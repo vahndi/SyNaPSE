@@ -12,6 +12,8 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
 from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+from .subviews.Leaves import Leaves_Model
+from .subviews.Leaves import Leaves_View
 
 # Models
 from models_views.flowElement import FlowElement
@@ -56,22 +58,10 @@ class RandomForestClassifier_Model(FlowElement):
         max_features_percentage = Int(50)
         max_features_percentage_min = Int(1)
         max_features_percentage_max = Int(100)
-        # max_leaf_nodes_type
-        max_leaf_nodes_type = Str('unlimited')
-        max_leaf_nodes_type_list = List(str, ['unlimited', 'int'])
-        # max_leaf_nodes
-        max_leaf_nodes = Int(10)
-        # max_depth_type
-        max_depth_type = Str('auto')
-        max_depth_type_list = List(str, ['auto', 'int'])
-        # max_depth_int
-        max_depth_int = Int(10)
-        # min_split_samples
-        min_split_samples = Int(2)
-        # min_leaf_samples
-        min_leaf_samples = Int(1)
-        # min_leaf_weighted_fraction
-        min_leaf_weighted_fraction = Float(0)
+        
+        # leaves
+        leaves = Value(Atom)
+
         # bootstrap
         bootstrap = Bool(True)
         # out_of_bag_scoring
@@ -98,9 +88,11 @@ class RandomForestClassifier_Model(FlowElement):
                                 input_dtypes = [float64, int64, str, object]
                                 )
         self.cores_selector = CoresSelector_Model()
+        self.leaves = Leaves_Model()
         self.uiModel = RandomForestClassifier_Model.ui(
                             inputs_targets_selector = self.selector.uiModel,
-                            cores_selector = self.cores_selector.uiModel
+                            cores_selector = self.cores_selector.uiModel,
+                            leaves = self.leaves.uiModel
                             )
 
 
@@ -120,18 +112,14 @@ class RandomForestClassifier_Model(FlowElement):
                             'int' : self.uiModel.max_features_int,
                             'percentage':self.uiModel.max_features_percentage
                             }[max_features_type]
-            max_leaf_nodes_type = self.uiModel.max_leaf_nodes_type
-            max_leaf_nodes = None
-            if max_leaf_nodes_type == 'int':
-                max_leaf_nodes = self.uiModel.max_leaf_nodes
-            if max_leaf_nodes_type == 'unlimited':
-                max_depth_type = self.uiModel.max_depth_type
-            max_depth = None
-            if max_depth_type == 'int':
-                max_depth = self.uiModel.max_depth_int
-            min_split_samples = self.uiModel.min_split_samples
-            min_leaf_samples = self.uiModel.min_leaf_samples
-            min_leaf_weighted_fraction = self.uiModel.min_leaf_weighted_fraction
+            
+            leaves = self.leaves
+            max_leaf_nodes = leaves.max_leaf_nodes()
+            max_depth = leaves.max_depth()
+            min_split_samples = leaves.min_split_samples()
+            min_leaf_samples = leaves.min_leaf_samples()
+            min_leaf_weighted_fraction = leaves.min_leaf_weighted_fraction()
+            
             bootstrap = self.uiModel.bootstrap
             out_of_bag_scoring = self.uiModel.out_of_bag_scoring
             random_state_seed = self.uiModel.random_state_seed
@@ -198,7 +186,7 @@ class RandomForestClassifier_Model(FlowElement):
             return outputs
             
         except Exception as e:
-                
+            print e.message
             return {'Exception': {'__class__': e.__class__,
                                   '__doc__': e.__doc__,
                                   'message': e.message}}
@@ -249,60 +237,14 @@ enamldef RandomForestClassifier_View(GroupBox): me:
                         text = 'Max Features Int'
                     IntField:
                         value := model.max_features_int
-            
-        
+                    
                 Label:
                     text = 'Max Features Percentage'
                 SpinBox:
                     minimum = model.max_features_percentage_min
                     maximum = model.max_features_percentage_max
                     value := model.max_features_percentage
-                    
-                Label:
-                    text = 'Max Leaf Nodes Type'
-                ObjectCombo:
-                    items = model.max_leaf_nodes_type_list
-                    selected := model.max_leaf_nodes_type
-        
-                Conditional:
-                    condition << model.max_leaf_nodes_type == 'int'
-                    Label:
-                        text = 'Max Leaf Nodes'
-                    IntField:
-                        value := model.max_leaf_nodes
-        
-                Conditional:
-                    condition << model.max_leaf_nodes_type == 'unlimited'
-                    Label:
-                        text = 'Max Depth Type'
-                    ObjectCombo:
-                        items = model.max_depth_type_list
-                        selected := model.max_depth_type
-            
-        
-                Conditional:
-                    condition << model.max_depth_type == 'int'
-                    Label:
-                        text = 'Max Depth Int'
-                    IntField:
-                        value := model.max_depth_int
-            
-        
-                Label:
-                    text = 'Min Split Samples'
-                IntField:
-                    value := model.min_split_samples
-        
-                Label:
-                    text = 'Min Leaf Samples'
-                IntField:
-                    value := model.min_leaf_samples
-        
-                Label:
-                    text = 'Min Leaf Weighted Fraction'
-                FloatField:
-                    value := model.min_leaf_weighted_fraction
-        
+
                 Label:
                     text = 'Bootstrap'
                 CheckBox:
@@ -336,3 +278,12 @@ enamldef RandomForestClassifier_View(GroupBox): me:
         
                 CoresSelector_View:
                     model = me.model.cores_selector
+        
+        Page:
+            
+            title = 'Leaves'
+            closable = False   
+
+            Leaves_View:
+                model = me.model.leaves
+                
