@@ -1,0 +1,139 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, ObjectCombo, SpinBox
+                              )
+
+# Models
+from models_views.flowElement import FlowElement
+from flow_elements.LoadDataFrame import LoadDataFrame
+from flow_elements.GetColumns import GetColumns
+
+# Other
+from sklearn.decomposition import PCA
+from pandas import Series, DataFrame, concat
+from pandasFunctions import splitCategoricalNumeric
+
+
+
+class PCA_Model(FlowElement):
+    
+    elementName = 'PCA'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+    
+    class ui(Atom):
+        
+        n_components_type = Str('all')
+        n_components_types = List(str, ['all', 'int', 'mle'])
+        n_components_int = Value(int)
+        pct_explained_variance = Int(80)
+        n_cols = Int()
+        copy = Bool(True)
+        whiten = Bool(False)
+
+
+    def setInputs(self, dataFrame):
+        
+        self._dataFrame = dataFrame
+        self._dfCategorical, self._dfNumeric = splitCategoricalNumeric(
+                                                    dataFrame
+                                                    )
+        self.uiModel = PCA_Model.ui(n_components_int = 2,
+                                    n_cols = len(self._dfNumeric.columns))
+
+
+    def getOutputs(self):
+
+        try:
+            
+            numComponents = {'all': None,
+                             'int': self.uiModel.n_components_int,
+                             'mle': 0.01 * self.uiModel.pct_explained_variance
+                            }[self.uiModel.n_components_type]
+            
+            pca = PCA(n_components = numComponents,
+                      copy = self.uiModel.copy,
+                      whiten = self.uiModel.whiten)
+     
+            result = pca.fit(self._dfNumeric)
+            transformed = pca.transform(self._dfNumeric)
+            dfTransformed = DataFrame(transformed, 
+                                      columns = ['PC%i' % (i + 1) for i in 
+                                                 range(transformed.shape[1])])
+            dfTransformed = concat([self._dfCategorical, dfTransformed], 
+                                      axis = 1)
+            return {'Attributes': 
+                        {'components':
+                            DataFrame(data = result.components_,
+                                      columns = self._dfNumeric.columns,
+                                      index = ['PC%i' % (i + 1) 
+                                               for i in 
+                                               range(result.n_components_)]),
+                         'explained variance ratio': 
+                            Series(data = result.explained_variance_ratio_,
+                                   name = 'explained variance ratio',
+                                   index = ['PC%i' % (i + 1) 
+                                            for i in 
+                                            range(result.n_components_)]
+                                  ),
+                         'mean': 
+                             Series(data = result.mean_,
+                                    index = self._dfNumeric.columns,
+                                    name = 'mean'),
+                         '# components': 
+                             result.n_components_,
+                         'noise variance': 
+                             result.noise_variance_},
+                    'DataFrame': dfTransformed}
+
+        except Exception as e:
+                
+            return {'Exception': {'__class__': e.__class__,
+                                  '__doc__': e.__doc__,
+                                  'message': e.message}}
+
+
+
+enamldef PCA_View(GroupBox):
+    
+    attr model
+    
+    Form:
+
+        Label:
+            text = 'Number of Components Type'
+        ObjectCombo:
+            items = model.n_components_types
+            selected := model.n_components_type
+        
+        Conditional:
+            condition << model.n_components_type == 'int'
+            Label:
+                text = 'Number of Components'        
+            SpinBox:
+                minimum = 1
+                maximum = model.n_cols
+                value := model.n_components_int
+
+        Conditional:
+            condition << model.n_components_type == 'mle'
+            Label:
+                text = 'Percentage of Explained Variance'
+            SpinBox:
+                minimum = 1
+                maximum = 99
+                value := model.pct_explained_variance
+
+        Label:
+            text = 'Copy'
+        CheckBox:
+            checked := model.copy
+
+        Label:
+            text = 'Whiten'
+        CheckBox:
+            checked := model.whiten

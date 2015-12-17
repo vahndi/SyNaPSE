@@ -1,0 +1,167 @@
+from atom.api import Atom, Bool, ContainerList, List, Callable
+from enaml.core.api import Conditional, Looper
+from enaml.widgets.api import  (
+    CheckBox, Container, GroupBox, PushButton, RadioButton, ScrollArea)
+
+
+
+class CheckBoxListItem(object):
+    
+    
+    def __init__(self, name, container):
+        
+        self.name = name
+        self.container = container
+
+
+    def __str__(self):
+        
+        return self.name
+
+
+    def toggle(self, value):
+        
+        self.container.toggleItem(self, value)
+
+
+
+class CheckBoxList_Model(object):
+
+
+    class ui(Atom):
+
+        checkItems = ContainerList(CheckBoxListItem)
+        checkedIndices = ContainerList(int)
+        hasScrollArea = Bool(True)
+        checkAllFunction = Callable(None)
+        uncheckAllFunction = Callable(None)
+        
+    
+    def __init__(self, itemNames, checkedIndices = [],
+                 hasScrollArea = True, checkAll = True, uncheckAll = True):
+
+        self.items = [CheckBoxListItem(name, self) 
+                       for name in list(itemNames)]   
+        self.checkedIndices = checkedIndices
+        checkAllFunc = None
+        uncheckAllFunc = None
+        if checkAll:
+            checkAllFunc = self.checkAll
+        if uncheckAll:
+            uncheckAllFunc = self.uncheckAll
+            
+        self.uiModel = CheckBoxList_Model.ui(checkItems = self.items,
+                                             checkedIndices = checkedIndices,
+                                             hasScrollArea = hasScrollArea,
+                                             checkAllFunction = checkAllFunc,
+                                             uncheckAllFunction = uncheckAllFunc)
+
+
+    def checkAll(self):
+        
+        self.uiModel.checkedIndices = list(range(len(self.items)))
+        
+        
+    def uncheckAll(self):
+        
+        self.uiModel.checkedIndices = []
+        
+        
+    def toggleItem(self, item, value):
+        
+        itemIndex = self.items.index(item)
+        checkedIndices = [i for i in self.uiModel.checkedIndices]
+        
+        if value:
+            checkedIndices.append(itemIndex)
+        else:
+            checkedIndices.remove(itemIndex)
+
+        self.uiModel.checkedIndices = checkedIndices
+    
+    
+    def getCheckedItemNames(self):
+        
+        return [str(self.uiModel.checkItems[i]) 
+                for i in self.uiModel.checkedIndices]
+
+
+            
+enamldef CheckBoxList_View(GroupBox):
+    '''
+    A container for a list of CheckBoxes which hold a ContainerList of 
+    instances of a class which implements .__str__() and .toggle(bool) methods.
+    To add or remove objects from the list, the entire list must be replaced
+    by a new one in the corresponding Atom model.
+    
+    Attributes
+    ----------
+    model:
+        A CheckBoxListModel.ui class instance
+    
+    Attribute methods
+    -----------------
+    .__str__(self): 
+        Return the name for the CheckBox.
+    .toggle(self, boolValue): 
+        The method to call when the CheckBox is toggled by the user. boolValue
+        will receive True if the box was checked or if it was unchecked.
+
+    N.B. in order to update the checkedIndices ContainerList, the individual
+    items must call a function on their parent when item.toggle() is invoked, 
+    which should get a copy of the items in the list and append or remove the
+    index of the item.
+    '''
+
+    attr model
+
+
+    Conditional:
+        
+        condition = model.hasScrollArea == True
+        
+        Container:
+            ScrollArea:
+                Container:
+                    Looper:
+                    
+                        iterable << [obj for obj in model.checkItems]
+                
+                        CheckBox: cb1:
+                            text = str(loop_item)
+                            checked << loop_index in model.checkedIndices
+                            toggled:: 
+                                loop_item.toggle(cb1.checked)
+            
+        
+
+    Conditional:
+    
+        condition = model.hasScrollArea == False
+
+        Looper:
+            
+            iterable << [obj for obj in model.checkItems]
+    
+            CheckBox: cb2:
+                text = str(loop_item)
+                checked << loop_index in model.checkedIndices
+                toggled:: 
+                    loop_item.toggle(cb2.checked)
+
+
+    Conditional:
+
+        condition = model.checkAllFunction is not None
+        PushButton:
+            text = 'Check All'
+            clicked::
+                model.checkAllFunction()
+
+    Conditional:
+
+        condition = model.uncheckAllFunction is not None
+        PushButton:
+            text = 'Uncheck All'
+            clicked::
+                model.uncheckAllFunction()

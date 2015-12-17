@@ -1,0 +1,52 @@
+from enaml.widgets.api import Container, Html
+
+
+def getSeriesHtml(series):
+
+    # Create table
+    source = '<table border = "1">'
+    
+    # Create header row
+    source += '<thead><tr>'
+    if series.index.name is not None:
+        source += '<th>%s<th>' % str(series.index.name)
+    else:
+        source += '<th></th>'
+    
+    if series.name is not None:
+        source += '<th>%s</th>' % str(series.name)
+    else:
+        source += '<th></th>'
+    
+    # Close header row
+    source += '</tr></thead>'
+    
+    # Create rows
+    source += '<tbody>'
+    for ix in series.index:
+        # Create row
+        source += '<tr>'
+        # Add index value
+        source += '<th>%s</th>' % str(ix)
+        # Add data value
+        source += '<td>%s</td>' % str(series.get_value(ix))
+        # Close row
+        source += '</tr>'
+    source += '</tbody>'
+    
+    # Close table tag
+    source += '</table>'
+    
+    return source
+
+
+
+enamldef Series_View(Container):
+    
+    attr model
+    
+    Html:
+        source = getSeriesHtml(model)
+    
+    
+    

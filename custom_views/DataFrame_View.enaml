@@ -1,0 +1,48 @@
+from enaml.widgets.api import Container, Html
+
+
+
+def getDataFrameHtml(dataframe):
+
+    # Create table
+    source = '<table border = "2">'
+    
+    # Create header row
+    source += '<thead><tr>'
+    if dataframe.index.name:
+        source += '<th>%s</th>' % str(dataframe.index.name)
+    else:
+        source += '<th></th>'
+    for col in dataframe.columns:
+        source += '<th>%s</th>' % col
+    
+    # Close header row
+    source += '</tr></thead>'
+    
+    # Create rows
+    source += '<tbody>'
+    for ix in dataframe.index:
+        # Create row
+        source += '<tr>'
+        # Add index value
+        source += '<th>%s</th>' % str(ix)
+        # Add data values
+        for col in dataframe.columns:
+            source += '<td>%s</td>' % str(dataframe.get_value(ix, col))
+        # Close row
+        source += '</tr>'
+    source += '</tbody>'
+    
+    # Close table tag
+    source += '</table>'
+
+    return source
+
+
+
+enamldef DataFrame_View(Container):
+    
+    attr model
+    
+    Html:
+        source = getDataFrameHtml(model)

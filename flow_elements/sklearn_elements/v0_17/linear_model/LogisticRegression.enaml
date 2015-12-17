@@ -1,0 +1,299 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Unicode, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox)
+from enaml.stdlib.fields import IntField, FloatField
+
+# Models
+from models_views.flowElement import FlowElement 
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
+from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+
+# Preceding elements
+from flow_elements.LoadDataFrame import LoadDataFrame
+from flow_elements.GetColumns import GetColumns
+
+# Other
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from pandas import DataFrame, Series
+from pandasFunctions import splitTrainingTest
+from pandasFunctions import splitCategoricalNumeric
+from pandasFunctions import joinInputsTargetsPredictions
+
+
+
+class LogisticRegression_Model(FlowElement):
+
+
+    elementName = 'Logistic Regression'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+
+    class ui(Atom):
+
+        # inputs_targets_selector
+        inputs_targets_selector = Value(Atom)
+        # solver
+        solver = Unicode('liblinear')
+        solver_list = List(str, ['newton-cg', 'lbfgs', 'liblinear', 'sag'])
+        # penalty
+        penalty = Unicode('l2')
+        penalty_list = List(str, ['l1', 'l2'])
+        # dual
+        dual = Bool(False)
+        # tolerance
+        tolerance = Float(0.0001)
+        # C
+        C = Float(True)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # intercept_scaling
+        intercept_scaling = Float(True)
+        # class_weight_type
+        class_weight_type = Unicode('equal')
+        class_weight_type_list = List(str, ['equal', 'balanced'])
+        # max_iterations
+        max_iterations = Int(100)
+        # multi_class
+        multi_class = Unicode('ovr')
+        multi_class_list = List(str, ['ovr', 'multinomial'])
+        # random_state_seed
+        random_state_seed = Int(1)
+        # verbose
+        verbose = Bool(False)
+        # warm_start
+        warm_start = Bool(False)
+        # cores_selector
+        cores_selector = Value(Atom)
+        
+
+    def setInputs(self, dataFrame):
+        
+        self._dataFrame = dataFrame
+        self.inputs_targets_selector = InputsTargetsSelector_Model(dataFrame)
+        self.cores_selector = CoresSelector_Model()
+        self.uiModel = LogisticRegression_Model.ui(
+            inputs_targets_selector = self.inputs_targets_selector.uiModel,
+            cores_selector = self.cores_selector.uiModel
+            )    
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            input_columns = self.inputs_targets_selector.checked_inputs()
+            target_column = self.inputs_targets_selector.selected_target()
+            solver = self.uiModel.solver
+            penalty = self.uiModel.penalty
+            if solver in ('newton-cg', 'lbfgs'):
+                solver = l2
+            dual = None
+            if penalty == 'l2' and solver == 'liblinear':
+                dual = self.uiModel.dual
+            tolerance = self.uiModel.tolerance
+            C = self.uiModel.C
+            fit_intercept = self.uiModel.fit_intercept
+            intercept_scaling = None
+            if fit_intercept:
+                intercept_scaling = self.uiModel.intercept_scaling
+            class_weight_type = self.uiModel.class_weight_type
+            class_weight = None
+            if class_weight_type == 'balanced':
+                class_weight = 'balanced'
+            max_iterations = self.uiModel.max_iterations
+            multi_class = 'ovr'
+            if solver == 'lbfgs':
+                multi_class = self.uiModel.multi_class
+            random_state_seed = self.uiModel.random_state_seed
+            verbose = self.uiModel.verbose
+            warm_start = None
+            if solver != 'liblinear':
+                warm_start = self.uiModel.warm_start
+            number_of_cores = self.cores_selector.number_of_cores()
+            
+            # Validate inputs
+            if not self.inputs_targets_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}                
+            
+            # Build model
+            logreg = LogisticRegression(solver = solver,
+                                        penalty = penalty,
+                                        dual = dual,
+                                        tol = tolerance,
+                                        C = C,
+                                        fit_intercept = fit_intercept,
+                                        class_weight = class_weight,
+                                        max_iter = max_iterations,
+                                        multi_class = multi_class,
+                                        random_state = random_state_seed,
+                                        verbose = verbose,
+                                        warm_start = warm_start,
+                                        n_jobs = number_of_cores)
+    
+            # Split into training and test set        
+            X_train, y_train, X_test, y_test = \
+                self.inputs_targets_selector.get_training_test_data()
+
+            # Train the model using the training sets and make predictions
+            logreg.fit(X_train, y_train)            
+            y_pred_train = logreg.predict(X_train)
+            y_pred_test = logreg.predict(X_test)   
+            confusion_matrix_train = confusion_matrix(y_train, y_pred_train)         
+            confusion_matrix_test = confusion_matrix(y_test, y_pred_test)
+            
+            # Create a prediction summary dataframe
+            df_pred = joinInputsTargetsPredictions(
+                                           train_inputs = X_train, 
+                                           train_targets = y_train, 
+                                           train_predictions = y_pred_train,
+                                           test_inputs = X_test, 
+                                           test_targets = y_test, 
+                                           test_predictions = y_pred_test)
+    
+            # Return outputs   
+            labels = sorted(self._dataFrame[target_column].unique())        
+            return {'Attributes': {'coefficients': DataFrame(
+                                                      data = logreg.coef_,
+                                                      columns = input_columns
+                                                      ),
+                                   'intercept': logreg.intercept_,
+                                   '# iterations': logreg.n_iter_},
+                    'mean accuracy': logreg.score(X_test, y_test),
+                    'dataFrame': df_pred,
+                    'target vs. predicted': df_pred[[
+                                                'Target ' + target_column, 
+                                                'Predicted ' + target_column, 
+                                                'Set'
+                                                ]],
+                    'confusion matrix': {'training': DataFrame(
+                                                        confusion_matrix_train,
+                                                        index = labels,
+                                                        columns = labels
+                                                        ),
+                                         'test': DataFrame(
+                                                        confusion_matrix_test,
+                                                        index = labels,
+                                                        columns = labels
+                                                        )
+                                       }
+                    }
+
+        except Exception as e:
+                
+            return {'Exception':{'__class__': str(e.__class__),
+                                 '__doc__': e.__doc__,
+                                 'message': e.message}}
+
+
+
+enamldef LogisticRegression_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model = me.model.inputs_targets_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Solver'
+                ObjectCombo:
+                    items = model.solver_list
+                    selected := model.solver
+
+                Conditional:
+                    condition << model.solver == 'liblinear'
+                    Label:
+                        text = 'Penalty'
+                    ObjectCombo:
+                        items = model.penalty_list
+                        selected := model.penalty
+
+                Conditional:
+                    condition << model.penalty == 'l2' and model.solver == 'liblinear'
+                    Label:
+                        text = 'Dual'
+                    CheckBox:
+                        checked := model.dual
+
+                Label:
+                    text = 'Tolerance'
+                FloatField:
+                    value := model.tolerance
+
+                Label:
+                    text = 'C'
+                FloatField:
+                    value := model.C
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Conditional:
+                    condition << model.fit_intercept == True and model.solver == 'liblinear'
+                    Label:
+                        text = 'Intercept Scaling'
+                    FloatField:
+                        value := model.intercept_scaling
+
+                Label:
+                    text = 'Class Weight Type'
+                ObjectCombo:
+                    items = model.class_weight_type_list
+                    selected := model.class_weight_type
+
+                Conditional:
+                    condition << model.solver in ('newton-cg', 'sag', 'lbfgs')
+                    Label:
+                        text = 'Max Iterations'
+                    IntField:
+                        value := model.max_iterations
+
+                Conditional:
+                    condition << model.solver == 'lbfgs'
+                    Label:
+                        text = 'Multi Class'
+                    ObjectCombo:
+                        items = model.multi_class_list
+                        selected := model.multi_class
+    
+                Label:
+                    text = 'Random State Seed'
+                IntField:
+                    value := model.random_state_seed
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+
+                Label:
+                    text = 'Warm Start'
+                CheckBox:
+                    checked := model.warm_start
+
+                CoresSelector_View:
+                    model = me.model.cores_selector

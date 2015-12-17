@@ -1,0 +1,29 @@
+from enaml.widgets.api import DockPane, GroupBox, PushButton
+from custom_views.RadioButtonList import RadioButtonList_View
+
+from chooseElement_View import ChooseElement_View
+
+
+
+enamldef FlowList_View(DockPane): flv:
+
+
+    attr model
+    attr mainModel
+    
+    
+    title = 'Flow List'
+    dock_area = 'left'
+    allowed_dock_areas = ['left', 'right']
+    closable = False
+    
+    GroupBox: 
+        RadioButtonList_View:
+            model << flv.model.uiModel.elements
+            selectedIndex << flv.model.uiModel.selectedIndex
+                                                 
+        PushButton:            
+            text = 'Add New Element'            
+            clicked ::
+                ChooseElement_View(model = flv.mainModel.chooseElement,
+                                   flvModel = model).show()

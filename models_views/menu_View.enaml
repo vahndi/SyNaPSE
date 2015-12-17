@@ -1,0 +1,14 @@
+from enaml.widgets.api import Action, Menu, MenuBar
+
+
+
+enamldef Menu_View(MenuBar):
+    
+    attr model
+    
+    Menu:
+        title = '&File'
+        Action:
+            text = '&Save Flow'
+            triggered :: print 'Flow Saved'
+

@@ -1,0 +1,59 @@
+from enaml.core.api import Include
+from enaml.widgets.api import DockPane, Form, GroupBox
+
+
+
+######################## Bootstrap this #######################################
+
+from flow_elements.LoadDataFrame import LoadDataFrame, LoadDataFrame_View
+from flow_elements.PandasPlot import PandasPlot, PandasPlot_View
+from flow_elements.GetColumns import GetColumns, GetColumns_View
+from flow_elements.sklearn_elements.v0_17.decomposition.PCA import (
+        PCA_Model, PCA_View)
+from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import (
+        LinearRegression_Model, LinearRegression_View)
+from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import (
+        LogisticRegression_Model, LogisticRegression_View)
+from flow_elements.sklearn_elements.v0_17.cluster.KMeans import (
+        KMeans_Model, KMeans_View)
+from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import (
+        RandomForestClassifier_Model, RandomForestClassifier_View)
+
+elementViewDict = {LoadDataFrame: LoadDataFrame_View,
+                   GetColumns: GetColumns_View,
+                   PandasPlot: PandasPlot_View,
+                   PCA_Model: PCA_View,
+                   LinearRegression_Model: LinearRegression_View,
+                   LogisticRegression_Model: LogisticRegression_View,
+                   KMeans_Model: KMeans_View,
+                   RandomForestClassifier_Model: RandomForestClassifier_View}
+
+
+###############################################################################
+
+
+def getElementView(elementModel):
+    
+    try:
+        constructor = elementViewDict[type(elementModel.getModel())]
+        view = constructor(model = elementModel.getModel().uiModel)
+        return view
+    except:
+        return Form()
+
+
+
+enamldef ElementConfig_View(DockPane):
+
+    attr model
+    
+    title = 'Element Configuration'
+    dock_area = 'left'
+    allowed_dock_areas = ['left', 'right'] 
+    closable = False
+    
+    GroupBox:
+        
+        Include:
+            
+            objects << [getElementView(model)]

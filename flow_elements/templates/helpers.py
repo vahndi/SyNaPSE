@@ -1,0 +1,96 @@
+def spc(num_spaces):
+    
+    return ' ' * num_spaces
+
+
+def to_words(hyphen_string):
+    
+    words = hyphen_string.split('_')
+    words = [word[0].upper() + word[1:] if word not in ('of') else word
+             for word in words]
+    return ' '.join(words)
+
+
+def ToWords(CamelCaseString):
+
+    words = CamelCaseString[0]    
+    for i in range(1, len(CamelCaseString)):
+        if CamelCaseString[i].isupper():
+            words += ' '
+        words += CamelCaseString[i]
+    return words
+    
+
+def strlist_to_liststr(strlist):
+    '''
+    Converts a string of comma separated strings (with or without separating 
+    spaces and single or double quotes) to a list of strings
+    '''
+    liststr = [str(value.strip().strip("'").strip('"'))
+               for value in strlist.split(',')]
+    return liststr
+
+
+class widget(object):
+    
+    @classmethod
+    def from_DataFrame_row(cls, widget_row):
+        
+        return widget(widget_row['Widget Name'], 
+                      widget_row['Widget Type'],
+                      widget_row['Widget Value'],
+                      widget_row['Widget Values'],
+                      widget_row['Visibility Condition'],
+                      widget_row['Widget Page'])
+
+    
+    def __init__(self, w_name, w_type, w_value, w_values, v_condition, w_page):
+        
+        self.w_name = w_name
+        self.w_type = w_type
+        self.w_value = w_value
+        self.w_values = w_values
+        self.v_condition = v_condition
+        self.w_page = w_page
+        
+        
+    def get_min_value(self):
+        
+        if isinstance(self.w_values, (str, unicode)):
+            return int(self.w_values.split(',')[0])
+        else:
+            return None
+
+
+    def get_max_value(self):
+        
+        if isinstance(self.w_values, (str, unicode)):
+            return int(self.w_values.split(',')[1])
+        else:
+            return None
+    
+            
+    def dont_execute_condition(self):
+        
+        if self.w_type == 'CheckBoxList_View':            
+            return 'len(%s) == 0' % self.w_name
+            
+        elif self.w_type == 'ObjectCombo':
+            return "%s == ''" % self.w_name
+
+        else:
+            return None
+    
+    
+    def indent1(self):
+        
+        if isinstance(self.w_page, (str, unicode)):
+            return spc(16)
+        return spc(8)
+
+
+    def indent2(self):
+
+        if isinstance(self.w_page, (str, unicode)):
+            return spc(20)
+        return spc(12)

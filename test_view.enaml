@@ -1,0 +1,144 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Nov 12 14:16:07 2015
+
+@author: Vahndi
+"""
+
+from atom.api import Atom, Value, ContainerList, Str
+
+
+import enaml
+from enaml.core.api import Include
+from enaml.qt.qt_application import QtApplication
+
+from enaml.widgets.api import (
+    DockPane, GroupBox, Window, RadioButton, Label, ObjectCombo, Form, 
+    PushButton
+                               )                              
+from custom_views.RadioButtonList import RadioButtonList_View
+from custom_views.CheckBoxList import CheckBoxList_View
+
+
+
+class element(object):
+    
+    
+    def __init__(self, name = '', parent = None):
+
+        self.name = name
+        self.parent = parent
+
+
+    def __str__(self):
+        print 'getting element name for %s' % self.name
+        return self.name
+
+
+    def select(self):        
+
+        print '%s was selected' % self.name
+
+
+    def toggle(self, value):
+        
+        print '%s was toggled to %s' % (self.name, value)
+        if self.parent is not None:
+            self.parent.toggleItem(self, value)
+
+    
+
+class MainModel(object):
+
+
+    class ui(Atom):
+
+        elements = ContainerList(element)
+        selectedElement = Value(element)
+        checkedIndices = ContainerList(int)
+
+
+    def __init__(self):
+        
+        self.elements = [element('a', parent = self), 
+                         element('b', parent = self), 
+                         element('c', parent = self)]
+
+        self.uiModel = MainModel.ui(elements = self.elements,
+                                    selectedElement = self.elements[0],
+                                    checkedIndices = [1])
+
+
+    def addElement(self):
+        
+        self.elements.append(element('d', parent = self))
+        self.uiModel.elements = self.elements
+        
+    
+    def checkAll(self):
+        print 'checking all'
+        self.uiModel.checkedIndices = list(range(len(self.elements)))
+        
+    def uncheckAll(self):
+        
+        self.uiModel.checkedIndices = []
+        
+    def toggleItem(self, item, value):
+        
+        itemIndex = self.elements.index(item)
+        checkedIndices = [i for i in self.uiModel.checkedIndices]
+        if value:
+            print 'appending item %i' % itemIndex
+            checkedIndices.append(itemIndex)
+        else:
+            print 'removing item %i' % itemIndex            
+            checkedIndices.remove(itemIndex)
+        self.uiModel.checkedIndices = checkedIndices
+
+
+
+enamldef Main(Window): main:
+    
+    attr model
+    
+    GroupBox:
+        Form:
+            Label:
+                text = 'elements'
+            ObjectCombo:
+                items := model.uiModel.elements
+                selected := model.uiModel.selectedElement
+                to_string = str
+            Label:
+                text = 'selected element'
+            Label:
+                text := model.uiModel.selectedElement.name
+            PushButton:
+                text = 'Add New Element'
+                clicked::
+                    model.addElement()
+                    print [str(e) for e in model.uiModel.elements]
+
+
+        RadioButtonList_View:
+            
+            model := main.model.uiModel.elements
+
+        
+        CheckBoxList_View:
+            
+            checkItems := main.model.uiModel.elements
+            checkedIndices := main.model.uiModel.checkedIndices
+            hasScrollArea = True
+            checkAllFunction = main.model.checkAll
+            uncheckAllFunction = main.model.uncheckAll
+        
+
+
+if __name__ == '__main__':
+
+    app = QtApplication()
+    view = Main(model = MainModel())
+
+    view.show()
+    app.start()

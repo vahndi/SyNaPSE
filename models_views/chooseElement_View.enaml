@@ -1,0 +1,23 @@
+from enaml.widgets.api import Form, Label, ObjectCombo, PopupView, PushButton
+
+
+
+enamldef ChooseElement_View(PopupView): me:
+        
+    attr model
+    attr flvModel
+    
+    
+    Form:
+        Label:
+            text = 'Element Type'
+        ObjectCombo: 
+            items << model.uiModel.elementTypes
+            selected := model.uiModel.selectedElementType
+        PushButton:
+            text = 'OK'
+            clicked :: 
+                # Add a new element to the flow list and update choosable types
+                flvModel.appendElement(model.uiModel.selectedElementType)                
+                # Close this window
+                me.close()

@@ -1,0 +1,154 @@
+from atom.api import Atom, Bool, Dict, List, Unicode
+
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    Action, CheckBox, ComboBox, Container, DockPane, GroupBox, Field, Form, 
+    Label, MainWindow, Menu, MenuBar, ObjectCombo, PopupView, PushButton, 
+    Window
+                              )
+
+from sklearn import datasets
+import pandas as pd
+import seaborn as sns
+
+from models_views.flowElement import FlowElement
+from custom_views.AutoSyncField import AutoSyncField
+
+
+# TODO: Make this a member of the LoadDataFrame class
+sklearnDatasets = {'boston': datasets.load_boston, 
+                   'breast_cancer': datasets.load_breast_cancer,
+                   'diabetes': datasets.load_diabetes, 
+                   'digits': datasets.load_digits, 
+                   'linnerud': datasets.load_linnerud, 
+                   'iris': datasets.load_iris}
+
+# TODO: Add seaborn datasets support
+seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
+                   'attention': sns.load_dataset('attention'),
+                   'brain_networks': sns.load_dataset('brain_networks'),
+                   'car_crashes': sns.load_dataset('car_crashes'),
+                   'exercise': sns.load_dataset('exercise'),
+                   'flights': sns.load_dataset('flights'),
+                   'gammas': sns.load_dataset('gammas'),
+                   'iris': sns.load_dataset('iris'),
+                   'planets': sns.load_dataset('planets'),
+                   'tips': sns.load_dataset('tips'),
+                   'titanic': sns.load_dataset('titanic')}
+
+
+
+class LoadDataFrame(FlowElement):
+    
+    
+    elementName = 'Load DataFrame'
+    
+    
+    class ui(Atom):
+        
+        sourcePath = Unicode()
+        sourceType = Unicode()
+        sheetName = Unicode()
+        sourceTypes = List(str, ['csv', 'xls', 'sklearn'])
+        sheetNames = List(str)    
+        sklearnDSnames = List(str, sorted(sklearnDatasets.keys()))
+        sklearnDSname = Unicode()
+
+        def getSheetNames(self):
+            
+            return getExcelSheetNames(self.sourcePath)
+    
+    
+    def __init__(self):
+        
+        self.uiModel = LoadDataFrame.ui()
+        
+    
+    def getOutputs(self):
+        
+        if self.uiModel.sourceType == 'sklearn':
+            # Load dataset
+            ds = sklearnDatasets[self.uiModel.sklearnDSname]()
+            
+            if 'feature_names' in ds.keys():
+                # Has feature namews
+                data = pd.DataFrame(ds['data'], 
+                                    columns = ds['feature_names'])
+            else:
+                # Does not have feature names
+                data = pd.DataFrame(ds['data'])
+                data.columns = [str(col) for col in data.columns]
+                
+            if 'target_names' in ds.keys():
+                # Has target names
+                if len(ds['target'].shape) > 1:
+                    # multiple target columns
+                    target = pd.DataFrame(ds['target'],
+                                          columns = ds['target_names'])
+                else:
+                    # single target column with multiple categories
+                    target = pd.Series(ds['target'], name = 'Target')  
+                    target = target.apply(lambda t: ds['target_names'][t])                           
+            else:
+                # Does not have target names
+                target = pd.Series(ds['target'], name = 'Target')
+            
+            # Join data and target columns and return
+            df = pd.concat([data, target], axis = 1)
+            return {'dataFrame': df}
+                    
+        elif self.uiModel.sourceType in ('.csv', '.xls'):
+            if os.path.exists(self.uiModel.sourcePath):
+                try:
+                    if self.uiModel.sourceType == 'csv':
+                        return {'dataFrame': 
+                                pd.read_csv(self.uiModel.sourcePath)}
+                    elif self.uiModel.sourceType == 'xls':
+                        sheet_name = self.uiModel.sheetName
+                        if sheet_name == '':
+                            sheet_name = None
+                        return {'dataFrame': 
+                                pd.read_excel(self.uiModel.sourcePath,
+                                              sheetname = sheet_name)}    
+                except:
+                    return {'Outputs': 'No outputs'}
+            else:
+                return {'Outputs': 'No outputs'}
+        else:
+            return {'Outputs': 'No outputs'}
+
+
+
+enamldef LoadDataFrame_View(GroupBox):
+    
+    attr model
+
+    Form:
+        Label:
+            text = 'Type'
+        ObjectCombo: cboxDStype:
+            items = model.sourceTypes
+            selected := model.sourceType
+            
+        Conditional:
+            condition << cboxDStype.selected in ('xls', 'csv')
+            Label:
+                text = 'Path'
+            AutoSyncField:
+                text := model.sourcePath
+                
+        Conditional:
+            condition << cboxDStype.selected == 'sklearn'
+            Label:
+                text = 'Dataset'
+            ObjectCombo: cboxSKLDSname:
+                items = model.sklearnDSnames
+                selected := model.sklearnDSname
+
+        Conditional:
+            condition << cboxDStype.selected == 'xls'
+            Label:
+                text = 'Sheet Name'
+            ObjectCombo: cboxSheetNames:
+                items = model.getSheetNames()
+                selected := model.sheetName

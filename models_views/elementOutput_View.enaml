@@ -1,0 +1,350 @@
+from enaml.core.api import DynamicTemplate, Looper
+from enaml.widgets.api import (
+    Container, DockPane, Field, GroupBox, Html, Notebook, MPLCanvas, 
+    MultilineField, Page, PushButton
+                             )
+
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from matplotlib.markers import MarkerStyle
+import pandas as pd
+from pandas import DataFrame, Series
+from numpy import ndarray, int64, float64
+
+from pandasFunctions import numNumericColumns
+from pandasFunctions import splitCategoricalNumeric
+from pandasFunctions import getColumnsByDType
+
+from plotFunctions import getFigureShape
+
+from custom_views.DataFrame_View import DataFrame_View
+from custom_views.Series_View import Series_View
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
+
+
+## grouped barplot
+#sns.factorplot(data = output_model,
+#               x = categorical.columns[0]"class", y = "survived", hue="sex", 
+#               size=6, kind="bar", palette="muted")
+
+
+
+markers = MarkerStyle.filled_markers
+
+
+
+def create_figure(output_model):
+    
+    fig = Figure()
+    ax = fig.add_subplot(111)
+
+    if type(output_model) is Series:
+        
+        if round(output_model.sum(), 3) == 1:
+            output_model.plot(kind = 'pie', ax = ax)
+        else:
+            sns.barplot(x = output_model.index, y = output_model.values, 
+                        ax = ax)
+    
+    elif type(output_model) is DataFrame:
+    
+        categorical, numeric = splitCategoricalNumeric(output_model)    
+        nnc = len(numeric.columns)
+        ncc = len(categorical.columns)
+        nic = list(output_model.dtypes).count(int64)
+        nfc = list(output_model.dtypes).count(float64)
+        
+        # all columns are dtype == int -> confusion matrix
+        if (len(set(output_model.dtypes)) == 1 and 
+            output_model.dtypes[0] == int64):
+            sns.heatmap(output_model,
+                        annot = True, square = True,
+                        fmt = 'd', ax = ax)
+            ax.set_xlim([0.5, len(output_model.columns) + 0.5])
+            
+        elif nnc == 0 and ncc == 3:
+            # Categorised confusion matrices (by category in 3rd column)
+            if sorted(output_model[output_model.columns[0]].unique()) == \
+               sorted(output_model[output_model.columns[1]].unique()):
+                   
+                   fig = Figure()
+                   col0 = output_model.columns[0]
+                   col1 = output_model.columns[1]
+                   axis_col = output_model.columns[2]
+                   axis_names = list(output_model[axis_col].unique())
+                   r, c = getFigureShape(len(axis_names))
+                   i_ax = 0
+                   for a in axis_names:
+                       i_ax += 1
+                       ax = fig.add_subplot(r, c, i_ax)
+                       ax.set_title(a)
+                       sub_df = output_model[output_model[axis_col] == a]
+                       conf_mat = confusion_matrix(sub_df[col0], sub_df[col1])
+                       sns.heatmap(conf_mat,
+                                   annot = True, square = True,
+                                   fmt = 'd', ax = ax)
+                       ax.legend()
+
+        elif nnc == 1 and ncc == 0:
+            
+            sns.distplot(output_model, ax = ax)
+            
+        elif nnc == 1 and ncc == 1:
+            
+            sns.boxplot(data = output_model, ax = ax,
+                        x = categorical.columns[0], y = numeric.columns[0])
+
+        elif nnc == 2 and ncc == 0:
+                
+            sns.regplot(data = output_model, fit_reg = False, ax = ax,
+                        x = numeric.columns[0], y = numeric.columns[1])
+                            
+        elif nnc == 2 and ncc == 1:
+                
+            cat_col = categorical.columns[0]
+            cat_col_values = categorical[cat_col].unique()
+            for cat_col_value in cat_col_values:
+                sub_df = output_model[output_model[cat_col] ==  cat_col_value]
+                sns.regplot(data = sub_df, fit_reg = False, ax = ax,
+                            x = numeric.columns[0], y = numeric.columns[1], 
+                            label = cat_col_value)
+                ax.legend()
+            
+        elif nnc == 2 and ncc == 2:
+                
+            colour_col = categorical.columns[0]
+            marker_col = categorical.columns[1]
+            colour_labels = sorted(categorical[colour_col].unique())
+            marker_labels = sorted(categorical[marker_col].unique())
+            palette = sns.color_palette('cubehelix', len(colour_labels))
+
+            for m in marker_labels:
+                for c in colour_labels:
+                    sub_df = output_model[(output_model[marker_col] == m) &
+                                          (output_model[colour_col] == c)]
+                    
+                    sns.regplot(
+                            data = sub_df, fit_reg = False, ax = ax,
+                            x = numeric.columns[0], y = numeric.columns[1], 
+                            color = palette[colour_labels.index(c)],
+                            marker = markers[marker_labels.index(m)],
+                            label = '%s - %s' % (m, c))
+            ax.legend()
+                
+        elif nnc == 2 and ncc == 3:
+                
+            colour_col = categorical.columns[0]
+            marker_col = categorical.columns[1]
+            axis_col = categorical.columns[2]
+            colour_labels = sorted(categorical[colour_col].unique())
+            marker_labels = sorted(categorical[marker_col].unique())
+            axis_labels = sorted(categorical[axis_col].unique())
+            palette = sns.color_palette('cubehelix', len(colour_labels))
+
+            fig = Figure()
+            fig_nrows, fig_ncols = getFigureShape(len(axis_labels))
+            
+            i_ax = 0
+            for a in axis_labels:
+                i_ax += 1
+                ax = fig.add_subplot(fig_nrows, fig_ncols, i_ax)
+                ax.set_title(a)
+                for m in marker_labels:
+                    for c in colour_labels:
+                        sub_df = output_model[(output_model[axis_col] == a) &
+                                              (output_model[marker_col] == m) &
+                                              (output_model[colour_col] == c)]
+                        sns.regplot(
+                                data = sub_df, fit_reg = False, ax = ax,
+                                x = numeric.columns[0], y = numeric.columns[1], 
+                                color = palette[colour_labels.index(c)],
+                                marker = markers[marker_labels.index(m)],
+                                label = '%s - %s' % (m, c))
+                ax.legend()
+
+        elif nnc == 3 and ncc == 0:
+            
+            if nic == 2 and nfc == 1:
+                # Try matrix plot
+                pass
+        
+        elif nnc == 3 and  ncc == 1:
+                # try a colour scatter plot with discrete colour blend for each
+                # category - will only work for a low number of categories
+                pass
+                
+        elif nnc == 4 and nfc == 2:
+                
+            xy = getColumnsByDType(output_model, float64)
+
+        else:
+            
+            if output_model.index.dtype == int64:
+
+                if ncc == 0:            
+                    sns.boxplot(data = output_model, ax = ax)
+                
+                else:
+                    dfMelt = pd.melt(output_model,
+                                     value_vars = list(numeric.columns), 
+                                     id_vars = list(categorical.columns))
+                    sns.boxplot(data = dfMelt, 
+                                x = 'variable', y = 'value',
+                                hue = categorical.columns[0],
+                                ax = ax)
+            else:
+                
+                if ncc == 0:
+                    # column plot of the value in each column, grouped by index
+                    df_plot = output_model.copy(deep = True)
+                    float_cols = getColumnsByDType(df_plot, float64).columns
+                    df_plot['index'] = df_plot.index
+                    dfMelt = pd.melt(df_plot, id_vars = 'index', 
+                                     value_vars = list(float_cols))
+                    sns.barplot(data = dfMelt, ax = ax, hue = 'variable',
+                                x = 'index', y = 'value')
+                    
+
+            
+    return fig
+
+
+
+template OutputTemplate(model_type: Figure):
+
+    MPLCanvas:
+        figure = output_model
+
+
+template OutputTemplate(model_type: DataFrame):
+
+    MPLCanvas:
+        figure = create_figure(output_model)
+    
+    DataFrame_View:
+        model = output_model
+
+
+template OutputTemplate(model_type: Series): 
+
+    MPLCanvas:
+        figure = create_figure(output_model)
+
+    Series_View:
+        model = output_model
+        
+
+template OutputTemplate(model_type: str): 
+
+    MultilineField:
+        read_only = True
+        text = str(output_model)
+    
+
+template OutputTemplate(model_type: float): 
+
+    Field:
+        read_only = True
+        text = str(output_model)
+
+
+template OutputTemplate(model_type: int): 
+
+    Field:
+        read_only = True
+        text = str(output_model)
+
+
+template OutputTemplate(model_type: ndarray): 
+
+    MultilineField:
+        read_only = True
+        text = str(output_model)
+
+
+template OutputTemplate(model_type: list):
+    
+    MultilineField:
+        read_only = True
+        text = str(output_model)
+        
+
+template OutputTemplate(model_type: dict):
+
+    OutputsGroupBox:
+        
+        output_model = parent.output_model
+
+
+enamldef OutputContainer(Container):
+    
+    attr output_model
+    
+    DynamicTemplate:
+        base = OutputTemplate
+        args = (type(output_model),)
+
+ 
+ 
+enamldef OutputsGroupBox(GroupBox): ogb:
+    
+    attr output_model
+    
+    Notebook:
+        
+        Looper:
+            
+            iterable << [key for key in output_model.keys()]
+            
+            Page:
+                title = loop_item
+                closable = False
+                
+                OutputContainer:
+                    output_model = ogb.output_model[loop_item]
+
+
+
+enamldef ElementOutput_View(DockPane):
+    '''
+    A view to display the outputs of a FlowElement
+
+    Attributes
+    ----------
+    model (Dict):
+        The named outputs of the currently selected FlowElement
+    '''
+    
+    attr model
+    attr flowList
+
+    
+    title = 'Element Output'
+    dock_area = 'right'
+    allowed_dock_areas = ['left', 'right']
+    closable = False
+
+
+    GroupBox:
+        
+        PushButton:
+            
+            text = 'Refresh Output'
+            clicked::
+                flowList.refreshSelectedElementOutputs()
+                model = flowList.uiModel.selectedElementOutputs
+                
+        Notebook:
+            
+            Looper:
+                
+                iterable << [key for key in model.keys()]
+                
+                Page:
+                    
+                    title = loop_item
+                    closable = False
+                    OutputContainer:
+                        output_model = model[loop_item]

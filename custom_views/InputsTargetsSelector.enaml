@@ -1,0 +1,210 @@
+from atom.api import Atom, Bool, Int, List, Str, Value
+from enaml.widgets.api import (
+    CheckBox, Container, Form, Label, ObjectCombo, Page, SpinBox
+    )
+from enaml.core.api import Conditional
+from numpy import float64, int64
+
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from pandasFunctions import getColumnNamesByDType
+from pandasFunctions import shuffleRows
+from pandasFunctions import splitTrainingTest
+
+
+
+enamldef InputsTargetsSelector_View(Container): me:
+
+    attr model
+
+    Form:
+
+        Conditional:
+            condition = model.show_shuffle_examples
+            Label:
+                text = 'Shuffle Examples'
+            CheckBox:
+                checked := model.shuffle_examples
+
+        Label:
+            text = 'Input Columns'
+        CheckBoxList_View:
+            model := me.model.input_columns
+
+        Label:
+            text = 'Target Column'
+        ObjectCombo:
+            items = model.target_column_list
+            selected := model.target_column
+
+        Conditional:
+            condition = model.show_pct_training
+            Label:
+                text = '% Training'
+            SpinBox:
+                minimum = model.pct_training_min
+                maximum = model.pct_training_max
+                value := model.pct_training
+
+
+
+class InputsTargetsSelector_Model(object):
+
+
+    class ui(Atom):
+        
+        show_shuffle_examples = Bool()
+        shuffle_examples = Bool()
+
+        input_columns = Value(Atom)
+
+        target_column = Str()
+        target_column_list = List(str)
+
+        show_pct_training = Bool()
+        pct_training = Int()
+        pct_training_min = Int(1)
+        pct_training_max = Int(99)
+
+
+    def __init__(
+            self, dataFrame, 
+            shuffle_examples = True, percent_training = 70,
+            input_dtypes = [float64, int64], target_dtypes = [str, object],
+            input_cardinality = 'multiple', target_cardinality = 'single',
+            target_mandatory = True, sel_desel_all_buttons = True,
+            show_shuffle_examples = True, show_pct_training = True
+            ):
+
+        self._dataFrame = dataFrame
+        self.target_mandatory = target_mandatory
+        self.show_shuffle_examples = show_shuffle_examples
+        self.show_pct_training = show_pct_training
+
+        input_cols = getColumnNamesByDType(dataFrame, input_dtypes)
+        target_cols = getColumnNamesByDType(dataFrame, target_dtypes)
+
+        self.input_cols = CheckBoxList_Model(input_cols)
+        self.uiModel = InputsTargetsSelector_Model.ui(
+                                show_shuffle_examples = show_shuffle_examples,
+                                shuffle_examples = shuffle_examples,
+                                show_pct_training = show_pct_training,
+                                pct_training = percent_training,
+                                input_columns = self.input_cols.uiModel,
+                                target_column_list = target_cols
+                                )
+
+
+    def checked_inputs(self):
+        '''
+        Returns the names of the checked input columns as a list of str
+        '''
+        return self.input_cols.getCheckedItemNames()
+        
+    def get_inputs(self):
+        '''
+        Returns a DataFrame with columns corresponding to the checked inputs
+        '''
+        return self._dataFrame[self.checked_inputs()]
+
+    def selected_target(self):
+        '''
+        Returns the name of the selected target column
+        '''
+        return self.uiModel.target_column
+
+    def get_targets(self):
+        '''
+        Returns a Series with the selected target column
+        '''
+        return self._dataFrame[self.selected_target()]
+
+    def validate_inputs(self):
+        '''
+        Checks that all necessary inputs are selected
+        '''
+        if not self.checked_inputs():
+            return False
+        if self.target_mandatory and not self.uiModel.target_column:
+            return False
+
+        return True
+
+
+    def get_data(self):
+        '''
+        Returns the selected dataset inputs and targets, shuffled if specified
+        '''
+        if not self.validate_inputs():
+            return None
+
+        input_cols = self.checked_inputs()
+        target_column = self.selected_target()
+
+        df_shuffled = {True: shuffleRows(self._dataFrame),
+                       False: self._dataFrame
+                       }[self.show_shuffle_examples]
+
+        if not target_column:            
+            return df_shuffled[input_cols]
+        else:
+            return df_shuffled[input_cols], df_shuffled[target_column]
+
+
+    def get_training_test_data(self):
+        '''
+        Returns the selected dataset inputs (and targets), shuffled if
+        specified, split into training and test sets
+        '''
+        if not self.validate_inputs() or not self.show_pct_training:
+            return None
+
+        input_cols = self.checked_inputs()
+        target_column = self.selected_target()
+        training_fraction = 0.01 * self.uiModel.pct_training
+        shuffle_examples = self.uiModel.shuffle_examples
+        
+        if target_column == '':
+            
+            X_train, X_test = splitTrainingTest(
+                                        dataframe = self._dataFrame, 
+                                        training_fraction = training_fraction, 
+                                        shuffle_rows = shuffle_examples,
+                                        input_columns = input_cols,
+                                        target_column = None
+                                        )
+
+            return X_train, X_test
+
+        else:
+            
+            X_train, y_train, X_test, y_test = splitTrainingTest(
+                                        dataframe = self._dataFrame, 
+                                        training_fraction = training_fraction, 
+                                        shuffle_rows = shuffle_examples,
+                                        input_columns = input_cols,
+                                        target_column = target_column
+                                        )
+                    
+            return X_train, y_train, X_test, y_test
+
+
+    def get_unique_targets(self):
+        
+        return list(self.get_targets().unique())
+        
+
+    def get_problem_type(self):
+        '''
+        Returns the type of the problem for classification metrics, depending
+        on the number of different classes in the target variable column.
+        N.B. the 'multilabel' case is not yet implemented.
+        '''
+        target_classes = list(self.get_unique_targets())
+        print 'target_classes:', target_classes
+        if len(target_classes) == 2:
+            return 'binary'
+        elif len(target_classes) > 2:
+            return 'multiclass'
+        else:
+            return None
+            

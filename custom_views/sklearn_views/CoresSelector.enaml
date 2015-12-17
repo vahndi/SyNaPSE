@@ -1,0 +1,56 @@
+from atom.api import Atom, Int, List, Str
+from enaml.core.api import Conditional
+from enaml.stdlib.fields import IntField
+from enaml.widgets.api import Form, GroupBox, Label, ObjectCombo
+
+
+
+class CoresSelector_Model(object):
+
+
+    class ui(Atom):
+        
+        # number_of_cores_type
+        number_of_cores_type = Str()
+        number_of_cores_type_list = List(str, ['one', 'all', 'int'])
+        # number_of_cores
+        number_of_cores_int = Int()
+
+
+    def __init__(self, number_of_cores_type = 'one', number_of_cores_int = 1):
+        
+        self.uiModel = CoresSelector_Model.ui(
+                            number_of_cores_type = number_of_cores_type,
+                            number_of_cores_int = number_of_cores_int
+                            )
+
+
+    def number_of_cores(self):
+        
+        number_of_cores_type = self.uiModel.number_of_cores_type
+        num_cores = {'one': 1,
+                     'int': self.uiModel.number_of_cores_int,
+                     'all': -1
+                     }[number_of_cores_type]
+
+        return num_cores
+
+
+enamldef CoresSelector_View(GroupBox):
+
+    attr model
+    
+    Form:
+        
+        Label:
+            text = 'Number of Cores Type'
+        ObjectCombo:
+            items = model.number_of_cores_type_list
+            selected := model.number_of_cores_type
+    
+        Conditional:
+            condition << model.number_of_cores_type == 'int'
+            Label:
+                text = 'Number of Cores'
+            IntField:
+                value := model.number_of_cores_int

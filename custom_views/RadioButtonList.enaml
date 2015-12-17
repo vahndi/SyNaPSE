@@ -1,0 +1,38 @@
+from atom.api import ContainerList, List, Value
+from enaml.core.api import Conditional, Looper
+from enaml.widgets.api import  (
+    CheckBox, Container, GroupBox, PushButton, RadioButton, ScrollArea
+                               )
+
+
+
+enamldef RadioButtonList_View(GroupBox):
+    '''
+    A container for a list of RadioButtons which hold a ContainerList of
+    instances of a class which implements .__str__() and .select() methods.
+    To add or remove objects from the list, the entire list must be replaced
+    by a new one in the corresponding Atom model.
+    
+    Attributes
+    ----------
+    model (ContainerList): the items to generate RadioButtons for.
+    selectedIndex (Int): the index of the checked item, if there is one
+    
+    Item methods
+    ------------
+    .__str__(): return the name for the RadioButton
+    .select(): the method to call when the Button is selected by the user
+    
+    '''
+    attr model
+    attr selectedIndex
+    
+    Looper:
+        
+        iterable << [obj for obj in model]
+
+        RadioButton: 
+            text = str(loop_item)
+            clicked:: 
+                loop_item.select()
+            checked = loop_index == selectedIndex

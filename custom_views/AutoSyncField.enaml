@@ -1,0 +1,7 @@
+from enaml.widgets.api import Field
+
+
+
+enamldef AutoSyncField(Field):
+    
+    submit_triggers = ['auto_sync']

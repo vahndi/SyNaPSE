@@ -1,0 +1,153 @@
+# Atom
+from atom.api import Atom, Bool, ContainerList, Dict, List, Unicode, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    Action, CheckBox, ComboBox, Container, DockPane, GroupBox, Field, Form, 
+    Label, MainWindow, Menu, MenuBar, ObjectCombo, PopupView, PushButton, 
+    Window
+                              )
+# Custom Models and Views
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+
+# Models
+from models_views.flowElement import FlowElement
+
+# Preceding Elements
+from LoadDataFrame import LoadDataFrame
+from GetColumns import GetColumns
+
+# Other
+import pandas as pd
+from matplotlib.figure import Figure
+
+
+
+pdPlotArgs = {'area': ['x', 'y'],
+              'bar': ['x', 'y'],
+              'barh': ['x', 'y'],
+              'box': ['by'],
+              'density': [],
+              'hexbin': ['x', 'y', 'C', 'reduce_C_function', 'gridsize'],
+              'hist': ['by', 'bins'],
+              'kde': [],
+              'line': ['x', 'y'],
+              'pie': ['y'],
+              'scatter': ['x', 'y', 's', 'c']}
+
+
+
+class PandasPlot(FlowElement):
+
+    elementName = 'Pandas Plot'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+
+    class ui(Atom):
+        
+        plotKinds = List(str, ['area', 'bar', 'barh', 'box', 'density', 
+                               'hexbin', 'hist', 'kde', 'line', 'pie', 
+                               'scatter'])
+        plotKind = Unicode('scatter')
+    
+        columns = List(str)
+        xColumn = Unicode()
+        yColumn = Unicode()
+        
+        useMultipleYcolumns = Bool(False)
+        canUseMultipleYcolumns = Bool(True)
+        yColumns = Value(Atom)
+
+    
+    def setInputs(self, dataFrame):
+        
+        self._dataFrame = dataFrame
+        cols = sorted(list(dataFrame.columns))
+        self.yCols = CheckBoxList_Model(cols)
+        self.uiModel = PandasPlot.ui(columns = cols,
+                                     yColumns = self.yCols.uiModel)
+
+
+    def getOutputs(self):
+
+        try:
+            
+            if not self.uiModel.useMultipleYcolumns:
+                y = self.uiModel.yColumn
+            else:
+                y = self.yCols.getCheckedItemNames()
+
+            axis = self._dataFrame.plot(kind = self.uiModel.plotKind,
+                                        x = self.uiModel.xColumn,
+                                        y = y)
+            figure = axis.figure              
+            return {'figure': figure}
+            
+        except Exception as e:
+                
+            return {'Exception':{'__class__': e.__class__,
+                                 '__doc__': e.__doc__,
+                                 'message': e.message}}
+
+
+enamldef PandasPlot_View(GroupBox): me:
+
+
+    attr model
+    
+    
+    Form:
+        
+        # Kind of plot
+        Label:
+            text = 'Plot Kind'
+        ObjectCombo:
+            items = model.plotKinds
+            selected := model.plotKind
+        
+        # X Column
+        Label:
+            text = 'X Column'
+        ObjectCombo:
+            items = model.columns
+            selected := model.xColumn
+        
+        # Y Columns
+        Label:
+            text = 'Multiple Y Columns'            
+        CheckBox:
+            checked := model.useMultipleYcolumns
+
+        Conditional:
+            condition << model.useMultipleYcolumns == False            
+            Label:
+                text = 'Y Column'
+            ObjectCombo:
+                items = model.columns
+                selected := model.yColumn
+
+        Conditional:
+            condition << model.useMultipleYcolumns == True
+            Label:
+                text = 'Y Columns'
+            CheckBoxList_View:
+                model = me.model.yColumns
+
+        # Size
+        Label:
+            text = 'Size Type'
+        ComboBox: cbSize:
+            items = ['Value', 'Column']
+
+        Label:
+            text = 'Size'
+            Conditional:
+                condition = cbSize.selected_item == 'Value'
+                Field:
+                    text = 'value'
+            Conditional:
+                condition = cbSize.selected_item == 'Column'
+                Field:
+                    text = 'column'
+                

@@ -1,0 +1,253 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox)
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
+from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+
+# Models
+from models_views.flowElement import FlowElement
+from models_views.elementOutput_View import create_figure
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Preceding elements
+from flow_elements.LoadDataFrame import LoadDataFrame
+from flow_elements.GetColumns import GetColumns
+
+# Other
+from pandas import DataFrame, Series, concat
+from pandasFunctions import splitTrainingTest
+from pandasFunctions import splitCategoricalNumeric
+from pandasFunctions import joinInputsPredictions
+from pandasFunctions import joinInputsTargetsPredictions
+from pandasFunctions import getConfusionMatrix
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from ..metrics.clustering_metrics import ClusteringMetrics as cm
+
+
+
+class KMeans_Model(FlowElement):
+
+    elementName = 'K Means'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+
+    class ui(Atom):
+
+        # inputs_targets_selector
+        inputs_targets_selector = Value(Atom)
+        
+        # number_of_clusters
+        number_of_clusters = Int(8)
+        # max_iterations
+        max_iterations = Int(300)
+        # number_of_initialisations
+        number_of_initialisations = Int(10)
+        # initialisation_method
+        initialisation_method = Str('k-means++')
+        initialisation_method_list = List(str, ['k-means++', 'random'])
+        # precompute_distances
+        precompute_distances = Str('auto')
+        precompute_distances_list = List(str, ['auto', 'always', 'never'])
+        # tolerance
+        tolerance = Float(0.0001)
+        # random_state_seed
+        random_state_seed = Int(1)
+        # verbose
+        verbose = Bool(False)
+        # copy_x
+        copy_x = Bool(True)
+        # cores_selector
+        cores_selector = Value(Atom)
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.inputs_targets_selector = InputsTargetsSelector_Model(
+                                               dataFrame,
+                                               show_shuffle_examples = True,
+                                               show_pct_training = False,
+                                               target_mandatory = False
+                                               )
+        self.cores_selector = CoresSelector_Model()
+        self.uiModel = KMeans_Model.ui(
+            inputs_targets_selector = self.inputs_targets_selector.uiModel,
+            cores_selector = self.cores_selector.uiModel
+            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            input_columns = self.inputs_targets_selector.checked_inputs()
+            target_column = self.inputs_targets_selector.selected_target()
+            number_of_clusters = self.uiModel.number_of_clusters
+            max_iterations = self.uiModel.max_iterations
+            number_of_initialisations = self.uiModel.number_of_initialisations
+            initialisation_method = self.uiModel.initialisation_method
+            precompute_distances = self.uiModel.precompute_distances
+            tolerance = self.uiModel.tolerance
+            random_state_seed = self.uiModel.random_state_seed
+            verbose = self.uiModel.verbose
+            copy_x = self.uiModel.copy_x
+            number_of_cores = self.cores_selector.number_of_cores()
+    
+            # Validate inputs
+            if not self.inputs_targets_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}
+    
+            # Build model
+            kmeans = KMeans(n_clusters = number_of_clusters, 
+                            init = initialisation_method, 
+                            n_init = number_of_initialisations, 
+                            max_iter = max_iterations, 
+                            tol = tolerance, 
+                            precompute_distances = precompute_distances, 
+                            verbose = verbose, 
+                            random_state = random_state_seed, 
+                            copy_x = copy_x, 
+                            n_jobs = number_of_cores)
+    
+            # Get inputs and targets
+            if target_column:                
+                X, y = self.inputs_targets_selector.get_data()
+            else:
+                X = self.inputs_targets_selector.get_data()
+
+            # Train the model using the training sets and make predictions
+            kmeans.fit(X)
+            y_pred = Series(kmeans.labels_, index = X.index, name = 'Cluster')
+            if target_column:
+                df_pred = concat([X, y, y_pred], axis = 1)
+            else:
+                df_pred = concat([X, y_pred], axis = 1)
+            
+            if target_column:
+                conf_mat = getConfusionMatrix(
+                                    DataFrame({'Actual': y, 
+                                               'Predicted': y_pred}),
+                                              'Actual', 'Predicted')
+                conf_mat.columns = ['Cluster %i' % col 
+                                    for col in conf_mat.columns]
+    
+            # Return outputs
+            outputs = {}
+            outputs['Cluster Centers'
+                    ] = DataFrame(
+                            data = kmeans.cluster_centers_,
+                            columns = input_columns,
+                            index = Series(data = [str(i) for i in 
+                                                   range(number_of_clusters)],
+                                           name = 'Cluster Center'))
+            outputs['Attributes'] = {'inertia': kmeans.inertia_}
+            outputs['DataFrame'] = df_pred
+            
+            if target_column:
+                outputs['Confusion Matrix'] = conf_mat
+
+            # Create a figure using PCA reduced data (if num input_columns > 2)
+            points_2d = DataFrame(PCA(n_components = 2).fit_transform(X),
+                                  columns = ['PC1', 'PC2'], index = X.index)
+            if target_column:
+                points_2d = concat([points_2d, y, y_pred], axis = 1)
+            else:
+                points_2d = concat([points_2d, y_pred], axis = 1)
+            points_2d['Cluster'] = 'Cluster ' + points_2d['Cluster'].apply(str)
+            outputs['PCA Clusters'] = create_figure(points_2d)
+
+            outputs['Metrics'] = {}
+            outputs['Metrics']['Unsupervised'] = ( 
+                                        cm.get_unsupervised_metrics(X, y_pred)
+                                                 )
+            if target_column:
+                outputs['Metrics']['Supervised'] = ( 
+                                        cm.get_supervised_metrics(y, y_pred)
+                                                 )
+            return outputs
+        
+        except Exception as e:
+                
+            return self.standard_exception(e)
+
+
+
+enamldef KMeans_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+            
+            InputsTargetsSelector_View:
+                model = me.model.inputs_targets_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Number of Clusters'
+                IntField:
+                    value := model.number_of_clusters
+
+                Label:
+                    text = 'Max Iterations'
+                IntField:
+                    value := model.max_iterations
+
+                Label:
+                    text = 'Number of Initialisations'
+                IntField:
+                    value := model.number_of_initialisations
+
+                Label:
+                    text = 'Initialisation Method'
+                ObjectCombo:
+                    items = model.initialisation_method_list
+                    selected := model.initialisation_method
+
+                Label:
+                    text = 'Precompute Distances'
+                ObjectCombo:
+                    items = model.precompute_distances_list
+                    selected := model.precompute_distances
+
+                Label:
+                    text = 'Tolerance'
+                FloatField:
+                    value := model.tolerance
+
+                Label:
+                    text = 'Random State Seed'
+                IntField:
+                    value := model.random_state_seed
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_x
+
+                CoresSelector_View:
+                    model = me.model.cores_selector

@@ -1,0 +1,338 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox
+    )
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
+from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+
+# Models
+from models_views.flowElement import FlowElement
+
+# Preceding elements
+from flow_elements.LoadDataFrame import LoadDataFrame
+from flow_elements.GetColumns import GetColumns
+
+# Other
+from sklearn.ensemble import RandomForestClassifier
+from numpy import int64, float64
+from pandas import Series, DataFrame
+from pandasFunctions import getColumnNamesByDType
+from pandasFunctions import splitTrainingTest
+from ..metrics.classification_metrics import ClassificationMetrics as CM
+
+
+
+class RandomForestClassifier_Model(FlowElement):
+
+    elementName = 'Random Forest Classifier'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+
+    class ui(Atom):
+
+        # inputs_targets_selector
+        inputs_targets_selector = Value(Atom)
+        
+        # number of trees
+        number_of_trees = Int(10)
+        # criterion
+        criterion = Str('gini')
+        criterion_list = List(str, ['gini', 'entropy'])
+        # max_features_type
+        max_features_type = Str('sqrt')
+        max_features_type_list = List(str, ['sqrt', 'log2', 'all', 
+                                            'int', 'percentage'])
+        # max_features_int
+        max_features_int = Int(10)
+        # max_features_percentage
+        max_features_percentage = Int(50)
+        max_features_percentage_min = Int(1)
+        max_features_percentage_max = Int(100)
+        # max_leaf_nodes_type
+        max_leaf_nodes_type = Str('unlimited')
+        max_leaf_nodes_type_list = List(str, ['unlimited', 'int'])
+        # max_leaf_nodes
+        max_leaf_nodes = Int(10)
+        # max_depth_type
+        max_depth_type = Str('auto')
+        max_depth_type_list = List(str, ['auto', 'int'])
+        # max_depth_int
+        max_depth_int = Int(10)
+        # min_split_samples
+        min_split_samples = Int(2)
+        # min_leaf_samples
+        min_leaf_samples = Int(1)
+        # min_leaf_weighted_fraction
+        min_leaf_weighted_fraction = Float(0)
+        # bootstrap
+        bootstrap = Bool(True)
+        # out_of_bag_scoring
+        out_of_bag_scoring = Bool(False)
+        # random_state_seed
+        random_state_seed = Int(1)
+        # verbose
+        verbose = Bool(False)
+        # warm_start
+        warm_start = Bool(False)
+        # class_weight
+        class_weight = Str('equal')
+        class_weight_list = List(str, ['equal', 'balanced', 
+                                       'balanced_subsample'])
+        # cores_selector
+        cores_selector = Value(Atom)
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.selector = InputsTargetsSelector_Model(
+                                dataFrame,
+                                input_dtypes = [float64, int64, str, object]
+                                )
+        self.cores_selector = CoresSelector_Model()
+        self.uiModel = RandomForestClassifier_Model.ui(
+                            inputs_targets_selector = self.selector.uiModel,
+                            cores_selector = self.cores_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            input_columns = self.selector.checked_inputs()
+            target_column = self.selector.selected_target()
+            number_of_trees = self.uiModel.number_of_trees
+            criterion = self.uiModel.criterion
+            max_features_type = self.uiModel.max_features_type
+            max_features = {'sqrt': 'sqrt',
+                            'log2': 'log2',
+                            'all': None,
+                            'int' : self.uiModel.max_features_int,
+                            'percentage':self.uiModel.max_features_percentage
+                            }[max_features_type]
+            max_leaf_nodes_type = self.uiModel.max_leaf_nodes_type
+            max_leaf_nodes = None
+            if max_leaf_nodes_type == 'int':
+                max_leaf_nodes = self.uiModel.max_leaf_nodes
+            if max_leaf_nodes_type == 'unlimited':
+                max_depth_type = self.uiModel.max_depth_type
+            max_depth = None
+            if max_depth_type == 'int':
+                max_depth = self.uiModel.max_depth_int
+            min_split_samples = self.uiModel.min_split_samples
+            min_leaf_samples = self.uiModel.min_leaf_samples
+            min_leaf_weighted_fraction = self.uiModel.min_leaf_weighted_fraction
+            bootstrap = self.uiModel.bootstrap
+            out_of_bag_scoring = self.uiModel.out_of_bag_scoring
+            random_state_seed = self.uiModel.random_state_seed
+            verbose = self.uiModel.verbose
+            warm_start = self.uiModel.warm_start
+            class_weight = self.uiModel.class_weight
+            number_of_cores = self.cores_selector.number_of_cores()
+    
+            # Validate inputs
+            if not self.selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}
+                
+            # Build model
+            ranfor = RandomForestClassifier(
+                        n_estimators = number_of_trees,
+                        criterion = criterion,
+                        max_features = max_features,
+                        min_samples_split = min_split_samples,
+                        min_samples_leaf = min_leaf_samples,
+                        min_weight_fraction_leaf = min_leaf_weighted_fraction,
+                        bootstrap = bootstrap,
+                        oob_score = out_of_bag_scoring,
+                        n_jobs = number_of_cores,
+                        random_state = random_state_seed,
+                        verbose = verbose,
+                        warm_start = warm_start)
+            
+            # Split into training and test set        
+            X_train, y_train, X_test, y_test = \
+                self.selector.get_training_test_data()
+    
+            # Train the model using the training set and make predictions
+            ranfor.fit(X_train, y_train)
+            y_pred_test = Series(ranfor.predict(X_test), 
+                                 index = X_test.index)
+            y_pred_proba = DataFrame(
+                                 ranfor.predict_proba(X_test),
+                                 index = X_test.index,
+                                 columns = self.selector.get_unique_targets())
+
+            # Create outputs
+            attrs = {'estimators': ranfor.estimators_,
+                     'classes': ranfor.classes_,
+                     '# classes': ranfor.n_classes_,
+                     '# features': ranfor.n_features_,
+                     '# outputs': ranfor.n_outputs_,
+                     'feature importances': Series(ranfor.feature_importances_,
+                                                   name = 'Feature Importance',
+                                                   index = input_columns)}
+            
+            if out_of_bag_scoring:
+                attrs['out of bag score'] = ranfor.oob_score_
+                attrs['out of bag decision function'] = \
+                    ranfor.oob_decision_function_
+            
+            outputs = {'Attributes': attrs}
+            outputs['Metrics'] = CM.get_metrics(
+                    y_true = y_test, 
+                    y_pred = y_pred_test,
+                    y_proba = y_pred_proba,
+                    classification_type = self.selector.get_problem_type()
+                    )
+    
+            return outputs
+            
+        except Exception as e:
+                
+            return {'Exception': {'__class__': e.__class__,
+                                  '__doc__': e.__doc__,
+                                  'message': e.message}}
+
+
+
+enamldef RandomForestClassifier_View(GroupBox): me:
+
+    attr model
+    
+    Notebook:
+        
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model = me.model.inputs_targets_selector
+
+        Page:
+            
+            title = 'Model'
+            closable = False            
+            
+            Form:
+                
+                Label:
+                    text = 'Number of trees'
+                IntField:
+                    value := model.number_of_trees
+        
+                Label:
+                    text = 'Criterion'
+                ObjectCombo:
+                    items = model.criterion_list
+                    selected := model.criterion
+        
+                Label:
+                    text = 'Max Features Type'
+                ObjectCombo:
+                    items = model.max_features_type_list
+                    selected := model.max_features_type
+        
+                Conditional:
+                    condition << model.max_features_type == 'int'
+                    Label:
+                        text = 'Max Features Int'
+                    IntField:
+                        value := model.max_features_int
+            
+        
+                Label:
+                    text = 'Max Features Percentage'
+                SpinBox:
+                    minimum = model.max_features_percentage_min
+                    maximum = model.max_features_percentage_max
+                    value := model.max_features_percentage
+                    
+                Label:
+                    text = 'Max Leaf Nodes Type'
+                ObjectCombo:
+                    items = model.max_leaf_nodes_type_list
+                    selected := model.max_leaf_nodes_type
+        
+                Conditional:
+                    condition << model.max_leaf_nodes_type == 'int'
+                    Label:
+                        text = 'Max Leaf Nodes'
+                    IntField:
+                        value := model.max_leaf_nodes
+        
+                Conditional:
+                    condition << model.max_leaf_nodes_type == 'unlimited'
+                    Label:
+                        text = 'Max Depth Type'
+                    ObjectCombo:
+                        items = model.max_depth_type_list
+                        selected := model.max_depth_type
+            
+        
+                Conditional:
+                    condition << model.max_depth_type == 'int'
+                    Label:
+                        text = 'Max Depth Int'
+                    IntField:
+                        value := model.max_depth_int
+            
+        
+                Label:
+                    text = 'Min Split Samples'
+                IntField:
+                    value := model.min_split_samples
+        
+                Label:
+                    text = 'Min Leaf Samples'
+                IntField:
+                    value := model.min_leaf_samples
+        
+                Label:
+                    text = 'Min Leaf Weighted Fraction'
+                FloatField:
+                    value := model.min_leaf_weighted_fraction
+        
+                Label:
+                    text = 'Bootstrap'
+                CheckBox:
+                    checked := model.bootstrap
+        
+                Label:
+                    text = 'Out of Bag Scoring'
+                CheckBox:
+                    checked := model.out_of_bag_scoring
+        
+                Label:
+                    text = 'Random State Seed'
+                IntField:
+                    value := model.random_state_seed
+        
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+        
+                Label:
+                    text = 'Warm Start'
+                CheckBox:
+                    checked := model.warm_start
+        
+                Label:
+                    text = 'Class Weight'
+                ObjectCombo:
+                    items = model.class_weight_list
+                    selected := model.class_weight
+        
+                CoresSelector_View:
+                    model = me.model.cores_selector

@@ -1,0 +1,42 @@
+# Enaml
+from enaml.widgets.api import MainWindow
+
+# Subviews
+from menu_View import Menu_View
+from flowList_View import FlowList_View
+from elementConfig_View import ElementConfig_View
+from elementOutput_View import ElementOutput_View
+
+# Models
+from models import Main_Model
+
+
+
+enamldef Main_View(MainWindow):
+
+    attr model = Main_Model()
+
+
+    title = 'SyNaPSE'
+
+
+    Menu_View:
+
+        model << parent.model
+
+
+    FlowList_View:
+        
+        model << parent.model.flowList
+        mainModel << parent.model
+
+ 
+    ElementConfig_View:
+
+        model := parent.model.flowList.uiModel.selectedElement
+
+
+    ElementOutput_View:
+        
+        model << parent.model.flowList.uiModel.selectedElementOutputs
+        flowList << parent.model.flowList
