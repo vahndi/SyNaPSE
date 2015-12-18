@@ -1,7 +1,7 @@
 # Atom
 from atom.api import Atom, Bool
 # Enaml
-from enaml.widgets.api import CheckBox, Container, Label
+from enaml.widgets.api import CheckBox, Container, Form, Label
 
 
 class BootstrapOOB_Model(object):
@@ -31,7 +31,7 @@ class BootstrapOOB_Model(object):
 
 
 
-enamldef BootstrapOOB_View(Container)
+enamldef BootstrapOOB_View(Container):
 
     attr model
 

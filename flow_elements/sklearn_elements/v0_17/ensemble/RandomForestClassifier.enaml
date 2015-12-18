@@ -12,8 +12,9 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
 from custom_views.sklearn_views.CoresSelector import CoresSelector_View
-from .subviews.Leaves import Leaves_Model
-from .subviews.Leaves import Leaves_View
+from .subviews.Leaves import Leaves_Model, Leaves_View
+from .subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
+
 
 # Models
 from models_views.flowElement import FlowElement
@@ -57,15 +58,11 @@ class RandomForestClassifier_Model(FlowElement):
         # max_features_percentage
         max_features_percentage = Int(50)
         max_features_percentage_min = Int(1)
-        max_features_percentage_max = Int(100)
-        
+        max_features_percentage_max = Int(100)        
         # leaves
         leaves = Value(Atom)
-
-        # bootstrap
-        bootstrap = Bool(True)
-        # out_of_bag_scoring
-        out_of_bag_scoring = Bool(False)
+        # bootstrapOOB
+        bootstrapOOB = Value(Atom)
         # random_state_seed
         random_state_seed = Int(1)
         # verbose
@@ -89,10 +86,12 @@ class RandomForestClassifier_Model(FlowElement):
                                 )
         self.cores_selector = CoresSelector_Model()
         self.leaves = Leaves_Model()
+        self.bootstrapOOB = BootstrapOOB_Model()
         self.uiModel = RandomForestClassifier_Model.ui(
                             inputs_targets_selector = self.selector.uiModel,
                             cores_selector = self.cores_selector.uiModel,
-                            leaves = self.leaves.uiModel
+                            leaves = self.leaves.uiModel,
+                            bootstrapOOB = self.bootstrapOOB.uiModel
                             )
 
 
@@ -112,16 +111,15 @@ class RandomForestClassifier_Model(FlowElement):
                             'int' : self.uiModel.max_features_int,
                             'percentage':self.uiModel.max_features_percentage
                             }[max_features_type]
-            
-            leaves = self.leaves
-            max_leaf_nodes = leaves.max_leaf_nodes()
-            max_depth = leaves.max_depth()
-            min_split_samples = leaves.min_split_samples()
-            min_leaf_samples = leaves.min_leaf_samples()
-            min_leaf_weighted_fraction = leaves.min_leaf_weighted_fraction()
-            
-            bootstrap = self.uiModel.bootstrap
-            out_of_bag_scoring = self.uiModel.out_of_bag_scoring
+                            
+            max_leaf_nodes = self.leaves.max_leaf_nodes()
+            max_depth = self.leaves.max_depth()
+            min_split_samples = self.leaves.min_split_samples()
+            min_leaf_samples = self.leaves.min_leaf_samples()
+            min_leaf_weighted_fraction = \
+                self.leaves.min_leaf_weighted_fraction()
+            bootstrap = self.bootstrapOOB.bootstrap()
+            out_of_bag_scoring = self.bootstrapOOB.out_of_bag_scoring()
             random_state_seed = self.uiModel.random_state_seed
             verbose = self.uiModel.verbose
             warm_start = self.uiModel.warm_start
@@ -209,7 +207,7 @@ enamldef RandomForestClassifier_View(GroupBox): me:
 
         Page:
             
-            title = 'Model'
+            title = 'General'
             closable = False            
             
             Form:
@@ -244,16 +242,6 @@ enamldef RandomForestClassifier_View(GroupBox): me:
                     minimum = model.max_features_percentage_min
                     maximum = model.max_features_percentage_max
                     value := model.max_features_percentage
-
-                Label:
-                    text = 'Bootstrap'
-                CheckBox:
-                    checked := model.bootstrap
-        
-                Label:
-                    text = 'Out of Bag Scoring'
-                CheckBox:
-                    checked := model.out_of_bag_scoring
         
                 Label:
                     text = 'Random State Seed'
@@ -278,7 +266,15 @@ enamldef RandomForestClassifier_View(GroupBox): me:
         
                 CoresSelector_View:
                     model = me.model.cores_selector
-        
+
+        Page:
+            
+            title = 'Bootstrapping'
+            closable = False
+            
+            BootstrapOOB_View:
+                model = me.model.bootstrapOOB            
+
         Page:
             
             title = 'Leaves'
