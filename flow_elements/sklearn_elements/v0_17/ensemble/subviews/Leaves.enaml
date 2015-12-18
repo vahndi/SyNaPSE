@@ -36,6 +36,7 @@ class Leaves_Model(object):
     def __init__(self, 
                  max_depth_type = 'auto',
                  max_depth_int = 10,
+                 max_leaf_nodes_type = 'unlimited',
                  max_leaf_nodes = 10,
                  min_leaf_samples = 1,
                  min_split_samples = 2,
@@ -44,6 +45,7 @@ class Leaves_Model(object):
         self.uiModel = Leaves_Model.ui(
                     max_depth_type = max_depth_type,
                     max_depth_int = max_depth_int,
+                    max_leaf_nodes_type = max_leaf_nodes_type,
                     max_leaf_nodes = max_leaf_nodes,
                     min_leaf_samples = min_leaf_samples,
                     min_split_samples = min_split_samples,

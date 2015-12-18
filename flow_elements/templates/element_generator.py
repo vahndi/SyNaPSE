@@ -6,6 +6,7 @@ from copy import deepcopy
 import seaborn as sns
 
 
+
 def generate_element(spreadsheet_name, element_name):
 
     # TODO: add element path and filename (create one for each library)
@@ -18,21 +19,23 @@ def generate_element(spreadsheet_name, element_name):
     print getEnamlCode(element_name, df)
 
 
-def inspect_element_args(spreadsheet_name, sheet_name):
+def inspect_element_args(pickle_name, module_name = ''):
     '''
     Find the number of occurences of each named argument in the list of models
     Sheet Columns should be ['Model', 'Args']
     '''
-    df = pd.read_excel(spreadsheet_name.rstrip('.xls') + '.xls', 
-                       sheetname = sheet_name)
-    
+    pkl_name = pickle_name;
+    if not pkl_name.endswith('.pkl'):
+        pkl_name += '.pkl'
+    df = pd.read_pickle(pkl_name)
+    if module_name:
+        df = df[df.module == module_name]
+    print len(df)
     # get all the arguments
     argCount = {}
-    for ix in df.index:
-        row = df.iloc[ix]
-        argsvals = [av.encode('utf8').lstrip('\xc2\xa0') 
-                    for av in row['Args'].split(',')]
-        args_vals = [av.split('=') for av in argsvals]
+    for loc in df.index:
+        row = df.loc[loc]
+        args_vals = row.args_vals
         for arg_val in args_vals:
             if arg_val[0] in argCount.keys():
                 argCount[arg_val[0]] += 1
@@ -44,15 +47,13 @@ def inspect_element_args(spreadsheet_name, sheet_name):
 
     
     # create a new dataframe showing which arguments are in which model
-    model_names = list(df['Model'].unique())
+    model_names = list(df['class_name'].unique())
     arg_names = argCount.keys()
     models_args_dict = {}
     for model_name in model_names:
         model_dict = {}
-        args_vals = df[df['Model'] == model_name].iloc[0]['Args']
-        lst_args_vals = [av.split('=') 
-                         for av in args_vals.encode('utf8').split(',')]
-        model_args = [av[0].strip().lstrip('\xc2\xa0') for av in lst_args_vals]
+        args_vals = df[df.class_name == model_name].iloc[0].args_vals
+        model_args = [av[0] for av in args_vals]
         for arg_name in arg_names:
             if arg_name in model_args:
                 model_dict[arg_name] = True
@@ -77,6 +78,7 @@ def inspect_element_args(spreadsheet_name, sheet_name):
     
     at_set = set(always_together_pairs)
     at_list = sorted(list(at_set))
+    
     # merge tuples
     merges_made = True
     while merges_made:
@@ -96,14 +98,18 @@ def inspect_element_args(spreadsheet_name, sheet_name):
                 new_list.append(at)
                 
         at_list = new_list
-
-    for at in at_list:
-        print at
     
+    # count how many times each set of arguments appears
+    at_num_list = sorted([(argCount[a[0]], a) for a in at_list], reverse = True)
+    for at in at_num_list:
+        print at
+
+
 
 if __name__ == '__main__':
     
 #    generate_element(spreadsheet_name = 'sklearn.linear_model',
 #                     element_name = 'LogisticRegression')
-    inspect_element_args(spreadsheet_name = 'sklearn.ensemble',
-                         sheet_name = 'All Models')
+
+    inspect_element_args(pickle_name = 'sklearn_scrape',
+                         module_name = 'sklearn.linear_model')

@@ -10,11 +10,10 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
-from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+from ..shared.CoresSelector import CoresSelector_Model
+from ..shared.CoresSelector import CoresSelector_View
 from .subviews.Leaves import Leaves_Model, Leaves_View
 from .subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
-
 
 # Models
 from models_views.flowElement import FlowElement
@@ -178,7 +177,8 @@ class RandomForestClassifier_Model(FlowElement):
                     y_true = y_test, 
                     y_pred = y_pred_test,
                     y_proba = y_pred_proba,
-                    classification_type = self.selector.get_problem_type()
+                    classification_type = self.selector.get_problem_type(),
+                    classes = ranfor.classes_
                     )
     
             return outputs

@@ -200,7 +200,6 @@ class InputsTargetsSelector_Model(object):
         N.B. the 'multilabel' case is not yet implemented.
         '''
         target_classes = list(self.get_unique_targets())
-        print 'target_classes:', target_classes
         if len(target_classes) == 2:
             return 'binary'
         elif len(target_classes) > 2:

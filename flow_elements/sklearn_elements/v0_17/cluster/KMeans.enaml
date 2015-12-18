@@ -7,8 +7,8 @@ from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox)
 from enaml.stdlib.fields import FloatField, IntField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from custom_views.sklearn_views.CoresSelector import CoresSelector_Model
-from custom_views.sklearn_views.CoresSelector import CoresSelector_View
+from ..shared.CoresSelector import CoresSelector_Model
+from ..shared.CoresSelector import CoresSelector_View
 
 # Models
 from models_views.flowElement import FlowElement

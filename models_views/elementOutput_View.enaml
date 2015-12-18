@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
 import pandas as pd
 from pandas import DataFrame, Series
-from numpy import ndarray, int64, float64
+from numpy import ndarray, int32, int64, float64
 
 from pandasFunctions import numNumericColumns
 from pandasFunctions import splitCategoricalNumeric
@@ -58,11 +58,13 @@ def create_figure(output_model):
         
         # all columns are dtype == int -> confusion matrix
         if (len(set(output_model.dtypes)) == 1 and 
-            output_model.dtypes[0] == int64):
+            output_model.dtypes[0] in (int32, int64)):
             sns.heatmap(output_model,
                         annot = True, square = True,
                         fmt = 'd', ax = ax)
-            ax.set_xlim([0.5, len(output_model.columns) + 0.5])
+            ax.set_xlim([0, len(output_model.columns)])
+            ax.set_xlabel('Predicted')
+            ax.set_ylabel('Actual')
             
         elif nnc == 0 and ncc == 3:
             # Categorised confusion matrices (by category in 3rd column)
