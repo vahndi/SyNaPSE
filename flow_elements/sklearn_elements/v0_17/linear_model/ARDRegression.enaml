@@ -20,6 +20,7 @@ from numpy import float64, int64
 from pandasFunctions import joinInputsTargetsPredictions
 from ..metrics.regression_metrics import RegressionMetrics as RM
 
+from pandas import Series, DataFrame
 
 
 class ARDRegression_Model(FlowElement):
@@ -129,13 +130,19 @@ class ARDRegression_Model(FlowElement):
 
             # Return outputs
             attributes = {'coefficients': 
-                              ardreg.coef_,
+                              Series(index = input_columns,
+                                     data =  ardreg.coef_,
+                                     name = 'coefficients'),
                           'alpha':
                               ardreg.alpha_,
                           'lambda':
-                              ardreg.lambda_,
+                              Series(index = input_columns,
+                                     data =  ardreg.lambda_,
+                                     name = 'lambda'),
                           'sigma':
-                              ardreg.sigma_}
+                              DataFrame(ardreg.sigma_,
+                                        index = input_columns,
+                                        columns = input_columns)}
             if compute_score:
                 attributes['scores'] = ardreg.scores_
             
@@ -151,9 +158,7 @@ class ARDRegression_Model(FlowElement):
 
         except Exception as e:
 
-            return {'Exception': {'__class__': e.__class__,
-                                  '__doc__': e.__doc__,
-                                  'message': e.message}}
+            return self.standard_exception(e)
 
         
 
