@@ -75,10 +75,20 @@ def get_enaml_Spinbox(widget):
     return enamlCode
 
 
+def get_enaml_InputsTargetsSelector(widget):
+    
+    enamlCode = '%sInputsTargetsSelector_View:\n' % widget.indent1()
+    enamlCode += '%smodel := me.model.%s\n' % (widget.indent2(), 
+                                               widget.w_name)
+    
+    return enamlCode
+
+
 getEnamlfunc = {'AutoSyncField': get_enaml_AutoSyncField,
                 'CheckBox': get_enaml_CheckBox,
-                'CheckBoxList_View': get_enaml_CheckBoxList_View,
+                'CheckBoxList': get_enaml_CheckBoxList_View,
                 'FloatField': get_enaml_FloatField,
+                'InputsTargetsSelector': get_enaml_InputsTargetsSelector,
                 'IntField': get_enaml_IntField,
                 'ObjectCombo': get_enaml_ObjectCombo,
                 'SpinBox': get_enaml_Spinbox}  

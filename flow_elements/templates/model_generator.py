@@ -3,7 +3,7 @@ from atom_generator import getAtomCode
 
 
 
-def setInputCode_CheckBoxList_View(widget):
+def setInputCode_CheckBoxList(widget):
     
     cbl_items = '???'
     if isinstance(widget.w_value, (str, unicode)):
@@ -13,6 +13,16 @@ def setInputCode_CheckBoxList_View(widget):
             spc(8), widget.w_name, cbl_items)
 
 
+def setInputCode_InputsTargetsSelector(widget):
+    
+    args = ''
+    if isinstance(widget.w_args, (str, unicode)):
+        args = str(widget.w_args)
+    
+    return '%sself.%s = InputsTargetsSelector_Model(%s)\n' \
+           % (spc(8), widget.w_name, args)
+    
+
 def getOutputCode(widget):
 
     outputCode = ''
@@ -21,9 +31,12 @@ def getOutputCode(widget):
     if isinstance(widget.v_condition, (str, unicode)):
         outputCode = '%sif %s:\n%s' % (spc(8), widget.v_condition, spc(4))
     
-    if widget.w_type == 'CheckBoxList_View':
+    if widget.w_type == 'CheckBoxList':
         outputCode += '%s%s = self.%s.getCheckedItemNames()\n' \
                      % (spc(8), widget.w_name, widget.w_name)
+    elif widget.w_type == 'InputsTargetsSelector':
+        outputCode += '%sinput_columns = self.%s.checked_inputs()\n' % (spc(8), widget.w_name)
+        outputCode += '%starget_column = self.%s.selected_target()\n' % (spc(8), widget.w_name)
     else:
         outputCode += '%s%s = self.uiModel.%s\n' \
                      % (spc(8), widget.w_name, widget.w_name)
@@ -42,14 +55,16 @@ def getModelCode(element_name, dataframe):
 
     modelCode += getAtomCode(dataframe)
     
-    # Set inputs
+    # setInputs code
     modelCode += '\n\n%sdef setInputs(self, ???):\n\n' % spc(4)
     modelCode += '%sself._??? = ???\n' % spc(8)
     
     # Initialise checkboxlist views
     for widge in widgets:  
-        if widge.w_type == 'CheckBoxList_View':
-            modelCode += setInputCode_CheckBoxList_View(widge)
+        if widge.w_type == 'CheckBoxList':
+            modelCode += setInputCode_CheckBoxList(widge)
+        elif widge.w_type == 'InputsTargetsSelector':
+            modelCode += setInputCode_InputsTargetsSelector(widge)
             
     # Create uiModel
     modelCode += '%sself.uiModel = %s_Model.ui(' % (spc(8), element_name)
@@ -58,9 +73,9 @@ def getModelCode(element_name, dataframe):
         if widge.w_type == 'ObjectCombo':            
             if not(isinstance(widge.w_values, (str, unicode))):
                 uiArgs.append('%s_list = [???]' % widge.w_name)
-        elif widge.w_type == 'CheckBoxList_View':
+        elif widge.w_type in ('CheckBoxList', 'InputsTargetsSelector'):
             uiArgs.append('%s = self.%s.uiModel' % (widge.w_name, 
-                                                    widge.w_name))            
+                                                    widge.w_name))
     if uiArgs:
         modelCode += ', '.join(uiArgs)                
     modelCode += ')\n'

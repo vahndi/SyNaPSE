@@ -150,7 +150,7 @@ class KMeans_Model(FlowElement):
                                                    range(number_of_clusters)],
                                            name = 'Cluster Center'))
             outputs['Attributes'] = {'inertia': kmeans.inertia_}
-            outputs['DataFrame'] = df_pred
+            outputs['dataFrame'] = df_pred
             
             if target_column:
                 outputs['Confusion Matrix'] = conf_mat

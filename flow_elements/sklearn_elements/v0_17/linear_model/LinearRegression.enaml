@@ -22,7 +22,7 @@ from pandas import Series, DataFrame, concat
 from pandasFunctions import splitTrainingTest
 from pandasFunctions import splitCategoricalNumeric
 from pandasFunctions import joinInputsTargetsPredictions
-from ..metrics.regression_metrics import RegressionMetrics
+from ..metrics.regression_metrics import RegressionMetrics as RM
 
 
 
@@ -43,18 +43,19 @@ class LinearRegression_Model(FlowElement):
         
         self._dataFrame = dataFrame
         self.inputs_targets_selector = InputsTargetsSelector_Model(
-            dataFrame,
-            target_dtypes = [float64, int64])
+                                            dataFrame,
+                                            target_dtypes = [float64, int64]
+                                            )
         self.uiModel = LinearRegression_Model.ui(
             inputs_targets_selector = self.inputs_targets_selector.uiModel
-            )    
-    
-    
+            )
+
+
     def getOutputs(self):
         
         try:
                 
-            # Split into training and test set        
+            # Assign local variables 
             input_columns = self.inputs_targets_selector.checked_inputs()
             target_column = self.inputs_targets_selector.selected_target()
             
@@ -81,18 +82,19 @@ class LinearRegression_Model(FlowElement):
                                            train_predictions = y_pred_train,
                                            test_inputs = X_test, 
                                            test_targets = y_test, 
-                                           test_predictions = y_pred_test)
+                                           test_predictions = y_pred_test
+                                           )
 
-            # Return outputs            
+            # Return outputs
             return {'Attributes': {'coefficients': 
-                                            Series(index = input_columns,
-                                                   data =  linreg.coef_,
-                                                   name = 'coefficients'),
+                                        Series(index = input_columns,
+                                               data =  linreg.coef_,
+                                               name = 'coefficients'),
                                     'intercept':
-                                            linreg.intercept_},
-                    'Metrics': RegressionMetrics.get_metrics(y_test, 
-                                                             y_pred_test),
-                    'DataFrame': df_pred,
+                                        linreg.intercept_},
+                    'Metrics': RM.get_metrics(y_test, 
+                                              y_pred_test),
+                    'dataFrame': df_pred,
                     'Target vs. Predicted':
                         df_pred[['Target ' + target_column, 
                                  'Predicted ' + target_column, 
@@ -103,9 +105,9 @@ class LinearRegression_Model(FlowElement):
             return {'Exception': {'__class__': e.__class__,
                                   '__doc__': e.__doc__,
                                   'message': e.message}}
- 
 
-    
+
+
 enamldef LinearRegression_View(GroupBox): me:
 
     attr model

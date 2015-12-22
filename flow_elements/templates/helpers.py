@@ -41,10 +41,12 @@ class widget(object):
                       widget_row['Widget Value'],
                       widget_row['Widget Values'],
                       widget_row['Visibility Condition'],
-                      widget_row['Widget Page'])
+                      widget_row['Widget Page'],
+                      widget_row['Widget Args'])
 
     
-    def __init__(self, w_name, w_type, w_value, w_values, v_condition, w_page):
+    def __init__(self, w_name, w_type, w_value, w_values, v_condition, w_page,
+                 w_args):
         
         self.w_name = w_name
         self.w_type = w_type
@@ -52,6 +54,7 @@ class widget(object):
         self.w_values = w_values
         self.v_condition = v_condition
         self.w_page = w_page
+        self.w_args = w_args
         
         
     def get_min_value(self):

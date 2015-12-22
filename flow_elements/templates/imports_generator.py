@@ -2,19 +2,21 @@ from helpers import spc
 
 
 
-custom_widgets = ('CheckBoxList_View',
-                  'RadioButtonList_View')
+custom_widgets = ('CheckBoxList',
+                  'RadioButtonList',
+                  'InputsTargetsSelector')
                   
 fields_widgets = ('FloatField', 
                   'IntField')
 
 widgets_atoms = {'AutoSyncField': ['Str'],
                  'CheckBox': ['Bool'],
-                 'CheckBoxList_View':['Atom', 'Value'],
-                 'IntField': ['Int'],
+                 'CheckBoxList':['Atom', 'Value'],
                  'FloatField': ['Float'],
+                 'InputsTargetsSelector': ['Atom', 'Value'],
+                 'IntField': ['Int'],
                  'ObjectCombo': ['List', 'Str'],                 
-                 'RadioButtonList_View': ['ContainerList', 'Int', 'Value'],
+                 'RadioButtonList': ['ContainerList', 'Int', 'Value'],
                  'SpinBox': ['Int', 'Value']} 
 
 
@@ -34,7 +36,8 @@ def getImportsCode(element_name, dataframe):
 
     # Enaml    
     # -----
-    standard_widgets = ', '.join(sorted(['Form', 'GroupBox', 'Label'] + 
+    standard_widgets = ', '.join(sorted(['Form', 'GroupBox', 'Label', 
+                                         'Notebook', 'Page'] + 
                                         [e for e in widget_types 
                                          if e not in custom_widgets
                                          and e not in fields_widgets]))    
@@ -53,9 +56,8 @@ def getImportsCode(element_name, dataframe):
     # custom
     reqd_custom_widgets = set(widget_types).intersection(custom_widgets)
     for w in reqd_custom_widgets:
-        w_root = w[: -5]
         importsCode += 'from custom_views.%s import %s_Model, %s_View\n' \
-                       % (w_root, w_root, w_root)
+                       % (w, w, w)
     
     # Models
     importsCode += '\n# Models\n'

@@ -14,7 +14,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
     from flow_elements.sklearn_elements.v0_17.cluster.KMeans import KMeans_Model
     from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
-
+    from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import ARDRegression_Model
 
 
 class Main_Model(object):
@@ -29,7 +29,8 @@ class Main_Model(object):
                      LinearRegression_Model,
                      LogisticRegression_Model,
                      KMeans_Model,
-                     RandomForestClassifier_Model]
+                     RandomForestClassifier_Model,
+                     ARDRegression_Model]
 
     
     def __init__(self):
@@ -151,7 +152,7 @@ class FlowElement(object):
 
     def setInputs(self, inputs_dict):
         
-        self._model.setInputs(**inputs_dict)
+        self._model.setInputs(** inputs_dict)
         
         
     def getOutputs(self):
@@ -214,8 +215,7 @@ class FlowList(object):
             if self.numElements() > 0:
 
                 try:
-                    # Map outputs of the previous element to the inputs of
-                    # this element.
+                    # Map outputs of previous element to inputs of this element
                     inputArgNames = newElement.getModelArgNames()
                     prevOutputs = self.uiModel.elements[-1].getOutputs()
                     # TODO: write a function to replace prevOutputs[a] in the 
@@ -223,11 +223,16 @@ class FlowList(object):
                     # case the required argument is nested below the top level 
                     # of the outputs
                     inputArgsDict = {a: prevOutputs[a] for a in inputArgNames}
-                    newElement.setInputs(inputArgsDict)             
-                except Exception as e:                    
+                    newElement.setInputs(inputArgsDict)  
+                    
+                except Exception as e:
+                    
                     print 'Error adding new element'
-                    print e.__doc__
-                    print e.message
+                    print '__class__:', str(e.__class__)
+                    print '__doc__:', e.__doc__
+                    print 'message:', e.message
+                    print 'args:', e.args
+                    
                     return
             
             self._elements.append(newElement)

@@ -1,0 +1,240 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from models_views.flowElement import FlowElement
+from sklearn.linear_model import ARDRegression
+
+# Preceding elements
+from flow_elements.LoadDataFrame import LoadDataFrame
+from flow_elements.GetColumns import GetColumns
+
+# Other
+from numpy import float64, int64
+from pandasFunctions import joinInputsTargetsPredictions
+from ..metrics.regression_metrics import RegressionMetrics as RM
+
+
+
+class ARDRegression_Model(FlowElement):
+
+    elementName = 'A R D Regression'
+    precedingElements = [LoadDataFrame, GetColumns]
+
+
+    class ui(Atom):
+
+        # input_selector
+        input_selector = Value(Atom)
+        # n_iter
+        n_iter = Int(300)
+        # tol
+        tol = Float(0.001)
+        # alpha_1
+        alpha_1 = Float(1e-06)
+        # alpha_2
+        alpha_2 = Float(1e-06)
+        # lambda_1
+        lambda_1 = Float(1e-06)
+        # lambda_2
+        lambda_2 = Float(1e-06)
+        # compute_score
+        compute_score = Bool(False)
+        # threshold_lambda
+        threshold_lambda = Float(10000.0)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # normalize
+        normalize = Bool(False)
+        # copy_X
+        copy_X = Bool(True)
+        # verbose
+        verbose = Bool(False)
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.input_selector = InputsTargetsSelector_Model(
+                                            dataFrame, 
+                                            target_dtypes = [float64, int64]
+                                            )
+        self.uiModel = ARDRegression_Model.ui(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try:
+            
+            # Assign local variables
+            input_columns = self.input_selector.checked_inputs()
+            target_column = self.input_selector.selected_target()
+            n_iter = self.uiModel.n_iter
+            tol = self.uiModel.tol
+            alpha_1 = self.uiModel.alpha_1
+            alpha_2 = self.uiModel.alpha_2
+            lambda_1 = self.uiModel.lambda_1
+            lambda_2 = self.uiModel.lambda_2
+            compute_score = self.uiModel.compute_score
+            threshold_lambda = self.uiModel.threshold_lambda
+            fit_intercept = self.uiModel.fit_intercept
+            normalize = self.uiModel.normalize
+            copy_X = self.uiModel.copy_X
+            verbose = self.uiModel.verbose
+            
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+    
+            # Create ARD Regression model
+            ardreg = ARDRegression(n_iter = n_iter, 
+                                   tol = tol, 
+                                   alpha_1 = alpha_1, 
+                                   alpha_2 = alpha_2, 
+                                   lambda_1 = lambda_1, 
+                                   lambda_2 = lambda_2, 
+                                   compute_score = compute_score, 
+                                   threshold_lambda = threshold_lambda, 
+                                   fit_intercept = fit_intercept, 
+                                   normalize = normalize, 
+                                   copy_X = copy_X, 
+                                   verbose = verbose)
+
+            # Split into training and test set
+            X_train, y_train, X_test, y_test = \
+            self.input_selector.get_training_test_data()
+            
+            # Train the model using the training sets
+            ardreg.fit(X_train, y_train)            
+            y_pred_train = ardreg.predict(X_train)
+            y_pred_test = ardreg.predict(X_test)            
+
+            # Create a prediction summary dataframe
+            df_pred = joinInputsTargetsPredictions(
+                                           train_inputs = X_train, 
+                                           train_targets = y_train, 
+                                           train_predictions = y_pred_train,
+                                           test_inputs = X_test, 
+                                           test_targets = y_test, 
+                                           test_predictions = y_pred_test
+                                           )
+
+            # Return outputs
+            attributes = {'coefficients': 
+                              ardreg.coef_,
+                          'alpha':
+                              ardreg.alpha_,
+                          'lambda':
+                              ardreg.lambda_,
+                          'sigma':
+                              ardreg.sigma_}
+            if compute_score:
+                attributes['scores'] = ardreg.scores_
+            
+             
+            return {'Attributes': attributes,
+                    'Metrics': RM.get_metrics(y_test, 
+                                              y_pred_test),
+                    'dataFrame': df_pred,
+                    'Target vs. Predicted':
+                        df_pred[['Target ' + target_column, 
+                                 'Predicted ' + target_column, 
+                                 'Set']]}
+
+        except Exception as e:
+
+            return {'Exception': {'__class__': e.__class__,
+                                  '__doc__': e.__doc__,
+                                  'message': e.message}}
+
+        
+
+
+enamldef ARDRegression_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'N Iter'
+                IntField:
+                    value := model.n_iter
+
+                Label:
+                    text = 'Tol'
+                FloatField:
+                    value := model.tol
+
+                Label:
+                    text = 'Alpha 1'
+                FloatField:
+                    value := model.alpha_1
+
+                Label:
+                    text = 'Alpha 2'
+                FloatField:
+                    value := model.alpha_2
+
+                Label:
+                    text = 'Lambda 1'
+                FloatField:
+                    value := model.lambda_1
+
+                Label:
+                    text = 'Lambda 2'
+                FloatField:
+                    value := model.lambda_2
+
+                Label:
+                    text = 'Compute Score'
+                CheckBox:
+                    checked := model.compute_score
+
+                Label:
+                    text = 'Threshold Lambda'
+                FloatField:
+                    value := model.threshold_lambda
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'Normalize'
+                CheckBox:
+                    checked := model.normalize
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_X
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose

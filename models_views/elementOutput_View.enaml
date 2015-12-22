@@ -24,15 +24,7 @@ import seaborn as sns
 
 
 
-## grouped barplot
-#sns.factorplot(data = output_model,
-#               x = categorical.columns[0]"class", y = "survived", hue="sex", 
-#               size=6, kind="bar", palette="muted")
-
-
-
 markers = MarkerStyle.filled_markers
-
 
 
 def create_figure(output_model):

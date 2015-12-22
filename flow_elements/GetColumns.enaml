@@ -1,15 +1,16 @@
+# Atom
 from atom.api import Atom, Bool, Str
-from enaml.widgets.api import (
-    CheckBox, Form, GroupBox, Label
-                              )
-from models_views.flowElement import FlowElement
-from custom_views.AutoSyncField import AutoSyncField
 
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label
+
+from custom_views.AutoSyncField import AutoSyncField
+from models_views.flowElement import FlowElement
 from pandasFunctions import getColumnNames
+
+# Previous elements
 from LoadDataFrame import LoadDataFrame
 
-
-#TODO: Add an option to select columns using a checkboxlist
 
 
 class GetColumns(FlowElement):
@@ -59,8 +60,10 @@ class GetColumns(FlowElement):
 
 
 enamldef GetColumns_View(GroupBox):    
-    
+
+
     attr model
+
 
     Form:
 

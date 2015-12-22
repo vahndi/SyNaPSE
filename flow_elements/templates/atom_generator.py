@@ -29,6 +29,11 @@ def get_Atom_CheckBoxList_View(widget):
     return '%s%s = Value(Atom)\n' % (indent, widget.w_name)
 
 
+def get_Atom_InputsTargetsSelector(widget):
+    
+    return '%s%s = Value(Atom)\n' % (indent, widget.w_name)
+
+
 def get_Atom_IntField(widget):
     
     str_value = ''    
@@ -84,6 +89,7 @@ getAtomFunc = {'AutoSyncField': get_Atom_AutoSyncField,
                'CheckBox': get_Atom_CheckBox,
                'CheckBoxList_View': get_Atom_CheckBoxList_View,
                'FloatField': get_Atom_FloatField,
+               'InputsTargetsSelector': get_Atom_InputsTargetsSelector,
                'IntField': get_Atom_IntField,
                'ObjectCombo': get_Atom_ObjectCombo,
                'SpinBox': get_Atom_SpinBox}

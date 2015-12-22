@@ -18,6 +18,8 @@ from flow_elements.sklearn_elements.v0_17.cluster.KMeans import (
         KMeans_Model, KMeans_View)
 from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import (
         RandomForestClassifier_Model, RandomForestClassifier_View)
+from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import (
+        ARDRegression_Model, ARDRegression_View)
 
 elementViewDict = {LoadDataFrame: LoadDataFrame_View,
                    GetColumns: GetColumns_View,
@@ -26,7 +28,8 @@ elementViewDict = {LoadDataFrame: LoadDataFrame_View,
                    LinearRegression_Model: LinearRegression_View,
                    LogisticRegression_Model: LogisticRegression_View,
                    KMeans_Model: KMeans_View,
-                   RandomForestClassifier_Model: RandomForestClassifier_View}
+                   RandomForestClassifier_Model: RandomForestClassifier_View,
+                   ARDRegression_Model: ARDRegression_View}
 
 
 ###############################################################################

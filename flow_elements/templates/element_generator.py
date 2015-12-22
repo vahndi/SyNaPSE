@@ -10,7 +10,10 @@ import seaborn as sns
 def generate_element(spreadsheet_name, element_name):
 
     # TODO: add element path and filename (create one for each library)
-    df = pd.read_excel(spreadsheet_name.rstrip('.xls') + '.xls', 
+    ss_name = spreadsheet_name
+    if not ss_name.endswith('.xls'):
+        ss_name += '.xls'
+    df = pd.read_excel(ss_name, 
                        sheetname = element_name)
 
     # TODO: write to a new .enaml file
@@ -108,8 +111,8 @@ def inspect_element_args(pickle_name, module_name = ''):
 
 if __name__ == '__main__':
     
-#    generate_element(spreadsheet_name = 'sklearn.linear_model',
-#                     element_name = 'LogisticRegression')
+    generate_element(spreadsheet_name = 'sklearn.linear_model',
+                     element_name = 'ARDRegression')
 
-    inspect_element_args(pickle_name = 'sklearn_scrape',
-                         module_name = 'sklearn.linear_model')
+#    inspect_element_args(pickle_name = 'sklearn_scrape',
+#                         module_name = 'sklearn.linear_model')
