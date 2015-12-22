@@ -41,13 +41,33 @@ def create_figure(output_model):
     ax = fig.add_subplot(111)
 
     if type(output_model) is Series:
-        
-        if round(output_model.sum(), 3) == 1:
-            output_model.plot(kind = 'pie', ax = ax)
+
+        if output_model.dtype == 'O':
+            
+            # Object Series -> confusion matrix
+            series = output_model.apply(str)
+            series_name = series.name
+            y = series.reset_index()
+            index_name = series.index.name
+            if not index_name:
+                index_name = 'index'
+            y['value'] = 1
+            z = y.pivot(index = index_name, 
+                        columns = series_name, 
+                        values = 'value')
+            z[z.isnull()] = 0
+            z = z.T
+            sns.heatmap(z, square = True, ax = ax)
+
         else:
-            sns.barplot(x = output_model.index, y = output_model.values, 
-                        ax = ax)
-    
+            # Numeric Series -> pie or column plot
+            if round(output_model.sum(), 3) == 1:
+                output_model.plot(kind = 'pie', ax = ax)
+            else:
+                sns.barplot(x = output_model.index, y = output_model.values, 
+                            ax = ax)
+            print 'finished plotting series'
+        
     elif type(output_model) is DataFrame:
     
         categorical, numeric = splitCategoricalNumeric(output_model)    

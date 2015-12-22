@@ -9,7 +9,7 @@ def getSeriesHtml(series):
     # Create header row
     source += '<thead><tr>'
     if series.index.name is not None:
-        source += '<th>%s<th>' % str(series.index.name)
+        source += '<th>%s</th>' % str(series.index.name)
     else:
         source += '<th></th>'
     

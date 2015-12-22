@@ -184,10 +184,8 @@ class RandomForestClassifier_Model(FlowElement):
             return outputs
             
         except Exception as e:
-            print e.message
-            return {'Exception': {'__class__': e.__class__,
-                                  '__doc__': e.__doc__,
-                                  'message': e.message}}
+            
+            return self.standard_exception(e) 
 
 
 

@@ -1,7 +1,3 @@
-import os, sys
-
-
-
 class FlowElement(object):
     '''
     The base class for all flow elements

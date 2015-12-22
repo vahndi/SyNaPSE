@@ -1,6 +1,4 @@
-from atom.api import (
-    Atom, Bool, Str, Unicode
-                     )
+from atom.api import Atom, Bool, Str
 from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label
                               )
@@ -42,21 +40,22 @@ class GetColumns(FlowElement):
         
     
     def getOutputs(self):
-        
+
         try:
             columns = getColumnNames(
-                            self._dataFrame,
-                            startsWith = self.uiModel.starts_with,
-                            endsWith = self.uiModel.ends_with,
-                            contains = self.uiModel.contains,
-                            doesNotContain = self.uiModel.does_not_contain,
-                            orderAlphabetically = self.uiModel.order_alphabetically)
-            
+                       self._dataFrame,
+                       startsWith = self.uiModel.starts_with,
+                       endsWith = self.uiModel.ends_with,
+                       contains = self.uiModel.contains,
+                       doesNotContain = self.uiModel.does_not_contain,
+                       orderAlphabetically = self.uiModel.order_alphabetically)
+
             return {'columns': columns,
                     'dataFrame': self._dataFrame[columns]}
         except:
-            
+
             return {'Outputs': 'No Outputs'}
+
 
 
 enamldef GetColumns_View(GroupBox):    

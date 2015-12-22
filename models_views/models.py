@@ -1,5 +1,7 @@
 import enaml
 from atom.api import Atom, ContainerList, Dict, Int, Str, Value
+from inspect import getargspec
+
 
 with enaml.imports():
     
@@ -140,9 +142,16 @@ class FlowElement(object):
         self._container.selectElement(self)
 
 
-    def setInputs(self, inputs):
+    def getModelArgNames(self):
         
-        self._model.setInputs(**inputs)
+        arg_names = getargspec(self._model.setInputs).args
+        arg_names.remove('self')
+        return arg_names
+
+
+    def setInputs(self, inputs_dict):
+        
+        self._model.setInputs(**inputs_dict)
         
         
     def getOutputs(self):
@@ -205,14 +214,17 @@ class FlowList(object):
             if self.numElements() > 0:
 
                 try:
-                    # Map the outputs of the previous element to the inputs of
+                    # Map outputs of the previous element to the inputs of
                     # this element.
-                    # TODO: use inspect.getargspec(function).args to get the
-                    # names of the arguments to the input function
+                    inputArgNames = newElement.getModelArgNames()
                     prevOutputs = self.uiModel.elements[-1].getOutputs()
-                    newElement.setInputs(prevOutputs)             
-                except Exception as e:
-                    
+                    # TODO: write a function to replace prevOutputs[a] in the 
+                    # following line that also traverses through the outputs in
+                    # case the required argument is nested below the top level 
+                    # of the outputs
+                    inputArgsDict = {a: prevOutputs[a] for a in inputArgNames}
+                    newElement.setInputs(inputArgsDict)             
+                except Exception as e:                    
                     print 'Error adding new element'
                     print e.__doc__
                     print e.message

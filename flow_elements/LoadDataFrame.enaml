@@ -1,4 +1,4 @@
-from atom.api import Atom, Bool, Dict, List, Unicode
+from atom.api import Atom, Bool, Dict, List, Str
 
 from enaml.core.api import Conditional
 from enaml.widgets.api import (
@@ -46,13 +46,13 @@ class LoadDataFrame(FlowElement):
     
     class ui(Atom):
         
-        sourcePath = Unicode()
-        sourceType = Unicode()
-        sheetName = Unicode()
+        sourcePath = Str()
+        sourceType = Str()
+        sheetName = Str()
         sourceTypes = List(str, ['csv', 'xls', 'sklearn'])
         sheetNames = List(str)    
         sklearnDSnames = List(str, sorted(sklearnDatasets.keys()))
-        sklearnDSname = Unicode()
+        sklearnDSname = Str()
 
         def getSheetNames(self):
             
@@ -66,56 +66,65 @@ class LoadDataFrame(FlowElement):
     
     def getOutputs(self):
         
-        if self.uiModel.sourceType == 'sklearn':
-            # Load dataset
-            ds = sklearnDatasets[self.uiModel.sklearnDSname]()
-            
-            if 'feature_names' in ds.keys():
-                # Has feature namews
-                data = pd.DataFrame(ds['data'], 
-                                    columns = ds['feature_names'])
-            else:
-                # Does not have feature names
-                data = pd.DataFrame(ds['data'])
-                data.columns = [str(col) for col in data.columns]
-                
-            if 'target_names' in ds.keys():
-                # Has target names
-                if len(ds['target'].shape) > 1:
-                    # multiple target columns
-                    target = pd.DataFrame(ds['target'],
-                                          columns = ds['target_names'])
+        try:
+            if self.uiModel.sourceType == 'sklearn':
+                # Load dataset
+                ds = sklearnDatasets[self.uiModel.sklearnDSname]()
+                if 'feature_names' in ds.keys():
+                    # Has feature names
+                    data = pd.DataFrame(ds['data'], 
+                                        columns = ds['feature_names'])
                 else:
-                    # single target column with multiple categories
-                    target = pd.Series(ds['target'], name = 'Target')  
-                    target = target.apply(lambda t: ds['target_names'][t])                           
-            else:
-                # Does not have target names
-                target = pd.Series(ds['target'], name = 'Target')
-            
-            # Join data and target columns and return
-            df = pd.concat([data, target], axis = 1)
-            return {'dataFrame': df}
-                    
-        elif self.uiModel.sourceType in ('.csv', '.xls'):
-            if os.path.exists(self.uiModel.sourcePath):
-                try:
+                    # Does not have feature names
+                    data = pd.DataFrame(ds['data'])
+                    data.columns = [str(col) for col in data.columns]
+                if 'target_names' in ds.keys():
+                    # Has target names
+                    if len(ds['target'].shape) > 1:
+                        # multiple target columns
+                        target = pd.DataFrame(ds['target'],
+                                              columns = ds['target_names'])
+                    else:
+                        # single target column with multiple categories
+                        target = pd.Series(ds['target'], name = 'Target')  
+                        target = target.apply(lambda t: ds['target_names'][t])                           
+                else:
+                    # Does not have target names
+                    target = pd.Series(ds['target'], name = 'Target')
+                
+                # Join data and target columns and return
+                dataFrame = pd.concat([data, target], axis = 1)
+                        
+            elif self.uiModel.sourceType in ('.csv', '.xls'):
+                if os.path.exists(self.uiModel.sourcePath):
                     if self.uiModel.sourceType == 'csv':
-                        return {'dataFrame': 
-                                pd.read_csv(self.uiModel.sourcePath)}
+                        dataFrame = pd.read_csv(self.uiModel.sourcePath)
                     elif self.uiModel.sourceType == 'xls':
                         sheet_name = self.uiModel.sheetName
                         if sheet_name == '':
                             sheet_name = None
-                        return {'dataFrame': 
-                                pd.read_excel(self.uiModel.sourcePath,
-                                              sheetname = sheet_name)}    
-                except:
-                    return {'Outputs': 'No outputs'}
+                        dataFrame = pd.read_excel(self.uiModel.sourcePath,
+                                                  sheetname = sheet_name)
+                else:
+                    return {'Outputs': 'Path does not exist'}
             else:
-                return {'Outputs': 'No outputs'}
-        else:
-            return {'Outputs': 'No outputs'}
+                return {'Outputs': 'Please select a source type'}    
+        
+            return {'dataFrame': dataFrame,
+                    'Attributes': 
+                        {'columns': pd.Series(
+                                                dataFrame.dtypes,
+                                                name = 'dtype',
+                                                index = pd.Index(dataFrame.columns,
+                                                                 name = 'column')
+                                                ),
+                        'index': list(dataFrame.index)},
+                    'Methods': {'describe': dataFrame.describe().drop('count')}
+                    }        
+
+        except Exception as e:
+            
+            return self.standard_exception(e)           
 
 
 
