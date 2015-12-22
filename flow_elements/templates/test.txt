@@ -1,0 +1,1085 @@
+damping : float, optional, default: 0.5
+convergence_iter : int, optional, default: 15
+max_iter : int, optional, default: 200
+copy : boolean, optional, default: True
+preference : array-like, shape (n_samples,) or float, optional
+affinity : string, optional, default=``euclidean``
+verbose : boolean, optional, default: False
+n_clusters : int, default=2
+connectivity : array-like or callable, optional
+memory : Instance of joblib.Memory or string (optional)
+n_components : int (optional)
+pooling_func : callable, default=np.mean
+threshold : float, default 0.5
+branching_factor : int, default 50
+n_clusters : int, instance of sklearn.cluster model, default None
+compute_labels : bool, default True
+copy : bool, default True
+eps : float, optional
+min_samples : int, optional
+metric : string, or callable
+leaf_size : int, optional (default = 30)
+random_state: numpy.RandomState, optional :
+n_clusters : int, default 2
+connectivity : array-like or callable, optional
+memory : Instance of joblib.Memory or string, optional
+n_components : int (optional)
+pooling_func : callable, default np.mean
+n_clusters : int, optional, default: 8
+max_iter : int, default: 300
+n_init : int, default: 10
+tol : float, default: 1e-4
+n_jobs : int
+random_state : integer or numpy.RandomState, optional
+verbose : int, default 0
+copy_x : boolean, default True
+n_clusters : int, optional, default: 8
+max_iter : int, optional
+max_no_improvement : int, default: 10
+tol : float, default: 0.0
+batch_size : int, optional, default: 100
+init_size : int, optional, default: 3 * batch_size
+n_init : int, default=3
+compute_labels : boolean, default=True
+random_state : integer or numpy.RandomState, optional
+reassignment_ratio : float, default: 0.01
+verbose : boolean, optional
+bandwidth : float, optional
+seeds : array, shape=[n_samples, n_features], optional
+bin_seeding : boolean, optional
+min_bin_freq : int, optional
+cluster_all : boolean, default True
+n_jobs : int
+n_clusters : integer, optional
+gamma : float
+degree : float, default=3
+coef0 : float, default=1
+n_neighbors : integer
+random_state : int seed, RandomState instance, or None (default)
+n_init : int, optional, default: 10
+eigen_tol : float, optional, default: 0.0
+kernel_params : dictionary of string to any, optional
+store_precision : bool
+assume_centered : bool
+store_precision : bool
+assume_centered : Boolean
+support_fraction : float, 0 < support_fraction < 1
+contamination : float, 0. < contamination < 0.5
+alpha : positive float, default 0.01
+tol : positive float, default 1e-4
+enet_tol : positive float, optional
+max_iter : integer, default 100
+verbose : boolean, default False
+assume_centered : boolean, default False
+alphas : integer, or list positive float, optional
+n_refinements: strictly positive integer :
+cv : int, cross-validation generator or an iterable, optional
+tol: positive float, optional :
+enet_tol : positive float, optional
+max_iter: integer, optional :
+n_jobs: int, optional :
+verbose: boolean, optional :
+assume_centered : Boolean
+store_precision : bool, default=True
+assume_centered : bool, default=False
+block_size : int, default=1000
+store_precision : bool
+assume_centered : Boolean
+support_fraction : float, 0 < support_fraction < 1
+random_state : integer or numpy.RandomState, optional
+store_precision : bool, default=True
+assume_centered: bool, default=False :
+store_precision : boolean, default True
+shrinkage : float, 0 <= shrinkage <= 1, default 0.1
+assume_centered : boolean, default False
+n : int
+n_folds : int, default=3
+shuffle : boolean, optional
+random_state : None, int or RandomState
+labels : array-like with shape (n_samples, )
+n_folds : int, default=3
+labels :  array, [n_samples]
+n_iter : int (default 5)
+test_size : float (default 0.2), int, or None
+train_size : float, int, or None (default is None)
+random_state : int or RandomState
+labels : array-like of int with shape (n_samples,)
+n : int
+labels : array-like of int with shape (n_samples,)
+p : int
+n : int
+p : int
+n : int
+n_iter : int (default 10)
+test_size : float (default 0.1), int, or None
+train_size : float, int, or None (default is None)
+random_state : int or RandomState
+y : array-like, [n_samples]
+n_folds : int, default=3
+shuffle : boolean, optional
+random_state : None, int or RandomState
+y : array, [n_samples]
+n_iter : int (default 10)
+test_size : float (default 0.1), int, or None
+train_size : float, int, or None (default is None)
+random_state : int or RandomState
+n_components : int, None or string
+copy : bool
+whiten : bool, optional
+n_components : int or None, (default=None)
+batch_size : int or None, (default=None)
+copy : bool, (default=True)
+whiten : bool, optional
+n_components : int or None
+tol : double, default: 1e-4
+max_iter : integer, default: 200
+random_state : integer seed, RandomState instance, or None (default)
+alpha : double, default: 0.
+l1_ratio : double, default: 0.
+shuffle : boolean, default: False
+nls_max_iter : integer, default: 2000
+beta : double, default: 1
+eta : double, default: 0.1
+n_components : int, optional
+copy : bool
+iterated_power : int, optional
+whiten : bool, optional
+random_state : int or RandomState instance or None (default)
+n_components: int or None :
+degree : int, default=3
+gamma : float, optional
+coef0 : float, optional
+kernel_params : mapping of string to any, optional
+alpha: int :
+fit_inverse_transform: bool :
+tol: float :
+max_iter : int
+remove_zero_eig : boolean, default=True
+n_components : int | None
+tol : float
+copy : bool
+max_iter : int
+noise_variance_init : None | array, shape=(n_features,)
+iterated_power : int, optional
+random_state : int or RandomState
+n_components : int, optional
+whiten : boolean, optional
+fun_args : dictionary, optional
+max_iter : int, optional
+tol : float, optional
+w_init : None of an (n_components, n_components) ndarray
+random_state : int or RandomState
+n_components : int, default = 2
+n_iter : int, optional
+random_state : int or RandomState, optional
+tol : float, optional
+n_components : int or None
+tol : double, default: 1e-4
+max_iter : integer, default: 200
+random_state : integer seed, RandomState instance, or None (default)
+alpha : double, default: 0.
+l1_ratio : double, default: 0.
+shuffle : boolean, default: False
+nls_max_iter : integer, default: 2000
+beta : double, default: 1
+eta : double, default: 0.1
+n_components : int,
+alpha : float,
+ridge_alpha : float,
+max_iter : int,
+tol : float,
+n_jobs : int,
+U_init : array of shape (n_samples, n_components),
+V_init : array of shape (n_components, n_features),
+verbose : :
+random_state : int or RandomState
+n_components : int,
+alpha : int,
+ridge_alpha : float,
+n_iter : int,
+callback : callable,
+batch_size : int,
+verbose : :
+shuffle : boolean,
+n_jobs : int,
+random_state : int or RandomState
+dictionary : array, [n_components, n_features]
+transform_n_nonzero_coefs : int, 0.1 * n_features by default
+transform_alpha : float, 1. by default
+split_sign : bool, False by default
+n_jobs : int,
+n_components : int,
+alpha : float,
+max_iter : int,
+tol : float,
+transform_n_nonzero_coefs : int, 0.1 * n_features by default
+transform_alpha : float, 1. by default
+split_sign : bool, False by default
+n_jobs : int,
+code_init : array of shape (n_samples, n_components),
+dict_init : array of shape (n_components, n_features),
+verbose : :
+random_state : int or RandomState
+n_components : int,
+alpha : float,
+n_iter : int,
+transform_n_nonzero_coefs : int, 0.1 * n_features by default
+transform_alpha : float, 1. by default
+split_sign : bool, False by default
+n_jobs : int,
+dict_init : array of shape (n_components, n_features),
+verbose : :
+batch_size : int,
+shuffle : bool,
+random_state : int or RandomState
+n_topics : int, optional (default=10)
+doc_topic_prior : float, optional (default=None)
+topic_word_prior : float, optional (default=None)
+learning_decay : float, optional (default=0.7)
+learning_offset : float, optional (default=10.)
+max_iter : integer, optional (default=10)
+total_samples : int, optional (default=1e6)
+batch_size : int, optional (default=128)
+evaluate_every : int optional (default=0)
+perp_tol : float, optional (default=1e-1)
+mean_change_tol : float, optional (default=1e-3)
+max_doc_update_iter : int (default=100)
+n_jobs : int, optional (default=1)
+verbose : int, optional (default=0)
+random_state : int or RandomState instance or None, optional (default=None)
+strategy : str
+random_state : int seed, RandomState instance, or None (default)
+constant : int or str or array of shape = [n_outputs]
+strategy : str
+constant : int or float or array of shape = [n_outputs]
+quantile : float in [0.0, 1.0]
+base_estimator : object, optional (default=DecisionTreeClassifier)
+n_estimators : integer, optional (default=50)
+learning_rate : float, optional (default=1.)
+random_state : int, RandomState instance or None, optional (default=None)
+base_estimator : object, optional (default=DecisionTreeRegressor)
+n_estimators : integer, optional (default=50)
+learning_rate : float, optional (default=1.)
+random_state : int, RandomState instance or None, optional (default=None)
+base_estimator : object or None, optional (default=None)
+n_estimators : int, optional (default=10)
+max_samples : int or float, optional (default=1.0)
+max_features : int or float, optional (default=1.0)
+bootstrap : boolean, optional (default=True)
+bootstrap_features : boolean, optional (default=False)
+oob_score : bool
+warm_start : bool, optional (default=False)
+n_jobs : int, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+base_estimator : object or None, optional (default=None)
+n_estimators : int, optional (default=10)
+max_samples : int or float, optional (default=1.0)
+max_features : int or float, optional (default=1.0)
+bootstrap : boolean, optional (default=True)
+bootstrap_features : boolean, optional (default=False)
+oob_score : bool
+warm_start : bool, optional (default=False)
+n_jobs : int, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+n_estimators : integer, optional (default=10)
+max_depth : integer or None, optional (default=None)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+bootstrap : boolean, optional (default=False)
+oob_score : bool
+n_jobs : integer, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+warm_start : bool, optional (default=False)
+n_estimators : integer, optional (default=10)
+max_depth : integer or None, optional (default=None)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+bootstrap : boolean, optional (default=False)
+oob_score : bool
+n_jobs : integer, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+warm_start : bool, optional (default=False)
+learning_rate : float, optional (default=0.1)
+n_estimators : int (default=100)
+max_depth : integer, optional (default=3)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+subsample : float, optional (default=1.0)
+max_features : int, float, string or None, optional (default=None)
+max_leaf_nodes : int or None, optional (default=None)
+init : BaseEstimator, None, optional (default=None)
+verbose : int, default: 0
+warm_start : bool, default: False
+random_state : int, RandomState instance or None, optional (default=None)
+learning_rate : float, optional (default=0.1)
+n_estimators : int (default=100)
+max_depth : integer, optional (default=3)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+subsample : float, optional (default=1.0)
+max_features : int, float, string or None, optional (default=None)
+max_leaf_nodes : int or None, optional (default=None)
+alpha : float (default=0.9)
+init : BaseEstimator, None, optional (default=None)
+verbose : int, default: 0
+warm_start : bool, default: False
+random_state : int, RandomState instance or None, optional (default=None)
+n_estimators : integer, optional (default=10)
+max_depth : integer or None, optional (default=None)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+bootstrap : boolean, optional (default=True)
+oob_score : bool
+n_jobs : integer, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+warm_start : bool, optional (default=False)
+n_estimators : int
+max_depth : int
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+sparse_output : bool, optional (default=True)
+n_jobs : integer, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+warm_start : bool, optional (default=False)
+n_estimators : integer, optional (default=10)
+max_depth : integer or None, optional (default=None)
+min_samples_split : integer, optional (default=2)
+min_samples_leaf : integer, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+bootstrap : boolean, optional (default=True)
+oob_score : bool
+n_jobs : integer, optional (default=1)
+random_state : int, RandomState instance or None, optional (default=None)
+verbose : int, optional (default=0)
+warm_start : bool, optional (default=False)
+estimators : list of (string, estimator) tuples
+weights : array-like, shape = [n_classifiers], optional (default=`None`)
+dtype : callable, optional
+separator: string, optional :
+sparse: boolean, optional. :
+sort: boolean, optional. :
+n_features : integer, optional
+dtype : numpy type, optional, default np.float64
+non_negative : boolean, optional, default False
+score_func : callable
+param : float or int depending on the feature selection mode
+score_func : callable
+percentile : int, optional, default=10
+score_func : callable
+score_func : callable
+alpha : float, optional
+score_func : callable
+alpha : float, optional
+estimator : object
+threshold : string, float, optional default None
+prefit : bool, default False
+score_func : callable
+alpha : float, optional
+estimator : object
+n_features_to_select : int or None (default=None)
+step : int or float, optional (default=1)
+estimator_params : dict
+verbose : int, default=0
+estimator : object
+step : int or float, optional (default=1)
+cv : int, cross-validation generator or an iterable, optional
+scoring : string, callable or None, optional, default: None
+estimator_params : dict
+verbose : int, default=0
+threshold : float, optional
+regr : string or callable, optional
+corr : string or callable, optional
+beta0 : double array_like, optional
+storage_mode : string, optional
+verbose : boolean, optional
+theta0 : double array_like, optional
+thetaL : double array_like, optional
+thetaU : double array_like, optional
+normalize : boolean, optional
+nugget : double or ndarray, optional
+optimizer : string, optional
+random_start : int, optional
+random_state: integer or numpy.RandomState, optional :
+estimator : estimator object.
+param_grid : dict or list of dictionaries
+scoring : string, callable or None, default=None
+fit_params : dict, optional
+n_jobs : int, default=1
+pre_dispatch : int, or string, optional
+iid : boolean, default=True
+cv : int, cross-validation generator or an iterable, optional
+refit : boolean, default=True
+verbose : integer
+param_grid : dict of string to sequence, or sequence of such
+param_distributions : dict
+n_iter : integer
+random_state : int or RandomState
+estimator : estimator object.
+param_distributions : dict
+n_iter : int, default=10
+scoring : string, callable or None, default=None
+fit_params : dict, optional
+n_jobs : int, default=1
+pre_dispatch : int, or string, optional
+iid : boolean, default=True
+cv : int, cross-validation generator or an iterable, optional
+refit : boolean, default=True
+verbose : integer
+random_state : int or RandomState
+y_min : optional, default: None
+y_max : optional, default: None
+increasing : boolean or string, optional, default: True
+sample_steps : int, optional
+sample_interval : float, optional
+n_components : int
+gamma : float, default=None
+degree : float, default=3
+coef0 : float, default=1
+kernel_params : mapping of string to any, optional
+random_state : {int, RandomState}, optional
+gamma : float
+n_components : int
+random_state : {int, RandomState}, optional
+skewedness : float
+n_components : int
+random_state : {int, RandomState}, optional
+alpha : {float, array-like}, shape = [n_targets]
+gamma : float, default=None
+degree : float, default=3
+coef0 : float, default=1
+kernel_params : mapping of string to any, optional
+solver : string, optional
+shrinkage : string or float, optional
+priors : array, optional, shape (n_classes,)
+n_components : int, optional
+store_covariance : bool, optional
+tol : float, optional
+priors : array, optional, shape = [n_classes]
+reg_param : float, optional
+n_iter : int, optional
+tol : float, optional
+alpha_1 : float, optional
+alpha_2 : float, optional
+lambda_1 : float, optional
+lambda_2 : float, optional
+compute_score : boolean, optional
+threshold_lambda : float, optional
+fit_intercept : boolean, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True.
+verbose : boolean, optional, default False
+n_iter : int, optional
+tol : float, optional
+alpha_1 : float, optional
+alpha_2 : float, optional
+lambda_1 : float, optional
+lambda_2 : float, optional
+compute_score : boolean, optional
+fit_intercept : boolean, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+verbose : boolean, optional, default False
+alpha : float
+l1_ratio : float
+fit_intercept : bool
+normalize : boolean, optional, default False
+max_iter : int, optional
+copy_X : boolean, optional, default True
+tol : float, optional
+warm_start : bool, optional
+positive : bool, optional
+random_state : int, RandomState instance, or None (default)
+l1_ratio : float or array of floats, optional
+eps : float, optional
+n_alphas : int, optional
+alphas : numpy array, optional
+max_iter : int, optional
+tol : float, optional
+cv : int, cross-validation generator or an iterable, optional
+verbose : bool or integer
+n_jobs : integer, optional
+positive : bool, optional
+random_state : int, RandomState instance, or None (default)
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+n_nonzero_coefs : int, optional
+fit_intercept : boolean
+positive : boolean (default=False)
+verbose : boolean or integer, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+eps : float, optional
+fit_path : boolean
+fit_intercept : boolean
+positive : boolean (default=False)
+verbose : boolean or integer, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter: integer, optional :
+cv : int, cross-validation generator or an iterable, optional
+max_n_alphas : integer, optional
+n_jobs : integer, optional
+eps : float, optional
+alpha : float, optional
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : int, optional
+tol : float, optional
+warm_start : bool, optional
+positive : bool, optional
+random_state : int, RandomState instance, or None (default)
+eps : float, optional
+n_alphas : int, optional
+alphas : numpy array, optional
+max_iter : int, optional
+tol : float, optional
+cv : int, cross-validation generator or an iterable, optional
+verbose : bool or integer
+n_jobs : integer, optional
+positive : bool, optional
+random_state : int, RandomState instance, or None (default)
+fit_intercept : boolean, default True
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+alpha : float
+fit_intercept : boolean
+positive : boolean (default=False)
+verbose : boolean or integer, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : integer, optional
+eps : float, optional
+fit_path : boolean
+fit_intercept : boolean
+positive : boolean (default=False)
+verbose : boolean or integer, optional
+normalize : boolean, optional, default False
+max_iter : integer, optional
+cv : int, cross-validation generator or an iterable, optional
+max_n_alphas : integer, optional
+n_jobs : integer, optional
+eps : float, optional
+copy_X : boolean, optional, default True
+fit_intercept : boolean
+positive : boolean (default=False)
+verbose : boolean or integer, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : integer, optional
+eps : float, optional
+fit_intercept : boolean, optional
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+n_jobs : int, optional, default 1
+dual : bool
+C : float, optional (default=1.0)
+fit_intercept : bool, default: True
+intercept_scaling : float, default: 1
+max_iter : int
+random_state : int seed, RandomState instance, or None (default)
+tol : float, optional
+verbose : int
+warm_start : bool, optional
+n_jobs : int, optional
+Cs : list of floats | int
+fit_intercept : bool, default: True
+cv : integer or cross-validation generator
+dual : bool
+scoring : callabale
+tol : float, optional
+max_iter : int, optional
+n_jobs : int, optional
+verbose : int
+refit : bool
+intercept_scaling : float, default 1.
+random_state : int seed, RandomState instance, or None (default)
+alpha : float, optional
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : int, optional
+tol : float, optional
+warm_start : bool, optional
+random_state : int, RandomState instance, or None (default)
+alpha : float, optional
+l1_ratio : float
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : int, optional
+tol : float, optional
+warm_start : bool, optional
+random_state : int, RandomState instance, or None (default)
+eps : float, optional
+alphas : array-like, optional
+n_alphas : int, optional
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : int, optional
+tol : float, optional
+cv : int, cross-validation generator or an iterable, optional
+verbose : bool or integer
+n_jobs : integer, optional
+random_state : int, RandomState instance, or None (default)
+eps : float, optional
+alphas : array-like, optional
+n_alphas : int, optional
+l1_ratio : float or array of floats
+fit_intercept : boolean
+normalize : boolean, optional, default False
+copy_X : boolean, optional, default True
+max_iter : int, optional
+tol : float, optional
+cv : int, cross-validation generator or an iterable, optional
+verbose : bool or integer
+n_jobs : integer, optional
+random_state : int, RandomState instance, or None (default)
+n_nonzero_coefs : int, optional
+tol : float, optional
+fit_intercept : boolean, optional
+normalize : boolean, optional
+Read more in the :ref:`User Guide <omp>`. :
+copy : bool, optional
+fit_intercept : boolean, optional
+normalize : boolean, optional
+max_iter : integer, optional
+cv : int, cross-validation generator or an iterable, optional
+n_jobs : integer, optional
+verbose : boolean or integer, optional
+Read more in the :ref:`User Guide <omp>`. :
+C : float
+fit_intercept : bool, default=False
+n_iter : int, optional
+shuffle : bool, default=True
+random_state : int seed, RandomState instance, or None (default)
+verbose : integer, optional
+n_jobs : integer, optional
+loss : string, optional
+warm_start : bool, optional
+C : float
+epsilon : float
+fit_intercept : bool
+n_iter : int, optional
+shuffle : bool, default=True
+random_state : int seed, RandomState instance, or None (default)
+verbose : integer, optional
+loss : string, optional
+warm_start : bool, optional
+alpha : float
+fit_intercept : bool
+n_iter : int, optional
+shuffle : bool, optional, default True
+random_state : int seed, RandomState instance, or None (default)
+verbose : integer, optional
+n_jobs : integer, optional
+eta0 : double
+warm_start : bool, optional
+scaling : float, optional
+sample_fraction : float, optional
+n_resampling : int, optional
+selection_threshold: float, optional :
+fit_intercept : boolean, optional
+verbose : boolean or integer, optional
+normalize : boolean, optional, default True
+max_iter : integer, optional
+eps : float, optional
+n_jobs : integer, optional
+random_state : int, RandomState instance or None, optional (default=None)
+pre_dispatch : int, or string, optional
+memory : Instance of joblib.Memory or string
+C : float, optional, default=1
+scaling : float, optional, default=0.5
+sample_fraction : float, optional, default=0.75
+n_resampling : int, optional, default=200
+selection_threshold : float, optional, default=0.25
+fit_intercept : boolean, optional, default=True
+verbose : boolean or integer, optional
+normalize : boolean, optional, default=True
+tol : float, optional, default=1e-3
+n_jobs : integer, optional
+random_state : int, RandomState instance or None, optional (default=None)
+pre_dispatch : int, or string, optional
+memory : Instance of joblib.Memory or string
+base_estimator : object, optional
+min_samples : int (>= 1) or float ([0, 1]), optional
+residual_threshold : float, optional
+is_data_valid : callable, optional
+is_model_valid : callable, optional
+max_trials : int, optional
+stop_n_inliers : int, optional
+stop_score : float, optional
+stop_probability : float in range [0, 1], optional
+residual_metric : callable, optional
+random_state : integer or numpy.RandomState, optional
+alpha : {float, array-like}, shape (n_targets)
+copy_X : boolean, optional, default True
+fit_intercept : boolean
+max_iter : int, optional
+normalize : boolean, optional, default False
+tol : float
+random_state : int seed, RandomState instance, or None (default)
+alpha : float
+copy_X : boolean, optional, default True
+fit_intercept : boolean
+max_iter : int, optional
+normalize : boolean, optional, default False
+tol : float
+random_state : int seed, RandomState instance, or None (default)
+alphas : numpy array of shape [n_alphas]
+fit_intercept : boolean
+normalize : boolean, optional, default False
+scoring : string, callable or None, optional, default: None
+cv : int, cross-validation generator or an iterable, optional
+alphas : numpy array of shape [n_alphas]
+fit_intercept : boolean
+normalize : boolean, optional, default False
+scoring : string, callable or None, optional, default: None
+cv : int, cross-validation generator or an iterable, optional
+store_cv_values : boolean, default=False
+alpha : float
+l1_ratio : float
+fit_intercept : bool
+n_iter : int, optional
+shuffle : bool, optional
+random_state : int seed, RandomState instance, or None (default)
+verbose : integer, optional
+epsilon : float
+n_jobs : integer, optional
+learning_rate : string, optional
+eta0 : double
+power_t : double
+warm_start : bool, optional
+average : bool or int, optional
+alpha : float
+l1_ratio : float
+fit_intercept : bool
+n_iter : int, optional
+shuffle : bool, optional
+random_state : int seed, RandomState instance, or None (default)
+verbose : integer, optional
+epsilon : float
+learning_rate : string, optional
+eta0 : double, optional
+power_t : double, optional
+warm_start : bool, optional
+average : bool or int, optional
+fit_intercept : boolean, optional, default True
+copy_X : boolean, optional, default True
+max_subpopulation : int, optional, default 1e4
+n_subsamples : int, optional, default None
+max_iter : int, optional, default 300
+tol : float, optional, default 1.e-3
+random_state : RandomState or an int seed, optional, default None
+n_jobs : integer, optional, default 1
+verbose : boolean, optional, default False
+n_neighbors : integer
+n_components : integer
+reg : float
+tol : float, optional
+max_iter : integer
+hessian_tol : float, optional
+modified_tol : float, optional
+random_state: numpy.RandomState or int, optional :
+n_neighbors : integer
+n_components : integer
+tol : float
+max_iter : integer
+metric : boolean, optional, default: True
+n_components : int, optional, default: 2
+n_init : int, optional, default: 4
+max_iter : int, optional, default: 300
+verbose : int, optional, default: 0
+eps : float, optional, default: 1e-6
+n_jobs : int, optional, default: 1
+random_state : integer or numpy.RandomState, optional
+dissimilarity : string
+n_components : integer, default: 2
+random_state : int seed, RandomState instance, or None, default
+affinity : string or callable, default
+gamma : float, optional, default
+n_neighbors : int, default
+n_components : int, optional (default: 2)
+perplexity : float, optional (default: 30)
+early_exaggeration : float, optional (default: 4.0)
+learning_rate : float, optional (default: 1000)
+n_iter : int, optional (default: 1000)
+n_iter_without_progress : int, optional (default: 30)
+min_grad_norm : float, optional (default: 1E-7)
+metric : string or callable, optional
+verbose : int, optional (default: 0)
+random_state : int or RandomState instance or None (default)
+angle : float (default: 0.5)
+n_components : int, optional
+covariance_type : string, optional
+random_state: RandomState or an int seed (None by default) :
+min_covar : float, optional
+tol : float, optional
+n_iter : int, optional
+n_init : int, optional
+params : string, optional
+init_params : string, optional
+verbose : int, default: 0
+n_components: int, default 1 :
+alpha: float, default 1 :
+tol : float, default 1e-3
+n_iter : int, default 10
+verbose : int, default 0
+n_components: int, default 1 :
+alpha: float, default 1 :
+tol : float, default 1e-3
+n_iter : int, default 10
+verbose : int, default 0
+estimator : estimator object
+n_jobs : int, optional, default: 1
+estimator : estimator object
+n_jobs : int, optional, default: 1
+estimator : estimator object
+code_size : float
+random_state : numpy.RandomState, optional
+n_jobs : int, optional, default: 1
+X : array-like, shape (n_samples, n_features)
+y : array-like, shape (n_samples,)
+sample_weight : array-like, shape (n_samples,), optional
+alpha : float, optional (default=1.0)
+fit_prior : boolean
+class_prior : array-like, size (n_classes,)
+alpha : float, optional (default=1.0)
+binarize : float or None, optional
+fit_prior : boolean
+class_prior : array-like, size=[n_classes,]
+n_neighbors : int, optional (default = 5)
+radius : float, optional (default = 1.0)
+leaf_size : int, optional (default = 30)
+p: integer, optional (default = 2) :
+metric_params : dict, optional (default = None)
+n_jobs : int, optional (default = 1)
+n_neighbors : int, optional (default = 5)
+weights : str or callable
+leaf_size : int, optional (default = 30)
+p : integer, optional (default = 2)
+metric_params : dict, optional (default = None)
+n_jobs : int, optional (default = 1)
+radius : float, optional (default = 1.0)
+weights : str or callable
+leaf_size : int, optional (default = 30)
+p : integer, optional (default = 2)
+outlier_label : int, optional (default = None)
+metric_params : dict, optional (default = None)
+n_neighbors : int, optional (default = 5)
+weights : str or callable
+leaf_size : int, optional (default = 30)
+p : integer, optional (default = 2)
+metric_params : dict, optional (default = None)
+n_jobs : int, optional (default = 1)
+radius : float, optional (default = 1.0)
+weights : str or callable
+leaf_size : int, optional (default = 30)
+p : integer, optional (default = 2)
+metric_params : dict, optional (default = None)
+metric: string, or callable :
+shrink_threshold : float, optional (default = None)
+X : array-like, shape = [n_samples, n_features]
+leaf_size : positive integer (default = 20)
+metric : string or DistanceMetric object
+Additional keywords are passed to the distance metric class. :
+X : array-like, shape = [n_samples, n_features]
+leaf_size : positive integer (default = 20)
+metric : string or DistanceMetric object
+Additional keywords are passed to the distance metric class. :
+n_estimators : int (default = 10)
+min_hash_match : int (default = 4)
+n_candidates : int (default = 10)
+n_neighbors : int (default = 5)
+radius : float, optinal (default = 1.0)
+radius_cutoff_ratio : float, optional (default = 0.9)
+random_state : int, RandomState instance or None, optional (default=None)
+metric : string or class name
+**kwargs :
+bandwidth : float
+algorithm : string
+kernel : string
+metric : string
+atol : float
+rtol : float
+breadth_first : boolean
+leaf_size : int
+metric_params : dict
+n_components : int, optional
+learning_rate : float, optional
+batch_size : int, optional
+n_iter : int, optional
+verbose : int, optional
+random_state : integer or numpy.RandomState, optional
+base_estimator : instance BaseEstimator
+n_components : int, (default 2)
+scale : boolean, (default True)
+max_iter : an integer, (default 500)
+tol : non-negative real
+copy : boolean, default True
+scale : boolean, scale data? (default True)
+max_iter : an integer, (default 500)
+tol : non-negative real, default 1e-06
+copy : boolean, default True
+n_components : int, number of components to keep. (default 2).
+n_components : int, (default 2).
+scale : boolean, (default True)
+max_iter : an integer, (default 500)
+tol : non-negative real, default 1e-06.
+copy : boolean
+n_components : int, default 2
+scale : boolean, default True
+copy : boolean, default True
+steps : list
+transformer_list: list of (string, transformer) tuples :
+n_jobs: int, optional :
+transformer_weights: dict, optional :
+threshold : float, optional (0.0 by default)
+copy : boolean, optional, default True
+func : callable, optional default=None
+validate : bool, optional default=True
+accept_sparse : boolean, optional
+pass_y: bool, optional default=False :
+axis : integer, optional (default=0)
+verbose : integer, optional (default=0)
+copy : boolean, optional (default=True)
+K : numpy array of shape [n_samples, n_samples]
+neg_label : int (default: 0)
+pos_label : int (default: 1)
+sparse_output : boolean (default: False)
+y : array-like of shape (n_samples,)
+classes : array-like of shape [n_classes] (optional)
+sparse_output : boolean (default: False),
+copy : boolean, optional, default is True
+feature_range: tuple (min, max), default=(0, 1) :
+copy : boolean, optional, default True
+copy : boolean, optional, default True
+dtype : number type, default=np.float
+sparse : boolean, default=True
+degree : integer
+interaction_only : boolean, default = False
+include_bias : boolean
+with_centering : boolean, True by default
+with_scaling : boolean, True by default
+copy : boolean, optional, default is True
+with_mean : boolean, True by default
+with_std : boolean, True by default
+copy : boolean, optional, default True
+eps : strictly positive float, optional (default=0.1)
+random_state : integer, RandomState instance or None (default=None)
+eps : strictly positive float, optional, (default=0.1)
+dense_output : boolean, optional (default=False)
+random_state : integer, RandomState instance or None (default=None)
+gamma : float
+n_neighbors : integer > 0
+alpha : float
+max_iter : float
+tol : float
+gamma : float
+n_neighbors : integer > 0
+alpha : float
+max_iter : float
+tol : float
+C : float, optional (default=1.0)
+degree : int, optional (default=3)
+coef0 : float, optional (default=0.0)
+probability : boolean, optional (default=False)
+shrinking : boolean, optional (default=True)
+tol : float, optional (default=1e-3)
+cache_size : float, optional
+verbose : bool, default: False
+max_iter : int, optional (default=-1)
+random_state : int seed, RandomState instance, or None (default)
+C : float, optional (default=1.0)
+dual : bool, (default=True)
+tol : float, optional (default=1e-4)
+fit_intercept : boolean, optional (default=True)
+intercept_scaling : float, optional (default=1)
+verbose : int, (default=0)
+random_state : int seed, RandomState instance, or None (default=None)
+max_iter : int, (default=1000)
+nu : float, optional (default=0.5)
+degree : int, optional (default=3)
+coef0 : float, optional (default=0.0)
+probability : boolean, optional (default=False)
+shrinking : boolean, optional (default=True)
+tol : float, optional (default=1e-3)
+cache_size : float, optional
+verbose : bool, default: False
+max_iter : int, optional (default=-1)
+random_state : int seed, RandomState instance, or None (default)
+C : float, optional (default=1.0)
+epsilon : float, optional (default=0.1)
+degree : int, optional (default=3)
+coef0 : float, optional (default=0.0)
+shrinking : boolean, optional (default=True)
+tol : float, optional (default=1e-3)
+cache_size : float, optional
+verbose : bool, default: False
+max_iter : int, optional (default=-1)
+C : float, optional (default=1.0)
+epsilon : float, optional (default=0.1)
+dual : bool, (default=True)
+tol : float, optional (default=1e-4)
+fit_intercept : boolean, optional (default=True)
+intercept_scaling : float, optional (default=1)
+verbose : int, (default=0)
+random_state : int seed, RandomState instance, or None (default=None)
+max_iter : int, (default=1000)
+C : float, optional (default=1.0)
+nu : float, optional
+degree : int, optional (default=3)
+coef0 : float, optional (default=0.0)
+shrinking : boolean, optional (default=True)
+tol : float, optional (default=1e-3)
+cache_size : float, optional
+verbose : bool, default: False
+max_iter : int, optional (default=-1)
+nu : float, optional
+degree : int, optional (default=3)
+coef0 : float, optional (default=0.0)
+tol : float, optional
+shrinking : boolean, optional
+cache_size : float, optional
+verbose : bool, default: False
+max_iter : int, optional (default=-1)
+random_state : int seed, RandomState instance, or None (default)
+max_features : int, float, string or None, optional (default=None)
+max_depth : int or None, optional (default=None)
+min_samples_split : int, optional (default=2)
+min_samples_leaf : int, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+random_state : int, RandomState instance or None, optional (default=None)
+presort : bool, optional (default=False)
+max_features : int, float, string or None, optional (default=None)
+max_depth : int or None, optional (default=None)
+min_samples_split : int, optional (default=2)
+min_samples_leaf : int, optional (default=1)
+min_weight_fraction_leaf : float, optional (default=0.)
+max_leaf_nodes : int or None, optional (default=None)
+random_state : int, RandomState instance or None, optional (default=None)
+presort : bool, optional (default=False)
+X : array_like or sparse matrix, shape = [n_samples, n_features]
+check_input : boolean, (default=True)
+X : array_like or sparse matrix, shape = [n_samples, n_features]
+check_input : boolean, (default=True)
