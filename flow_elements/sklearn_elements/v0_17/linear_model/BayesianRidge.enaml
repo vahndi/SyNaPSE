@@ -9,7 +9,7 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
 from models_views.flowElement import FlowElement
-from sklearn.linear_model import ARDRegression
+from sklearn.linear_model import BayesianRidge
 
 # Preceding elements
 from flow_elements.LoadDataFrame import LoadDataFrame
@@ -23,9 +23,9 @@ from ..metrics.regression_metrics import RegressionMetrics as RM
 from pandas import Series, DataFrame
 
 
-class ARDRegression_Model(FlowElement):
+class BayesianRidge_Model(FlowElement):
 
-    elementName = 'ARD Regression'
+    elementName = 'Bayesian Ridge Regression'
     precedingElements = [LoadDataFrame, GetColumns]
 
 
@@ -47,8 +47,6 @@ class ARDRegression_Model(FlowElement):
         lambda_2 = Float(1e-06)
         # compute_score
         compute_score = Bool(False)
-        # threshold_lambda
-        threshold_lambda = Float(10000.0)
         # fit_intercept
         fit_intercept = Bool(True)
         # normalize
@@ -66,7 +64,7 @@ class ARDRegression_Model(FlowElement):
                                             dataFrame, 
                                             target_dtypes = [float64, int64]
                                             )
-        self.uiModel = ARDRegression_Model.ui(
+        self.uiModel = BayesianRidge_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
 
@@ -85,7 +83,6 @@ class ARDRegression_Model(FlowElement):
             lambda_1 = self.uiModel.lambda_1
             lambda_2 = self.uiModel.lambda_2
             compute_score = self.uiModel.compute_score
-            threshold_lambda = self.uiModel.threshold_lambda
             fit_intercept = self.uiModel.fit_intercept
             normalize = self.uiModel.normalize
             copy_X = self.uiModel.copy_X
@@ -95,15 +92,14 @@ class ARDRegression_Model(FlowElement):
             if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
     
-            # Create ARD Regression model
-            ardreg = ARDRegression(n_iter = n_iter, 
+            # Create Bayesian Ridge Regression model
+            bayreg = BayesianRidge(n_iter = n_iter, 
                                    tol = tol, 
                                    alpha_1 = alpha_1, 
                                    alpha_2 = alpha_2, 
                                    lambda_1 = lambda_1, 
                                    lambda_2 = lambda_2, 
-                                   compute_score = compute_score,
-                                   threshold_lambda = threshold_lambda,
+                                   compute_score = compute_score, 
                                    fit_intercept = fit_intercept, 
                                    normalize = normalize, 
                                    copy_X = copy_X, 
@@ -114,9 +110,9 @@ class ARDRegression_Model(FlowElement):
             self.input_selector.get_training_test_data()
             
             # Train the model using the training sets
-            ardreg.fit(X_train, y_train)            
-            y_pred_train = ardreg.predict(X_train)
-            y_pred_test = ardreg.predict(X_test)            
+            bayreg.fit(X_train, y_train)            
+            y_pred_train = bayreg.predict(X_train)
+            y_pred_test = bayreg.predict(X_test)            
 
             # Create a prediction summary dataframe
             df_pred = joinInputsTargetsPredictions(
@@ -131,20 +127,16 @@ class ARDRegression_Model(FlowElement):
             # Return outputs
             attributes = {'coefficients': 
                               Series(index = input_columns,
-                                     data =  ardreg.coef_,
+                                     data =  bayreg.coef_,
                                      name = 'coefficients'),
                           'alpha':
-                              ardreg.alpha_,
+                              bayreg.alpha_,
                           'lambda':
                               Series(index = input_columns,
-                                     data =  ardreg.lambda_,
-                                     name = 'lambda'),
-                          'sigma':
-                              DataFrame(ardreg.sigma_,
-                                        index = input_columns,
-                                        columns = input_columns)}
+                                     data =  bayreg.lambda_,
+                                     name = 'lambda')}
             if compute_score:
-                attributes['scores'] = ardreg.scores_
+                attributes['scores'] = bayreg.scores_
 
              
             return {'Attributes': attributes,
@@ -163,7 +155,7 @@ class ARDRegression_Model(FlowElement):
         
 
 
-enamldef ARDRegression_View(GroupBox): me:
+enamldef BayesianRidge_View(GroupBox): me:
 
     attr model
 
@@ -218,11 +210,6 @@ enamldef ARDRegression_View(GroupBox): me:
                     text = 'Compute Score'
                 CheckBox:
                     checked := model.compute_score
-                    
-                Label:
-                    text = 'Threshold Lambda'
-                FloatField:
-                    value := model.threshold_lambda
 
                 Label:
                     text = 'Fit Intercept'
