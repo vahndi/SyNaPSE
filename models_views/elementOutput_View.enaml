@@ -58,7 +58,6 @@ def create_figure(output_model):
             else:
                 sns.barplot(x = output_model.index, y = output_model.values, 
                             ax = ax)
-            print 'finished plotting series'
         
     elif type(output_model) is DataFrame:
     

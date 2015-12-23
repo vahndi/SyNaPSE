@@ -4,66 +4,39 @@ from atom.api import Atom, Bool, Float, Int, Value
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from enaml.stdlib.fields import FloatField, IntField
-from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from models_views.flowElement import FlowElement
+from .base.regression_model import RegressionModel
 from sklearn.linear_model import BayesianRidge
 
-# Preceding elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
-
-# Other
-from numpy import float64, int64
-from pandasFunctions import joinInputsTargetsPredictions
-from ..metrics.regression_metrics import RegressionMetrics as RM
-
-from pandas import Series, DataFrame
 
 
-class BayesianRidge_Model(FlowElement):
+class BayesianRidge_Model(RegressionModel):
+
 
     elementName = 'Bayesian Ridge Regression'
-    precedingElements = [LoadDataFrame, GetColumns]
 
 
     class ui(Atom):
 
-        # input_selector
         input_selector = Value(Atom)
-        # n_iter
         n_iter = Int(300)
-        # tol
         tol = Float(0.001)
-        # alpha_1
         alpha_1 = Float(1e-06)
-        # alpha_2
         alpha_2 = Float(1e-06)
-        # lambda_1
         lambda_1 = Float(1e-06)
-        # lambda_2
         lambda_2 = Float(1e-06)
-        # compute_score
         compute_score = Bool(False)
-        # fit_intercept
         fit_intercept = Bool(True)
-        # normalize
         normalize = Bool(False)
-        # copy_X
         copy_X = Bool(True)
-        # verbose
         verbose = Bool(False)
 
 
     def setInputs(self, dataFrame):
 
-        self._dataFrame = dataFrame
-        self.input_selector = InputsTargetsSelector_Model(
-                                            dataFrame, 
-                                            target_dtypes = [float64, int64]
-                                            )
+        self.set_inputs(dataFrame)
         self.uiModel = BayesianRidge_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
@@ -74,86 +47,40 @@ class BayesianRidge_Model(FlowElement):
         try:
             
             # Assign local variables
-            input_columns = self.input_selector.checked_inputs()
-            target_column = self.input_selector.selected_target()
-            n_iter = self.uiModel.n_iter
-            tol = self.uiModel.tol
-            alpha_1 = self.uiModel.alpha_1
-            alpha_2 = self.uiModel.alpha_2
-            lambda_1 = self.uiModel.lambda_1
-            lambda_2 = self.uiModel.lambda_2
-            compute_score = self.uiModel.compute_score
-            fit_intercept = self.uiModel.fit_intercept
-            normalize = self.uiModel.normalize
-            copy_X = self.uiModel.copy_X
-            verbose = self.uiModel.verbose
+            args = {'n_iter': self.uiModel.n_iter,
+                    'tol': self.uiModel.tol,
+                    'alpha_1': self.uiModel.alpha_1,
+                    'alpha_2': self.uiModel.alpha_2,
+                    'lambda_1': self.uiModel.lambda_1,
+                    'lambda_2': self.uiModel.lambda_2,
+                    'compute_score': self.uiModel.compute_score,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'normalize': self.uiModel.normalize,
+                    'copy_X': self.uiModel.copy_X,
+                    'verbose': self.uiModel.verbose}
             
             # Validate inputs
             if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
     
             # Create Bayesian Ridge Regression model
-            bayreg = BayesianRidge(n_iter = n_iter, 
-                                   tol = tol, 
-                                   alpha_1 = alpha_1, 
-                                   alpha_2 = alpha_2, 
-                                   lambda_1 = lambda_1, 
-                                   lambda_2 = lambda_2, 
-                                   compute_score = compute_score, 
-                                   fit_intercept = fit_intercept, 
-                                   normalize = normalize, 
-                                   copy_X = copy_X, 
-                                   verbose = verbose)
-
-            # Split into training and test set
-            X_train, y_train, X_test, y_test = \
-            self.input_selector.get_training_test_data()
-            
-            # Train the model using the training sets
-            bayreg.fit(X_train, y_train)            
-            y_pred_train = bayreg.predict(X_train)
-            y_pred_test = bayreg.predict(X_test)            
-
-            # Create a prediction summary dataframe
-            df_pred = joinInputsTargetsPredictions(
-                                           train_inputs = X_train, 
-                                           train_targets = y_train, 
-                                           train_predictions = y_pred_train,
-                                           test_inputs = X_test, 
-                                           test_targets = y_test, 
-                                           test_predictions = y_pred_test
-                                           )
+            self.estimator = BayesianRidge(**args)
+            self.train_test_model()
 
             # Return outputs
-            attributes = {'coefficients': 
-                              Series(index = input_columns,
-                                     data =  bayreg.coef_,
-                                     name = 'coefficients'),
-                          'alpha':
-                              bayreg.alpha_,
-                          'lambda':
-                              Series(index = input_columns,
-                                     data =  bayreg.lambda_,
-                                     name = 'lambda')}
-            if compute_score:
-                attributes['scores'] = bayreg.scores_
-
-             
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
             return {'Attributes': attributes,
-                    'Metrics': RM.get_metrics(y_test, 
-                                              y_pred_test),
-                    'dataFrame': df_pred,
-                    'Target vs. Predicted':
-                        df_pred[['Target ' + target_column, 
-                                 'Predicted ' + target_column, 
-                                 'Set']]}
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
 
         except Exception as e:
 
             return self.standard_exception(e)
 
         
-
 
 enamldef BayesianRidge_View(GroupBox): me:
 
