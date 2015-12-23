@@ -74,6 +74,9 @@ class RegressionModel(FlowElement):
                                                 data =  self.estimator.coef_,
                                                 name = 'coefficients')
         
+        if hasattr(self.estimator, 'intercept_'):
+            attributes['intercept'] = self.estimator.intercept_
+            
         if hasattr(self.estimator, 'lambda_'):
             attributes['lambda'] = Series(index = input_columns,
                                           data =  self.estimator.lambda_,

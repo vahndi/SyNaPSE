@@ -1,110 +1,60 @@
 # Atom
-from atom.api import Atom, Bool, Int, List, Str, Unicode, Value
+from atom.api import Atom, Bool, Float, Int, Value
 
 # Enaml
-from enaml.widgets.api import (
-    CheckBox, Form, GroupBox, Label, ObjectCombo, SpinBox)
-
-# Models
-from models_views.flowElement import FlowElement 
-from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
-# Preceding elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
-
-# Other
-from sklearn import linear_model
-from numpy import int64, float64
-from pandas import Series, DataFrame, concat
-from pandasFunctions import splitTrainingTest
-from pandasFunctions import splitCategoricalNumeric
-from pandasFunctions import joinInputsTargetsPredictions
-from ..metrics.regression_metrics import RegressionMetrics as RM
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import LinearRegression
 
 
 
-class LinearRegression_Model(FlowElement):
+class LinearRegression_Model(RegressionModel):
 
 
     elementName = 'Linear Regression'
-    precedingElements = [LoadDataFrame, GetColumns]
 
    
     class ui(Atom):
 
-        # inputs_targets_selector
-        inputs_targets_selector = Value(Atom)
+        input_selector = Value(Atom)
     
     
     def setInputs(self, dataFrame):
         
-        self._dataFrame = dataFrame
-        self.inputs_targets_selector = InputsTargetsSelector_Model(
-                                            dataFrame,
-                                            target_dtypes = [float64, int64]
-                                            )
+        self.set_inputs(dataFrame)
         self.uiModel = LinearRegression_Model.ui(
-            inputs_targets_selector = self.inputs_targets_selector.uiModel
-            )
+                            input_selector = self.input_selector.uiModel
+                            )
 
 
     def getOutputs(self):
         
         try:
                 
-            # Assign local variables 
-            input_columns = self.inputs_targets_selector.checked_inputs()
-            target_column = self.inputs_targets_selector.selected_target()
-            
             # Validate inputs
-            if not self.inputs_targets_selector.validate_inputs():
+            if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
             
             # Create linear regression model
-            linreg = linear_model.LinearRegression()
+            self.estimator = LinearRegression()
+            self.train_test_model()
             
-            # Split into training and test set        
-            X_train, y_train, X_test, y_test = \
-            self.inputs_targets_selector.get_training_test_data()
-            
-            # Train the model using the training sets
-            linreg.fit(X_train, y_train)            
-            y_pred_train = linreg.predict(X_train)
-            y_pred_test = linreg.predict(X_test)            
-
-            # Create a prediction summary dataframe
-            df_pred = joinInputsTargetsPredictions(
-                                           train_inputs = X_train, 
-                                           train_targets = y_train, 
-                                           train_predictions = y_pred_train,
-                                           test_inputs = X_test, 
-                                           test_targets = y_test, 
-                                           test_predictions = y_pred_test
-                                           )
-
             # Return outputs
-            return {'Attributes': {'coefficients': 
-                                        Series(index = input_columns,
-                                               data =  linreg.coef_,
-                                               name = 'coefficients'),
-                                    'intercept':
-                                        linreg.intercept_},
-                    'Metrics': RM.get_metrics(y_test, 
-                                              y_pred_test),
-                    'dataFrame': df_pred,
-                    'Target vs. Predicted':
-                        df_pred[['Target ' + target_column, 
-                                 'Predicted ' + target_column, 
-                                 'Set']]}
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
 
         except Exception as e:
 
-            return {'Exception': {'__class__': e.__class__,
-                                  '__doc__': e.__doc__,
-                                  'message': e.message}}
+            return self.standard_exception(e)
 
 
 
@@ -113,5 +63,5 @@ enamldef LinearRegression_View(GroupBox): me:
     attr model
 
     InputsTargetsSelector_View:
-        model = me.model.inputs_targets_selector
+        model = me.model.input_selector
 
