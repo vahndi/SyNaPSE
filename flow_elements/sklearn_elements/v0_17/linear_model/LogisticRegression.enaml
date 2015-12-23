@@ -95,7 +95,7 @@ class LogisticRegression_Model(FlowElement):
             solver = self.uiModel.solver
             penalty = self.uiModel.penalty
             if solver in ('newton-cg', 'lbfgs'):
-                solver = l2
+                penalty = 'l2'
             dual = None
             if penalty == 'l2' and solver == 'liblinear':
                 dual = self.uiModel.dual
