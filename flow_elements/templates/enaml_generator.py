@@ -35,7 +35,12 @@ def get_enaml_FloatField(widget):
     enamlCode = '%sFloatField:\n' % widget.indent1()
     enamlCode += '%svalue := model.%s\n' % (widget.indent2(), 
                                             widget.w_name)
-
+    if widget.get_float_min_value() is not None:
+        enamlCode += '%sminimum = model.%s_min\n' % (widget.indent2(), 
+                                                     widget.w_name)
+    if widget.get_float_max_value() is not None:
+        enamlCode += '%smaximum = model.%s_max\n' % (widget.indent2(), 
+                                                     widget.w_name)
     return enamlCode
 
 
@@ -44,7 +49,12 @@ def get_enaml_IntField(widget):
     enamlCode = '%sIntField:\n' % widget.indent1()
     enamlCode += '%svalue := model.%s\n' % (widget.indent2(), 
                                             widget.w_name)
-
+    if widget.get_int_min_value() is not None:
+        enamlCode += '%sminimum = model.%s_min\n' % (widget.indent2(), 
+                                                     widget.w_name)
+    if widget.get_int_max_value() is not None:
+        enamlCode += '%smaximum = model.%s_max\n' % (widget.indent2(), 
+                                                     widget.w_name)
     return enamlCode 
 
 
@@ -62,10 +72,10 @@ def get_enaml_ObjectCombo(widget):
 def get_enaml_Spinbox(widget):
     
     enamlCode = '%sSpinBox:\n' % widget.indent1()
-    if widget.get_min_value() is not None:
+    if widget.get_int_min_value() is not None:
         enamlCode += '%sminimum = model.%s_min\n' % (widget.indent2(), 
                                                      widget.w_name)
-    if widget.get_max_value() is not None:
+    if widget.get_int_max_value() is not None:
         enamlCode += '%smaximum = model.%s_max\n' % (widget.indent2(), 
                                                      widget.w_name)
     

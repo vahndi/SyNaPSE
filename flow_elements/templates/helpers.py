@@ -57,21 +57,49 @@ class widget(object):
         self.w_args = w_args
         
         
-    def get_min_value(self):
+    def get_int_min_value(self):
         
         if isinstance(self.w_values, (str, unicode)):
-            return int(self.w_values.split(',')[0])
+            try:
+                return int(self.w_values.split(',')[0])
+            except:
+                return None
         else:
             return None
 
 
-    def get_max_value(self):
+    def get_int_max_value(self):
         
         if isinstance(self.w_values, (str, unicode)):
-            return int(self.w_values.split(',')[1])
+            try:
+                return int(self.w_values.split(',')[1])
+            except:
+                return None
         else:
             return None
-    
+
+
+    def get_float_min_value(self):
+        
+        if isinstance(self.w_values, (str, unicode)):
+            try:
+                return float(self.w_values.split(',')[0])
+            except:
+                return None
+        else:
+            return None
+
+
+    def get_float_max_value(self):
+        
+        if isinstance(self.w_values, (str, unicode)):
+            try:
+                return float(self.w_values.split(',')[1])
+            except:
+                return None
+        else:
+            return None
+            
             
     def dont_execute_condition(self):
         

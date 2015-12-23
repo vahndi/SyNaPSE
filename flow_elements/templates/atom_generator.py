@@ -39,8 +39,16 @@ def get_Atom_IntField(widget):
     str_value = ''    
     if isinstance(widget.w_value, (int, float)):
         str_value = str(int(widget.w_value))
+    str_atom = '%s%s = Int(%s)\n' % (indent, widget.w_name, str_value)    
 
-    return '%s%s = Int(%s)\n' % (indent, widget.w_name, str_value)    
+    min_val = widget.get_int_min_value()
+    if min_val is not None:
+        str_atom += '%s%s_min = Int(%i)\n' % (indent, widget.w_name, min_val)
+    max_val = widget.get_int_max_value()
+    if max_val is not None:
+        str_atom += '%s%s_max = Int(%i)\n' % (indent, widget.w_name, max_val)
+
+    return str_atom
 
 
 def get_Atom_FloatField(widget):
@@ -48,8 +56,17 @@ def get_Atom_FloatField(widget):
     str_value = ''    
     if isinstance(widget.w_value, (int, float)):
         str_value = str(widget.w_value)
+    str_atom = '%s%s = Float(%s)\n' % (indent, widget.w_name, str_value) 
 
-    return '%s%s = Float(%s)\n' % (indent, widget.w_name, str_value) 
+    min_val = widget.get_float_min_value()
+    if min_val is not None:
+        str_atom += '%s%s_min = Float(%i)\n' % (indent, widget.w_name, min_val)
+    max_val = widget.get_float_max_value()
+    if max_val is not None:
+        str_atom += '%s%s_max = Float(%i)\n' % (indent, widget.w_name, max_val)
+
+    return str_atom
+
 
 
 def get_Atom_ObjectCombo(widget):
@@ -75,10 +92,10 @@ def get_Atom_SpinBox(widget):
         str_value = str(int(widget.w_value))
 
     str_atom = '%s%s = Int(%s)\n' % (indent, widget.w_name, str_value)     
-    min_val = widget.get_min_value()
+    min_val = widget.get_int_min_value()
     if min_val is not None:
         str_atom += '%s%s_min = Int(%i)\n' % (indent, widget.w_name, min_val)
-    max_val = widget.get_max_value()
+    max_val = widget.get_int_max_value()
     if max_val is not None:
         str_atom += '%s%s_max = Int(%i)\n' % (indent, widget.w_name, max_val)
 

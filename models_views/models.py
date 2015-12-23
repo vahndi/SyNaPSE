@@ -16,7 +16,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import ARDRegression_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
-
+    from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
 
 
 class Main_Model(object):
@@ -33,7 +33,8 @@ class Main_Model(object):
                      KMeans_Model,
                      RandomForestClassifier_Model,
                      ARDRegression_Model,
-                     BayesianRidge_Model]
+                     BayesianRidge_Model,
+                     ElasticNet_Model]
 
     
     def __init__(self):

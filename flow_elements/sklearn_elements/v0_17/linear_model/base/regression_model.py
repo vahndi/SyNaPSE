@@ -74,6 +74,10 @@ class RegressionModel(FlowElement):
                                                 data =  self.estimator.coef_,
                                                 name = 'coefficients')
         
+        if hasattr(self.uiModel, 'compute_score'):
+            if self.uiModel.compute_score:
+                attributes['scores'] = self.estimator.scores_        
+        
         if hasattr(self.estimator, 'intercept_'):
             attributes['intercept'] = self.estimator.intercept_
             
@@ -81,15 +85,22 @@ class RegressionModel(FlowElement):
             attributes['lambda'] = Series(index = input_columns,
                                           data =  self.estimator.lambda_,
                                           name = 'lambda')
+                                          
+        if hasattr(self.estimator, 'n_iter_'):
+            attributes['num_iterations'] = self.estimator.n_iter_
 
         if hasattr(self.estimator, 'sigma_'):
             attributes['sigma'] = DataFrame(self.estimator.sigma_,
                                             index = input_columns,
                                             columns = input_columns)            
 
-        if hasattr(self.uiModel, 'compute_score'):
-            if self.uiModel.compute_score:
-                attributes['scores'] = self.estimator.scores_
+        if hasattr(self.estimator, 'sparse_coef_'):
+            attributes['sparse_coefficients'] = Series(
+                                        index = input_columns,
+                                        data =  self.estimator.sparse_coef_,
+                                        name = 'sparse_coefficients'
+                                        )
+
 
         return attributes
 

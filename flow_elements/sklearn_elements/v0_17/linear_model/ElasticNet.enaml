@@ -1,0 +1,191 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import ElasticNet
+
+
+
+class ElasticNet_Model(RegressionModel):
+
+
+    elementName = 'Elastic Net'
+
+
+    class ui(Atom):
+
+        input_selector = Value(Atom)
+        
+        # alpha
+        alpha = Float(1)
+        alpha_min = Float(0)
+        # l1_ratio
+        l1_ratio = Float(0.5)
+        l1_ratio_min = Float(0)
+        l1_ratio_max = Float(1)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # normalize
+        normalize = Bool(False)
+        # precompute
+        precompute = Bool(False)
+        # max_iter
+        max_iter = Int(1000)
+        max_iter_min = Int(1)
+        # copy_X
+        copy_X = Bool(True)
+        # tol
+        tol = Float(0.0001)
+        tol_min = Float(0)
+        # warm_start
+        warm_start = Bool(False)
+        # positive
+        positive = Bool(False)
+        # random_state
+        random_state = Int(1)
+        # selection
+        selection = Str('cyclic')
+        selection_list = List(str, ['cyclic', 'random'])
+
+
+    def setInputs(self, dataFrame):
+        
+        self.set_inputs(dataFrame)
+        self.uiModel = ElasticNet_Model.ui(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try:
+            
+            # Assign local variables
+            args = {'alpha': self.uiModel.alpha,
+                    'l1_ratio': self.uiModel.l1_ratio,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'normalize': self.uiModel.normalize,
+                    'precompute': self.uiModel.precompute,
+                    'max_iter': self.uiModel.max_iter,
+                    'copy_X': self.uiModel.copy_X,
+                    'tol': self.uiModel.tol,
+                    'warm_start': self.uiModel.warm_start,
+                    'positive': self.uiModel.positive,
+                    'random_state': self.uiModel.random_state,
+                    'selection': self.uiModel.selection}
+            
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+    
+            # Create ARD Regression model
+            self.estimator = ElasticNet(**args)
+            self.train_test_model()
+
+            # Return outputs
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef ElasticNet_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'alpha'
+                FloatField:
+                    value := model.alpha
+
+                Label:
+                    text = 'l1 Ratio'
+                FloatField:
+                    value := model.l1_ratio
+                    minimum = model.l1_ratio_min
+                    maximum = model.l1_ratio_max
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'Normalize'
+                CheckBox:
+                    checked := model.normalize
+
+                Label:
+                    text = 'Precompute'
+                CheckBox:
+                    checked := model.precompute
+
+                Label:
+                    text = 'Max Iterations'
+                IntField:
+                    value := model.max_iter
+                    minimum = model.max_iter_min
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_X
+
+                Label:
+                    text = 'Tolerance'
+                FloatField:
+                    value := model.tol
+                    minimum = model.tol_min
+
+                Label:
+                    text = 'Warm Start'
+                CheckBox:
+                    checked := model.warm_start
+
+                Label:
+                    text = 'Positive'
+                CheckBox:
+                    checked := model.positive
+
+                Label:
+                    text = 'Random State Seed'
+                IntField:
+                    value := model.random_state
+
+                Label:
+                    text = 'Selection'
+                ObjectCombo:
+                    items = model.selection_list
+                    selected := model.selection
