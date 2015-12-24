@@ -18,7 +18,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.Lars import Lars_Model
-    
+    from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
     
 
 class Main_Model(object):
@@ -33,6 +33,7 @@ class Main_Model(object):
                      BayesianRidge_Model,
                      ElasticNet_Model,
                      Lars_Model,
+                     LassoLars_Model,
                      LinearRegression_Model,
                      LogisticRegression_Model,
                      KMeans_Model,
@@ -238,7 +239,7 @@ class FlowList(object):
                     print '__class__:', str(e.__class__)
                     print '__doc__:', e.__doc__
                     print 'message:', e.message
-                    print 'args:', e.args
+                    print 'args:', str(e.args)
                     
                     return
             
