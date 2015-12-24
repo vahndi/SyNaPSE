@@ -19,6 +19,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.Lars import Lars_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
+    from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
     
 
 class Main_Model(object):
@@ -34,6 +35,7 @@ class Main_Model(object):
                      ElasticNet_Model,
                      Lars_Model,
                      LassoLars_Model,
+                     LassoLarsIC_Model,
                      LinearRegression_Model,
                      LogisticRegression_Model,
                      KMeans_Model,

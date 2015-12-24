@@ -9,48 +9,46 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
 from .base.regression_model import RegressionModel
-from sklearn.linear_model import LassoLars
+from sklearn.linear_model import LassoLarsIC
 
 
 
-class LassoLars_Model(RegressionModel):
+class LassoLarsIC_Model(RegressionModel):
 
-    elementName = 'Lasso Lars'
+
+    elementName = 'Lasso Lars IC'
 
 
     class ui(Atom):
         
         input_selector = Value(Atom)
 
-        # alpha
-        alpha = Float(1)
-        alpha_min = Float(0)
+        # criterion
+        criterion = Str('aic')
+        criterion_list = List(str, ['aic', 'bic'])
         # fit_intercept
         fit_intercept = Bool(True)
-        # positive
-        positive = Bool(False)
         # verbose
         verbose = Bool(False)
         # normalize
-        normalize = Bool(False)
-        # copy_X
-        copy_X = Bool(True)
+        normalize = Bool(True)
         # precompute
         precompute = Str('auto')
         precompute_list = List(str, ['True', 'False', 'auto'])
         # max_iter
         max_iter = Int(500)
-        max_iter_min = Int(1)
         # eps
         eps = Float(2.22044604925e-16)
-        # fit_path
-        fit_path = Bool(True)
+        # copy_X
+        copy_X = Bool(True)
+        # positive
+        positive = Bool(False)
 
 
     def setInputs(self, dataFrame):
 
         self.set_inputs(dataFrame)
-        self.uiModel = LassoLars_Model.ui(
+        self.uiModel = LassoLarsIC_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
 
@@ -60,25 +58,24 @@ class LassoLars_Model(RegressionModel):
         try:
             
             # Assign local variables
-            args = {'alpha': self.uiModel.alpha,
+            args = {'criterion': self.uiModel.criterion,
                     'fit_intercept': self.uiModel.fit_intercept,
-                    'positive': self.uiModel.positive,
                     'verbose': self.uiModel.verbose,
                     'normalize': self.uiModel.normalize,
-                    'copy_X': self.uiModel.copy_X,
                     'precompute': (self.uiModel.precompute 
                                    if self.uiModel.precompute == 'auto'
                                    else bool(self.uiModel.precompute)),
                     'max_iter': self.uiModel.max_iter,
                     'eps': self.uiModel.eps,
-                    'fit_path': self.uiModel.fit_path}
+                    'copy_X': self.uiModel.copy_X,
+                    'positive': self.uiModel.positive}
 
             # Validate inputs
             if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
     
             # Create Lars Regression model
-            self.estimator = LassoLars(**args)
+            self.estimator = LassoLarsIC(**args)
             self.train_test_model()
 
             # Return outputs
@@ -96,12 +93,12 @@ class LassoLars_Model(RegressionModel):
 
 
 
-enamldef LassoLars_View(GroupBox): me:
+enamldef LassoLarsIC_View(GroupBox): me:
 
     attr model
 
     Notebook:
-
+        
         Page:
 
             title = 'Inputs'
@@ -118,20 +115,15 @@ enamldef LassoLars_View(GroupBox): me:
             Form:
 
                 Label:
-                    text = 'Alpha'
-                FloatField:
-                    value := model.alpha
-                    minimum = model.alpha_min
+                    text = 'Criterion'
+                ObjectCombo:
+                    items = model.criterion_list
+                    selected := model.criterion
 
                 Label:
                     text = 'Fit Intercept'
                 CheckBox:
                     checked := model.fit_intercept
-
-                Label:
-                    text = 'Positive'
-                CheckBox:
-                    checked := model.positive
 
                 Label:
                     text = 'Verbose'
@@ -144,11 +136,6 @@ enamldef LassoLars_View(GroupBox): me:
                     checked := model.normalize
 
                 Label:
-                    text = 'Copy X'
-                CheckBox:
-                    checked := model.copy_X
-
-                Label:
                     text = 'Precompute'
                 ObjectCombo:
                     items = model.precompute_list
@@ -158,7 +145,6 @@ enamldef LassoLars_View(GroupBox): me:
                     text = 'Max Iterations'
                 IntField:
                     value := model.max_iter
-                    minimum = model.max_iter_min
 
                 Label:
                     text = 'eps'
@@ -166,6 +152,11 @@ enamldef LassoLars_View(GroupBox): me:
                     value := model.eps
 
                 Label:
-                    text = 'Fit Path'
+                    text = 'Copy X'
                 CheckBox:
-                    checked := model.fit_path
+                    checked := model.copy_X
+
+                Label:
+                    text = 'Positive'
+                CheckBox:
+                    checked := model.positive
