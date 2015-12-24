@@ -11,4 +11,4 @@ class FlowElement(object):
         return {'Exception': {'__class__': str(e.__class__),
                               '__doc__': e.__doc__,
                               'message': e.message,
-                              'args': e.args}}
+                              'args': str(e.args)}}

@@ -1,0 +1,159 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import Lars
+
+
+
+class Lars_Model(RegressionModel):
+
+    elementName = 'Lars'
+
+
+    class ui(Atom):
+        
+        input_selector = Value(Atom)
+
+        # n_nonzero_coefs
+        n_nonzero_coefs = Int(500)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # positive
+        positive = Bool(False)
+        # verbose
+        verbose = Bool(False)
+        # normalize
+        normalize = Bool(True)
+        # precompute
+        precompute = Str('auto')
+        precompute_list = List(str, ['True', 'False', 'auto'])
+        # copy_X
+        copy_X = Bool(True)
+        # eps
+        eps = Float(2.22044604925e-16)
+        # fit_path
+        fit_path = Bool(False)
+
+
+    def setInputs(self, dataFrame):
+
+        self.set_inputs(dataFrame)
+        self.uiModel = Lars_Model.ui(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try: 
+            
+            # Assign local variables
+            args = {'n_nonzero_coefs': self.uiModel.n_nonzero_coefs,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'positive': self.uiModel.positive,
+                    'verbose': self.uiModel.verbose,
+                    'normalize': self.uiModel.normalize,
+                    'precompute': (self.uiModel.precompute 
+                                   if self.uiModel.precompute == 'auto'
+                                   else bool(self.uiModel.precompute)),
+                    'copy_X': self.uiModel.copy_X,
+                    'eps': self.uiModel.eps,
+                    'fit_path': self.uiModel.fit_path}
+
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+    
+            # Create Lars Regression model
+            self.estimator = Lars(**args)
+            self.train_test_model()
+
+            # Return outputs
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Lars_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = '# Non-zero Coefficients'
+                IntField:
+                    value := model.n_nonzero_coefs
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'Positive'
+                CheckBox:
+                    checked := model.positive
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+
+                Label:
+                    text = 'Normalize'
+                CheckBox:
+                    checked := model.normalize
+
+                Label:
+                    text = 'Precompute'
+                ObjectCombo:
+                    items = model.precompute_list
+                    selected := model.precompute
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_X
+
+                Label:
+                    text = 'eps'
+                FloatField:
+                    value := model.eps
+
+                Label:
+                    text = 'Fit Path'
+                CheckBox:
+                    checked := model.fit_path

@@ -85,7 +85,7 @@ class ElasticNet_Model(RegressionModel):
             if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
     
-            # Create ARD Regression model
+            # Create ElasticNet Regression model
             self.estimator = ElasticNet(**args)
             self.train_test_model()
 

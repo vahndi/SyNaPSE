@@ -38,7 +38,7 @@ def getOutputCode(widget):
         outputCode += '%sinput_columns = self.%s.checked_inputs()\n' % (spc(8), widget.w_name)
         outputCode += '%starget_column = self.%s.selected_target()\n' % (spc(8), widget.w_name)
     else:
-        outputCode += '%s%s = self.uiModel.%s\n' \
+        outputCode += "%s'%s': self.uiModel.%s,\n" \
                      % (spc(8), widget.w_name, widget.w_name)
 
     return outputCode
@@ -83,9 +83,11 @@ def getModelCode(element_name, dataframe):
     # Get outputs
     modelCode += '\n\n%sdef getOutputs(self):\n\n' % spc(4)
     modelCode += '%s# Assign local variables\n' % spc(8)
+    modelCode += '%sargs = {\n' % spc(8)
     for widge in widgets:
         modelCode += getOutputCode(widge)
-
+    modelCode += '}\n'
+    
     modelCode += "\n%sreturn {'Outputs': 'No Output'}" % spc(8)
     
     return modelCode

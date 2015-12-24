@@ -5,7 +5,7 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from models_views.flowElement import FlowElement
 
 # Other
-from numpy import float64, int64
+from numpy import float64, int64, squeeze
 from pandasFunctions import joinInputsTargetsPredictions
 from pandas import DataFrame, Series
 from ...metrics.regression_metrics import RegressionMetrics as RM
@@ -40,7 +40,7 @@ class RegressionModel(FlowElement):
         self.input_selector.get_training_test_data()
         
         # Train the model using the training sets
-        self.estimator.fit(X_train, y_train)            
+        self.estimator.fit(X_train, y_train)
         y_pred_train = self.estimator.predict(X_train)
         self.y_pred_test = self.estimator.predict(X_test)            
 
@@ -52,8 +52,7 @@ class RegressionModel(FlowElement):
                                            test_inputs = X_test, 
                                            test_targets = self.y_test, 
                                            test_predictions = self.y_pred_test
-                                           )
-                                           
+                                           )            
         self.df_targets_predictions = self.df_predictions[
                                                 ['Target ' + target_column, 
                                                  'Predicted ' + target_column, 
@@ -67,34 +66,42 @@ class RegressionModel(FlowElement):
         attributes = {}
 
         if hasattr(self.estimator, 'alpha_'):
+            print 'alpha_'
             attributes['alpha'] = self.estimator.alpha_
         
         if hasattr(self.estimator, 'coef_'):
+            print 'coef_'
             attributes['coefficients'] = Series(index = input_columns,
-                                                data =  self.estimator.coef_,
+                                                data =  squeeze(self.estimator.coef_),
                                                 name = 'coefficients')
         
         if hasattr(self.uiModel, 'compute_score'):
             if self.uiModel.compute_score:
+                print 'scores_'
                 attributes['scores'] = self.estimator.scores_        
         
         if hasattr(self.estimator, 'intercept_'):
+            print 'intercept_'
             attributes['intercept'] = self.estimator.intercept_
             
         if hasattr(self.estimator, 'lambda_'):
+            print 'lambda_'
             attributes['lambda'] = Series(index = input_columns,
                                           data =  self.estimator.lambda_,
                                           name = 'lambda')
                                           
         if hasattr(self.estimator, 'n_iter_'):
+            print 'n_iter_'
             attributes['num_iterations'] = self.estimator.n_iter_
 
         if hasattr(self.estimator, 'sigma_'):
+            print 'sigma_'
             attributes['sigma'] = DataFrame(self.estimator.sigma_,
                                             index = input_columns,
                                             columns = input_columns)            
 
         if hasattr(self.estimator, 'sparse_coef_'):
+            print 'sparse_coef_'
             attributes['sparse_coefficients'] = Series(
                                         index = input_columns,
                                         data =  self.estimator.sparse_coef_,
