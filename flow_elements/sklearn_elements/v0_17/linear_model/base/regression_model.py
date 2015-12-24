@@ -65,49 +65,49 @@ class RegressionModel(FlowElement):
         
         attributes = {}
 
+        if hasattr(self.estimator, 'active_'):
+            attributes['active'] = self.estimator.active_
+
         if hasattr(self.estimator, 'alpha_'):
-            print 'alpha_'
             attributes['alpha'] = self.estimator.alpha_
+            
+        if hasattr(self.estimator, 'alphas_'):
+            attributes['alphas_'] = self.estimator.alphas_
         
         if hasattr(self.estimator, 'coef_'):
-            print 'coef_'
             attributes['coefficients'] = Series(index = input_columns,
                                                 data =  squeeze(self.estimator.coef_),
                                                 name = 'coefficients')
         
+        if hasattr(self.estimator, 'coef_path_'):
+            attributes['coefficient_path'] = self.estimator.coef_path_
+        
         if hasattr(self.uiModel, 'compute_score'):
             if self.uiModel.compute_score:
-                print 'scores_'
                 attributes['scores'] = self.estimator.scores_        
         
         if hasattr(self.estimator, 'intercept_'):
-            print 'intercept_'
             attributes['intercept'] = self.estimator.intercept_
             
         if hasattr(self.estimator, 'lambda_'):
-            print 'lambda_'
             attributes['lambda'] = Series(index = input_columns,
                                           data =  self.estimator.lambda_,
                                           name = 'lambda')
                                           
         if hasattr(self.estimator, 'n_iter_'):
-            print 'n_iter_'
             attributes['num_iterations'] = self.estimator.n_iter_
 
         if hasattr(self.estimator, 'sigma_'):
-            print 'sigma_'
             attributes['sigma'] = DataFrame(self.estimator.sigma_,
                                             index = input_columns,
                                             columns = input_columns)            
 
         if hasattr(self.estimator, 'sparse_coef_'):
-            print 'sparse_coef_'
             attributes['sparse_coefficients'] = Series(
                                         index = input_columns,
                                         data =  self.estimator.sparse_coef_,
                                         name = 'sparse_coefficients'
                                         )
-
 
         return attributes
 
