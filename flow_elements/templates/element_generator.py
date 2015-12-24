@@ -112,7 +112,7 @@ def inspect_element_args(pickle_name, module_name = ''):
 if __name__ == '__main__':
     
     generate_element(spreadsheet_name = 'sklearn.linear_model',
-                     element_name = 'LassoLarsIC')
+                     element_name = 'PassiveAggressiveRegressor')
 
 #    inspect_element_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')

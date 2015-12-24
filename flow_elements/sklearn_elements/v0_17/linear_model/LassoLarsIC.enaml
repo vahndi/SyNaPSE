@@ -74,7 +74,7 @@ class LassoLarsIC_Model(RegressionModel):
             if not self.input_selector.validate_inputs():
                 return {'Outputs': 'No Outputs'}  
     
-            # Create Lars Regression model
+            # Create Lasso Lars IC Regression model
             self.estimator = LassoLarsIC(**args)
             self.train_test_model()
 

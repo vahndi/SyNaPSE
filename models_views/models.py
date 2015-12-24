@@ -9,17 +9,20 @@ with enaml.imports():
     from flow_elements.PandasPlot import PandasPlot
     from flow_elements.LoadDataFrame import LoadDataFrame
 
-    from flow_elements.sklearn_elements.v0_17.decomposition.PCA import PCA_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import LinearRegression_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
     from flow_elements.sklearn_elements.v0_17.cluster.KMeans import KMeans_Model
     from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
+    from flow_elements.sklearn_elements.v0_17.decomposition.PCA import PCA_Model
+
     from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import ARDRegression_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.Lars import Lars_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
+    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
+    from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import LinearRegression_Model
+    from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
+
     
 
 class Main_Model(object):
@@ -39,6 +42,7 @@ class Main_Model(object):
                      LinearRegression_Model,
                      LogisticRegression_Model,
                      KMeans_Model,
+                     PassiveAggressiveRegressor_Model,
                      PCA_Model,
                      RandomForestClassifier_Model]
 
