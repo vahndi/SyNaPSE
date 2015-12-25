@@ -16,7 +16,9 @@ class LinearRegression_Model(RegressionModel):
 
 
     elementName = 'Linear Regression'
-
+    elementDescription = 'Ordinary least squares Linear Regression.'
+    elementDocumentation = RegressionModel.doc_root + \
+                           'LinearRegression.html'
    
     class ui(Atom):
 

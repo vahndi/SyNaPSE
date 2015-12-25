@@ -16,7 +16,9 @@ from sklearn.linear_model import LassoLars
 class LassoLars_Model(RegressionModel):
 
     elementName = 'Lasso Lars'
-
+    elementDescription = \
+        'Lasso model fit with Least Angle Regression a.k.a. Lars.'
+    elementDocumentation = RegressionModel.doc_root + 'LassoLars.html'
 
     class ui(Atom):
         

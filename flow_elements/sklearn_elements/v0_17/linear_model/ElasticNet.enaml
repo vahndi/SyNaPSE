@@ -17,7 +17,9 @@ class ElasticNet_Model(RegressionModel):
 
 
     elementName = 'Elastic Net'
-
+    elementDescription = \
+        'Linear regression with combined L1 and L2 priors as regularizer.'
+    elementDocumentation = RegressionModel.doc_root + 'ElasticNet.html'
 
     class ui(Atom):
 

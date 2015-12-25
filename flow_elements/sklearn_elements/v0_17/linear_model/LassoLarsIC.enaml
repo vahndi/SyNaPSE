@@ -17,7 +17,10 @@ class LassoLarsIC_Model(RegressionModel):
 
 
     elementName = 'Lasso Lars IC'
-
+    elementDescription = \
+        'Lasso model fit with Lars using BIC or AIC for model selection.'
+    elementDocumentation = RegressionModel.doc_root + \
+                           'LassoLarsIC.html'
 
     class ui(Atom):
         

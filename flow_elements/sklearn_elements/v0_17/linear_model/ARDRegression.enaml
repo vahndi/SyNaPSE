@@ -16,6 +16,8 @@ class ARDRegression_Model(RegressionModel):
 
 
     elementName = 'ARD Regression'
+    elementDescription = 'Bayesian ARD regression.'
+    elementDocumentation = RegressionModel.doc_root + 'ARDRegression.html'
 
 
     class ui(Atom):

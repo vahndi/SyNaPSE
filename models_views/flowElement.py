@@ -3,7 +3,10 @@ class FlowElement(object):
     The base class for all flow elements
     '''    
     elementName = ''
+    elementDescription = ''
+    elementDocumentation = ''
     precedingElements = []
+    doc_root = ''
 
 
     def standard_exception(self, e):

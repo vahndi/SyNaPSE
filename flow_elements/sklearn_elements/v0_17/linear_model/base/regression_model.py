@@ -2,7 +2,7 @@
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 
 # Models
-from models_views.flowElement import FlowElement
+from ...sklearn_element import SKLearnElement
 
 # Other
 from numpy import float64, int64, squeeze
@@ -10,17 +10,12 @@ from pandasFunctions import joinInputsTargetsPredictions
 from pandas import DataFrame, Series
 from ...metrics.regression_metrics import RegressionMetrics as RM
 
-# Preceding Elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
 
 
+class RegressionModel(SKLearnElement):
 
-class RegressionModel(FlowElement):
-
-
-    precedingElements = [LoadDataFrame, GetColumns]
-
+    doc_root = \
+    'http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.'
     
     def set_inputs(self, dataFrame):
         

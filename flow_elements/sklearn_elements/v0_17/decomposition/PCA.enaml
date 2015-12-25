@@ -6,23 +6,22 @@ from enaml.core.api import Conditional
 from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label, ObjectCombo, SpinBox
                               )
-
 # Models
-from models_views.flowElement import FlowElement
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
+from sklearn.decomposition import PCA
 
 # Other
-from sklearn.decomposition import PCA
+from ..sklearn_element import SKLearnElement
 from pandas import Series, DataFrame, concat
 from pandasFunctions import splitCategoricalNumeric
 
 
 
-class PCA_Model(FlowElement):
+class PCA_Model(SKLearnElement):
     
     elementName = 'PCA'
-    precedingElements = [LoadDataFrame, GetColumns]
+    elementDescription = 'Principal component analysis.'
+    elementDocumentation = SKLearnElement.doc_root + \
+                           'sklearn.decomposition.PCA.html'
 
     
     class ui(Atom):

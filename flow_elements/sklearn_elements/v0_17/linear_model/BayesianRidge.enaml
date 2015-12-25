@@ -16,7 +16,8 @@ class BayesianRidge_Model(RegressionModel):
 
 
     elementName = 'Bayesian Ridge Regression'
-
+    elementDescription = 'Bayesian ridge regression.'
+    elementDocumentation = RegressionModel.doc_root + 'BayesianRidge.html'
 
     class ui(Atom):
 

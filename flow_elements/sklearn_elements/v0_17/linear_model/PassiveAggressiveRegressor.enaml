@@ -17,7 +17,9 @@ class PassiveAggressiveRegressor_Model(RegressionModel):
 
 
     elementName = 'Passive Aggressive Regressor'
-
+    elementDescription = 'Passive Aggressive Regressor.'
+    elementDocumentation = RegressionModel.doc_root + \
+                           'PassiveAggressiveRegressor.html'
 
     class ui(Atom):
 

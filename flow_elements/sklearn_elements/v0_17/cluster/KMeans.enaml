@@ -11,33 +11,26 @@ from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
 # Models
-from models_views.flowElement import FlowElement
 from models_views.elementOutput_View import create_figure
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
-# Preceding elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
-
 # Other
 from pandas import DataFrame, Series, concat
-from pandasFunctions import splitTrainingTest
-from pandasFunctions import splitCategoricalNumeric
-from pandasFunctions import joinInputsPredictions
-from pandasFunctions import joinInputsTargetsPredictions
 from pandasFunctions import getConfusionMatrix
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from ..sklearn_element import SKLearnElement
 from ..metrics.clustering_metrics import ClusteringMetrics as cm
 
 
 
-class KMeans_Model(FlowElement):
+class KMeans_Model(SKLearnElement):
 
     elementName = 'K Means'
-    precedingElements = [LoadDataFrame, GetColumns]
-
+    elementDescription = 'K-means clustering algorithm.'
+    elementDocumentation = SKLearnElement.doc_root + \
+                           'sklearn.cluster.k_means.html'
 
     class ui(Atom):
 

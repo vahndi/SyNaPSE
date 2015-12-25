@@ -16,7 +16,8 @@ from sklearn.linear_model import Lars
 class Lars_Model(RegressionModel):
 
     elementName = 'Lars'
-
+    elementDescription = 'Least Angle Regression model a.k.a. LAR.'
+    elementDocumentation = RegressionModel.doc_root + 'Lars.html'
 
     class ui(Atom):
         

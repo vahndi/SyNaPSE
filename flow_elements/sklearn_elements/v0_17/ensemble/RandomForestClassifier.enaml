@@ -16,11 +16,8 @@ from .subviews.Leaves import Leaves_Model, Leaves_View
 from .subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
 
 # Models
-from models_views.flowElement import FlowElement
+from ..sklearn_element import SKLearnElement
 
-# Preceding elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
 
 # Other
 from sklearn.ensemble import RandomForestClassifier
@@ -32,10 +29,12 @@ from ..metrics.classification_metrics import ClassificationMetrics as CM
 
 
 
-class RandomForestClassifier_Model(FlowElement):
+class RandomForestClassifier_Model(SKLearnElement):
 
     elementName = 'Random Forest Classifier'
-    precedingElements = [LoadDataFrame, GetColumns]
+    elementDescription = 'A random forest classifier.'
+    elementDocumentation = SKLearnElement.doc_root + \
+                           'sklearn.ensemble.RandomForestClassifier.html'
 
 
     class ui(Atom):
