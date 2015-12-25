@@ -17,6 +17,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.Lars import Lars_Model
+    from flow_elements.sklearn_elements.v0_17.linear_model.Lasso import Lasso_Model  
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
     from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
@@ -37,6 +38,7 @@ class Main_Model(object):
                      BayesianRidge_Model,
                      ElasticNet_Model,
                      Lars_Model,
+                     Lasso_Model,
                      LassoLars_Model,
                      LassoLarsIC_Model,
                      LinearRegression_Model,

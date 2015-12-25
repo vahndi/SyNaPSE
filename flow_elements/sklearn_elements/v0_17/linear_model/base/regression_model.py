@@ -70,9 +70,11 @@ class RegressionModel(SKLearnElement):
             attributes['alphas_'] = self.estimator.alphas_
         
         if hasattr(self.estimator, 'coef_'):
-            attributes['coefficients'] = Series(index = input_columns,
-                                                data =  squeeze(self.estimator.coef_),
-                                                name = 'coefficients')
+            attributes['coefficients'] = Series(
+                                        index = input_columns,
+                                        data =  squeeze(self.estimator.coef_),
+                                        name = 'coefficients'
+                                        )
         
         if hasattr(self.estimator, 'coef_path_'):
             attributes['coefficient_path'] = self.estimator.coef_path_
