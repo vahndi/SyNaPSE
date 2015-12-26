@@ -152,7 +152,7 @@ enamldef Ridge_View(GroupBox): me:
     
 
                 Label:
-                    text = 'Tol'
+                    text = 'Tolerance'
                 FloatField:
                     value := model.tol
 
