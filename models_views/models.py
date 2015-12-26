@@ -4,15 +4,25 @@ from inspect import getargspec
 
 
 with enaml.imports():
-    
+
+        
     from flow_elements.GetColumns import GetColumns
     from flow_elements.PandasPlot import PandasPlot
     from flow_elements.LoadDataFrame import LoadDataFrame
 
+    # Classification
+    from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
+
+    # Clustering
     from flow_elements.sklearn_elements.v0_17.cluster.KMeans import KMeans_Model
+    
+    # Ensemble
     from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
+
+    # Matrix Decomposition
     from flow_elements.sklearn_elements.v0_17.decomposition.PCA import PCA_Model
 
+    # Regression
     from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import ARDRegression_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
@@ -20,9 +30,9 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.Lasso import Lasso_Model  
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
     from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
-    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
     from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import LinearRegression_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
+    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
+    from flow_elements.sklearn_elements.v0_17.linear_model.Ridge import Ridge_Model 
 
     
 
@@ -45,6 +55,7 @@ class Main_Model(object):
                      LogisticRegression_Model,
                      KMeans_Model,
                      PassiveAggressiveRegressor_Model,
+                     Ridge_Model,
                      PCA_Model,
                      RandomForestClassifier_Model]
 

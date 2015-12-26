@@ -1,0 +1,168 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.core.api import Conditional
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import Ridge
+
+
+
+class Ridge_Model(RegressionModel):
+
+    elementName = 'Ridge'
+    elementDescription = 'Linear least squares with l2 regularization.'
+    elementDocumentation = RegressionModel.doc_root + 'Ridge.html'
+
+
+    class ui(Atom):
+
+        input_selector = Value(Atom)
+
+        # alpha
+        alpha = Float(1)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # normalize
+        normalize = Bool(False)
+        # copy_X
+        copy_X = Bool(True)
+        # max_iter_type
+        max_iter_type = Str('auto, int')
+        max_iter_type_list = List(str)
+        # max_iter_int
+        max_iter_int = Int(1000)
+        max_iter_int_min = Int(1)
+        # tol
+        tol = Float(0.001)
+        # solver
+        solver = Str('auto')
+        solver_list = List(str, ['auto', 'svd', 'cholesky', 
+                                 'lsqr', 'sparse_cg', 'sag'])
+        # random_state
+        random_state = Int(1)
+
+
+    def setInputs(self, dataFrame):
+        
+        self.set_inputs(dataFrame)
+        self.uiModel = Ridge_Model.ui(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {'alpha': self.uiModel.alpha,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'normalize': self.uiModel.normalize,
+                    'copy_X': self.uiModel.copy_X,
+                    'max_iter': (self.uiModel.max_iter_int 
+                                 if self.uiModel.max_iter_type == 'int'
+                                 else None),
+                    'tol': self.uiModel.tol,
+                    'solver': self.uiModel.solver,
+                    'random_state': self.uiModel.random_state}
+
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+    
+            # Create Ridge Regression model
+            self.estimator = Ridge(**args)
+            self.train_test_model()
+
+            # Return outputs
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Ridge_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+        
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Alpha'
+                FloatField:
+                    value := model.alpha
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'Normalize'
+                CheckBox:
+                    checked := model.normalize
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_X
+
+                Label:
+                    text = 'Max Iterations Type'
+                ObjectCombo:
+                    items = model.max_iter_type_list
+                    selected := model.max_iter_type
+
+                Conditional:
+                    condition << model.max_iter_type == 'int'
+                    Label:
+                        text = 'Max Iterations'
+                    IntField:
+                        value := model.max_iter_int
+                        minimum = model.max_iter_int_min
+    
+
+                Label:
+                    text = 'Tol'
+                FloatField:
+                    value := model.tol
+
+                Label:
+                    text = 'Solver'
+                ObjectCombo:
+                    items = model.solver_list
+                    selected := model.solver
+
+                Label:
+                    text = 'Random State'
+                IntField:
+                    value := model.random_state

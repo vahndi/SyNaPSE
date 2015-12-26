@@ -34,6 +34,9 @@ from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import (
         LassoLarsIC_Model, LassoLarsIC_View)
 from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import (
         PassiveAggressiveRegressor_Model, PassiveAggressiveRegressor_View)
+from flow_elements.sklearn_elements.v0_17.linear_model.Ridge import (
+        Ridge_Model, Ridge_View)
+
 
 
 elementViewDict = {LoadDataFrame: LoadDataFrame_View,
@@ -50,6 +53,7 @@ elementViewDict = {LoadDataFrame: LoadDataFrame_View,
                    LinearRegression_Model: LinearRegression_View,
                    LogisticRegression_Model: LogisticRegression_View,
                    PassiveAggressiveRegressor_Model: PassiveAggressiveRegressor_View,
+                   Ridge_Model: Ridge_View,
                    RandomForestClassifier_Model: RandomForestClassifier_View,
                    PCA_Model: PCA_View}
 

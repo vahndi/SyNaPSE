@@ -92,7 +92,8 @@ class RegressionModel(SKLearnElement):
                                           name = 'lambda')
                                           
         if hasattr(self.estimator, 'n_iter_'):
-            attributes['num_iterations'] = self.estimator.n_iter_
+            if self.estimator.n_iter_ is not None:
+                attributes['num_iterations'] = self.estimator.n_iter_
 
         if hasattr(self.estimator, 'sigma_'):
             attributes['sigma'] = DataFrame(self.estimator.sigma_,
