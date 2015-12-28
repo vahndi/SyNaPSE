@@ -20,8 +20,9 @@ from flow_elements.LoadDataFrame import LoadDataFrame
 from flow_elements.GetColumns import GetColumns
 
 # Other
+from .base.classification_model import ABCClassificationModel
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
+
 from pandas import DataFrame, Series
 from pandasFunctions import splitTrainingTest
 from pandasFunctions import splitCategoricalNumeric
@@ -29,17 +30,20 @@ from pandasFunctions import joinInputsTargetsPredictions
 
 
 
-class LogisticRegression_Model(FlowElement):
+class LogisticRegression_Model(ABCClassificationModel):
 
 
     elementName = 'Logistic Regression'
-    precedingElements = [LoadDataFrame, GetColumns]
+    elementDescription = 'Logistic Regression (aka logit, MaxEnt) classifier.'
+    elementDocumentation = \
+        ABCClassificationModel.doc_root + 'LogisticRegression.html'
 
 
     class ui(Atom):
 
         # inputs_targets_selector
-        inputs_targets_selector = Value(Atom)
+        input_selector = Value(Atom)
+        
         # solver
         solver = Unicode('liblinear')
         solver_list = List(str, ['newton-cg', 'lbfgs', 'liblinear', 'sag'])
@@ -75,14 +79,13 @@ class LogisticRegression_Model(FlowElement):
         
 
     def setInputs(self, dataFrame):
-        
-        self._dataFrame = dataFrame
-        self.inputs_targets_selector = InputsTargetsSelector_Model(dataFrame)
+
+        self.set_inputs(dataFrame)
         self.cores_selector = CoresSelector_Model()
         self.uiModel = LogisticRegression_Model.ui(
-            inputs_targets_selector = self.inputs_targets_selector.uiModel,
-            cores_selector = self.cores_selector.uiModel
-            )    
+                            input_selector = self.input_selector.uiModel,
+                            cores_selector = self.cores_selector.uiModel
+                            )
 
 
     def getOutputs(self):
@@ -90,101 +93,57 @@ class LogisticRegression_Model(FlowElement):
         try:
 
             # Assign local variables
-            input_columns = self.inputs_targets_selector.checked_inputs()
-            target_column = self.inputs_targets_selector.selected_target()
-            solver = self.uiModel.solver
-            penalty = self.uiModel.penalty
-            if solver in ('newton-cg', 'lbfgs'):
-                penalty = 'l2'
-            dual = None
-            if penalty == 'l2' and solver == 'liblinear':
-                dual = self.uiModel.dual
-            tolerance = self.uiModel.tolerance
-            C = self.uiModel.C
-            fit_intercept = self.uiModel.fit_intercept
-            intercept_scaling = None
-            if fit_intercept:
-                intercept_scaling = self.uiModel.intercept_scaling
-            class_weight_type = self.uiModel.class_weight_type
-            class_weight = None
-            if class_weight_type == 'balanced':
-                class_weight = 'balanced'
-            max_iterations = self.uiModel.max_iterations
-            multi_class = 'ovr'
-            if solver == 'lbfgs':
-                multi_class = self.uiModel.multi_class
-            random_state_seed = self.uiModel.random_state_seed
-            verbose = self.uiModel.verbose
-            warm_start = None
-            if solver != 'liblinear':
-                warm_start = self.uiModel.warm_start
-            number_of_cores = self.cores_selector.number_of_cores()
+            args = {'solver': self.uiModel.solver,
+                    'penalty': ('l2' 
+                                if self.uiModel.solver in ('newton-cg', 
+                                                           'lbfgs')
+                                else self.uiModel.penalty),
+                    'dual': (self.uiModel.dual
+                             if (self.uiModel.penalty == 'l2' and 
+                                 self.uiModel.solver == 'liblinear')
+                             else None),
+                    'tol': self.uiModel.tolerance,
+                    'C': self.uiModel.C,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'intercept_scaling': (self.uiModel.intercept_scaling
+                                          if self.uiModel.fit_intercept
+                                          else None),
+                    'class_weight': ('balanced'
+                                     if self.uiModel.class_weight_type == 'balanced'
+                                     else None),
+                    'max_iter': self.uiModel.max_iterations,
+                    'multi_class': (self.uiModel.multi_class
+                                    if self.uiModel.solver == 'lbfgs'
+                                    else 'ovr'),
+                    'random_state': self.uiModel.random_state_seed,
+                    'verbose': self.uiModel.verbose,
+                    'warm_start': (self.uiModel.warm_start
+                                   if self.uiModel.solver != 'liblinear'
+                                   else None),
+                    'n_jobs': self.cores_selector.number_of_cores()}
             
             # Validate inputs
-            if not self.inputs_targets_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}                
-            
-            # Build model
-            logreg = LogisticRegression(solver = solver,
-                                        penalty = penalty,
-                                        dual = dual,
-                                        tol = tolerance,
-                                        C = C,
-                                        fit_intercept = fit_intercept,
-                                        class_weight = class_weight,
-                                        max_iter = max_iterations,
-                                        multi_class = multi_class,
-                                        random_state = random_state_seed,
-                                        verbose = verbose,
-                                        warm_start = warm_start,
-                                        n_jobs = number_of_cores)
-    
-            # Split into training and test set        
-            X_train, y_train, X_test, y_test = \
-                self.inputs_targets_selector.get_training_test_data()
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}              
 
-            # Train the model using the training sets and make predictions
-            logreg.fit(X_train, y_train)            
-            y_pred_train = logreg.predict(X_train)
-            y_pred_test = logreg.predict(X_test)   
-            confusion_matrix_train = confusion_matrix(y_train, y_pred_train)         
-            confusion_matrix_test = confusion_matrix(y_test, y_pred_test)
-            
-            # Create a prediction summary dataframe
-            df_pred = joinInputsTargetsPredictions(
-                                           train_inputs = X_train, 
-                                           train_targets = y_train, 
-                                           train_predictions = y_pred_train,
-                                           test_inputs = X_test, 
-                                           test_targets = y_test, 
-                                           test_predictions = y_pred_test)
+            # Create Logistic Regression model
+            self.estimator = LogisticRegression(**args)
+            self.train_test_model()
     
-            # Return outputs   
-            labels = sorted(self._dataFrame[target_column].unique())        
-            return {'Attributes': {'coefficients': DataFrame(
-                                                      data = logreg.coef_,
-                                                      columns = input_columns
-                                                      ),
-                                   'intercept': logreg.intercept_,
-                                   '# iterations': logreg.n_iter_},
-                    'mean accuracy': logreg.score(X_test, y_test),
-                    'dataFrame': df_pred,
-                    'target vs. predicted': df_pred[[
-                                                'Target ' + target_column, 
-                                                'Predicted ' + target_column, 
-                                                'Set'
-                                                ]],
-                    'confusion matrix': {'training': DataFrame(
-                                                        confusion_matrix_train,
-                                                        index = labels,
-                                                        columns = labels
-                                                        ),
-                                         'test': DataFrame(
-                                                        confusion_matrix_test,
-                                                        index = labels,
-                                                        columns = labels
-                                                        )
-                                       }
+            # Return outputs 
+            print 'getting attributes'
+            attributes = self.get_attributes()
+            print 'getting metrics'
+            metrics = self.get_metrics()       
+
+            print 'returning outputs'
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions,
+                    'Confusion Matrix': 
+                        {'training': self.confusion_matrix_train,
+                         'test': self.confusion_matrix_test}
                     }
 
         except Exception as e:
@@ -207,7 +166,7 @@ enamldef LogisticRegression_View(GroupBox): me:
             closable = False
 
             InputsTargetsSelector_View:
-                model = me.model.inputs_targets_selector
+                model = me.model.input_selector
 
         Page:
 

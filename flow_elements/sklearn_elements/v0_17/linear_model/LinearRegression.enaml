@@ -7,17 +7,17 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import LinearRegression
 
 
 
-class LinearRegression_Model(RegressionModel):
+class LinearRegression_Model(ABCRegressionModel):
 
 
     elementName = 'Linear Regression'
     elementDescription = 'Ordinary least squares Linear Regression.'
-    elementDocumentation = RegressionModel.doc_root + 'LinearRegression.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'LinearRegression.html'
    
     class ui(Atom):
 

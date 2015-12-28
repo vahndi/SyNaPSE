@@ -8,18 +8,18 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import ElasticNet
 
 
 
-class ElasticNet_Model(RegressionModel):
+class ElasticNet_Model(ABCRegressionModel):
 
 
     elementName = 'Elastic Net'
     elementDescription = \
         'Linear regression with combined L1 and L2 priors as regularizer.'
-    elementDocumentation = RegressionModel.doc_root + 'ElasticNet.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'ElasticNet.html'
 
     class ui(Atom):
 

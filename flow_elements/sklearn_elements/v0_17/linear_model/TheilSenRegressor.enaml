@@ -12,17 +12,18 @@ from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import TheilSenRegressor
 
 
 
-class TheilSenRegressor_Model(RegressionModel):
+class TheilSenRegressor_Model(ABCRegressionModel):
 
     elementName = 'Theil Sen Regressor'
     elementDescription = \
         'Theil-Sen Estimator: robust multivariate regression model.'
-    elementDocumentation = RegressionModel.doc_root + 'TheilSenRegressor.html'
+    elementDocumentation = ABCRegressionModel.doc_root + \
+        'TheilSenRegressor.html'
 
 
     class ui(Atom):

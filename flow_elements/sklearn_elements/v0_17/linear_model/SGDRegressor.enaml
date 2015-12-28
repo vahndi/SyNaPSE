@@ -10,17 +10,17 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import SGDRegressor
 
 
 
-class SGDRegressor_Model(RegressionModel):
+class SGDRegressor_Model(ABCRegressionModel):
 
     elementName = 'SGD Regressor'
     elementDescription = \
     'Linear model fitted by minimizing a regularized empirical loss with SGD.'
-    elementDocumentation = RegressionModel.doc_root + 'SGDRegressor.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'SGDRegressor.html'
 
 
     class ui(Atom):
@@ -67,8 +67,6 @@ class SGDRegressor_Model(RegressionModel):
         average_bool = Bool(False)
         average_int = Int(10)
         average_int_min = Int(2)
-        # cores_selector
-        cores_selector = Value(Atom)
         
 
     def setInputs(self, dataFrame):

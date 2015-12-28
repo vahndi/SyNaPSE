@@ -5,13 +5,15 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from linear_model import ABCLinearModel
 
 # Other
-from numpy import float64, int64
+from numpy import int64
 from pandasFunctions import joinInputsTargetsPredictions
-from ...metrics.regression_metrics import RegressionMetrics as RM
+from pandas import DataFrame
+from ...metrics.classification_metrics import ClassificationMetrics as CM
+from sklearn.metrics import confusion_matrix
 
 
 
-class ABCRegressionModel(ABCLinearModel):
+class ABCClassificationModel(ABCLinearModel):
 
     
     def set_inputs(self, dataFrame):
@@ -19,7 +21,7 @@ class ABCRegressionModel(ABCLinearModel):
         self._dataFrame = dataFrame
         self.input_selector = InputsTargetsSelector_Model(
                                             dataFrame, 
-                                            target_dtypes = [float64, int64]
+                                            target_dtypes = [int64, object]
                                             )
     
     
@@ -36,6 +38,18 @@ class ABCRegressionModel(ABCLinearModel):
         y_pred_train = self.estimator.predict(X_train)
         self.y_pred_test = self.estimator.predict(X_test)            
 
+        # Create confusion matrices
+        self.labels = sorted(self._dataFrame[target_column].unique())
+        self.confusion_matrix_train = DataFrame(confusion_matrix(y_train, 
+                                                                 y_pred_train),
+                                                index = self.labels,
+                                                columns = self.labels)
+        self.confusion_matrix_test = DataFrame(confusion_matrix(self.y_test, 
+                                                                self.y_pred_test),
+                                                index = self.labels,
+                                                columns = self.labels)
+
+
         # Create a prediction summary dataframe
         self.df_predictions = joinInputsTargetsPredictions(
                                            train_inputs = X_train, 
@@ -49,9 +63,9 @@ class ABCRegressionModel(ABCLinearModel):
                                                 ['Target ' + target_column, 
                                                  'Predicted ' + target_column, 
                                                  'Set']]
-
     
     def get_metrics(self):
-        
-        return RM.get_metrics(self.y_test, self.y_pred_test)
+
+        return CM.get_metrics(self.y_test, self.y_pred_test,
+                              'multiclass') # TODO: pass the right classification type
 

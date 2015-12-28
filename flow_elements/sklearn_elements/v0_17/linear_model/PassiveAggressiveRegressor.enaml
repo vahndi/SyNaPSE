@@ -8,17 +8,17 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import PassiveAggressiveRegressor
 
 
 
-class PassiveAggressiveRegressor_Model(RegressionModel):
+class PassiveAggressiveRegressor_Model(ABCRegressionModel):
 
 
     elementName = 'Passive Aggressive Regressor'
     elementDescription = 'Passive Aggressive Regressor.'
-    elementDocumentation = RegressionModel.doc_root + \
+    elementDocumentation = ABCRegressionModel.doc_root + \
                            'PassiveAggressiveRegressor.html'
 
     class ui(Atom):

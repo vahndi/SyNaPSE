@@ -8,16 +8,16 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import Lars
 
 
 
-class Lars_Model(RegressionModel):
+class Lars_Model(ABCRegressionModel):
 
     elementName = 'Lars'
     elementDescription = 'Least Angle Regression model a.k.a. LAR.'
-    elementDocumentation = RegressionModel.doc_root + 'Lars.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'Lars.html'
 
     class ui(Atom):
         

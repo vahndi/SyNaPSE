@@ -7,17 +7,17 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import ARDRegression
 
 
 
-class ARDRegression_Model(RegressionModel):
+class ARDRegression_Model(ABCRegressionModel):
 
 
     elementName = 'ARD Regression'
     elementDescription = 'Bayesian ARD regression.'
-    elementDocumentation = RegressionModel.doc_root + 'ARDRegression.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'ARDRegression.html'
 
 
     class ui(Atom):

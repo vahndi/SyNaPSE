@@ -8,16 +8,16 @@ from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
+from .base.regression_model import ABCRegressionModel
 from sklearn.linear_model import Ridge
 
 
 
-class Ridge_Model(RegressionModel):
+class Ridge_Model(ABCRegressionModel):
 
     elementName = 'Ridge'
     elementDescription = 'Linear least squares with l2 regularization.'
-    elementDocumentation = RegressionModel.doc_root + 'Ridge.html'
+    elementDocumentation = ABCRegressionModel.doc_root + 'Ridge.html'
 
 
     class ui(Atom):

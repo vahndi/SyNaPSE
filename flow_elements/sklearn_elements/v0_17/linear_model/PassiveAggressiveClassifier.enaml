@@ -1,0 +1,131 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import PassiveAggressiveRegressor
+
+
+
+class PassiveAggressiveClassifier_Model(FlowElement):
+
+    elementName = 'Passive Aggressive Classifier'
+
+
+
+    class ui(Atom):
+
+        # C
+        C = Float(1)
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # n_iter
+        n_iter = Int(5)
+        n_iter_min = Int(1)
+        # shuffle
+        shuffle = Bool(True)
+        # verbose
+        verbose = Bool(False)
+        # loss
+        loss = Str('hinge')
+        loss_list = List(str, ['hinge', 'squared_hinge'])
+        # random_state
+        random_state = Int(1)
+        # warm_start
+        warm_start = Bool(False)
+        # class_weight
+        class_weight = Str('equal')
+        class_weight_list = List(str, ['equal', 'balanced'])
+
+
+    def setInputs(self, ???):
+
+        self._??? = ???
+        self.uiModel = PassiveAggressiveClassifier_Model.ui()
+
+
+    def getOutputs(self):
+
+        # Assign local variables
+        args = {
+        'C': self.uiModel.C,
+        'fit_intercept': self.uiModel.fit_intercept,
+        'n_iter': self.uiModel.n_iter,
+        'shuffle': self.uiModel.shuffle,
+        'verbose': self.uiModel.verbose,
+        'loss': self.uiModel.loss,
+        'random_state': self.uiModel.random_state,
+        'warm_start': self.uiModel.warm_start,
+        'class_weight': self.uiModel.class_weight,
+}
+
+        return {'Outputs': 'No Output'}
+
+
+
+enamldef PassiveAggressiveClassifier_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'C'
+                FloatField:
+                    value := model.C
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'N Iter'
+                IntField:
+                    value := model.n_iter
+                    minimum = model.n_iter_min
+
+                Label:
+                    text = 'Shuffle'
+                CheckBox:
+                    checked := model.shuffle
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+
+                Label:
+                    text = 'Loss'
+                ObjectCombo:
+                    items = model.loss_list
+                    selected := model.loss
+
+                Label:
+                    text = 'Random State'
+                IntField:
+                    value := model.random_state
+
+                Label:
+                    text = 'Warm Start'
+                CheckBox:
+                    checked := model.warm_start
+
+                Label:
+                    text = 'Class Weight'
+                ObjectCombo:
+                    items = model.class_weight_list
+                    selected := model.class_weight
