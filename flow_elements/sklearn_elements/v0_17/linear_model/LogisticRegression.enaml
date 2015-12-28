@@ -131,12 +131,9 @@ class LogisticRegression_Model(ABCClassificationModel):
             self.train_test_model()
     
             # Return outputs 
-            print 'getting attributes'
             attributes = self.get_attributes()
-            print 'getting metrics'
             metrics = self.get_metrics()       
 
-            print 'returning outputs'
             return {'Attributes': attributes,
                     'Metrics': metrics,
                     'dataFrame': self.df_predictions,

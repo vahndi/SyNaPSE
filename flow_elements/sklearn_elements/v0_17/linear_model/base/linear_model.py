@@ -51,8 +51,12 @@ class ABCLinearModel(SKLearnElement):
                 attributes['scores'] = self.estimator.scores_        
         
         if hasattr(self.estimator, 'intercept_'):
-            # TODO: return a series if the intercept is multi-valued            
-            attributes['intercept'] = self.estimator.intercept_
+            if self.estimator.intercept_.ndim == 0:
+                attributes['intercept'] = self.estimator.intercept_
+            else:
+                attributes['intercept'] = Series(self.estimator.intercept_,
+                                                 index = self.labels,
+                                                 name = 'intercept')
             
         if hasattr(self.estimator, 'lambda_'):
             attributes['lambda'] = Series(index = input_columns,

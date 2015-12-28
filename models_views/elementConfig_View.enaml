@@ -10,10 +10,16 @@ from flow_elements.PandasPlot import PandasPlot, PandasPlot_View
 from flow_elements.GetColumns import GetColumns, GetColumns_View
 from flow_elements.sklearn_elements.v0_17.decomposition.PCA import (
         PCA_Model, PCA_View)
-from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import (
-        LinearRegression_Model, LinearRegression_View)
+
+# Classification
 from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import (
         LogisticRegression_Model, LogisticRegression_View)
+from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveClassifier import (
+        PassiveAggressiveClassifier_Model, PassiveAggressiveClassifier_View)
+
+# Regression
+from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import (
+        LinearRegression_Model, LinearRegression_View)
 from flow_elements.sklearn_elements.v0_17.cluster.KMeans import (
         KMeans_Model, KMeans_View)
 from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import (
@@ -55,6 +61,7 @@ elementViewDict = {LoadDataFrame: LoadDataFrame_View,
                    LassoLarsIC_Model: LassoLarsIC_View,
                    LinearRegression_Model: LinearRegression_View,
                    LogisticRegression_Model: LogisticRegression_View,
+                   PassiveAggressiveClassifier_Model: PassiveAggressiveClassifier_View,
                    PassiveAggressiveRegressor_Model: PassiveAggressiveRegressor_View,
                    Ridge_Model: Ridge_View,
                    SGDRegressor_Model: SGDRegressor_View,

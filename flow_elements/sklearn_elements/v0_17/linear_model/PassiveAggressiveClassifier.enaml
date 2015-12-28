@@ -1,25 +1,32 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int, List, Str, Value
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from enaml.stdlib.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import RegressionModel
-from sklearn.linear_model import PassiveAggressiveRegressor
+from ..shared.CoresSelector import CoresSelector_Model
+from ..shared.CoresSelector import CoresSelector_View
+from .base.classification_model import ABCClassificationModel
+from sklearn.linear_model import PassiveAggressiveClassifier
 
 
 
-class PassiveAggressiveClassifier_Model(FlowElement):
+class PassiveAggressiveClassifier_Model(ABCClassificationModel):
+
 
     elementName = 'Passive Aggressive Classifier'
-
+    elementDescription = 'Passive Aggressive Classifier.'
+    elementDocumentation = \
+        ABCClassificationModel.doc_root + 'PassiveAggressiveClassifier.html'
 
 
     class ui(Atom):
+
+        # inputs_targets_selector
+        input_selector = Value(Atom)
 
         # C
         C = Float(1)
@@ -42,30 +49,64 @@ class PassiveAggressiveClassifier_Model(FlowElement):
         # class_weight
         class_weight = Str('equal')
         class_weight_list = List(str, ['equal', 'balanced'])
+        # cores_selector
+        cores_selector = Value(Atom)
 
 
-    def setInputs(self, ???):
+    def setInputs(self, dataFrame):
 
-        self._??? = ???
-        self.uiModel = PassiveAggressiveClassifier_Model.ui()
+        self.set_inputs(dataFrame)
+        self.cores_selector = CoresSelector_Model()
+        self.uiModel = PassiveAggressiveClassifier_Model.ui(
+                            input_selector = self.input_selector.uiModel,
+                            cores_selector = self.cores_selector.uiModel
+                            )
 
 
     def getOutputs(self):
 
-        # Assign local variables
-        args = {
-        'C': self.uiModel.C,
-        'fit_intercept': self.uiModel.fit_intercept,
-        'n_iter': self.uiModel.n_iter,
-        'shuffle': self.uiModel.shuffle,
-        'verbose': self.uiModel.verbose,
-        'loss': self.uiModel.loss,
-        'random_state': self.uiModel.random_state,
-        'warm_start': self.uiModel.warm_start,
-        'class_weight': self.uiModel.class_weight,
-}
+        try:
+    
+            # Assign local variables
+            args = {'C': self.uiModel.C,
+                    'fit_intercept': self.uiModel.fit_intercept,
+                    'n_iter': self.uiModel.n_iter,
+                    'shuffle': self.uiModel.shuffle,
+                    'verbose': self.uiModel.verbose,
+                    'loss': self.uiModel.loss,
+                    'random_state': self.uiModel.random_state,
+                    'warm_start': self.uiModel.warm_start,
+                    'class_weight': ('auto'
+                                     if self.uiModel.class_weight == 'balanced'
+                                     else None),
+                    'n_jobs': self.cores_selector.number_of_cores()}
 
-        return {'Outputs': 'No Output'}
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}              
+
+            # Create PassiveAggressiveClassifier model
+            self.estimator = PassiveAggressiveClassifier(**args)
+            self.train_test_model()
+
+            # Return outputs 
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()       
+
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions,
+                    'Confusion Matrix': 
+                        {'training': self.confusion_matrix_train,
+                         'test': self.confusion_matrix_test}
+                    }
+
+        except Exception as e:
+                
+            return {'Exception':{'__class__': str(e.__class__),
+                                 '__doc__': e.__doc__,
+                                 'message': e.message}}
 
 
 
@@ -74,6 +115,14 @@ enamldef PassiveAggressiveClassifier_View(GroupBox): me:
     attr model
 
     Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model = me.model.input_selector
 
         Page:
 
@@ -93,7 +142,7 @@ enamldef PassiveAggressiveClassifier_View(GroupBox): me:
                     checked := model.fit_intercept
 
                 Label:
-                    text = 'N Iter'
+                    text = '# Iterations'
                 IntField:
                     value := model.n_iter
                     minimum = model.n_iter_min
@@ -129,3 +178,6 @@ enamldef PassiveAggressiveClassifier_View(GroupBox): me:
                 ObjectCombo:
                     items = model.class_weight_list
                     selected := model.class_weight
+                
+                CoresSelector_View:
+                    model = me.model.cores_selector

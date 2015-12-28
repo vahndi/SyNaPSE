@@ -12,7 +12,8 @@ with enaml.imports():
 
     # Classification
     from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
-
+    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveClassifier import PassiveAggressiveClassifier_Model
+    
     # Clustering
     from flow_elements.sklearn_elements.v0_17.cluster.KMeans import KMeans_Model
     
@@ -55,6 +56,7 @@ class Main_Model(object):
                      LinearRegression_Model,
                      LogisticRegression_Model,
                      KMeans_Model,
+                     PassiveAggressiveClassifier_Model,
                      PassiveAggressiveRegressor_Model,
                      Ridge_Model,
                      SGDRegressor_Model,
