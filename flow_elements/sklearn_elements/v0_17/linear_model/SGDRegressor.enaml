@@ -67,13 +67,16 @@ class SGDRegressor_Model(RegressionModel):
         average_bool = Bool(False)
         average_int = Int(10)
         average_int_min = Int(2)
-
+        # cores_selector
+        cores_selector = Value(Atom)
+        
 
     def setInputs(self, dataFrame):
         
         self.set_inputs(dataFrame)
+        self.cores_selector = CoresSelector_Model()
         self.uiModel = SGDRegressor_Model.ui(
-                            input_selector = self.input_selector.uiModel
+                            input_selector = self.input_selector.uiModel,
                             )
 
 

@@ -38,7 +38,8 @@ from flow_elements.sklearn_elements.v0_17.linear_model.Ridge import (
         Ridge_Model, Ridge_View)
 from flow_elements.sklearn_elements.v0_17.linear_model.SGDRegressor import (
         SGDRegressor_Model, SGDRegressor_View)
-
+from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import (
+        TheilSenRegressor_Model, TheilSenRegressor_View)
 
 
 elementViewDict = {LoadDataFrame: LoadDataFrame_View,
@@ -57,6 +58,7 @@ elementViewDict = {LoadDataFrame: LoadDataFrame_View,
                    PassiveAggressiveRegressor_Model: PassiveAggressiveRegressor_View,
                    Ridge_Model: Ridge_View,
                    SGDRegressor_Model: SGDRegressor_View,
+                   TheilSenRegressor_Model: TheilSenRegressor_View,
                    RandomForestClassifier_Model: RandomForestClassifier_View,
                    PCA_Model: PCA_View}
 

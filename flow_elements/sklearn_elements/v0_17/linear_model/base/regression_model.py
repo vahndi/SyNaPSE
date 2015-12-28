@@ -69,6 +69,9 @@ class RegressionModel(SKLearnElement):
         if hasattr(self.estimator, 'alphas_'):
             attributes['alphas_'] = self.estimator.alphas_
         
+        if hasattr(self.estimator, 'breakdown_'):
+            attributes['breakdown'] =self.estimator.breakdown_
+        
         if hasattr(self.estimator, 'coef_'):
             attributes['coefficients'] = Series(
                                         index = input_columns,
@@ -94,6 +97,9 @@ class RegressionModel(SKLearnElement):
         if hasattr(self.estimator, 'n_iter_'):
             if self.estimator.n_iter_ is not None:
                 attributes['num_iterations'] = self.estimator.n_iter_
+
+        if hasattr(self.estimator, 'n_subpopulation_'):
+            attributes['n_subpopulation'] = self.estimator.n_subpopulation_
 
         if hasattr(self.estimator, 'sigma_'):
             attributes['sigma'] = DataFrame(self.estimator.sigma_,

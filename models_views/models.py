@@ -34,7 +34,7 @@ with enaml.imports():
     from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
     from flow_elements.sklearn_elements.v0_17.linear_model.Ridge import Ridge_Model 
     from flow_elements.sklearn_elements.v0_17.linear_model.SGDRegressor import SGDRegressor_Model 
-    
+    from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import TheilSenRegressor_Model 
     
 
 class Main_Model(object):
@@ -58,6 +58,7 @@ class Main_Model(object):
                      PassiveAggressiveRegressor_Model,
                      Ridge_Model,
                      SGDRegressor_Model,
+                     TheilSenRegressor_Model,
                      PCA_Model,
                      RandomForestClassifier_Model]
 

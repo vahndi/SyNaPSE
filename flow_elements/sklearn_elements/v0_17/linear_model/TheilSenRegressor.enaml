@@ -1,0 +1,173 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+    )
+from enaml.core.api import Conditional
+from enaml.stdlib.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+from ..shared.CoresSelector import CoresSelector_Model
+from ..shared.CoresSelector import CoresSelector_View
+
+# Models
+from .base.regression_model import RegressionModel
+from sklearn.linear_model import TheilSenRegressor
+
+
+
+class TheilSenRegressor_Model(RegressionModel):
+
+    elementName = 'Theil Sen Regressor'
+    elementDescription = \
+        'Theil-Sen Estimator: robust multivariate regression model.'
+    elementDocumentation = RegressionModel.doc_root + 'TheilSenRegressor.html'
+
+
+    class ui(Atom):
+        
+        input_selector = Value(Atom)
+
+        # fit_intercept
+        fit_intercept = Bool(True)
+        # copy_X
+        copy_X = Bool(True)
+        # max_subpopulation
+        max_subpopulation = Int(10000)
+        # n_subsamples_type
+        n_subsamples_type = Str('None')
+        n_subsamples_type_list = List(str, ['None', 'int'])
+        # n_subsamples_int
+        n_subsamples_int = Int()
+        # max_iter
+        max_iter = Int(300)
+        # tol
+        tol = Float(0.001)
+        # random_state
+        random_state = Int(1)
+        # verbose
+        verbose = Bool(False)
+        # cores_selector
+        cores_selector = Value(Atom)
+        
+
+    def setInputs(self, dataFrame):
+        
+        self.set_inputs(dataFrame)
+        self.cores_selector = CoresSelector_Model()
+        self.uiModel = TheilSenRegressor_Model.ui(
+                            input_selector = self.input_selector.uiModel,
+                            cores_selector = self.cores_selector.uiModel
+                            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {'fit_intercept': self.uiModel.fit_intercept,
+                    'copy_X': self.uiModel.copy_X,
+                    'max_subpopulation': self.uiModel.max_subpopulation,
+                    'n_subsamples': (self.uiModel.n_subsamples_int
+                                     if self.uiModel.n_subsamples_type == 'int'
+                                     else None),
+                    'max_iter': self.uiModel.max_iter,
+                    'tol': self.uiModel.tol,
+                    'random_state': self.uiModel.random_state,
+                    'verbose': self.uiModel.verbose,
+                    'n_jobs': self.cores_selector.number_of_cores()}
+
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+
+            # Create Ridge Regression model
+            self.estimator = TheilSenRegressor(**args)
+            self.train_test_model()
+
+            # Return outputs
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataFrame': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef TheilSenRegressor_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Fit Intercept'
+                CheckBox:
+                    checked := model.fit_intercept
+
+                Label:
+                    text = 'Copy X'
+                CheckBox:
+                    checked := model.copy_X
+
+                Label:
+                    text = 'Max Subpopulation'
+                IntField:
+                    value := model.max_subpopulation
+
+                Label:
+                    text = '# Subsamples Type'
+                ObjectCombo:
+                    items = model.n_subsamples_type_list
+                    selected := model.n_subsamples_type
+
+                Label:
+                    text = '# Subsamples'
+                IntField:
+                    value := model.n_subsamples_int
+
+                Label:
+                    text = 'Max Iterations'
+                IntField:
+                    value := model.max_iter
+
+                Label:
+                    text = 'Tolerance'
+                FloatField:
+                    value := model.tol
+
+                Label:
+                    text = 'Random State'
+                IntField:
+                    value := model.random_state
+
+                Label:
+                    text = 'Verbose'
+                CheckBox:
+                    checked := model.verbose
+                    
+                CoresSelector_View:
+                    model = me.model.cores_selector
