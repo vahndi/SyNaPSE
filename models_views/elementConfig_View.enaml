@@ -7,15 +7,19 @@ from enaml.widgets.api import DockPane, Form, GroupBox
 
 
 # CORE
+# ----
 from flow_elements.core.LoadDataFrame import LoadDataFrame, LoadDataFrame_View
 from flow_elements.core.PandasPlot import PandasPlot, PandasPlot_View
 
 # PANDAS
+# ------
 from flow_elements.pandas_elements.v0_17_1.SelectColumns import (
     SelectColumns_Model, SelectColumns_View)
-
+from flow_elements.pandas_elements.v0_17_1.DataFrameInfo import (
+    DataFrameInfo_Model, DataFrameInfo_View)
 
 # SCIKIT-LEARN
+# ------------
 # Decomposition
 from flow_elements.sklearn_elements.v0_17.decomposition.PCA import (
         PCA_Model, PCA_View)
@@ -58,6 +62,7 @@ from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import 
 
 
 elementViewDict = {LoadDataFrame: LoadDataFrame_View,
+                   DataFrameInfo_Model: DataFrameInfo_View,
                    SelectColumns_Model: SelectColumns_View,
                    PandasPlot: PandasPlot_View,
                    ARDRegression_Model: ARDRegression_View,

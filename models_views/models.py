@@ -11,6 +11,7 @@ with enaml.imports():
     
     # Pandas
     from flow_elements.pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
+    from flow_elements.pandas_elements.v0_17_1.DataFrameInfo import DataFrameInfo_Model
     
     # Classification
     from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
@@ -46,8 +47,9 @@ class Main_Model(object):
     ### See if it is possible to automatically detect and import elements from 
     ### the filesystem at startup ###
     elementModels = [PandasPlot, 
-                     SelectColumns_Model, 
                      LoadDataFrame, 
+                     SelectColumns_Model, 
+                     DataFrameInfo_Model,
                      ARDRegression_Model,
                      BayesianRidge_Model,
                      ElasticNet_Model,

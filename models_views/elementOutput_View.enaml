@@ -58,7 +58,10 @@ def create_figure(output_model):
             else:
                 sns.barplot(x = output_model.index, y = output_model.values, 
                             ax = ax)
-        
+                if output_model.name:
+                    ax.set_ylabel(output_model.name)
+
+                
     elif type(output_model) is DataFrame:
     
         categorical, numeric = splitCategoricalNumeric(output_model)    
@@ -264,6 +267,13 @@ template OutputTemplate(model_type: float):
 
 
 template OutputTemplate(model_type: int): 
+
+    Field:
+        read_only = True
+        text = str(output_model)
+
+
+template OutputTemplate(model_type: tuple): 
 
     Field:
         read_only = True

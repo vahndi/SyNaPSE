@@ -1,0 +1,59 @@
+# Enaml
+from enaml.widgets.api import GroupBox
+
+from models_views.flowElement import FlowElement
+
+# Previous elements
+from ...core.LoadDataFrame import LoadDataFrame
+
+from pandas import Series, Index
+
+
+def label_series(series, name, index_name):
+    
+    return Series(series,
+                  name = name,
+                  index = Index(series.index,
+                              name = index_name)
+                  )
+
+
+class DataFrameInfo_Model(FlowElement):
+    
+
+    elementName = 'DataFrame Info'
+    precedingElements = [LoadDataFrame]
+
+    
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+
+
+    def getOutputs(self):
+        
+        try:
+            
+            df = self._dataFrame
+            
+            return {'Attributes':
+                        {'dtypes': 
+                            label_series(df.dtypes, 'dtype', 'column'),
+                        'dtype_counts': label_series(df.get_dtype_counts(), 
+                                                     'count', 'dtype'),
+                        'ndim': df.ndim,
+                        'size': df.size,
+                        'shape': df.shape,
+                        'memory_usage': label_series(df.memory_usage(),
+                                                     'bytes', 'column')
+                        }
+                    }
+        
+        except:
+            
+            return {'Outputs': 'No Outputs'}
+            
+
+enamldef DataFrameInfo_View(GroupBox):
+    
+    pass
