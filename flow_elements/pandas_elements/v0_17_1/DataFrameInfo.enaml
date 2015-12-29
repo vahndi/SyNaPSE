@@ -6,9 +6,18 @@ from models_views.flowElement import FlowElement
 # Previous elements
 from ...core.LoadDataFrame import LoadDataFrame
 
-from pandas import Series, Index
+from pandas import Series, Index, concat
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
+def label_series(series, name, index_name):
+    
+    return Series(series,
+                  name = name,
+                  index = Index(series.index,
+                              name = index_name)
+                  )
 
 
 def getHistogramFigure(data):
@@ -19,14 +28,21 @@ def getHistogramFigure(data):
     return fig
 
 
-
-def label_series(series, name, index_name):
+def getStats(dataframe):
     
-    return Series(series,
-                  name = name,
-                  index = Index(series.index,
-                              name = index_name)
-                  )
+    # N.B. Can't use mode because it may return more than one value
+    df = dataframe.select_dtypes(['number'])
+    df_stats = concat([df.mean(), df.mad(), df.median(), df.min(),
+                          df.max(), df.std(), df.var(), df.sem(),
+                          df.skew(), df.kurt()], 
+                         axis = 1)
+    df_stats.columns = ['Mean', 'Mean Absolute Deviation', 'Median', 
+                        'Minimum', 'Maximum', 'Standard Deviation', 'Variance', 
+                        'Standard Error of Mean', 'Skew', 'Kurtosis']
+    df_stats = df_stats.transpose()
+    df_stats.index.name = 'Statistic'
+    return df_stats
+
 
 
 class DataFrameInfo_Model(FlowElement):
@@ -70,12 +86,14 @@ class DataFrameInfo_Model(FlowElement):
                                              df.select_dtypes(['number']
                                                                  ).columns}
                               }
-                          }
+                          },
+                     'Stats': getStats(df)
                     }
         
-        except:
+        except Exception as e:
             
-            return {'Outputs': 'No Outputs'}
+            return self.standard_exception(e)
+            
             
 
 enamldef DataFrameInfo_View(GroupBox):

@@ -12,7 +12,6 @@ from sklearn.decomposition import PCA
 # Other
 from ..sklearn_element import SKLearnElement
 from pandas import Series, DataFrame, concat
-from pandasFunctions import splitCategoricalNumeric
 
 
 
@@ -38,9 +37,8 @@ class PCA_Model(SKLearnElement):
     def setInputs(self, dataFrame):
         
         self._dataFrame = dataFrame
-        self._dfCategorical, self._dfNumeric = splitCategoricalNumeric(
-                                                    dataFrame
-                                                    )
+        self._dfCategorical = dataFrame.select_dtypes([object])
+        self._dfNumeric = dataFrame.select_dtypes(['number'])
         self.uiModel = PCA_Model.ui(n_components_int = 2,
                                     n_cols = len(self._dfNumeric.columns))
 

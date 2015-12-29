@@ -10,10 +10,6 @@ import pandas as pd
 from pandas import DataFrame, Series
 from numpy import ndarray, int32, int64, float64
 
-from pandasFunctions import numNumericColumns
-from pandasFunctions import splitCategoricalNumeric
-from pandasFunctions import getColumnsByDType
-
 from plotFunctions import getFigureShape
 
 from custom_views.DataFrame_View import DataFrame_View
@@ -63,7 +59,8 @@ def create_figure(output_model):
                 
     elif type(output_model) is DataFrame:
     
-        categorical, numeric = splitCategoricalNumeric(output_model)    
+        categorical = output_model.select_dtypes([object])
+        numeric = output_model.select_dtypes(['number'])
         nnc = len(numeric.columns)
         ncc = len(categorical.columns)
         nic = list(output_model.dtypes).count(int64)
@@ -192,7 +189,7 @@ def create_figure(output_model):
                 
         elif nnc == 4 and nfc == 2:
                 
-            xy = getColumnsByDType(output_model, float64)
+            xy = output_model.select_dtypes([float64])
 
         else:
             
@@ -210,11 +207,11 @@ def create_figure(output_model):
                                 hue = categorical.columns[0],
                                 ax = ax)
             else:
-                
+
                 if ncc == 0:
                     # column plot of the value in each column, grouped by index
                     df_plot = output_model.copy(deep = True)
-                    float_cols = getColumnsByDType(df_plot, float64).columns
+                    float_cols = df_plot.select_dtypes([float64]).columns
                     df_plot['index'] = df_plot.index
                     dfMelt = pd.melt(df_plot, id_vars = 'index', 
                                      value_vars = list(float_cols))

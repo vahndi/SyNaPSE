@@ -21,7 +21,6 @@ from sklearn.linear_model import LogisticRegression
 
 from pandas import DataFrame, Series
 from pandasFunctions import splitTrainingTest
-from pandasFunctions import splitCategoricalNumeric
 from pandasFunctions import joinInputsTargetsPredictions
 
 
