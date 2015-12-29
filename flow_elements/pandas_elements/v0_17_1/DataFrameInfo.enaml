@@ -7,6 +7,17 @@ from models_views.flowElement import FlowElement
 from ...core.LoadDataFrame import LoadDataFrame
 
 from pandas import Series, Index
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def getHistogramFigure(data):
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    data.hist(ax = ax)
+    return fig
+
 
 
 def label_series(series, name, index_name):
@@ -50,7 +61,16 @@ class DataFrameInfo_Model(FlowElement):
                         },
                      'Methods':
                          {'describe': {str(dt): df.describe(include = [dt]) 
-                                       for dt in df.dtypes.unique()}}
+                                       for dt in df.dtypes.unique()}},
+                     'Plots':
+                         {'Histogram': 
+                             {'All': getHistogramFigure(df),
+                              'Individual': {col: getHistogramFigure(df[col])
+                                             for col in 
+                                             df.select_dtypes(['number']
+                                                                 ).columns}
+                              }
+                          }
                     }
         
         except:

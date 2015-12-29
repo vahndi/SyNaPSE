@@ -1,9 +1,8 @@
 from enaml.core.api import DynamicTemplate, Looper
 from enaml.widgets.api import (
     Container, DockPane, Field, GroupBox, Html, Notebook, MPLCanvas, 
-    MultilineField, Page, PushButton
+    MultilineField, Page, PushButton, ScrollArea
                              )
-
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
@@ -230,8 +229,9 @@ def create_figure(output_model):
 
 template OutputTemplate(model_type: Figure):
 
-    MPLCanvas:
-        figure = output_model
+    Container:
+        MPLCanvas:
+            figure = output_model
 
 
 template OutputTemplate(model_type: DataFrame):
@@ -324,9 +324,11 @@ enamldef OutputsGroupBox(GroupBox): ogb:
             Page:
                 title = loop_item
                 closable = False
-                
-                OutputContainer:
-                    output_model = ogb.output_model[loop_item]
+
+                Container:
+                    ScrollArea:
+                        OutputContainer:
+                            output_model = ogb.output_model[loop_item]
 
 
 
