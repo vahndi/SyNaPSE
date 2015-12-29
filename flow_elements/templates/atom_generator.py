@@ -37,7 +37,7 @@ def get_Atom_InputsTargetsSelector(widget):
 def get_Atom_IntField(widget):
     
     str_value = ''    
-    if isinstance(widget.w_value, (int, float)):
+    if isinstance(widget.w_value, (int, float)) and pd.notnull(widget.w_value):
         str_value = str(int(widget.w_value))
     str_atom = '%s%s = Int(%s)\n' % (indent, widget.w_name, str_value)    
 
@@ -54,7 +54,7 @@ def get_Atom_IntField(widget):
 def get_Atom_FloatField(widget):
     
     str_value = ''    
-    if isinstance(widget.w_value, (int, float)):
+    if isinstance(widget.w_value, (int, float)) and pd.notnull(widget.w_value):
         str_value = str(widget.w_value)
     str_atom = '%s%s = Float(%s)\n' % (indent, widget.w_name, str_value) 
 

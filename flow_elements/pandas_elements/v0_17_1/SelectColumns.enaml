@@ -1,8 +1,9 @@
 # Atom
-from atom.api import Atom, Bool, List, Str, Value
+from atom.api import Atom, Bool, Int, List, Str, Value
 
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from enaml.stdlib.fields import FloatField, IntField
 from enaml.core.api import Conditional
 
 from custom_views.AutoSyncField import AutoSyncField
@@ -26,7 +27,8 @@ class SelectColumns_Model(FlowElement):
 
         # method
         method = Str('string')
-        method_list = List(str, ['string', 'regex', 'manual'])
+        method_list = List(str, ['string', 'regex', 
+                                 'index range', 'name range', 'manual'])
         # starts_with
         starts_with = Str()
         # ends_with
@@ -35,8 +37,22 @@ class SelectColumns_Model(FlowElement):
         contains = Str()
         # does_not_contain
         does_not_contain = Str()
-        # expression
+        # regular expression
         expression = Str()
+        # start index
+        range_start_int = Int()
+        use_range_start_int = Bool()
+        # end index
+        range_end_int = Int()
+        use_range_end_int = Bool()
+        
+        fl_columns = List(str)
+        # first column name
+        first_col_name = Str()
+        use_first_col_name = Bool()
+        # last column name
+        last_col_name = Str()
+        use_last_col_name = Bool()        
         # columns
         columns = Value(Atom)
         # order_alphabetically
@@ -47,12 +63,18 @@ class SelectColumns_Model(FlowElement):
 
         self._dataFrame = dataFrame
         self.columns = CheckBoxList_Model(dataFrame.columns)
-        self.uiModel = SelectColumns_Model.ui(columns = self.columns.uiModel)
+        self.uiModel = SelectColumns_Model.ui(
+                                        columns = self.columns.uiModel,
+                                        fl_columns = list(dataFrame.columns)
+                                        )
 
     
     def getOutputs(self):
 
         try:
+            
+            df = self._dataFrame            
+            
             if self.uiModel.method == 'string':
                 
                 columns = getColumnNames(
@@ -62,25 +84,49 @@ class SelectColumns_Model(FlowElement):
                        contains = self.uiModel.contains,
                        doesNotContain = self.uiModel.does_not_contain,
                        orderAlphabetically = self.uiModel.order_alphabetically)
-                df = self._dataFrame[columns]
+                df = df[columns]
                 
             elif self.uiModel.method == 'regex':
                 
-                df = self._dataFrame.filter(regex = self.uiModel.expression)
+                df = df.filter(regex = self.uiModel.expression)
                 if self.uiModel.order_alphabetically:
                     df = df[sorted(list(df.columns))]
+                    
+            elif self.uiModel.method == 'index range':
+                
+                rs = self.uiModel.range_start_int
+                re = self.uiModel.range_end_int
+                if (self.uiModel.use_range_start_int and
+                    self.uiModel.use_range_end_int):
+                        df = df.iloc[:, rs:re]
+                elif self.uiModel.use_range_start_int:
+                        df = df.iloc[:, rs:]
+                elif self.uiModel.use_range_end_int:
+                        df = df.iloc[:, :re]
+
+            elif self.uiModel.method == 'name range':
+                
+                fc = self.uiModel.first_col_name
+                lc = self.uiModel.last_col_name
+                if (self.uiModel.use_first_col_name and
+                    self.uiModel.use_last_col_name):
+                        df = df.loc[:, fc:lc]
+                elif self.uiModel.use_first_col_name:
+                        df = df.loc[:, fc:]
+                elif self.uiModel.use_last_col_name:
+                        df = df.loc[:, :lc]
 
             else:
                 
-                df = self._dataFrame[self.columns.getCheckedItemNames()]
-                if self.uiModel.order_alphabetically:
-                    df = df[sorted(list(df.columns))]
+                df = df[self.columns.getCheckedItemNames()]
 
+            if self.uiModel.order_alphabetically:
+                df = df[sorted(list(df.columns))]
             return {'dataFrame': df}
             
-        except:
-
-            return {'Outputs': 'No Outputs'}
+        except Exception as e:
+            
+            return self.standard_exception(e)
 
 
 
@@ -123,13 +169,70 @@ enamldef SelectColumns_View(GroupBox): me:
 
         Conditional:
             condition << model.method == 'regex'
+
             Label:
                 text = 'Expression'
             AutoSyncField:
                 text := model.expression
-    
+
+
+        Conditional:
+            condition << model.method == 'index range'
+            
+            CheckBox: 
+                text = 'Lower Index (inclusive)'
+                checked := model.use_range_start_int
+            Label:
+                text = 'N/A'
+                visible << not model.use_range_start_int
+            IntField:
+                value := model.range_start_int
+                minimum = 0
+                maximum = len(model.fl_columns)
+                visible << model.use_range_start_int
+
+            CheckBox:
+                text = 'Upper Index (exclusive)'
+                checked := model.use_range_end_int
+            Label:
+                text = 'N/A'
+                visible << not model.use_range_end_int
+            IntField:
+                value := model.range_end_int
+                minimum = 0
+                maximum = len(model.fl_columns)
+                visible << model.use_range_end_int
+
+
+        Conditional:
+            condition << model.method == 'name range'
+            
+            CheckBox: 
+                text = 'First Name'
+                checked := model.use_first_col_name
+            Label:
+                text = 'N/A'
+                visible << not model.use_first_col_name
+            ObjectCombo:
+                items = model.fl_columns
+                selected := model.first_col_name
+                visible << model.use_first_col_name
+
+            CheckBox:
+                text = 'Last Name'
+                checked := model.use_last_col_name
+            Label:
+                text = 'N/A'
+                visible << not model.use_last_col_name
+            ObjectCombo:
+                items = model.fl_columns
+                selected := model.last_col_name
+                visible << model.use_last_col_name
+
+
         Conditional:
             condition << model.method == 'manual'
+
             Label:
                 text = 'Columns'
             CheckBoxList_View:

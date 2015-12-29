@@ -21,7 +21,7 @@ def label_series(series, name, index_name):
 class DataFrameInfo_Model(FlowElement):
     
 
-    elementName = 'DataFrame Info'
+    elementName = 'Info'
     precedingElements = [LoadDataFrame]
 
     
@@ -36,17 +36,21 @@ class DataFrameInfo_Model(FlowElement):
             
             df = self._dataFrame
             
-            return {'Attributes':
-                        {'dtypes': 
-                            label_series(df.dtypes, 'dtype', 'column'),
+            return {'dataFrame': df,
+                    'Attributes':
+                        {'axes': df.axes,
+                        'dtypes': label_series(df.dtypes, 'dtype', 'column'),
                         'dtype_counts': label_series(df.get_dtype_counts(), 
                                                      'count', 'dtype'),
+                        'memory_usage': label_series(df.memory_usage(),
+                                                     'bytes', 'column'),
                         'ndim': df.ndim,
                         'size': df.size,
-                        'shape': df.shape,
-                        'memory_usage': label_series(df.memory_usage(),
-                                                     'bytes', 'column')
-                        }
+                        'shape': df.shape
+                        },
+                     'Methods':
+                         {'describe': {str(dt): df.describe(include = [dt]) 
+                                       for dt in df.dtypes.unique()}}
                     }
         
         except:

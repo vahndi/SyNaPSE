@@ -110,16 +110,7 @@ class LoadDataFrame(FlowElement):
             else:
                 return {'Outputs': 'Please select a source type'}    
         
-            return {'dataFrame': dataFrame,
-                    'Attributes': 
-                        {'dtypes': pd.Series(dataFrame.dtypes,
-                                             name = 'dtype',
-                                             index = pd.Index(dataFrame.columns,
-                                                              name = 'column')
-                                            ),
-                        'index': list(dataFrame.index)},
-                    'Methods': {'describe': dataFrame.describe().drop('count')}
-                    }        
+            return {'dataFrame': dataFrame}        
 
         except Exception as e:
             
