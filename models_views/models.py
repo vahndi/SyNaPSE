@@ -5,11 +5,13 @@ from inspect import getargspec
 
 with enaml.imports():
 
-        
-    from flow_elements.GetColumns import GetColumns
-    from flow_elements.PandasPlot import PandasPlot
-    from flow_elements.LoadDataFrame import LoadDataFrame
-
+    # Core
+    from flow_elements.core.PandasPlot import PandasPlot
+    from flow_elements.core.LoadDataFrame import LoadDataFrame
+    
+    # Pandas
+    from flow_elements.pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
+    
     # Classification
     from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
     from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveClassifier import PassiveAggressiveClassifier_Model
@@ -44,7 +46,7 @@ class Main_Model(object):
     ### See if it is possible to automatically detect and import elements from 
     ### the filesystem at startup ###
     elementModels = [PandasPlot, 
-                     GetColumns, 
+                     SelectColumns_Model, 
                      LoadDataFrame, 
                      ARDRegression_Model,
                      BayesianRidge_Model,

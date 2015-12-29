@@ -16,7 +16,6 @@ from models_views.flowElement import FlowElement
 
 # Preceding Elements
 from LoadDataFrame import LoadDataFrame
-from GetColumns import GetColumns
 
 # Other
 import pandas as pd
@@ -41,7 +40,7 @@ pdPlotArgs = {'area': ['x', 'y'],
 class PandasPlot(FlowElement):
 
     elementName = 'Pandas Plot'
-    precedingElements = [LoadDataFrame, GetColumns]
+    precedingElements = [LoadDataFrame]
 
 
     class ui(Atom):

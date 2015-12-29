@@ -15,10 +15,6 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
-# Preceding elements
-from flow_elements.LoadDataFrame import LoadDataFrame
-from flow_elements.GetColumns import GetColumns
-
 # Other
 from .base.classification_model import ABCClassificationModel
 from sklearn.linear_model import LogisticRegression

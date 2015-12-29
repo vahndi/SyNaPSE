@@ -1,0 +1,142 @@
+# Atom
+from atom.api import Atom, Bool, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from enaml.core.api import Conditional
+
+from custom_views.AutoSyncField import AutoSyncField
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from models_views.flowElement import FlowElement
+from pandasFunctions import getColumnNames
+
+# Previous elements
+from ...core.LoadDataFrame import LoadDataFrame
+
+
+
+class SelectColumns_Model(FlowElement):
+    
+        
+    elementName = 'Select Columns'
+    precedingElements = [LoadDataFrame]
+    
+    
+    class ui(Atom):
+
+        # method
+        method = Str('string')
+        method_list = List(str, ['string', 'regex', 'manual'])
+        # starts_with
+        starts_with = Str()
+        # ends_with
+        ends_with = Str()
+        # contains
+        contains = Str()
+        # does_not_contain
+        does_not_contain = Str()
+        # expression
+        expression = Str()
+        # columns
+        columns = Value(Atom)
+        # order_alphabetically
+        order_alphabetically = Bool(False)
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.columns = CheckBoxList_Model(dataFrame.columns)
+        self.uiModel = SelectColumns_Model.ui(columns = self.columns.uiModel)
+
+    
+    def getOutputs(self):
+
+        try:
+            if self.uiModel.method == 'string':
+                
+                columns = getColumnNames(
+                       self._dataFrame,
+                       startsWith = self.uiModel.starts_with,
+                       endsWith = self.uiModel.ends_with,
+                       contains = self.uiModel.contains,
+                       doesNotContain = self.uiModel.does_not_contain,
+                       orderAlphabetically = self.uiModel.order_alphabetically)
+                df = self._dataFrame[columns]
+                
+            elif self.uiModel.method == 'regex':
+                
+                df = self._dataFrame.filter(regex = self.uiModel.expression)
+                if self.uiModel.order_alphabetically:
+                    df = df[sorted(list(df.columns))]
+
+            else:
+                
+                df = self._dataFrame[self.columns.getCheckedItemNames()]
+                if self.uiModel.order_alphabetically:
+                    df = df[sorted(list(df.columns))]
+
+            return {'dataFrame': df}
+            
+        except:
+
+            return {'Outputs': 'No Outputs'}
+
+
+
+enamldef SelectColumns_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Method'
+        ObjectCombo:
+            items = model.method_list
+            selected := model.method
+
+
+        Conditional:
+            condition << model.method == 'string'
+            
+            Label:
+                text = 'Starts With'
+            AutoSyncField:
+                text := model.starts_with
+
+            Label:
+                text = 'Ends With'
+            AutoSyncField:
+                text := model.ends_with
+
+            Label:
+                text = 'Contains'
+            AutoSyncField:
+                text := model.contains
+
+            Label:
+                text = 'Does Not Contain'
+            AutoSyncField:
+                text := model.does_not_contain
+    
+
+        Conditional:
+            condition << model.method == 'regex'
+            Label:
+                text = 'Expression'
+            AutoSyncField:
+                text := model.expression
+    
+        Conditional:
+            condition << model.method == 'manual'
+            Label:
+                text = 'Columns'
+            CheckBoxList_View:
+                model:= me.model.columns
+
+
+        Label:
+            text = 'Order Alphabetically'
+        CheckBox:
+            checked := model.order_alphabetically
