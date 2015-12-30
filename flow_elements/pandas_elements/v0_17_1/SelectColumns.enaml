@@ -24,11 +24,10 @@ class SelectColumns_Model(FlowElement):
     
     
     class ui(Atom):
-
+        
         # method
         method = Str('string')
-        method_list = List(str, ['string', 'regex', 'index range', 
-                                 'name range', 'dtypes', 'manual'])
+        method_list = List(str)
         # starts_with
         starts_with = Str()
         # ends_with
@@ -68,6 +67,13 @@ class SelectColumns_Model(FlowElement):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
+        # Limit selection methods based on the dtype of the columns index
+        if dataFrame.columns.dtype == object:
+            method_list = ['string', 'regex', 'index range', 
+                           'name range', 'dtypes', 'manual']
+        else:
+            method_list = ['index range', 'dtypes', 'manual']
+            
         self.manual_columns = CheckBoxList_Model(dataFrame.columns)
         self.dtype_dict = {'float': float,
                            'int': int,
@@ -75,6 +81,7 @@ class SelectColumns_Model(FlowElement):
                            'string': object}
         self.dtype_columns = CheckBoxList_Model(sorted(self.dtype_dict.keys()))
         self.uiModel = SelectColumns_Model.ui(
+                            method_list = method_list,
                             manual_columns = self.manual_columns.uiModel,
                             dtype_columns = self.dtype_columns.uiModel,
                             fl_columns = list(dataFrame.columns)
@@ -166,7 +173,8 @@ enamldef SelectColumns_View(GroupBox): me:
 
 
         Conditional:
-            condition << model.method == 'string'
+            condition << (model.method == 'string' and 
+                          'string' in model.method_list)
             
             Label:
                 text = 'Starts With'
@@ -190,7 +198,8 @@ enamldef SelectColumns_View(GroupBox): me:
     
 
         Conditional:
-            condition << model.method == 'regex'
+            condition << (model.method == 'regex' and 
+                          'regex' in model.method_list)
 
             Label:
                 text = 'Expression'
@@ -227,7 +236,8 @@ enamldef SelectColumns_View(GroupBox): me:
 
 
         Conditional:
-            condition << model.method == 'name range'
+            condition << (model.method == 'name range' and
+                          'name range' in model.method_list)
             
             CheckBox: 
                 text = 'First Name'
