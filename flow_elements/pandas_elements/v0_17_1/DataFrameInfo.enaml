@@ -41,6 +41,7 @@ def getStats(dataframe):
                         'Standard Error of Mean', 'Skew', 'Kurtosis']
     df_stats = df_stats.transpose()
     df_stats.index.name = 'Statistic'
+    
     return df_stats
 
 

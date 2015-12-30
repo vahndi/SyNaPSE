@@ -18,7 +18,7 @@ from ...core.LoadDataFrame import LoadDataFrame
 
 class SelectColumns_Model(FlowElement):
     
-        
+
     elementName = 'Select Columns'
     precedingElements = [LoadDataFrame]
     
@@ -27,8 +27,8 @@ class SelectColumns_Model(FlowElement):
 
         # method
         method = Str('string')
-        method_list = List(str, ['string', 'regex', 
-                                 'index range', 'name range', 'manual'])
+        method_list = List(str, ['string', 'regex', 'index range', 
+                                 'name range', 'dtypes', 'manual'])
         # starts_with
         starts_with = Str()
         # ends_with
@@ -46,15 +46,21 @@ class SelectColumns_Model(FlowElement):
         range_end_int = Int()
         use_range_end_int = Bool()
         
+        # first and last columns
         fl_columns = List(str)
         # first column name
         first_col_name = Str()
         use_first_col_name = Bool()
         # last column name
         last_col_name = Str()
-        use_last_col_name = Bool()        
+        use_last_col_name = Bool() 
+
+        # dtypes
+        dtype_columns = Value(Atom)
+        
         # columns
-        columns = Value(Atom)
+        manual_columns = Value(Atom)
+        
         # order_alphabetically
         order_alphabetically = Bool(False)
 
@@ -62,11 +68,17 @@ class SelectColumns_Model(FlowElement):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
-        self.columns = CheckBoxList_Model(dataFrame.columns)
+        self.manual_columns = CheckBoxList_Model(dataFrame.columns)
+        self.dtype_dict = {'float': float,
+                           'int': int,
+                           'number': 'number',
+                           'string': object}
+        self.dtype_columns = CheckBoxList_Model(sorted(self.dtype_dict.keys()))
         self.uiModel = SelectColumns_Model.ui(
-                                        columns = self.columns.uiModel,
-                                        fl_columns = list(dataFrame.columns)
-                                        )
+                            manual_columns = self.manual_columns.uiModel,
+                            dtype_columns = self.dtype_columns.uiModel,
+                            fl_columns = list(dataFrame.columns)
+                            )
 
     
     def getOutputs(self):
@@ -115,13 +127,23 @@ class SelectColumns_Model(FlowElement):
                         df = df.loc[:, fc:]
                 elif self.uiModel.use_last_col_name:
                         df = df.loc[:, :lc]
+                        
+            elif self.uiModel.method == 'dtypes':
+                print [self.dtype_dict[dt]
+                         for dt in self.dtype_columns.getCheckedItemNames()]
+                df = df.select_dtypes(
+                        [self.dtype_dict[dt]
+                         for dt in self.dtype_columns.getCheckedItemNames()]
+                         )
 
             else:
                 
-                df = df[self.columns.getCheckedItemNames()]
-
+                df = df[self.manual_columns.getCheckedItemNames()]
+            
+            # sort, if specified
             if self.uiModel.order_alphabetically:
                 df = df[sorted(list(df.columns))]
+
             return {'dataFrame': df}
             
         except Exception as e:
@@ -231,12 +253,21 @@ enamldef SelectColumns_View(GroupBox): me:
 
 
         Conditional:
+            condition << model.method == 'dtypes'
+            
+            Label:
+                text = 'dtypes'
+            CheckBoxList_View:
+                model := me.model.dtype_columns
+
+
+        Conditional:
             condition << model.method == 'manual'
 
             Label:
                 text = 'Columns'
             CheckBoxList_View:
-                model:= me.model.columns
+                model := me.model.manual_columns
 
 
         Label:
