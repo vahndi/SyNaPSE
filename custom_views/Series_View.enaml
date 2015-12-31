@@ -1,4 +1,13 @@
+# Enaml
 from enaml.widgets.api import Container, Html
+from enaml.core.api import Conditional
+
+# Plotting                             
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from matplotlib.markers import MarkerStyle
+from plotFunctions import getFigureShape
+import seaborn as sns
 
 
 def getSeriesHtml(series):
@@ -40,13 +49,49 @@ def getSeriesHtml(series):
     return source
 
 
+def getSeriesFigure(series):
+    
+    fig = Figure()
+    ax = fig.add_subplot(111)
 
-enamldef Series_View(Container):
+    if series.dtype == 'O':
+        
+        # Object Series -> confusion matrix
+        srs = series.apply(str)
+        series_name = srs.name
+        y = srs.reset_index()
+        index_name = srs.index.name
+        if not index_name:
+            index_name = 'index'
+        y['value'] = 1
+        z = y.pivot(index = index_name, 
+                    columns = series_name, 
+                    values = 'value')
+        z[z.isnull()] = 0
+        z = z.T
+        sns.heatmap(z, square = True, ax = ax)
+        return fig
+
+    else:
+        
+        # Numeric Series -> pie or column plot
+        if round(series.sum(), 3) == 1:
+            series.plot(kind = 'pie', ax = ax)
+            return fig
+        else:
+            sns.barplot(x = series.index, y = series.values, 
+                        ax = ax)
+            if series.name:
+                ax.set_ylabel(series.name)
+            return fig
+
+    return None
+
+
+
+enamldef Series_TableView(Container):
     
     attr model
     
     Html:
         source = getSeriesHtml(model)
-    
-    
-    

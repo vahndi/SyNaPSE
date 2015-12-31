@@ -1,21 +1,27 @@
+# Enaml
 from enaml.core.api import DynamicTemplate, Looper
 from enaml.widgets.api import (
     Container, DockPane, Field, GroupBox, Html, Notebook, MPLCanvas, 
     MultilineField, Page, PushButton, ScrollArea
-                             )
+    )
+
+# Plotting                             
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
+from plotFunctions import getFigureShape
+import seaborn as sns
+
+# Numerical
 import pandas as pd
 from pandas import DataFrame, Series
 from numpy import ndarray, int32, int64, float64
-
-from plotFunctions import getFigureShape
-
-from custom_views.DataFrame_View import DataFrame_View
-from custom_views.Series_View import Series_View
 from sklearn.metrics import confusion_matrix
-import seaborn as sns
+
+# Custom Views
+from custom_views.DataFrame_View import DataFrame_TableView
+from custom_views.Series_View import Series_TableView, getSeriesFigure
+from custom_views.list_View import list_TableView
 
 
 
@@ -27,37 +33,7 @@ def create_figure(output_model):
     fig = Figure()
     ax = fig.add_subplot(111)
 
-    if type(output_model) is Series:
-
-        if output_model.dtype == 'O':
-            
-            # Object Series -> confusion matrix
-            series = output_model.apply(str)
-            series_name = series.name
-            y = series.reset_index()
-            index_name = series.index.name
-            if not index_name:
-                index_name = 'index'
-            y['value'] = 1
-            z = y.pivot(index = index_name, 
-                        columns = series_name, 
-                        values = 'value')
-            z[z.isnull()] = 0
-            z = z.T
-            sns.heatmap(z, square = True, ax = ax)
-
-        else:
-            # Numeric Series -> pie or column plot
-            if round(output_model.sum(), 3) == 1:
-                output_model.plot(kind = 'pie', ax = ax)
-            else:
-                sns.barplot(x = output_model.index, y = output_model.values, 
-                            ax = ax)
-                if output_model.name:
-                    ax.set_ylabel(output_model.name)
-
-                
-    elif type(output_model) is DataFrame:
+    if type(output_model) is DataFrame:
     
         categorical = output_model.select_dtypes([object])
         numeric = output_model.select_dtypes(['number'])
@@ -236,18 +212,24 @@ template OutputTemplate(model_type: DataFrame):
     MPLCanvas:
         figure = create_figure(output_model)
     
-    DataFrame_View:
+    DataFrame_TableView:
         model = output_model
 
 
 template OutputTemplate(model_type: Series): 
 
     MPLCanvas:
-        figure = create_figure(output_model)
+        figure = getSeriesFigure(output_model)
 
-    Series_View:
+    Series_TableView:
         model = output_model
-        
+
+
+template OutputTemplate(model_type: list):
+    
+    list_TableView:
+        model = output_model
+
 
 template OutputTemplate(model_type: str): 
 
@@ -279,13 +261,6 @@ template OutputTemplate(model_type: tuple):
 
 template OutputTemplate(model_type: ndarray): 
 
-    MultilineField:
-        read_only = True
-        text = str(output_model)
-
-
-template OutputTemplate(model_type: list):
-    
     MultilineField:
         read_only = True
         text = str(output_model)

@@ -1,0 +1,26 @@
+from enaml.widgets.api import Container, Html
+
+
+def get_list_Html(lst):
+
+    # Create table
+    source = '<table border = "1">'
+    # Add items
+    for item in lst:
+        source += '<tr><td>%s</td></tr>' % str(item)
+    # Close table tag
+    source += '</table>'
+    
+    return source
+
+
+
+enamldef list_TableView(Container):
+    
+    attr model
+    
+    Html:
+        source = get_list_Html(model)
+    
+    
+    

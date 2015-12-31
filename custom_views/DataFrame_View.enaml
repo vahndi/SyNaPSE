@@ -40,7 +40,7 @@ def getDataFrameHtml(dataframe):
 
 
 
-enamldef DataFrame_View(Container):
+enamldef DataFrame_TableView(Container):
     
     attr model
     

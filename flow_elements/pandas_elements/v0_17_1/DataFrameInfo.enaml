@@ -100,7 +100,6 @@ def getIndexMethodValues(index):
 
 
 
-
 class DataFrameInfo_Model(FlowElement):
     
 
