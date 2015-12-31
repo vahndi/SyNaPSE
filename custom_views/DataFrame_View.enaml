@@ -46,3 +46,5 @@ enamldef DataFrame_TableView(Container):
     
     Html:
         source = getDataFrameHtml(model)
+
+    

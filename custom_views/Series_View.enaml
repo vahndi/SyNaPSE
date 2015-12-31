@@ -1,5 +1,5 @@
 # Enaml
-from enaml.widgets.api import Container, Html
+from enaml.widgets.api import Container, Field, Html, MPLCanvas
 from enaml.core.api import Conditional
 
 # Plotting                             
@@ -49,13 +49,25 @@ def getSeriesHtml(series):
     return source
 
 
-def getSeriesFigure(series):
+
+enamldef Series_TableView(Container):
     
+    attr model
+    
+    Html:
+        source = getSeriesHtml(model)
+        
+
+def getSeriesFigure(series):
+
     fig = Figure()
     ax = fig.add_subplot(111)
 
-    if series.dtype == 'O':
+    if not series.index.name:
+        return None
         
+    if series.dtype == 'O':
+
         # Object Series -> confusion matrix
         srs = series.apply(str)
         series_name = srs.name
@@ -73,7 +85,7 @@ def getSeriesFigure(series):
         return fig
 
     else:
-        
+
         # Numeric Series -> pie or column plot
         if round(series.sum(), 3) == 1:
             series.plot(kind = 'pie', ax = ax)
@@ -89,9 +101,21 @@ def getSeriesFigure(series):
 
 
 
-enamldef Series_TableView(Container):
+class SeriesFigure_Model(object):
+    
+    
+    def __init__(self, series):
+        
+        self.figure = getSeriesFigure(series)
+
+
+enamldef SeriesFigure_View(Container):
     
     attr model
-    
-    Html:
-        source = getSeriesHtml(model)
+
+    hug_height = 'strong'
+        
+    Conditional:
+        condition = model.figure is not None
+        MPLCanvas:
+            figure = getSeriesFigure(output_model)

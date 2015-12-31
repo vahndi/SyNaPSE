@@ -20,7 +20,8 @@ from sklearn.metrics import confusion_matrix
 
 # Custom Views
 from custom_views.DataFrame_View import DataFrame_TableView
-from custom_views.Series_View import Series_TableView, getSeriesFigure
+from custom_views.Series_View import Series_TableView
+from custom_views.Series_View import SeriesFigure_Model, SeriesFigure_View
 from custom_views.list_View import list_TableView
 
 
@@ -218,8 +219,8 @@ template OutputTemplate(model_type: DataFrame):
 
 template OutputTemplate(model_type: Series): 
 
-    MPLCanvas:
-        figure = getSeriesFigure(output_model)
+    SeriesFigure_View:
+        model = SeriesFigure_Model(output_model)
 
     Series_TableView:
         model = output_model
@@ -274,7 +275,7 @@ template OutputTemplate(model_type: dict):
 
 
 enamldef OutputContainer(Container):
-    
+
     attr output_model
     
     DynamicTemplate:
