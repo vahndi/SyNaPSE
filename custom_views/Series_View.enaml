@@ -1,5 +1,5 @@
 # Enaml
-from enaml.widgets.api import Container, Field, Html, MPLCanvas
+from enaml.widgets.api import Container, Html, MPLCanvas
 from enaml.core.api import Conditional
 
 # Plotting                             
@@ -13,7 +13,7 @@ import seaborn as sns
 def getSeriesHtml(series):
 
     # Create table
-    source = '<table border = "1">'
+    source = '<table border = "2">'
     
     # Create header row
     source += '<thead><tr>'
@@ -48,15 +48,6 @@ def getSeriesHtml(series):
     
     return source
 
-
-
-enamldef Series_TableView(Container):
-    
-    attr model
-    
-    Html:
-        source = getSeriesHtml(model)
-        
 
 def getSeriesFigure(series):
 
@@ -101,7 +92,16 @@ def getSeriesFigure(series):
 
 
 
-class SeriesFigure_Model(object):
+enamldef Series_TableView(Container):
+    
+    attr model
+    
+    Html:
+        source = getSeriesHtml(model)
+        
+
+
+class Series_FigureModel(object):
     
     
     def __init__(self, series):
@@ -109,7 +109,8 @@ class SeriesFigure_Model(object):
         self.figure = getSeriesFigure(series)
 
 
-enamldef SeriesFigure_View(Container):
+
+enamldef Series_FigureView(Container):
     
     attr model
 
@@ -118,4 +119,4 @@ enamldef SeriesFigure_View(Container):
     Conditional:
         condition = model.figure is not None
         MPLCanvas:
-            figure = getSeriesFigure(output_model)
+            figure = model.figure

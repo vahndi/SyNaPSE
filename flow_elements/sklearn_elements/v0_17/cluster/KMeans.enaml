@@ -11,7 +11,7 @@ from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
 # Models
-from models_views.elementOutput_View import create_figure
+from custom_views.DataFrame_View import getDataFrameFigure
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
@@ -156,7 +156,7 @@ class KMeans_Model(SKLearnElement):
             else:
                 points_2d = concat([points_2d, y_pred], axis = 1)
             points_2d['Cluster'] = 'Cluster ' + points_2d['Cluster'].apply(str)
-            outputs['PCA Clusters'] = create_figure(points_2d)
+            outputs['PCA Clusters'] = getDataFrameFigure(points_2d)
 
             outputs['Metrics'] = {}
             outputs['Metrics']['Unsupervised'] = ( 
