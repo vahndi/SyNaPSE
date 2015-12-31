@@ -124,8 +124,7 @@ class DataFrameInfo_Model(FlowElement):
                         'dtypes': label_series(df.dtypes, 'dtype', 'column'),
                         'dtype_counts': label_series(df.get_dtype_counts(), 
                                                      'count', 'dtype'),
-                        'memory_usage': label_series(df.memory_usage(),
-                                                     'bytes', 'column'),
+                        'index': getIndexAttributes(df.index),
                         'ndim': df.ndim,
                         'size': df.size,
                         'shape': df.shape

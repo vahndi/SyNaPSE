@@ -1,5 +1,5 @@
 # Enaml
-from enaml.core.api import DynamicTemplate, Looper
+from enaml.core.api import Conditional, DynamicTemplate, Looper
 from enaml.widgets.api import (
     Container, DockPane, Field, GroupBox, Html, Notebook, MPLCanvas, 
     MultilineField, Page, PushButton, ScrollArea
@@ -232,6 +232,20 @@ template OutputTemplate(model_type: list):
         model = output_model
 
 
+template OutputTemplate(model_type: ndarray):
+    
+    Conditional:
+        condition = output_model.ndim == 1
+        list_TableView:
+            model = list(output_model)
+
+    Conditional:
+        condition = output_model.ndim > 1
+        MultilineField:
+            read_only = True
+            text = str(output_model)
+
+
 template OutputTemplate(model_type: str): 
 
     MultilineField:
@@ -256,13 +270,6 @@ template OutputTemplate(model_type: int):
 template OutputTemplate(model_type: tuple): 
 
     Field:
-        read_only = True
-        text = str(output_model)
-
-
-template OutputTemplate(model_type: ndarray): 
-
-    MultilineField:
         read_only = True
         text = str(output_model)
         
