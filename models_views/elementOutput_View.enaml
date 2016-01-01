@@ -114,7 +114,6 @@ enamldef OutputContainer(Container):
         args = (type(output_model),)
 
  
- 
 enamldef OutputsGroupBox(GroupBox): ogb:
     
     attr output_model
