@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 import pandas as pd
 from pandas import DataFrame, Series
 from numpy import ndarray
-from sklearn.metrics import confusion_matrix
+
 
 # Custom Views
 from custom_views.DataFrame_View import (
