@@ -12,7 +12,7 @@ from models_views.flowElement import FlowElement
 from pandasFunctions import getColumnNames
 
 # Previous elements
-from ...core.LoadDataFrame import LoadDataFrame
+from ...core.ReadDataFrame import ReadDataFrame
 
 
 
@@ -20,7 +20,7 @@ class SelectColumns_Model(FlowElement):
     
 
     elementName = 'Select Columns'
-    precedingElements = [LoadDataFrame]
+    precedingElements = [ReadDataFrame]
     
     
     class ui(Atom):

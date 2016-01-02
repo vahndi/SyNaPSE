@@ -7,7 +7,7 @@ with enaml.imports():
 
     # Core
     from flow_elements.core.PandasPlot import PandasPlot
-    from flow_elements.core.LoadDataFrame import LoadDataFrame
+    from flow_elements.core.ReadDataFrame import ReadDataFrame
     
     # Pandas
     from flow_elements.pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
@@ -47,7 +47,7 @@ class Main_Model(object):
     ### See if it is possible to automatically detect and import elements from 
     ### the filesystem at startup ###
     elementModels = [PandasPlot, 
-                     LoadDataFrame, 
+                     ReadDataFrame, 
                      SelectColumns_Model, 
                      DataFrameInfo_Model,
                      ARDRegression_Model,

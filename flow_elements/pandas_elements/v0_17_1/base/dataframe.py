@@ -1,11 +1,11 @@
 from models_views.flowElement import FlowElement
-from ...core.LoadDataFrame import LoadDataFrame
+from ...core.ReadDataFrame import ReadDataFrame
 
 
 
 class ABCDataFrame(FlowElement):
 
-    precedingElements = [LoadDataFrame]
+    precedingElements = [ReadDataFrame]
     
 
     

@@ -4,14 +4,15 @@ from enaml.widgets.api import GroupBox
 from models_views.flowElement import FlowElement
 
 # Previous elements
-from ...core.LoadDataFrame import LoadDataFrame
+from ...core.ReadDataFrame import ReadDataFrame
 
+from metacodeFunctions import getPublicAttributes
 from pandas import Series, Index, concat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def label_series(series, name, index_name):
+def labelSeries(series, name, index_name):
     
     return Series(series,
                   name = name,
@@ -43,12 +44,6 @@ def getStats(dataframe):
     df_stats.index.name = 'Statistic'
     
     return df_stats
-
-
-def getPublicAttributes(obj):
-    
-    return [a for a in dir(obj) 
-            if not a.startswith('_') and not callable(getattr(obj, a))]
 
 
 def getIndexAttributes(index):
@@ -104,7 +99,7 @@ class DataFrameInfo_Model(FlowElement):
     
 
     elementName = 'Info'
-    precedingElements = [LoadDataFrame]
+    precedingElements = [ReadDataFrame]
 
     
     def setInputs(self, dataFrame):
@@ -121,8 +116,8 @@ class DataFrameInfo_Model(FlowElement):
             return {'dataFrame': df,
                     'Attributes':
                         {'columns':  getIndexAttributes(df.columns),
-                        'dtypes': label_series(df.dtypes, 'dtype', 'column'),
-                        'dtype_counts': label_series(df.get_dtype_counts(), 
+                        'dtypes': labelSeries(df.dtypes, 'dtype', 'column'),
+                        'dtype_counts': labelSeries(df.get_dtype_counts(), 
                                                      'count', 'dtype'),
                         'index': getIndexAttributes(df.index),
                         'ndim': df.ndim,
@@ -136,9 +131,8 @@ class DataFrameInfo_Model(FlowElement):
                          {'Histogram': 
                              {'All': getHistogramFigure(df),
                               'Individual': {col: getHistogramFigure(df[col])
-                                             for col in 
-                                             df.select_dtypes(['number']
-                                                                 ).columns}
+                                             for col in df.select_dtypes(
+                                                           ['number']).columns}
                               }
                           },
                      'Stats': getStats(df)

@@ -15,7 +15,7 @@ from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from models_views.flowElement import FlowElement
 
 # Preceding Elements
-from LoadDataFrame import LoadDataFrame
+from ReadDataFrame import ReadDataFrame
 
 # Other
 import pandas as pd
@@ -40,7 +40,7 @@ pdPlotArgs = {'area': ['x', 'y'],
 class PandasPlot(FlowElement):
 
     elementName = 'Pandas Plot'
-    precedingElements = [LoadDataFrame]
+    precedingElements = [ReadDataFrame]
 
 
     class ui(Atom):

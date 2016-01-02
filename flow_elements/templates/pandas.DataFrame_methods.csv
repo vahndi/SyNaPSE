@@ -1,0 +1,196 @@
+"method";"args";"return_type";"defaults";"keywords";"varargs";
+"abs";"self";;;;;"'abs', "
+"add";"self, other, axis, level, fill_value";"<class 'pandas.core.frame.DataFrame'>";"('columns', None, None)";;;
+"add_prefix";"self, prefix";"error";;;;
+"add_suffix";"self, suffix";"<type 'numpy.int64'>";;;;
+"align";"self, other, join, axis, level, copy, fill_value, method, limit, fill_axis, broadcast_axis";"<class 'pandas.core.series.Series'>";"('outer', None, None, True, None, None, None, 0, None)";;;
+"all";"self, axis, bool_only, skipna, level";"<class 'pandas.core.series.Series'>";"(None, None, None, None)";"kwargs";;
+"any";"self, axis, bool_only, skipna, level";"<type 'numpy.ndarray'>";"(None, None, None, None)";"kwargs";;
+"append";"self, other, ignore_index, verify_integrity";"<class 'pandas.core.frame.DataFrame'>";"(False, False)";;;
+"apply";"self, func, axis, broadcast, raw, reduce, args";"<type 'generator'>";"(0, False, False, None, ())";"kwds";;
+"applymap";"self, func";"<type 'generator'>";;;;
+"as_blocks";"self, copy";"<type 'generator'>";"(True,)";;;
+"as_matrix";"self, columns";"<class 'pandas.core.index.Index'>";"(None,)";;;
+"asfreq";"self, freq, method, how, normalize";"<type 'numpy.int64'>";"(None, None, False)";;;
+"assign";"self";"DataFrame";;"kwargs";;"'assign', "
+"astype";"self, dtype, copy, raise_on_error";"<class 'pandas.core.frame.DataFrame'>";"(True, True)";"kwargs";;
+"at_time";"self, time, asof";"<class 'pandas.core.frame.DataFrame'>";"(False,)";;;
+"between_time";"self, start_time, end_time, include_start, include_end";"error";"(True, True)";;;
+"bfill";"self, axis, inplace, limit, downcast";"<class 'pandas.core.frame.DataFrame'>";"(None, False, None, None)";;;
+"bool";"self";;;;;"'bool', "
+"boxplot";"self, column, by, ax, fontsize, rot, grid, figsize, layout, return_type";;"(None, None, None, None, 0, True, None, None, None)";"kwds";;
+"clip";"self, lower, upper, out, axis";;"(None, None, None, None)";;;
+"clip_lower";"self, threshold, axis";;"(None,)";;;
+"clip_upper";"self, threshold, axis";;"(None,)";;;
+"combine";"self, other, func, fill_value, overwrite";;"(None, True)";;;
+"combineAdd";"self, other";;;;;
+"combineMult";"self, other";;;;;
+"combine_first";"self, other";;;;;
+"compound";"self, axis, skipna, level";;"(None, None, None)";;;
+"consolidate";"self, inplace";;"(False,)";;;
+"convert_objects";"self, convert_dates, convert_numeric, convert_timedeltas, copy";;"(True, False, True, True)";;;
+"copy";"self, deep";;"(True,)";;;
+"corr";"self, method, min_periods";;"('pearson', 1)";;;
+"corrwith";"self, other, axis, drop";;"(0, False)";;;
+"count";"self, axis, level, numeric_only";;"(0, None, False)";;;
+"cov";"self, min_periods";;"(None,)";;;
+"cummax";"self, axis, dtype, out, skipna";;"(None, None, None, True)";"kwargs";;
+"cummin";"self, axis, dtype, out, skipna";;"(None, None, None, True)";"kwargs";;
+"cumprod";"self, axis, dtype, out, skipna";;"(None, None, None, True)";"kwargs";;
+"cumsum";"self, axis, dtype, out, skipna";;"(None, None, None, True)";"kwargs";;
+"describe";"self, percentiles, include, exclude";;"(None, None, None)";;;
+"diff";"self, periods, axis";;"(1, 0)";;;
+"div";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"divide";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"dot";"self, other";;;;;
+"drop";"self, labels, axis, level, inplace, errors";;"(0, None, False, 'raise')";;;
+"drop_duplicates";;;;"kwargs";"args";
+"dropna";"self, axis, how, thresh, subset, inplace";;"(0, 'any', None, None, False)";;;
+"duplicated";;;;"kwargs";"args";
+"eq";"self, other, axis, level";;"('columns', None)";;;
+"equals";"self, other";;;;;
+"eval";"self, expr";;;"kwargs";;
+"ffill";"self, axis, inplace, limit, downcast";;"(None, False, None, None)";;;
+"fillna";"self, value, method, axis, inplace, limit, downcast";;"(None, None, None, False, None, None)";"kwargs";;
+"filter";"self, items, like, regex, axis";;"(None, None, None, None)";;;
+"first";"self, offset";;;;;
+"first_valid_index";"self";"int64";;;;"'first_valid_index', "
+"floordiv";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"from_csv";"cls, path, header, sep, index_col, parse_dates, encoding, tupleize_cols, infer_datetime_format";;"(0, ',', 0, True, None, False, False)";;;
+"from_dict";"cls, data, orient, dtype";;"('columns', None)";;;
+"from_items";"cls, items, columns, orient";;"(None, 'columns')";;;
+"from_records";"cls, data, index, exclude, columns, coerce_float, nrows";;"(None, None, None, False, None)";;;
+"ge";"self, other, axis, level";;"('columns', None)";;;
+"get";"self, key, default";;"(None,)";;;
+"get_dtype_counts";"self";"Series";;;;"'get_dtype_counts', "
+"get_ftype_counts";"self";"Series";;;;"'get_ftype_counts', "
+"get_value";"self, index, col, takeable";;"(False,)";;;
+"get_values";"self";"ndarray";;;;"'get_values', "
+"groupby";"self, by, axis, level, as_index, sort, group_keys, squeeze";;"(None, 0, None, True, True, True, False)";;;
+"gt";"self, other, axis, level";;"('columns', None)";;;
+"head";"self, n";;"(5,)";;;
+"hist";"data, column, by, grid, xlabelsize, xrot, ylabelsize, yrot, ax, sharex, sharey, figsize, layout, bins";;"(None, None, True, None, None, None, None, None, False, False, None, None, 10)";"kwds";;
+"icol";"self, i";;;;;
+"idxmax";"self, axis, skipna";;"(0, True)";;;
+"idxmin";"self, axis, skipna";;"(0, True)";;;
+"iget_value";"self, i, j";;;;;
+"info";"self, verbose, buf, max_cols, memory_usage, null_counts";;"(None, None, None, None, None)";;;
+"insert";"self, loc, column, value, allow_duplicates";;"(False,)";;;
+"interpolate";"self, method, axis, limit, inplace, limit_direction, downcast";;"('linear', 0, None, False, 'forward', None)";"kwargs";;
+"irow";"self, i, copy";;"(False,)";;;
+"isin";"self, values";;;;;
+"isnull";"self";"DataFrame";;;;"'isnull', "
+"iteritems";"self";"generator";;;;"'iteritems', "
+"iterkv";"self";"generator";;"kwargs";"args";"'iterkv', "
+"iterrows";"self";"generator";;;;"'iterrows', "
+"itertuples";"self, index, name";;"(True, 'Pandas')";;;
+"join";"self, other, on, how, lsuffix, rsuffix, sort";;"(None, 'left', '', '', False)";;;
+"keys";"self";"Index";;;;"'keys', "
+"kurt";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"kurtosis";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"last";"self, offset";;;;;
+"last_valid_index";"self";"int64";;;;"'last_valid_index', "
+"le";"self, other, axis, level";;"('columns', None)";;;
+"lookup";"self, row_labels, col_labels";;;;;
+"lt";"self, other, axis, level";;"('columns', None)";;;
+"mad";"self, axis, skipna, level";;"(None, None, None)";;;
+"mask";"self, cond, other, inplace, axis, level, try_cast, raise_on_error";;"(nan, False, None, None, False, True)";;;
+"max";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"mean";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"median";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"memory_usage";"self, index, deep";;"(False, False)";;;
+"merge";"self, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator";;"('inner', None, None, None, False, False, False, ('_x', '_y'), True, False)";;;
+"min";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"mod";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"mode";"self, axis, numeric_only";;"(0, False)";;;
+"mul";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"multiply";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"ne";"self, other, axis, level";;"('columns', None)";;;
+"nlargest";"self, n, columns, keep";;"('first',)";;;
+"notnull";"self";"DataFrame";;;;"'notnull', "
+"nsmallest";"self, n, columns, keep";;"('first',)";;;
+"pct_change";"self, periods, fill_method, limit, freq";;"(1, 'pad', None, None)";"kwargs";;
+"pipe";"self, func";;;"kwargs";"args";
+"pivot";"self, index, columns, values";;"(None, None, None)";;;
+"pivot_table";"data, values, index, columns, aggfunc, fill_value, margins, dropna, margins_name";;"(None, None, None, 'mean', None, False, True, 'All')";;;
+"pop";"self, item";;;;;
+"pow";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"prod";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"product";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"quantile";"self, q, axis, numeric_only";;"(0.5, 0, True)";;;
+"query";"self, expr";;;"kwargs";;
+"radd";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"rank";"self, axis, numeric_only, method, na_option, ascending, pct";;"(0, None, 'average', 'keep', True, False)";;;
+"rdiv";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"reindex";"self, index, columns";;"(None, None)";"kwargs";;
+"reindex_axis";"self, labels, axis, method, level, copy, limit, fill_value";;"(0, None, None, True, None, nan)";;;
+"reindex_like";"self, other, method, copy, limit, tolerance";;"(None, True, None, None)";;;
+"rename";"self, index, columns";;"(None, None)";"kwargs";;
+"rename_axis";"self, mapper, axis, copy, inplace";;"(0, True, False)";;;
+"reorder_levels";"self, order, axis";;"(0,)";;;
+"replace";"self, to_replace, value, inplace, limit, regex, method, axis";;"(None, None, False, None, False, 'pad', None)";;;
+"resample";"self, rule, how, axis, fill_method, closed, label, convention, kind, loffset, limit, base";;"(None, 0, None, None, None, 'start', None, None, None, 0)";;;
+"reset_index";"self, level, drop, inplace, col_level, col_fill";;"(None, False, False, 0, '')";;;
+"rfloordiv";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"rmod";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"rmul";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"round";"self, decimals, out";;"(0, None)";;;
+"rpow";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"rsub";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"rtruediv";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"sample";"self, n, frac, replace, weights, random_state, axis";;"(None, None, False, None, None, None)";;;
+"select";"self, crit, axis";;"(0,)";;;
+"select_dtypes";"self, include, exclude";;"(None, None)";;;
+"sem";"self, axis, skipna, level, ddof, numeric_only";;"(None, None, None, 1, None)";"kwargs";;
+"set_axis";"self, axis, labels";;;;;
+"set_index";"self, keys, drop, append, inplace, verify_integrity";;"(True, False, False, False)";;;
+"set_value";"self, index, col, value, takeable";;"(False,)";;;
+"shift";"self, periods, freq, axis";;"(1, None, 0)";;;
+"skew";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"slice_shift";"self, periods, axis";;"(1, 0)";;;
+"sort";"self, columns, axis, ascending, inplace, kind, na_position";;"(None, 0, True, False, 'quicksort', 'last')";;;
+"sort_index";"self, axis, level, ascending, inplace, kind, na_position, sort_remaining, by";;"(0, None, True, False, 'quicksort', 'last', True, None)";;;
+"sort_values";"self, by, axis, ascending, inplace, kind, na_position";;"(0, True, False, 'quicksort', 'last')";;;
+"sortlevel";"self, level, axis, ascending, inplace, sort_remaining";;"(0, 0, True, False, True)";;;
+"squeeze";"self";"DataFrame";;;;"'squeeze', "
+"stack";"self, level, dropna";;"(-1, True)";;;
+"std";"self, axis, skipna, level, ddof, numeric_only";;"(None, None, None, 1, None)";"kwargs";;
+"sub";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"subtract";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"sum";"self, axis, skipna, level, numeric_only";;"(None, None, None, None)";"kwargs";;
+"swapaxes";"self, axis1, axis2, copy";;"(True,)";;;
+"swaplevel";"self, i, j, axis";;"(0,)";;;
+"tail";"self, n";;"(5,)";;;
+"take";"self, indices, axis, convert, is_copy";;"(0, True, True)";;;
+"to_clipboard";"self, excel, sep";;"(None, None)";"kwargs";;
+"to_csv";"self, path_or_buf, sep, na_rep, float_format, columns, header, index, index_label, mode, encoding, compression, quoting, quotechar, line_terminator, chunksize, tupleize_cols, date_format, doublequote, escapechar, decimal";;"(None, ',', '', None, None, True, True, None, 'w', None, None, None, '""', '\n', None, False, None, True, None, '.')";"kwds";;
+"to_dense";"self";"DataFrame";;;;"'to_dense', "
+"to_dict";;;;"kwargs";"args";
+"to_excel";"self, excel_writer, sheet_name, na_rep, float_format, columns, header, index, index_label, startrow, startcol, engine, merge_cells, encoding, inf_rep, verbose";;"('Sheet1', '', None, None, True, True, None, 0, 0, None, True, None, 'inf', True)";;;
+"to_gbq";"self, destination_table, project_id, chunksize, verbose, reauth, if_exists";;"(10000, True, False, 'fail')";;;
+"to_hdf";"self, path_or_buf, key";;;"kwargs";;
+"to_html";"self, buf, columns, col_space, colSpace, header, index, na_rep, formatters, float_format, sparsify, index_names, justify, bold_rows, classes, escape, max_rows, max_cols, show_dimensions, notebook";;"(None, None, None, None, True, True, 'NaN', None, None, None, True, None, True, None, True, None, None, False, False)";;;
+"to_json";"self, path_or_buf, orient, date_format, double_precision, force_ascii, date_unit, default_handler";;"(None, None, 'epoch', 10, True, 'ms', None)";;;
+"to_latex";"self, buf, columns, col_space, colSpace, header, index, na_rep, formatters, float_format, sparsify, index_names, bold_rows, column_format, longtable, escape";;"(None, None, None, None, True, True, 'NaN', None, None, None, True, True, None, False, True)";;;
+"to_msgpack";"self, path_or_buf";;"(None,)";"kwargs";;
+"to_panel";"self";;;;;"'to_panel', "
+"to_period";"self, freq, axis, copy";;"(None, 0, True)";;;
+"to_pickle";"self, path";;;;;
+"to_records";"self, index, convert_datetime64";;"(True, True)";;;
+"to_sparse";"self, fill_value, kind";;"(None, 'block')";;;
+"to_sql";"self, name, con, flavor, schema, if_exists, index, index_label, chunksize, dtype";;"('sqlite', None, 'fail', True, None, None, None)";;;
+"to_stata";"self, fname, convert_dates, write_index, encoding, byteorder, time_stamp, data_label";;"(None, True, 'latin-1', None, None, None)";;;
+"to_string";"self, buf, columns, col_space, header, index, na_rep, formatters, float_format, sparsify, index_names, justify, line_width, max_rows, max_cols, show_dimensions";;"(None, None, None, True, True, 'NaN', None, None, None, True, None, None, None, None, False)";;;
+"to_timestamp";"self, freq, how, axis, copy";;"(None, 'start', 0, True)";;;
+"to_wide";;;;"kwargs";"args";
+"transpose";"self";"DataFrame";;;;"'transpose', "
+"truediv";"self, other, axis, level, fill_value";;"('columns', None, None)";;;
+"truncate";"self, before, after, axis, copy";;"(None, None, None, True)";;;
+"tshift";"self, periods, freq, axis";;"(1, None, 0)";;;
+"tz_convert";"self, tz, axis, level, copy";;"(0, None, True)";;;
+"tz_localize";;;;"kwargs";"args";
+"unstack";"self, level";;"(-1,)";;;
+"update";"self, other, join, overwrite, filter_func, raise_conflict";;"('left', True, None, False)";;;
+"var";"self, axis, skipna, level, ddof, numeric_only";;"(None, None, None, 1, None)";"kwargs";;
+"where";"self, cond, other, inplace, axis, level, try_cast, raise_on_error";;"(nan, False, None, None, False, True)";;;
+"xs";"self, key, axis, level, copy, drop_level";;"(0, None, None, True)";;;

@@ -15,7 +15,6 @@ from models_views.flowElement import FlowElement
 from custom_views.AutoSyncField import AutoSyncField
 
 
-# TODO: Make this a member of the LoadDataFrame class
 sklearnDatasets = {'boston': datasets.load_boston, 
                    'breast_cancer': datasets.load_breast_cancer,
                    'diabetes': datasets.load_diabetes, 
@@ -38,7 +37,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
 
 
 
-class LoadDataFrame(FlowElement):
+class ReadDataFrame(FlowElement):
     
     
     elementName = 'Load DataFrame'
@@ -61,7 +60,7 @@ class LoadDataFrame(FlowElement):
     
     def __init__(self):
         
-        self.uiModel = LoadDataFrame.ui()
+        self.uiModel = ReadDataFrame.ui()
         
     
     def getOutputs(self):
@@ -118,7 +117,7 @@ class LoadDataFrame(FlowElement):
 
 
 
-enamldef LoadDataFrame_View(GroupBox):
+enamldef ReadDataFrame_View(GroupBox):
     
     attr model
 
