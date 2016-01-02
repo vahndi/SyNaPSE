@@ -119,11 +119,14 @@ class KMeans_Model(SKLearnElement):
 
             # Train the model using the training sets and make predictions
             kmeans.fit(X)
-            y_pred = Series(kmeans.labels_, index = X.index, name = 'Cluster')
+            y_pred = Series(kmeans.labels_, 
+                            index = X.index, 
+                            name = 'Cluster')
+            y_pred_cluster = 'Cluster ' + y_pred.apply(str)
             if target_column:
-                df_pred = concat([X, y, y_pred], axis = 1)
+                df_pred = concat([X, y, y_pred_cluster], axis = 1)
             else:
-                df_pred = concat([X, y_pred], axis = 1)
+                df_pred = concat([X, y_pred_cluster], axis = 1)
             
             if target_column:
                 conf_mat = getConfusionMatrix(
