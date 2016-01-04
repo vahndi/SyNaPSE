@@ -4,7 +4,7 @@ from enaml.widgets.api import GroupBox
 from models_views.flowElement import FlowElement
 
 # Previous elements
-from flow_elements.pandas_elements.v0_17_1 import ReadDataFrame
+from flow_elements.pandas_elements.v0_17_1.ReadDataFrame import ReadDataFrame_Model
 
 from metacodeFunctions import getPublicAttributes
 from pandas import Series, Index, concat
@@ -99,7 +99,7 @@ class DataFrameInfo_Model(FlowElement):
     
 
     elementName = 'Info'
-    precedingElements = [ReadDataFrame]
+    precedingElements = [ReadDataFrame_Model]
 
     
     def setInputs(self, dataFrame):

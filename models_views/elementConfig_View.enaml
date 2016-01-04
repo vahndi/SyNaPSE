@@ -8,7 +8,7 @@ from enaml.widgets.api import DockPane, Form, GroupBox
 
 # CORE
 # ----
-from flow_elements.core.ReadDataFrame import ReadDataFrame, ReadDataFrame_View
+from flow_elements.core.ReadDataFrame import ReadDataFrame_Model, ReadDataFrame_View
 from flow_elements.core.PandasPlot import PandasPlot, PandasPlot_View
 
 # PANDAS
@@ -63,7 +63,7 @@ from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import 
         TheilSenRegressor_Model, TheilSenRegressor_View)
 
 
-elementViewDict = {ReadDataFrame: ReadDataFrame_View,
+elementViewDict = {ReadDataFrame_Model: ReadDataFrame_View,
                    DataFrameInfo_Model: DataFrameInfo_View,
                    SelectColumns_Model: SelectColumns_View,
                    SelectRows_Model: SelectRows_View,

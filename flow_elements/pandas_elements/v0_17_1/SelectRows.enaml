@@ -12,7 +12,7 @@ from models_views.flowElement import FlowElement
 from pandasFunctions import getRowNames
 
 # Previous elements
-from ReadDataFrame import ReadDataFrame
+from ReadDataFrame import ReadDataFrame_Model
 
 
 
@@ -20,7 +20,7 @@ class SelectRows_Model(FlowElement):
     
 
     elementName = 'Select Rows'
-    precedingElements = [ReadDataFrame]
+    precedingElements = [ReadDataFrame_Model]
     
     
     class ui(Atom):

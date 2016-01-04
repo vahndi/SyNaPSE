@@ -37,7 +37,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
 
 
 
-class ReadDataFrame(FlowElement):
+class ReadDataFrame_Model(FlowElement):
     
     
     elementName = 'Read DataFrame'
@@ -62,7 +62,7 @@ class ReadDataFrame(FlowElement):
     
     def __init__(self):
         
-        self.uiModel = ReadDataFrame.ui()
+        self.uiModel = ReadDataFrame_Model.ui()
         
     
     def getOutputs(self):
