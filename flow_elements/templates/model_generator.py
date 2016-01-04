@@ -5,7 +5,7 @@ from atom_generator import getAtomCode
 
 def setInputCode_CheckBoxList(widget):
     
-    cbl_items = '???'
+    cbl_items = '[???]'
     if isinstance(widget.w_value, (str, unicode)):
         cbl_items = str(strlist_to_liststr(widget.w_value))
 

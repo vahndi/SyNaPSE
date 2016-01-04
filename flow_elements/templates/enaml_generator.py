@@ -1,5 +1,5 @@
 from helpers import spc, to_words, widget
-
+import pandas as pd
 
 def get_enaml_Label(widget):
     
@@ -186,13 +186,17 @@ def getEnamlCode(element_name, dataframe):
     for iRow in range(len(dataframe)):
         widget_row = dataframe.iloc[iRow]
         widget_page = widget_row['Widget Page']
-        if iRow == 0 or (prev_page is not None and widget_page != prev_page):
+        if pd.isnull(widget_page):
+            widget_page = None
+        if ((iRow == 0 and widget_page is not None) or 
+            (prev_page is not None and widget_page != prev_page)):
             if iRow == 0:
                 enamlCode += '%sNotebook:\n\n' % spc(4)
             enamlCode += '%sPage:\n\n' % spc(8)
             enamlCode += "%stitle = '%s'\n" % (spc(12), widget_page)
             enamlCode += '%sclosable = False\n\n' % spc(12)
             enamlCode += '%sForm:\n\n' % spc(12)
+        # Add the code for the widget
         enamlCode += getEnamlWidgetCode(widget_row, widget_names)
         prev_page = widget_page
         

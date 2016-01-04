@@ -15,6 +15,7 @@ from models_views.flowElement import FlowElement
 from custom_views.AutoSyncField import AutoSyncField
 
 
+
 sklearnDatasets = {'boston': datasets.load_boston, 
                    'breast_cancer': datasets.load_breast_cancer,
                    'diabetes': datasets.load_diabetes, 
@@ -22,7 +23,6 @@ sklearnDatasets = {'boston': datasets.load_boston,
                    'linnerud': datasets.load_linnerud, 
                    'iris': datasets.load_iris}
 
-# TODO: Add seaborn datasets support
 seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
                    'attention': sns.load_dataset('attention'),
                    'brain_networks': sns.load_dataset('brain_networks'),
@@ -40,7 +40,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
 class ReadDataFrame(FlowElement):
     
     
-    elementName = 'Load DataFrame'
+    elementName = 'Read DataFrame'
     
     
     class ui(Atom):
@@ -48,10 +48,12 @@ class ReadDataFrame(FlowElement):
         sourcePath = Str()
         sourceType = Str()
         sheetName = Str()
-        sourceTypes = List(str, ['csv', 'xls', 'sklearn'])
+        sourceTypes = List(str, ['csv', 'xls', 'seaborn', 'sklearn'])
         sheetNames = List(str)    
         sklearnDSnames = List(str, sorted(sklearnDatasets.keys()))
         sklearnDSname = Str()
+        seabornDSnames = List(str, sorted(seabornDatasets.keys()))
+        seabornDSname = Str()
 
         def getSheetNames(self):
             
@@ -93,7 +95,11 @@ class ReadDataFrame(FlowElement):
                 
                 # Join data and target columns and return
                 dataFrame = pd.concat([data, target], axis = 1)
-                        
+            
+            elif self.uiModel.sourceType == 'seaborn':
+                
+                dataFrame = seabornDatasets[self.uiModel.seabornDSname]
+                
             elif self.uiModel.sourceType in ('.csv', '.xls'):
                 if os.path.exists(self.uiModel.sourcePath):
                     if self.uiModel.sourceType == 'csv':
@@ -134,12 +140,20 @@ enamldef ReadDataFrame_View(GroupBox):
                 text = 'Path'
             AutoSyncField:
                 text := model.sourcePath
+
+        Conditional:
+            condition << cboxDStype.selected == 'seaborn'
+            Label:
+                text = 'Dataset'
+            ObjectCombo: 
+                items = model.seabornDSnames
+                selected := model.seabornDSname
                 
         Conditional:
             condition << cboxDStype.selected == 'sklearn'
             Label:
                 text = 'Dataset'
-            ObjectCombo: cboxSKLDSname:
+            ObjectCombo:
                 items = model.sklearnDSnames
                 selected := model.sklearnDSname
 

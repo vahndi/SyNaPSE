@@ -44,7 +44,6 @@ class SelectColumns_Model(FlowElement):
         # end index
         range_end_int = Int()
         use_range_end_int = Bool()
-        
         # first and last columns
         fl_columns = List(str)
         # first column name
@@ -53,13 +52,10 @@ class SelectColumns_Model(FlowElement):
         # last column name
         last_col_name = Str()
         use_last_col_name = Bool() 
-
         # dtypes
-        dtype_columns = Value(Atom)
-        
+        dtype_columns = Value(Atom)        
         # columns
-        manual_columns = Value(Atom)
-        
+        manual_columns = Value(Atom)        
         # order_alphabetically
         order_alphabetically = Bool(False)
 
