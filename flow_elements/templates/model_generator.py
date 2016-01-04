@@ -28,18 +28,22 @@ def getOutputCode(widget):
     outputCode = ''
 
     # Conditionalise
+    start_cond = end_cond = ''
     if isinstance(widget.v_condition, (str, unicode)):
-        outputCode = '%sif %s:\n%s' % (spc(8), widget.v_condition, spc(4))
+        start_cond = '('
+        end_cond = ' if self.uiModel.%s else None)' % widget.v_condition
     
     if widget.w_type == 'CheckBoxList':
-        outputCode += '%s%s = self.%s.getCheckedItemNames()\n' \
-                     % (spc(8), widget.w_name, widget.w_name)
+        outputCode += '%s%s = %sself.%s.getCheckedItemNames()%s\n' \
+                      % (spc(8), widget.w_name, start_cond, widget.w_name, end_cond)
     elif widget.w_type == 'InputsTargetsSelector':
-        outputCode += '%sinput_columns = self.%s.checked_inputs()\n' % (spc(8), widget.w_name)
-        outputCode += '%starget_column = self.%s.selected_target()\n' % (spc(8), widget.w_name)
+        outputCode += '%sinput_columns = %sself.%s.checked_inputs()%s\n' \
+                      % (spc(8), start_cond, widget.w_name, end_cond)
+        outputCode += '%starget_column = %sself.%s.selected_target()%s\n' \
+                      % (spc(8), start_cond, widget.w_name, end_cond)
     else:
-        outputCode += "%s'%s': self.uiModel.%s,\n" \
-                     % (spc(8), widget.w_name, widget.w_name)
+        outputCode += "%s'%s': %sself.uiModel.%s%s,\n" \
+                     % (spc(8), widget.w_name, start_cond, widget.w_name, end_cond)
 
     return outputCode
 

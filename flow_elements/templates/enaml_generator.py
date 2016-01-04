@@ -8,6 +8,29 @@ def get_enaml_Label(widget):
                                           to_words(widget.w_name))
 
 
+def get_enaml_OptionalStart(widget):
+    
+    enamlCode = '%sCheckBox:\n' % widget.indent1()
+    enamlCode += "%stext = '%s'\n" % (widget.indent2(), 
+                                      to_words(widget.w_name))
+    enamlCode += '%schecked := model.use_%s\n' % (widget.indent2(), 
+                                                  widget.w_name)
+    enamlCode += '%sLabel:\n' % widget.indent1()
+    enamlCode += "%stext = 'N/A'\n" % widget.indent2()
+    enamlCode += '%svisible << not model.use_%s\n' % (widget.indent2(), 
+                                                      widget.w_name)
+
+    return enamlCode
+
+
+def get_enaml_OptionalEnd(widget):
+    
+    enamlCode = '%svisible << model.use_%s\n' % (widget.indent2(), 
+                                               widget.w_name)
+    
+    return enamlCode
+
+
 def get_enaml_AutoSyncField(widget):
     
     return '%sAutoSyncField:\n%stext := model.%s\n' % (widget.indent1(), 
@@ -122,9 +145,24 @@ def getEnamlWidgetCode(widget_row, widget_names):
     
     widge = widget.from_DataFrame_row(widget_row)
 
-    enamlCode = get_enaml_Label(widge)
+    # Label (or checkbox for optional values)
+    if isinstance(widge.w_args, (str, unicode)):
+        if 'optional' in widge.w_args:
+            enamlCode = get_enaml_OptionalStart(widge)
+        else:
+            enamlCode = get_enaml_Label(widge)
+    else:
+        enamlCode = get_enaml_Label(widge)
+
+    # Widget code        
     enamlCode += getEnamlfunc[widge.w_type](widge)
     
+    # Closer for optional values
+    if isinstance(widge.w_args, (str, unicode)):
+        if 'optional' in widge.w_args:
+            enamlCode += get_enaml_OptionalEnd(widge)
+    
+    # Add Conditional code
     if isinstance(widge.v_condition, (str, unicode)):
         enamlCode = conditionVisibility(enamlCode, 
                                         widge, 

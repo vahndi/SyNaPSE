@@ -117,6 +117,9 @@ def getAtomWidgetCode(widget_row):
     widge = widget.from_DataFrame_row(widget_row)
     atomCode = '%s# %s\n' % (indent, widge.w_name)
     atomCode += getAtomFunc[widge.w_type](widge)
+    if isinstance(widge.w_args, (str, unicode)):
+        if 'optional' in widge.w_args:
+            atomCode += '%suse_%s = Bool()\n' % (indent, widge.w_name)
     
     return atomCode
 
@@ -129,5 +132,6 @@ def getAtomCode(dataframe):
         
         widget_row = dataframe.iloc[iRow]
         atomCode += getAtomWidgetCode(widget_row)
+
         
     return atomCode
