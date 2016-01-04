@@ -9,17 +9,17 @@ from enaml.core.api import Conditional
 from custom_views.AutoSyncField import AutoSyncField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from models_views.flowElement import FlowElement
-from pandasFunctions import getColumnNames
+from pandasFunctions import getRowNames
 
 # Previous elements
 from ...core.ReadDataFrame import ReadDataFrame
 
 
 
-class SelectColumns_Model(FlowElement):
+class SelectRows_Model(FlowElement):
     
 
-    elementName = 'Select Columns'
+    elementName = 'Select Rows'
     precedingElements = [ReadDataFrame]
     
     
@@ -44,18 +44,16 @@ class SelectColumns_Model(FlowElement):
         # end index
         range_end_int = Int()
         use_range_end_int = Bool()
-        # first and last columns
-        fl_columns = List(str)
-        # first column name
-        first_col_name = Str()
-        use_first_col_name = Bool()
-        # last column name
-        last_col_name = Str()
-        use_last_col_name = Bool() 
-        # dtypes
-        dtype_columns = Value(Atom)        
+        # first and last rows
+        fl_rows = List(str)
+        # first row name
+        first_row_name = Str()
+        use_first_row_name = Bool()
+        # last row name
+        last_row_name = Str()
+        use_last_row_name = Bool() 
         # manual selection
-        manual_columns = Value(Atom)        
+        manual_rows = Value(Atom)        
         # order_alphabetically
         order_alphabetically = Bool(False)
 
@@ -63,24 +61,22 @@ class SelectColumns_Model(FlowElement):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
-        # Limit selection methods based on the dtype of the columns
-        if dataFrame.columns.dtype == object:
+        # Limit selection methods based on the dtype of the index
+        if dataFrame.index.dtype == object:
             method_list = ['string', 'regex', 'index range', 
-                           'name range', 'dtypes', 'manual']
+                           'name range', 'manual']
         else:
-            method_list = ['index range', 'dtypes', 'manual']
+            method_list = ['index range', 'manual']
             
-        self.manual_columns = CheckBoxList_Model(dataFrame.columns)
+        self.manual_rows = CheckBoxList_Model(dataFrame.index)
         self.dtype_dict = {'float': float,
                            'int': int,
                            'number': 'number',
                            'string': object}
-        self.dtype_columns = CheckBoxList_Model(sorted(self.dtype_dict.keys()))
-        self.uiModel = SelectColumns_Model.ui(
+        self.uiModel = SelectRows_Model.ui(
                             method_list = method_list,
-                            manual_columns = self.manual_columns.uiModel,
-                            dtype_columns = self.dtype_columns.uiModel,
-                            fl_columns = list(dataFrame.columns)
+                            manual_rows = self.manual_rows.uiModel,
+                            fl_rows = [str(i) for i in list(dataFrame.index)]
                             )
 
     
@@ -92,20 +88,21 @@ class SelectColumns_Model(FlowElement):
             
             if self.uiModel.method == 'string':
                 
-                columns = getColumnNames(
+                rows = getRowNames(
                        self._dataFrame,
                        startsWith = self.uiModel.starts_with,
                        endsWith = self.uiModel.ends_with,
                        contains = self.uiModel.contains,
                        doesNotContain = self.uiModel.does_not_contain,
                        orderAlphabetically = self.uiModel.order_alphabetically)
-                df = df[columns]
+                df = df.loc[rows]
                 
             elif self.uiModel.method == 'regex':
                 
-                df = df.filter(regex = self.uiModel.expression)
+                df = df.filter(regex = self.uiModel.expression,
+                               axis = 0)
                 if self.uiModel.order_alphabetically:
-                    df = df[sorted(list(df.columns))]
+                    df = df.loc[sorted(list(df.index))]
                     
             elif self.uiModel.method == 'index range':
                 
@@ -113,36 +110,31 @@ class SelectColumns_Model(FlowElement):
                 re = self.uiModel.range_end_int
                 if (self.uiModel.use_range_start_int and
                     self.uiModel.use_range_end_int):
-                        df = df.iloc[:, rs:re]
+                        df = df.iloc[rs:re, :]
                 elif self.uiModel.use_range_start_int:
-                        df = df.iloc[:, rs:]
+                        df = df.iloc[rs:, :]
                 elif self.uiModel.use_range_end_int:
-                        df = df.iloc[:, :re]
+                        df = df.iloc[:re, :]
 
             elif self.uiModel.method == 'name range':
                 
-                fc = self.uiModel.first_col_name
-                lc = self.uiModel.last_col_name
-                if (self.uiModel.use_first_col_name and
-                    self.uiModel.use_last_col_name):
-                        df = df.loc[:, fc:lc]
-                elif self.uiModel.use_first_col_name:
-                        df = df.loc[:, fc:]
-                elif self.uiModel.use_last_col_name:
-                        df = df.loc[:, :lc]
-                        
-            elif self.uiModel.method == 'dtypes':
-                df = df.select_dtypes(
-                        [self.dtype_dict[dt]
-                         for dt in self.dtype_columns.getCheckedItemNames()]
-                         )
+                fc = self.uiModel.first_row_name
+                lc = self.uiModel.last_row_name
+                if (self.uiModel.use_first_row_name and
+                    self.uiModel.use_last_row_name):
+                        df = df.loc[fc:lc, :]
+                elif self.uiModel.use_first_row_name:
+                        df = df.loc[fc:, :]
+                elif self.uiModel.use_last_row_name:
+                        df = df.loc[:lc, :]
 
             else:
                 
-                df = df[self.manual_columns.getCheckedItemNames()]
-                # sort, if specified
-                if self.uiModel.order_alphabetically:
-                    df = df[sorted(list(df.columns))]
+                df = df.loc[self.manual_rows.getCheckedItemNames()]
+            
+            # sort, if specified
+            if self.uiModel.order_alphabetically:
+                df = df[sorted(list(df.index))]
 
             return {'dataFrame': df}
             
@@ -152,7 +144,7 @@ class SelectColumns_Model(FlowElement):
 
 
 
-enamldef SelectColumns_View(GroupBox): me:
+enamldef SelectRows_View(GroupBox): me:
 
     attr model
 
@@ -212,7 +204,7 @@ enamldef SelectColumns_View(GroupBox): me:
             IntField:
                 value := model.range_start_int
                 minimum = 0
-                maximum = len(model.fl_columns)
+                maximum = len(model.fl_rows)
                 visible << model.use_range_start_int
 
             CheckBox:
@@ -224,7 +216,7 @@ enamldef SelectColumns_View(GroupBox): me:
             IntField:
                 value := model.range_end_int
                 minimum = 0
-                maximum = len(model.fl_columns)
+                maximum = len(model.fl_rows)
                 visible << model.use_range_end_int
 
 
@@ -234,43 +226,34 @@ enamldef SelectColumns_View(GroupBox): me:
             
             CheckBox: 
                 text = 'First Name'
-                checked := model.use_first_col_name
+                checked := model.use_first_row_name
             Label:
                 text = 'N/A'
-                visible << not model.use_first_col_name
+                visible << not model.use_first_row_name
             ObjectCombo:
-                items = model.fl_columns
-                selected := model.first_col_name
-                visible << model.use_first_col_name
+                items = model.fl_rows
+                selected := model.first_row_name
+                visible << model.use_first_row_name
 
             CheckBox:
                 text = 'Last Name'
-                checked := model.use_last_col_name
+                checked := model.use_last_row_name
             Label:
                 text = 'N/A'
-                visible << not model.use_last_col_name
+                visible << not model.use_last_row_name
             ObjectCombo:
-                items = model.fl_columns
-                selected := model.last_col_name
-                visible << model.use_last_col_name
-
-
-        Conditional:
-            condition << model.method == 'dtypes'
-            
-            Label:
-                text = 'dtypes'
-            CheckBoxList_View:
-                model := me.model.dtype_columns
+                items = model.fl_rows
+                selected := model.last_row_name
+                visible << model.use_last_row_name
 
 
         Conditional:
             condition << model.method == 'manual'
 
             Label:
-                text = 'Columns'
+                text = 'Rows'
             CheckBoxList_View:
-                model := me.model.manual_columns
+                model := me.model.manual_rows
 
 
         Label:

@@ -11,6 +11,7 @@ with enaml.imports():
     
     # Pandas
     from flow_elements.pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
+    from flow_elements.pandas_elements.v0_17_1.SelectRows import SelectRows_Model
     from flow_elements.pandas_elements.v0_17_1.DataFrameInfo import DataFrameInfo_Model
     
     # Classification
@@ -49,6 +50,7 @@ class Main_Model(object):
     elementModels = [PandasPlot, 
                      ReadDataFrame, 
                      SelectColumns_Model, 
+                     SelectRows_Model, 
                      DataFrameInfo_Model,
                      ARDRegression_Model,
                      BayesianRidge_Model,

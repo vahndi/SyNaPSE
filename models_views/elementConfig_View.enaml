@@ -15,6 +15,8 @@ from flow_elements.core.PandasPlot import PandasPlot, PandasPlot_View
 # ------
 from flow_elements.pandas_elements.v0_17_1.SelectColumns import (
     SelectColumns_Model, SelectColumns_View)
+from flow_elements.pandas_elements.v0_17_1.SelectRows import (
+    SelectRows_Model, SelectRows_View)
 from flow_elements.pandas_elements.v0_17_1.DataFrameInfo import (
     DataFrameInfo_Model, DataFrameInfo_View)
 
@@ -64,6 +66,7 @@ from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import 
 elementViewDict = {ReadDataFrame: ReadDataFrame_View,
                    DataFrameInfo_Model: DataFrameInfo_View,
                    SelectColumns_Model: SelectColumns_View,
+                   SelectRows_Model: SelectRows_View,
                    PandasPlot: PandasPlot_View,
                    ARDRegression_Model: ARDRegression_View,
                    BayesianRidge_Model: BayesianRidge_View,

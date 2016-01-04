@@ -16,7 +16,7 @@ class CheckBoxListItem(object):
 
     def __str__(self):
         
-        return self.name
+        return str(self.name)
 
 
     def toggle(self, value):
@@ -82,9 +82,8 @@ class CheckBoxList_Model(object):
     
     def getCheckedItemNames(self):
         
-        return [str(self.uiModel.checkItems[i]) 
+        return [self.uiModel.checkItems[i].name
                 for i in self.uiModel.checkedIndices]
-
 
             
 enamldef CheckBoxList_View(GroupBox):
