@@ -12,7 +12,7 @@ from models_views.flowElement import FlowElement
 from pandasFunctions import getColumnNames
 
 # Previous elements
-from ...core.ReadDataFrame import ReadDataFrame
+from ReadDataFrame import ReadDataFrame
 
 
 

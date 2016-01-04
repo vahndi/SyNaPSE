@@ -2,7 +2,7 @@
 from models_views.flowElement import FlowElement
 
 # Preceding elements
-from flow_elements.core.ReadDataFrame import ReadDataFrame
+from flow_elements.pandas_elements.v0_17_1 import ReadDataFrame
 from ...pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
 
 

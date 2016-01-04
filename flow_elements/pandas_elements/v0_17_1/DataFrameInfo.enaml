@@ -4,7 +4,7 @@ from enaml.widgets.api import GroupBox
 from models_views.flowElement import FlowElement
 
 # Previous elements
-from ...core.ReadDataFrame import ReadDataFrame
+from flow_elements.pandas_elements.v0_17_1 import ReadDataFrame
 
 from metacodeFunctions import getPublicAttributes
 from pandas import Series, Index, concat

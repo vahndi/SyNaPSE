@@ -1,5 +1,5 @@
 from models_views.flowElement import FlowElement
-from ...core.ReadDataFrame import ReadDataFrame
+from flow_elements.pandas_elements.v0_17_1 import ReadDataFrame
 
 
 

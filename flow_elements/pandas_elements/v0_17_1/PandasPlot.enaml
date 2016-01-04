@@ -15,7 +15,7 @@ from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from models_views.flowElement import FlowElement
 
 # Preceding Elements
-from ReadDataFrame import ReadDataFrame
+from flow_elements.pandas_elements.v0_17_1 import ReadDataFrame
 
 # Other
 import pandas as pd

@@ -12,7 +12,7 @@ from models_views.flowElement import FlowElement
 from pandasFunctions import getRowNames
 
 # Previous elements
-from ...core.ReadDataFrame import ReadDataFrame
+from ReadDataFrame import ReadDataFrame
 
 
 
@@ -54,6 +54,8 @@ class SelectRows_Model(FlowElement):
         use_last_row_name = Bool() 
         # manual selection
         manual_rows = Value(Atom)        
+        # head_tail_number
+        head_tail_number = Int(10)
         # order_alphabetically
         order_alphabetically = Bool(False)
 
@@ -64,15 +66,11 @@ class SelectRows_Model(FlowElement):
         # Limit selection methods based on the dtype of the index
         if dataFrame.index.dtype == object:
             method_list = ['string', 'regex', 'index range', 
-                           'name range', 'manual']
+                           'name range', 'manual', 'head', 'tail']
         else:
-            method_list = ['index range', 'manual']
+            method_list = ['index range', 'manual', 'head', 'tail']
             
         self.manual_rows = CheckBoxList_Model(dataFrame.index)
-        self.dtype_dict = {'float': float,
-                           'int': int,
-                           'number': 'number',
-                           'string': object}
         self.uiModel = SelectRows_Model.ui(
                             method_list = method_list,
                             manual_rows = self.manual_rows.uiModel,
@@ -128,9 +126,17 @@ class SelectRows_Model(FlowElement):
                 elif self.uiModel.use_last_row_name:
                         df = df.loc[:lc, :]
 
-            else:
+            elif self.uiModel.method == 'manual':
                 
                 df = df.loc[self.manual_rows.getCheckedItemNames()]
+
+            elif self.uiModel.method == 'head':
+                
+                df = df.head(self.uiModel.head_tail_number)
+                
+            elif self.uiModel.method == 'tail':
+                
+                df = df.tail(self.uiModel.head_tail_number)
             
             # sort, if specified
             if self.uiModel.order_alphabetically:
@@ -254,7 +260,15 @@ enamldef SelectRows_View(GroupBox): me:
                 text = 'Rows'
             CheckBoxList_View:
                 model := me.model.manual_rows
-
+        
+        Conditional:
+            condition << model.method in ('head', 'tail')
+            
+            Label:
+                text = '# Rows'
+            IntField:
+                minimum = 1
+                value := model.head_tail_number
 
         Label:
             text = 'Order Alphabetically'
