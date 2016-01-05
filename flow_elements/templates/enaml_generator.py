@@ -141,31 +141,29 @@ def conditionVisibility(widgetCode, widget, widget_names):
     return enamlCode + ''.join(code_lines)
 
 
-def getEnamlWidgetCode(widget_row, widget_names):
+def getEnamlWidgetCode(widget, widget_names):
     
-    widge = widget.from_DataFrame_row(widget_row)
-
     # Label (or checkbox for optional values)
-    if isinstance(widge.w_args, (str, unicode)):
-        if 'optional' in widge.w_args:
-            enamlCode = get_enaml_OptionalStart(widge)
+    if isinstance(widget.w_args, (str, unicode)):
+        if 'optional' in widget.w_args:
+            enamlCode = get_enaml_OptionalStart(widget)
         else:
-            enamlCode = get_enaml_Label(widge)
+            enamlCode = get_enaml_Label(widget)
     else:
-        enamlCode = get_enaml_Label(widge)
+        enamlCode = get_enaml_Label(widget)
 
     # Widget code        
-    enamlCode += getEnamlfunc[widge.w_type](widge)
+    enamlCode += getEnamlfunc[widget.w_type](widget)
     
     # Closer for optional values
-    if isinstance(widge.w_args, (str, unicode)):
-        if 'optional' in widge.w_args:
-            enamlCode += get_enaml_OptionalEnd(widge)
+    if isinstance(widget.w_args, (str, unicode)):
+        if 'optional' in widget.w_args:
+            enamlCode += get_enaml_OptionalEnd(widget)
     
     # Add Conditional code
-    if isinstance(widge.v_condition, (str, unicode)):
+    if isinstance(widget.v_condition, (str, unicode)):
         enamlCode = conditionVisibility(enamlCode, 
-                                        widge, 
+                                        widget, 
                                         widget_names)
     
     enamlCode += '\n'
@@ -197,7 +195,8 @@ def getEnamlCode(element_name, dataframe):
             enamlCode += '%sclosable = False\n\n' % spc(12)
             enamlCode += '%sForm:\n\n' % spc(12)
         # Add the code for the widget
-        enamlCode += getEnamlWidgetCode(widget_row, widget_names)
+        widge = widget.from_DataFrame_row(widget_row)
+        enamlCode += getEnamlWidgetCode(widge, widget_names)
         prev_page = widget_page
         
     return enamlCode

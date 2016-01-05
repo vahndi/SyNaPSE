@@ -1,0 +1,131 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from enaml.stdlib.fields import FloatField, IntField
+from enaml.core.api import Conditional
+
+from custom_views.AutoSyncField import AutoSyncField
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from base.ABCs import ABCDataFrameToDataFrame
+from pandasFunctions import getColumnNames
+import re
+
+
+class RenameColumns_Model(ABCDataFrameToDataFrame):
+    
+    elementName = 'Rename Columns'
+
+    class ui(Atom):
+
+        # prefix
+        prefix = Str()
+        use_prefix = Bool()
+        # suffix
+        suffix = Str()
+        use_suffix = Bool()
+        # find_and_replace
+        find_and_replace = Bool()
+        # findrep_method
+        findrep_method = Str('normal')
+        findrep_method_list = List(str, ['normal', 'regex'])
+        # find
+        find = Str()
+        # replace
+        replace = Str()
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.uiModel = RenameColumns_Model.ui()
+        self.original_columns = dataFrame.columns
+
+
+    def getOutputs(self):
+
+        try:
+
+            df = self._dataFrame
+            df.columns = self.original_columns
+            
+            if self.uiModel.use_prefix:
+                df = df.add_prefix(self.uiModel.prefix)
+                
+            if self.uiModel.use_suffix:
+                df = df.add_suffix(self.uiModel.suffix)
+
+            if self.uiModel.find_and_replace:
+                if self.uiModel.findrep_method == 'normal':
+                    cols = [col.replace(self.uiModel.find, 
+                                        self.uiModel.replace)
+                                  for col in df.columns]
+                    if len(set(cols)) == len(cols):
+                        df.columns = cols
+                else:
+                    p = re.compile('(' + self.uiModel.find + ')')
+                    cols = [p.sub(self.uiModel.replace, col)
+                            for col in df.columns]
+                    if len(set(cols)) == len(cols):
+                        df.columns = cols
+
+            return {'dataFrame': df}
+            
+                
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+
+
+enamldef RenameColumns_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            text = 'Prefix'
+            checked := model.use_prefix
+        Label:
+            text = 'N/A'
+            visible << not model.use_prefix
+        AutoSyncField:
+            text := model.prefix
+            visible << model.use_prefix
+
+        CheckBox:
+            text = 'Suffix'
+            checked := model.use_suffix
+        Label:
+            text = 'N/A'
+            visible << not model.use_suffix
+        AutoSyncField:
+            text := model.suffix
+            visible << model.use_suffix
+            
+        Label:
+            text = 'Find And Replace'
+        CheckBox:
+            checked := model.find_and_replace
+
+        Conditional:
+            condition << model.find_and_replace == True
+            
+            Label:
+                text = 'Method'
+            ObjectCombo:
+                items = model.findrep_method_list
+                selected := model.findrep_method
+
+            Label:
+                text = 'Find'
+            AutoSyncField:
+                text := model.find
+
+            Label:
+                text = 'Replace'
+            AutoSyncField:
+                text := model.replace

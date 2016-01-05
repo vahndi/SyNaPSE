@@ -10,6 +10,7 @@ with enaml.imports():
     from flow_elements.pandas.v0_17_1.ReadDataFrame import ReadDataFrame_Model
     from flow_elements.pandas.v0_17_1.SelectColumns import SelectColumns_Model
     from flow_elements.pandas.v0_17_1.SelectRows import SelectRows_Model
+    from flow_elements.pandas.v0_17_1.RenameColumns import RenameColumns_Model
     from flow_elements.pandas.v0_17_1.DataFrameInfo import DataFrameInfo_Model
     
     # Classification
@@ -50,6 +51,7 @@ class Main_Model(object):
                      ReadDataFrame_Model, 
                      SelectColumns_Model, 
                      SelectRows_Model, 
+                     RenameColumns_Model,
                      DataFrameInfo_Model,
                      ARDRegression_Model,
                      BayesianRidge_Model,
