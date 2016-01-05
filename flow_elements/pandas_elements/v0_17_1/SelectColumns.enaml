@@ -8,7 +8,8 @@ from enaml.core.api import Conditional
 
 from custom_views.AutoSyncField import AutoSyncField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from models_views.flowElement import FlowElement
+#from models_views.flowElement import FlowElement
+from base.ABCs import DataFrameToDataFrame
 from pandasFunctions import getColumnNames
 
 # Previous elements
@@ -16,11 +17,11 @@ from ReadDataFrame import ReadDataFrame_Model
 
 
 
-class SelectColumns_Model(FlowElement):
+class SelectColumns_Model(DataFrameToDataFrame):
     
 
     elementName = 'Select Columns'
-    precedingElements = [ReadDataFrame_Model]
+#    precedingElements = [ReadDataFrame_Model]
     
     
     class ui(Atom):

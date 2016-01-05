@@ -6,7 +6,7 @@ from inspect import getargspec
 with enaml.imports():
 
     # Core
-    from flow_elements.core.PandasPlot import PandasPlot
+    from flow_elements.core.PandasPlot import PandasPlot_Model
     from flow_elements.core.ReadDataFrame import ReadDataFrame_Model
     
     # Pandas
@@ -47,7 +47,7 @@ class Main_Model(object):
     ### Move this to outside the class and bootstrap it ###
     ### See if it is possible to automatically detect and import elements from 
     ### the filesystem at startup ###
-    elementModels = [PandasPlot, 
+    elementModels = [PandasPlot_Model, 
                      ReadDataFrame_Model, 
                      SelectColumns_Model, 
                      SelectRows_Model, 

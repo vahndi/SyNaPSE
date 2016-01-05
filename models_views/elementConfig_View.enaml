@@ -9,7 +9,7 @@ from enaml.widgets.api import DockPane, Form, GroupBox
 # CORE
 # ----
 from flow_elements.core.ReadDataFrame import ReadDataFrame_Model, ReadDataFrame_View
-from flow_elements.core.PandasPlot import PandasPlot, PandasPlot_View
+from flow_elements.core.PandasPlot import PandasPlot_Model, PandasPlot_View
 
 # PANDAS
 # ------
@@ -67,7 +67,7 @@ elementViewDict = {ReadDataFrame_Model: ReadDataFrame_View,
                    DataFrameInfo_Model: DataFrameInfo_View,
                    SelectColumns_Model: SelectColumns_View,
                    SelectRows_Model: SelectRows_View,
-                   PandasPlot: PandasPlot_View,
+                   PandasPlot_Model: PandasPlot_View,
                    ARDRegression_Model: ARDRegression_View,
                    BayesianRidge_Model: BayesianRidge_View,
                    ElasticNet_Model: ElasticNet_View,

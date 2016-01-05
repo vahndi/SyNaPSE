@@ -37,7 +37,7 @@ pdPlotArgs = {'area': ['x', 'y'],
 
 
 
-class PandasPlot(FlowElement):
+class PandasPlot_Model(FlowElement):
 
     elementName = 'Pandas Plot'
     precedingElements = [ReadDataFrame_Model]
@@ -64,8 +64,8 @@ class PandasPlot(FlowElement):
         self._dataFrame = dataFrame
         cols = sorted(list(dataFrame.columns))
         self.yCols = CheckBoxList_Model(cols)
-        self.uiModel = PandasPlot.ui(columns = cols,
-                                     yColumns = self.yCols.uiModel)
+        self.uiModel = PandasPlot_Model.ui(columns = cols,
+                                           yColumns = self.yCols.uiModel)
 
 
     def getOutputs(self):
