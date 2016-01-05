@@ -2,8 +2,8 @@
 from models_views.flowElement import FlowElement
 
 # Preceding elements
-from flow_elements.pandas_elements.v0_17_1.ReadDataFrame import ReadDataFrame_Model
-from ...pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
+from flow_elements.pandas.v0_17_1.ReadDataFrame import ReadDataFrame_Model
+from flow_elements.pandas.v0_17_1.SelectColumns import SelectColumns_Model
 
 
 class SKLearnElement(FlowElement):

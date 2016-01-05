@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 
 #from models_views.flowElement import FlowElement
-from base.ABCs import OutputsDataFrame
+from .base.ABCs import ABCOutputsDataFrame
 from custom_views.AutoSyncField import AutoSyncField
 
 
@@ -38,7 +38,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
 
 
 
-class ReadDataFrame_Model(OutputsDataFrame):
+class ReadDataFrame_Model(ABCOutputsDataFrame):
     
     
     elementName = 'Read DataFrame'

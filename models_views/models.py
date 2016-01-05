@@ -5,42 +5,41 @@ from inspect import getargspec
 
 with enaml.imports():
 
-    # Core
-    from flow_elements.core.PandasPlot import PandasPlot_Model
-    from flow_elements.core.ReadDataFrame import ReadDataFrame_Model
-    
     # Pandas
-    from flow_elements.pandas_elements.v0_17_1.SelectColumns import SelectColumns_Model
-    from flow_elements.pandas_elements.v0_17_1.SelectRows import SelectRows_Model
-    from flow_elements.pandas_elements.v0_17_1.DataFrameInfo import DataFrameInfo_Model
+    from flow_elements.pandas.v0_17_1.PandasPlot import PandasPlot_Model
+    from flow_elements.pandas.v0_17_1.ReadDataFrame import ReadDataFrame_Model
+    from flow_elements.pandas.v0_17_1.SelectColumns import SelectColumns_Model
+    from flow_elements.pandas.v0_17_1.SelectRows import SelectRows_Model
+    from flow_elements.pandas.v0_17_1.DataFrameInfo import DataFrameInfo_Model
     
     # Classification
-    from flow_elements.sklearn_elements.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveClassifier import PassiveAggressiveClassifier_Model
+    from flow_elements.sklearn.v0_17.linear_model.LogisticRegression import LogisticRegression_Model
+    from flow_elements.sklearn.v0_17.linear_model.PassiveAggressiveClassifier import PassiveAggressiveClassifier_Model
     
     # Clustering
-    from flow_elements.sklearn_elements.v0_17.cluster.KMeans import KMeans_Model
+    from flow_elements.sklearn.v0_17.cluster.KMeans import KMeans_Model
     
     # Ensemble
-    from flow_elements.sklearn_elements.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
+    from flow_elements.sklearn.v0_17.ensemble.RandomForestClassifier import RandomForestClassifier_Model
 
     # Matrix Decomposition
-    from flow_elements.sklearn_elements.v0_17.decomposition.PCA import PCA_Model
+    from flow_elements.sklearn.v0_17.decomposition.PCA import PCA_Model
 
     # Regression
-    from flow_elements.sklearn_elements.v0_17.linear_model.ARDRegression import ARDRegression_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.ElasticNet import ElasticNet_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.Lars import Lars_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.Lasso import Lasso_Model  
-    from flow_elements.sklearn_elements.v0_17.linear_model.LassoLars import LassoLars_Model    
-    from flow_elements.sklearn_elements.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
-    from flow_elements.sklearn_elements.v0_17.linear_model.LinearRegression import LinearRegression_Model
-    from flow_elements.sklearn_elements.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
-    from flow_elements.sklearn_elements.v0_17.linear_model.Ridge import Ridge_Model 
-    from flow_elements.sklearn_elements.v0_17.linear_model.SGDRegressor import SGDRegressor_Model 
-    from flow_elements.sklearn_elements.v0_17.linear_model.TheilSenRegressor import TheilSenRegressor_Model 
-    
+    from flow_elements.sklearn.v0_17.linear_model.ARDRegression import ARDRegression_Model
+    from flow_elements.sklearn.v0_17.linear_model.BayesianRidge import BayesianRidge_Model
+    from flow_elements.sklearn.v0_17.linear_model.ElasticNet import ElasticNet_Model
+    from flow_elements.sklearn.v0_17.linear_model.Lars import Lars_Model
+    from flow_elements.sklearn.v0_17.linear_model.Lasso import Lasso_Model  
+    from flow_elements.sklearn.v0_17.linear_model.LassoLars import LassoLars_Model    
+    from flow_elements.sklearn.v0_17.linear_model.LassoLarsIC import LassoLarsIC_Model 
+    from flow_elements.sklearn.v0_17.linear_model.LinearRegression import LinearRegression_Model
+    from flow_elements.sklearn.v0_17.linear_model.PassiveAggressiveRegressor import PassiveAggressiveRegressor_Model 
+    from flow_elements.sklearn.v0_17.linear_model.Ridge import Ridge_Model 
+    from flow_elements.sklearn.v0_17.linear_model.SGDRegressor import SGDRegressor_Model 
+    from flow_elements.sklearn.v0_17.linear_model.TheilSenRegressor import TheilSenRegressor_Model 
+
+
 
 class Main_Model(object):
     
@@ -77,7 +76,7 @@ class Main_Model(object):
 
         self.chooseElement = ChooseElement(parent = self,
                                            elementTypes = 
-                                               Main_Model.elementModels)
+                                           Main_Model.elementModels)
 
         self.flowList = FlowList(parent = self,
                                  elementDict = self.elementDict)
@@ -145,8 +144,9 @@ class ChooseElement(object):
             return [et for et in self.elementTypes 
                     if not et.precedingElements]
         else:
-            return [et for et in self.elementTypes 
-                    if forElementType in et.precedingElements]
+            return [et for et in self.elementTypes
+                    for etPreceder in et.precedingElements
+                    if issubclass(forElementType, etPreceder)]
 
 
 

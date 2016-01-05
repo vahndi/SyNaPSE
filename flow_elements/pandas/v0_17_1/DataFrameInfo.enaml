@@ -2,9 +2,9 @@
 from enaml.widgets.api import GroupBox
 
 #from models_views.flowElement import FlowElement
-from base.ABCs import TakesDataFrame
+from base.ABCs import ABCTakesDataFrame
 # Previous elements
-from flow_elements.pandas_elements.v0_17_1.ReadDataFrame import ReadDataFrame_Model
+from flow_elements.pandas.v0_17_1.ReadDataFrame import ReadDataFrame_Model
 
 from metacodeFunctions import getPublicAttributes
 from pandas import Series, Index, concat
@@ -95,7 +95,7 @@ def getIndexMethodValues(index):
 
 
 
-class DataFrameInfo_Model(TakesDataFrame):
+class DataFrameInfo_Model(ABCTakesDataFrame):
     
 
     elementName = 'Info'

@@ -9,7 +9,7 @@ from enaml.core.api import Conditional
 from custom_views.AutoSyncField import AutoSyncField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 #from models_views.flowElement import FlowElement
-from base.ABCs import DataFrameToDataFrame
+from base.ABCs import ABCDataFrameToDataFrame
 from pandasFunctions import getRowNames
 
 # Previous elements
@@ -17,7 +17,7 @@ from ReadDataFrame import ReadDataFrame_Model
 
 
 
-class SelectRows_Model(DataFrameToDataFrame):
+class SelectRows_Model(ABCDataFrameToDataFrame):
     
 
     elementName = 'Select Rows'
