@@ -11,11 +11,12 @@ enamldef ChooseElement_View(PopupView): me:
     Form:
         Label:
             text = 'Element Type'
-        ObjectCombo: 
+        ObjectCombo: oc:
             items << model.uiModel.elementTypes
             selected := model.uiModel.selectedElementType
         PushButton:
             text = 'OK'
+            enabled << oc.selected != ''
             clicked :: 
                 # Add a new element to the flow list and update choosable types
                 flvModel.appendElement(model.uiModel.selectedElementType)                
