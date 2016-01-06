@@ -1,101 +1,28 @@
 from enaml.core.api import Include
 from enaml.widgets.api import DockPane, Form, GroupBox
+from models import pkg_sys
+from pydoc import locate
+from fileFunctions import getFileNames
 
 
+def _getModelsViews(package_path, sys_path):
+    
+    model_list = []
+    model_files = getFileNames(sys_path, endsWith = '.enaml')
+    for model_file in model_files:
+        model_name = model_file.split('.')[0]
+        model_list.append((locate('%s.%s.%s_Model' 
+                                 % (package_path, model_name, model_name)),
+                           locate('%s.%s.%s_View' 
+                                 % (package_path, model_name, model_name))))
+    return model_list
+    
 
-######################## Bootstrap this #######################################
-
-# PANDAS
-# ------
-from flow_elements.pandas.v0_17_1.ReadDataFrame import (
-    ReadDataFrame_Model, ReadDataFrame_View)
-from flow_elements.pandas.v0_17_1.PandasPlot import (
-    PandasPlot_Model, PandasPlot_View)
-from flow_elements.pandas.v0_17_1.SelectColumns import (
-    SelectColumns_Model, SelectColumns_View)
-from flow_elements.pandas.v0_17_1.RenameColumns import (
-    RenameColumns_Model, RenameColumns_View)
-from flow_elements.pandas.v0_17_1.SelectRows import (
-    SelectRows_Model, SelectRows_View)
-from flow_elements.pandas.v0_17_1.DataFrameInfo import (
-    DataFrameInfo_Model, DataFrameInfo_View)
-from flow_elements.pandas.v0_17_1.PairwiseCorrelation import (
-    PairwiseCorrelation_Model, PairwiseCorrelation_View)
-from flow_elements.pandas.v0_17_1.ClipValues import (
-    ClipValues_Model, ClipValues_View)
-
-
-# SCIKIT-LEARN
-# ------------
-# Decomposition
-from flow_elements.sklearn.v0_17.decomposition.PCA import (
-        PCA_Model, PCA_View)
-# Classification
-from flow_elements.sklearn.v0_17.linear_model.LogisticRegression import (
-        LogisticRegression_Model, LogisticRegression_View)
-from flow_elements.sklearn.v0_17.linear_model.PassiveAggressiveClassifier import (
-        PassiveAggressiveClassifier_Model, PassiveAggressiveClassifier_View)
-# Regression
-from flow_elements.sklearn.v0_17.linear_model.LinearRegression import (
-        LinearRegression_Model, LinearRegression_View)
-from flow_elements.sklearn.v0_17.cluster.KMeans import (
-        KMeans_Model, KMeans_View)
-from flow_elements.sklearn.v0_17.ensemble.RandomForestClassifier import (
-        RandomForestClassifier_Model, RandomForestClassifier_View)
-from flow_elements.sklearn.v0_17.linear_model.ARDRegression import (
-        ARDRegression_Model, ARDRegression_View)
-from flow_elements.sklearn.v0_17.linear_model.BayesianRidge import (
-        BayesianRidge_Model, BayesianRidge_View)
-from flow_elements.sklearn.v0_17.linear_model.ElasticNet import (
-        ElasticNet_Model, ElasticNet_View)        
-from flow_elements.sklearn.v0_17.linear_model.Lars import (
-        Lars_Model, Lars_View)
-from flow_elements.sklearn.v0_17.linear_model.Lasso import (
-        Lasso_Model, Lasso_View)
-from flow_elements.sklearn.v0_17.linear_model.LassoLars import (
-        LassoLars_Model, LassoLars_View)
-from flow_elements.sklearn.v0_17.linear_model.LassoLarsIC import (
-        LassoLarsIC_Model, LassoLarsIC_View)
-from flow_elements.sklearn.v0_17.linear_model.PassiveAggressiveRegressor import (
-        PassiveAggressiveRegressor_Model, PassiveAggressiveRegressor_View)
-from flow_elements.sklearn.v0_17.linear_model.Ridge import (
-        Ridge_Model, Ridge_View)
-from flow_elements.sklearn.v0_17.linear_model.SGDRegressor import (
-        SGDRegressor_Model, SGDRegressor_View)
-from flow_elements.sklearn.v0_17.linear_model.TheilSenRegressor import (
-        TheilSenRegressor_Model, TheilSenRegressor_View)
-
-
-elementViewDict = {
-    ReadDataFrame_Model: ReadDataFrame_View,
-    DataFrameInfo_Model: DataFrameInfo_View,
-    SelectColumns_Model: SelectColumns_View,
-    SelectRows_Model: SelectRows_View,
-    RenameColumns_Model: RenameColumns_View,
-    PairwiseCorrelation_Model: PairwiseCorrelation_View,
-    ClipValues_Model: ClipValues_View,
-    PandasPlot_Model: PandasPlot_View,
-    ARDRegression_Model: ARDRegression_View,
-    BayesianRidge_Model: BayesianRidge_View,
-    ElasticNet_Model: ElasticNet_View,
-    KMeans_Model: KMeans_View,
-    Lars_Model: Lars_View,
-    Lasso_Model: Lasso_View,
-    LassoLars_Model: LassoLars_View,
-    LassoLarsIC_Model: LassoLarsIC_View,
-    LinearRegression_Model: LinearRegression_View,
-    LogisticRegression_Model: LogisticRegression_View,
-    PassiveAggressiveClassifier_Model: PassiveAggressiveClassifier_View,
-    PassiveAggressiveRegressor_Model: PassiveAggressiveRegressor_View,
-    Ridge_Model: Ridge_View,
-    SGDRegressor_Model: SGDRegressor_View,
-    TheilSenRegressor_Model: TheilSenRegressor_View,
-    RandomForestClassifier_Model: RandomForestClassifier_View,
-    PCA_Model: PCA_View
-    }
-
-
-###############################################################################
+element_models_views = []            
+for pkg_path, sys_path in pkg_sys:
+    element_models_views.extend(_getModelsViews(pkg_path, sys_path))
+elementViewDict = {mv[0]: mv[1]
+                   for mv in element_models_views}
 
 
 def getElementView(elementModel):

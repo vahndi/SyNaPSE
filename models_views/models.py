@@ -5,6 +5,18 @@ from pydoc import locate
 from fileFunctions import getFileNames
 
 
+pkg_sys = (('flow_elements.pandas.v0_17_1', 
+            './flow_elements/pandas/v0_17_1/'),
+           ('flow_elements.sklearn.v0_17.linear_model',
+            './flow_elements/sklearn/v0_17/linear_model'),
+           ('flow_elements.sklearn.v0_17.cluster',
+            './flow_elements/sklearn/v0_17/cluster'),
+           ('flow_elements.sklearn.v0_17.ensemble',
+            './flow_elements/sklearn/v0_17/ensemble'),
+           ('flow_elements.sklearn.v0_17.decomposition',
+            './flow_elements/sklearn/v0_17/decomposition'))
+
+
 def getModels(package_path, sys_path):
     
     model_list = []
@@ -17,23 +29,10 @@ def getModels(package_path, sys_path):
     
 
 element_models = []
-  
 with enaml.imports():
-
-    pkg_sys = (('flow_elements.pandas.v0_17_1', 
-                './flow_elements/pandas/v0_17_1/'),
-               ('flow_elements.sklearn.v0_17.linear_model',
-                './flow_elements/sklearn/v0_17/linear_model'),
-               ('flow_elements.sklearn.v0_17.cluster',
-                './flow_elements/sklearn/v0_17/cluster'),
-               ('flow_elements.sklearn.v0_17.ensemble',
-                './flow_elements/sklearn/v0_17/ensemble'),
-               ('flow_elements.sklearn.v0_17.decomposition',
-                './flow_elements/sklearn/v0_17/decomposition'))
-                
     for pkg_path, sys_path in pkg_sys:
-        element_models.extend(getModels(pkg_path, sys_path))                
-                
+        element_models.extend(getModels(pkg_path, sys_path))               
+
 
 
 class Main_Model(object):
