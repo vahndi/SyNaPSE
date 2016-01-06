@@ -20,41 +20,58 @@ from numpy import int32, int64, float64
 from pandas import melt
 
 
-def getDataFrameHtml(dataframe):
-
-    # Create table
-    source = '<table border = "3">'
+def getDataFrameRowsHtml(dataframe):
     
-    # Create header row
-    source += '<thead><tr>'
-    if dataframe.index.name:
-        source += '<th>%s</th>' % str(dataframe.index.name)
-    else:
-        source += '<th></th>'
-    for col in dataframe.columns:
-        source += '<th>%s</th>' % col
+    html = ''
     
-    # Close header row
-    source += '</tr></thead>'
-    
-    # Create rows
-    source += '<tbody>'
     for ix in dataframe.index:
         # Create row
-        source += '<tr>'
+        html += '<tr>'
         # Add index value
-        source += '<th>%s</th>' % str(ix)
+        html += '<th>%s</th>' % str(ix)
         # Add data values
         for col in dataframe.columns:
-            source += '<td>%s</td>' % str(dataframe.get_value(ix, col))
+            html += '<td>%s</td>' % str(dataframe.get_value(ix, col))
         # Close row
-        source += '</tr>'
-    source += '</tbody>'
+        html += '</tr>'
+        
+    return html
+
+
+def getDataFrameHtml(dataframe, max_rows = 100):
+
+    # Create table
+    html = '<table border = "3">'
+    
+    # Create header row
+    html += '<thead><tr>'
+    if dataframe.index.name:
+        html += '<th>%s</th>' % str(dataframe.index.name)
+    else:
+        html += '<th></th>'
+    for col in dataframe.columns:
+        html += '<th>%s</th>' % col
+    
+    # Close header row
+    html += '</tr></thead>'
+    
+    # Create rows
+    html += '<tbody>'
+    if len(dataframe) <= max_rows:
+        html += getDataFrameRowsHtml(dataframe)
+    else:
+        html += getDataFrameRowsHtml(dataframe.head(max_rows // 2))
+        html += ('<tr><th>...</th>' + 
+                 '<td>...</td>' * len(dataframe.columns) + 
+                 '</tr>')
+        html += getDataFrameRowsHtml(dataframe.tail(max_rows // 2))
+
+    html += '</tbody>'
     
     # Close table tag
-    source += '</table>'
+    html += '</table>'
 
-    return source
+    return html
     
     
 def getDataFrameFigure(dataframe):
