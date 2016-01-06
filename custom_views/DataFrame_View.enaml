@@ -20,7 +20,24 @@ from numpy import int32, int64, float64
 from pandas import melt
 
 
-def getDataFrameRowsHtml(dataframe):
+def _getDataFrameRowHtml(dataframe, ix, max_cols):
+
+    html = ''
+    cols = list(dataframe.columns)
+    if len(cols) <= max_cols:
+        for col in cols:
+            html += '<td>%s</td>' % str(dataframe.get_value(ix, col))
+    else:
+        for col in cols[:max_cols // 2]:
+            html += '<td>%s</td>' % str(dataframe.get_value(ix, col))
+        html += '<td>...</td>'
+        for col in cols[- max_cols // 2:]:
+            html += '<td>%s</td>' % str(dataframe.get_value(ix, col))         
+
+    return html
+
+
+def _getDataFrameRowsHtml(dataframe, max_cols):
     
     html = ''
     
@@ -30,41 +47,61 @@ def getDataFrameRowsHtml(dataframe):
         # Add index value
         html += '<th>%s</th>' % str(ix)
         # Add data values
-        for col in dataframe.columns:
-            html += '<td>%s</td>' % str(dataframe.get_value(ix, col))
+        html += _getDataFrameRowHtml(dataframe, ix, max_cols)
         # Close row
         html += '</tr>'
         
     return html
 
 
-def getDataFrameHtml(dataframe, max_rows = 100):
+def getDataFrameHeaderHtml(dataframe, max_cols):
+
+    cols = list(dataframe.columns)    
+    html = '<thead><tr>'
+    if dataframe.index.name:
+        html += '<th>%s</th>' % str(dataframe.index.name)
+    else:
+        html += '<th></th>'
+    
+    if len(cols) <= max_cols:
+        for col in dataframe.columns:
+            html += '<th>%s</th>' % col
+    else:
+        for col in cols[:max_cols // 2]:
+            html += '<th>%s</th>' % col
+        html += '<th>...</th>'
+        for col in cols[- max_cols // 2:]:
+            html += '<th>%s</th>' % col
+
+    html += '</tr></thead>'
+
+    return html
+
+
+def getDataFrameHtml(dataframe, max_rows = 100, max_cols = 20):
 
     # Create table
     html = '<table border = "3">'
     
     # Create header row
-    html += '<thead><tr>'
-    if dataframe.index.name:
-        html += '<th>%s</th>' % str(dataframe.index.name)
-    else:
-        html += '<th></th>'
-    for col in dataframe.columns:
-        html += '<th>%s</th>' % col
-    
-    # Close header row
-    html += '</tr></thead>'
+    html += getDataFrameHeaderHtml(dataframe, max_cols)
     
     # Create rows
     html += '<tbody>'
+    
     if len(dataframe) <= max_rows:
-        html += getDataFrameRowsHtml(dataframe)
+        html += _getDataFrameRowsHtml(dataframe, max_cols)
     else:
-        html += getDataFrameRowsHtml(dataframe.head(max_rows // 2))
-        html += ('<tr><th>...</th>' + 
-                 '<td>...</td>' * len(dataframe.columns) + 
-                 '</tr>')
-        html += getDataFrameRowsHtml(dataframe.tail(max_rows // 2))
+        html += _getDataFrameRowsHtml(dataframe.head(max_rows // 2), max_cols)
+        if len(dataframe.columns) <= max_cols:
+            html += ('<tr><th>...</th>' + 
+                     '<td>...</td>' * len(dataframe.columns) + 
+                     '</tr>')
+        else:
+            html += ('<tr><th>...</th>' + 
+                     '<td>...</td>' * (max_cols + 1) + 
+                     '</tr>')            
+        html += _getDataFrameRowsHtml(dataframe.tail(max_rows // 2), max_cols)
 
     html += '</tbody>'
     

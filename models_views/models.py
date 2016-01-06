@@ -23,8 +23,13 @@ def getModels(package_path, sys_path):
     model_files = getFileNames(sys_path, endsWith = '.enaml')
     for model_file in model_files:
         model_name = model_file.split('.')[0]
-        model_list.append(locate('%s.%s.%s_Model' 
-                                 % (package_path, model_name, model_name))) 
+        print 'Loading element: %s...' % model_name
+        try:
+            model_list.append(locate('%s.%s.%s_Model' 
+                                     % (package_path, model_name, model_name)))
+        except:
+            print '!!! Error !!!'
+            
     return model_list
     
 
