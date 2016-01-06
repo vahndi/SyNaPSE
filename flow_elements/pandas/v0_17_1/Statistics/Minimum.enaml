@@ -1,0 +1,20 @@
+from ._base.Statistic import Statistic_Model
+from ._base.Statistic import Statistic_View
+
+
+
+class Minimum_Model(Statistic_Model):
+    
+    
+    elementName = 'Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'min'
+
+
+
+enamldef Minimum_View(Statistic_View):
+    
+    pass

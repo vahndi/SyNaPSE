@@ -1,0 +1,20 @@
+from ._base.Statistic import Statistic_Model
+from ._base.Statistic import Statistic_View
+
+
+
+class Kurtosis_Model(Statistic_Model):
+    
+    
+    elementName = 'Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'kurtosis'
+
+
+
+enamldef Kurtosis_View(Statistic_View):
+    
+    pass

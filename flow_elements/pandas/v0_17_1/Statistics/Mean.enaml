@@ -1,0 +1,20 @@
+from ._base.Statistic import Statistic_Model
+from ._base.Statistic import Statistic_View
+
+
+
+class Mean_Model(Statistic_Model):
+    
+    
+    elementName = 'Mean'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'mean'
+
+
+
+enamldef Mean_View(Statistic_View):
+    
+    pass

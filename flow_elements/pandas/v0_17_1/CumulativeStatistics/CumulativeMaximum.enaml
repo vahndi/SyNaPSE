@@ -1,5 +1,5 @@
-from ._shared.CumulativeStatistic import CumulativeStatistic_Model
-from ._shared.CumulativeStatistic import CumulativeStatistic_View
+from ._base.CumulativeStatistic import CumulativeStatistic_Model
+from ._base.CumulativeStatistic import CumulativeStatistic_View
 
 
 

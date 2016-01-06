@@ -1,0 +1,74 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from ..._base.ABCs import ABCDataFrameToSeries
+
+
+
+class Statistic_Model(ABCDataFrameToSeries):
+
+
+    class ui(Atom):
+
+        # axis
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        # skipna
+        skipna = Bool(False)
+        # numeric_only
+        numeric_only = Bool(True)
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.uiModel = Statistic_Model.ui()
+        
+
+    def getOutputs(self):
+        
+        try:
+            
+            args = {'axis': self.uiModel.axis,
+                    'skipna': self.uiModel.skipna,
+                    'numeric_only': self.uiModel.numeric_only}
+
+            # apply function
+            func = getattr(self._dataFrame, self.outputFunction)
+            series = func(** args)
+            series.index.name = 'column'
+            series.name = self.elementName.lower()
+            
+            return {'series': series}    
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+
+
+enamldef Statistic_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+
+        Label:
+            text = 'Skip NA / Null Values'
+        CheckBox:
+            checked := model.skipna
+
+        Label:
+            text = 'Numeric Only'
+        CheckBox:
+            checked := model.numeric_only

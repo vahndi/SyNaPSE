@@ -1,0 +1,20 @@
+from ._base.Statistic import Statistic_Model
+from ._base.Statistic import Statistic_View
+
+
+
+class Product_Model(Statistic_Model):
+    
+    
+    elementName = 'Product'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'product'
+
+
+
+enamldef Product_View(Statistic_View):
+    
+    pass
