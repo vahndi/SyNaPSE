@@ -6,7 +6,7 @@ from enaml.core.api import Conditional
 from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox
     )
-from enaml.stdlib.fields import FloatField, IntField
+from custom_views.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View

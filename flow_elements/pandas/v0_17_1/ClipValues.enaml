@@ -1,0 +1,78 @@
+# Atom
+from atom.api import Atom, Bool, Float
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField
+
+# Models
+from base.ABCs import ABCDataFrameToDataFrame
+
+
+
+class ClipValues_Model(ABCDataFrameToDataFrame):
+
+
+    elementName = 'Clip Values'
+
+
+    class ui(Atom):
+
+        # lower
+        lower = Float()
+        use_lower = Bool()
+        # upper
+        upper = Float()
+        use_upper = Bool()
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.uiModel = ClipValues_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+            
+            args = {'lower': (self.uiModel.lower
+                              if self.uiModel.use_lower
+                              else None),
+                    'upper': (self.uiModel.upper
+                              if self.uiModel.use_upper
+                              else None)}
+
+            return {'dataFrame': self._dataFrame.clip(** args)}
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+            
+
+enamldef ClipValues_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            text = 'Lower'
+            checked := model.use_lower
+        Label:
+            text = 'N/A'
+            visible << not model.use_lower
+        FloatField:
+            value := model.lower
+            visible << model.use_lower
+
+        CheckBox:
+            text = 'Upper'
+            checked := model.use_upper
+        Label:
+            text = 'N/A'
+            visible << not model.use_upper
+        FloatField:
+            value := model.upper
+            visible << model.use_upper

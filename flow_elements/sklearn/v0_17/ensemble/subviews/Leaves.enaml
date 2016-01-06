@@ -3,7 +3,7 @@ from atom.api import Atom, Float, Int, List, Str
 
 # Enaml
 from enaml.core.api import Conditional
-from enaml.stdlib.fields import IntField, FloatField
+from custom_views.fields import IntField, FloatField
 from enaml.widgets.api import Container, Form, Label, ObjectCombo, Page
 
 

@@ -1,0 +1,21 @@
+from enaml.widgets.api import Field as fld
+from enaml.stdlib.fields import FloatField as ffld
+from enaml.stdlib.fields import IntField as ifld
+
+
+enamldef Field(fld):
+    
+    submit_triggers = ['auto_sync']
+
+
+
+enamldef FloatField(ffld):
+    
+    submit_triggers = ['auto_sync']
+
+
+
+enamldef IntField(ifld):
+    
+    submit_triggers = ['auto_sync']
+

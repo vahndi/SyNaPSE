@@ -3,14 +3,15 @@ from atom.api import Atom, Bool, Int, List, Str, Value
 
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
-from enaml.stdlib.fields import FloatField, IntField
+from custom_views.fields import FloatField, IntField
 from enaml.core.api import Conditional
 
-from custom_views.AutoSyncField import AutoSyncField
+from custom_views.fields import Field
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from base.ABCs import ABCDataFrameToDataFrame
 from pandasFunctions import getColumnNames
 import re
+
 
 
 class RenameColumns_Model(ABCDataFrameToDataFrame):
@@ -71,8 +72,7 @@ class RenameColumns_Model(ABCDataFrameToDataFrame):
                         df.columns = cols
 
             return {'dataFrame': df}
-            
-                
+                            
 
         except Exception as e:
             
@@ -92,7 +92,7 @@ enamldef RenameColumns_View(GroupBox): me:
         Label:
             text = 'N/A'
             visible << not model.use_prefix
-        AutoSyncField:
+        Field:
             text := model.prefix
             visible << model.use_prefix
 
@@ -102,7 +102,7 @@ enamldef RenameColumns_View(GroupBox): me:
         Label:
             text = 'N/A'
             visible << not model.use_suffix
-        AutoSyncField:
+        Field:
             text := model.suffix
             visible << model.use_suffix
             
@@ -122,10 +122,10 @@ enamldef RenameColumns_View(GroupBox): me:
 
             Label:
                 text = 'Find'
-            AutoSyncField:
+            Field:
                 text := model.find
 
             Label:
                 text = 'Replace'
-            AutoSyncField:
+            Field:
                 text := model.replace

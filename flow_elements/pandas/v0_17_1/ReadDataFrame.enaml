@@ -2,7 +2,7 @@ from atom.api import Atom, Bool, Dict, List, Str
 
 from enaml.core.api import Conditional
 from enaml.widgets.api import (
-    Action, CheckBox, ComboBox, Container, DockPane, GroupBox, Field, Form, 
+    Action, CheckBox, ComboBox, Container, DockPane, GroupBox, Form, 
     Label, MainWindow, Menu, MenuBar, ObjectCombo, PopupView, PushButton, 
     Window
                               )
@@ -13,7 +13,7 @@ import seaborn as sns
 
 #from models_views.flowElement import FlowElement
 from .base.ABCs import ABCOutputsDataFrame
-from custom_views.AutoSyncField import AutoSyncField
+from custom_views.fields import Field
 
 
 
@@ -139,7 +139,7 @@ enamldef ReadDataFrame_View(GroupBox):
             condition << cboxDStype.selected in ('xls', 'csv')
             Label:
                 text = 'Path'
-            AutoSyncField:
+            Field:
                 text := model.sourcePath
 
         Conditional:

@@ -3,10 +3,10 @@ from atom.api import Atom, Bool, Int, List, Str, Value
 
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
-from enaml.stdlib.fields import FloatField, IntField
+from custom_views.fields import FloatField, IntField
 from enaml.core.api import Conditional
 
-from custom_views.AutoSyncField import AutoSyncField
+from custom_views.fields import Field
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 #from models_views.flowElement import FlowElement
 from base.ABCs import ABCDataFrameToDataFrame
@@ -170,22 +170,22 @@ enamldef SelectRows_View(GroupBox): me:
             
             Label:
                 text = 'Starts With'
-            AutoSyncField:
+            Field:
                 text := model.starts_with
 
             Label:
                 text = 'Ends With'
-            AutoSyncField:
+            Field:
                 text := model.ends_with
 
             Label:
                 text = 'Contains'
-            AutoSyncField:
+            Field:
                 text := model.contains
 
             Label:
                 text = 'Does Not Contain'
-            AutoSyncField:
+            Field:
                 text := model.does_not_contain
     
 
@@ -195,7 +195,7 @@ enamldef SelectRows_View(GroupBox): me:
 
             Label:
                 text = 'Expression'
-            AutoSyncField:
+            Field:
                 text := model.expression
 
 

@@ -31,9 +31,9 @@ def get_enaml_OptionalEnd(widget):
     return enamlCode
 
 
-def get_enaml_AutoSyncField(widget):
+def get_enaml_Field(widget):
     
-    return '%sAutoSyncField:\n%stext := model.%s\n' % (widget.indent1(), 
+    return '%sField:\n%stext := model.%s\n' % (widget.indent1(), 
                                                        widget.indent2(),
                                                        widget.w_name)
 
@@ -117,7 +117,7 @@ def get_enaml_InputsTargetsSelector(widget):
     return enamlCode
 
 
-getEnamlfunc = {'AutoSyncField': get_enaml_AutoSyncField,
+getEnamlfunc = {'Field': get_enaml_Field,
                 'CheckBox': get_enaml_CheckBox,
                 'CheckBoxList': get_enaml_CheckBoxList_View,
                 'FloatField': get_enaml_FloatField,

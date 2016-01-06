@@ -5,7 +5,7 @@ from atom.api import Atom, Int, List, Str
 # Enaml
 from enaml.core.api import Conditional
 from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
-from enaml.stdlib.fields import IntField
+from custom_views.fields import IntField
 
 # Models
 from base.ABCs import ABCDataFrameToDataFrame

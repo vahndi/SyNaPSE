@@ -5,7 +5,7 @@ from atom.api import Atom, Bool, Float, Int, List, Unicode, Value
 from enaml.core.api import Conditional
 from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox)
-from enaml.stdlib.fields import IntField, FloatField
+from custom_views.fields import IntField, FloatField
 
 # Models
 from models_views.flowElement import FlowElement 

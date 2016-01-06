@@ -1,6 +1,6 @@
 from atom.api import Atom, Int, List, Str
 from enaml.core.api import Conditional
-from enaml.stdlib.fields import IntField
+from custom_views.fields import IntField
 from enaml.widgets.api import Form, Container, Label, ObjectCombo
 
 

@@ -21,6 +21,9 @@ from flow_elements.pandas.v0_17_1.DataFrameInfo import (
     DataFrameInfo_Model, DataFrameInfo_View)
 from flow_elements.pandas.v0_17_1.PairwiseCorrelation import (
     PairwiseCorrelation_Model, PairwiseCorrelation_View)
+from flow_elements.pandas.v0_17_1.ClipValues import (
+    ClipValues_Model, ClipValues_View)
+
 
 # SCIKIT-LEARN
 # ------------
@@ -70,6 +73,7 @@ elementViewDict = {
     SelectRows_Model: SelectRows_View,
     RenameColumns_Model: RenameColumns_View,
     PairwiseCorrelation_Model: PairwiseCorrelation_View,
+    ClipValues_Model: ClipValues_View,
     PandasPlot_Model: PandasPlot_View,
     ARDRegression_Model: ARDRegression_View,
     BayesianRidge_Model: BayesianRidge_View,

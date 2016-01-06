@@ -6,7 +6,7 @@ from helpers import spc, widget, strlist_to_liststr
 indent = spc(8)
 
 
-def get_Atom_AutoSyncField(widget):
+def get_Atom_Field(widget):
 
     str_value = ''    
     if isinstance(widget.w_value, (str, unicode)):
@@ -102,7 +102,7 @@ def get_Atom_SpinBox(widget):
     return str_atom
 
 
-getAtomFunc = {'AutoSyncField': get_Atom_AutoSyncField,
+getAtomFunc = {'Field': get_Atom_Field,
                'CheckBox': get_Atom_CheckBox,
                'CheckBoxList': get_Atom_CheckBoxList,
                'FloatField': get_Atom_FloatField,

@@ -1,9 +1,10 @@
 # Enaml
 from enaml.core.api import Conditional, DynamicTemplate, Looper
 from enaml.widgets.api import (
-    Container, DockPane, Field, GroupBox, Html, Notebook, MPLCanvas, 
+    Container, DockPane, GroupBox, Html, Notebook, MPLCanvas, 
     MultilineField, Page, PushButton, ScrollArea
     )
+from custom_views.fields import Field
 
 # Plotting                             
 from matplotlib.figure import Figure

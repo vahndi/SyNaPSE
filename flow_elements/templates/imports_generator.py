@@ -1,15 +1,12 @@
-from helpers import spc
-
-
-
 custom_widgets = ('CheckBoxList',
                   'RadioButtonList',
                   'InputsTargetsSelector')
                   
-fields_widgets = ('FloatField', 
+fields_widgets = ('Field',
+                  'FloatField', 
                   'IntField')
 
-widgets_atoms = {'AutoSyncField': ['Str'],
+widgets_atoms = {'Field': ['Str'],
                  'CheckBox': ['Bool'],
                  'CheckBoxList':['Atom', 'Value'],
                  'FloatField': ['Float'],
@@ -51,7 +48,7 @@ def getImportsCode(element_name, dataframe):
     # fields
     reqd_field_widgets = set(widget_types).intersection(fields_widgets)
     if len(reqd_field_widgets) > 0:
-        importsCode += 'from enaml.stdlib.fields import %s\n' \
+        importsCode += 'from custom_views.fields import %s\n' \
                        % ', '.join([w for w in reqd_field_widgets])
     # custom
     reqd_custom_widgets = set(widget_types).intersection(custom_widgets)
