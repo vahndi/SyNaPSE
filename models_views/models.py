@@ -24,11 +24,17 @@ def getModels(package_path, sys_path):
     for model_file in model_files:
         model_name = model_file.split('.')[0]
         print 'Loading element: %s...' % model_name
-        try:
-            model_list.append(locate('%s.%s.%s_Model' 
+        model_list.append(locate('%s.%s.%s_Model' 
                                      % (package_path, model_name, model_name)))
-        except:
-            print '!!! Error !!!'
+#        try:
+#            model_list.append(locate('%s.%s.%s_Model' 
+#                                     % (package_path, model_name, model_name)))
+#        except Exception as e:
+#            print '!!! Error !!!'
+#            print {'__class__': str(e.__class__),
+#                   '__doc__': e.__doc__,
+#                   'message': e.message,
+#                   'args': str(e.args)}
             
     return model_list
     

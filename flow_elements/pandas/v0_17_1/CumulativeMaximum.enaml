@@ -1,0 +1,20 @@
+from ._shared.CumulativeStatistic import CumulativeStatistic_Model
+from ._shared.CumulativeStatistic import CumulativeStatistic_View
+
+
+
+class CumulativeMaximum_Model(CumulativeStatistic_Model):
+    
+    
+    elementName = 'Cumulative Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cummax'
+
+
+
+enamldef CumulativeMaximum_View(CumulativeStatistic_View):
+    
+    pass

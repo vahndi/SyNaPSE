@@ -1,0 +1,20 @@
+from ._shared.CumulativeStatistic import CumulativeStatistic_Model
+from ._shared.CumulativeStatistic import CumulativeStatistic_View
+
+
+
+class CumulativeProduct_Model(CumulativeStatistic_Model):
+    
+    
+    elementName = 'Cumulative Product'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cumprod'
+
+
+
+enamldef CumulativeProduct_View(CumulativeStatistic_View):
+    
+    pass

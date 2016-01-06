@@ -1,0 +1,20 @@
+from ._shared.CumulativeStatistic import CumulativeStatistic_Model
+from ._shared.CumulativeStatistic import CumulativeStatistic_View
+
+
+
+class CumulativeSum_Model(CumulativeStatistic_Model):
+    
+    
+    elementName = 'Cumulative Sum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cumsum'
+
+
+
+enamldef CumulativeSum_View(CumulativeStatistic_View):
+    
+    pass

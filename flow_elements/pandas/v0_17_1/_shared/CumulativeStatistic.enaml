@@ -1,0 +1,72 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame
+
+from pandas import concat
+
+
+
+class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
+
+
+    class ui(Atom):
+
+        # axis
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        # skipna
+        skipna = Bool()
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.uiModel = CumulativeStatistic_Model.ui()
+        
+
+    def getOutputs(self):
+        
+        try:
+            
+            args = {'axis': self.uiModel.axis,
+                    'skipna': self.uiModel.skipna}
+            # split numeric and object types
+            df_object = self._dataFrame.select_dtypes(include = [object])        
+            df_numeric = self._dataFrame.select_dtypes(exclude = [object])
+            # apply cumulative function
+            func = getattr(df_numeric, self.outputFunction)
+            df_stat = func(** args)
+            df_stat = df_stat.convert_objects(convert_numeric = True)
+            # join back together
+            df_joined = concat([df_object, df_stat], axis = 1)
+            df_joined = df_joined[[col for col in self._dataFrame.columns]]
+            
+            return {'dataFrame': df_joined}    
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+
+
+enamldef CumulativeStatistic_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+
+        Label:
+            text = 'Skip NA / Null Values'
+        CheckBox:
+            checked := model.skipna
