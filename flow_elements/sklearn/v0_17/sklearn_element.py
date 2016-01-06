@@ -2,7 +2,7 @@
 from models_views.flowElement import FlowElement
 
 # Preceding elements
-from flow_elements.pandas.v0_17_1.base.ABCs import ABCOutputsDataFrame
+from flow_elements.pandas.v0_17_1._base.ABCs import ABCOutputsDataFrame
 
 
 

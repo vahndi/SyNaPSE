@@ -6,7 +6,6 @@ from copy import deepcopy
 import seaborn as sns
 
 
-
 def generate_element(spreadsheet_name, element_name):
 
     # TODO: add element path and filename (create one for each library)

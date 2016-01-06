@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 
 #from models_views.flowElement import FlowElement
-from .base.ABCs import ABCOutputsDataFrame
+from ._base.ABCs import ABCOutputsDataFrame
 from custom_views.fields import Field
 
 
