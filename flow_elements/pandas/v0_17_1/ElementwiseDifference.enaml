@@ -7,7 +7,6 @@ from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.fields import IntField
 
 # Models
-from models_views.flowElement import FlowElement
 from .base.ABCs import ABCDataFrameToDataFrame
 
 
@@ -15,7 +14,7 @@ from .base.ABCs import ABCDataFrameToDataFrame
 class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Elementwise Difference'
+    elementName = 'Element-wise Difference'
 
 
     class ui(Atom):
