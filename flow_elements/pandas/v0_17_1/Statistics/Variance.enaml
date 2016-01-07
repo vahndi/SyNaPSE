@@ -1,0 +1,20 @@
+from ._base.Statistic2 import Statistic2_Model
+from ._base.Statistic2 import Statistic2_View
+
+
+
+class Variance_Model(Statistic2_Model):
+    
+    
+    elementName = 'Variance'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'var'
+
+
+
+enamldef Variance_View(Statistic2_View):
+    
+    pass

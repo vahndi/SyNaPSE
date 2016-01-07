@@ -1,15 +1,16 @@
 # Atom
-from atom.api import Atom, Bool, List, Str
+from atom.api import Atom, Bool, Int, List, Str
 
 # Enaml
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
 
 # Models
 from ..._base.ABCs import ABCDataFrameToSeries
 
 
 
-class Statistic1_Model(ABCDataFrameToSeries):
+class Statistic2_Model(ABCDataFrameToSeries):
 
 
     class ui(Atom):
@@ -19,6 +20,9 @@ class Statistic1_Model(ABCDataFrameToSeries):
         axis_list = List(str, ['index', 'columns'])
         # skipna
         skipna = Bool(False)
+        # ddof
+        ddof = Int(1)
+        ddof_min = Int(1)
         # numeric_only
         numeric_only = Bool(True)
 
@@ -26,17 +30,21 @@ class Statistic1_Model(ABCDataFrameToSeries):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
-        self.uiModel = Statistic1_Model.ui()
-        
+        self.uiModel = Statistic2_Model.ui()
+
 
     def getOutputs(self):
-        
-        try:
-            
-            args = {'axis': self.uiModel.axis,
-                    'skipna': self.uiModel.skipna,
-                    'numeric_only': self.uiModel.numeric_only}
 
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'skipna': self.uiModel.skipna,
+                'ddof': self.uiModel.ddof,
+                'numeric_only': self.uiModel.numeric_only
+                }
+            
             # apply function
             func = getattr(self._dataFrame, self.outputFunction)
             series = func(** args)
@@ -46,12 +54,12 @@ class Statistic1_Model(ABCDataFrameToSeries):
             return {'series': series}    
 
         except Exception as e:
-            
+
             return self.standard_exception(e)
 
 
 
-enamldef Statistic1_View(GroupBox):
+enamldef Statistic2_View(GroupBox): me:
 
     attr model
 
@@ -67,6 +75,12 @@ enamldef Statistic1_View(GroupBox):
             text = 'Skip NA / Null Values'
         CheckBox:
             checked := model.skipna
+
+        Label:
+            text = 'Degrees of Freedom'
+        IntField:
+            value := model.ddof
+            minimum = model.ddof_min
 
         Label:
             text = 'Numeric Only'

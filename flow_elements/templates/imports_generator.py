@@ -25,9 +25,12 @@ def getImportsCode(element_name, dataframe):
     # ---- 
     atom_types = {'Atom'}
     for widget_type in widget_types:
-        atom_types = atom_types.union(widgets_atoms[widget_type])  
-    if dataframe['Widget Args'].str.contains('optional').any():
-        atom_types = list(set(list(atom_types) + ['Bool']))
+        atom_types = atom_types.union(widgets_atoms[widget_type])
+    try:
+        if dataframe['Widget Args'].str.contains('optional').any():
+            atom_types = list(set(list(atom_types) + ['Bool']))
+    except:
+        pass
     importsCode = '# Atom\n'
     importsCode += 'from atom.api import %s\n\n' \
                    % ', '.join(sorted(atom_types))
@@ -38,8 +41,11 @@ def getImportsCode(element_name, dataframe):
                        [e for e in widget_types 
                         if e not in custom_widgets
                         and e not in fields_widgets]
-    if dataframe['Widget Args'].str.contains('optional').any():
-        standard_widgets = set(standard_widgets + ['CheckBox'])
+    try:
+        if dataframe['Widget Args'].str.contains('optional').any():
+            standard_widgets = set(standard_widgets + ['CheckBox'])
+    except:
+        pass
     str_standard_widgets = ', '.join(sorted(standard_widgets))
     
     importsCode += '\n# Enaml\n'
