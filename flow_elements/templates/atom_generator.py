@@ -117,10 +117,12 @@ def getAtomWidgetCode(widget_row):
     widge = widget.from_DataFrame_row(widget_row)
     atomCode = '%s# %s\n' % (indent, widge.w_name)
     atomCode += getAtomFunc[widge.w_type](widge)
-    if isinstance(widge.w_args, (str, unicode)):
+    if widge.is_optional():
         if 'optional' in widge.w_args:
             atomCode += '%suse_%s = Bool()\n' % (indent, widge.w_name)
-    
+    if widge.has_tooltip():
+        atomCode += "%s%s_tooltip = '%s'\n" % (indent, widge.w_name, 
+                                               widge.get_tooltip())
     return atomCode
 
 

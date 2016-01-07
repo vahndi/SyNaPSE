@@ -44,8 +44,14 @@ def getOutputCode(widget):
         outputCode += '%starget_column = %sself.%s.selected_target()%s\n' \
                       % (spc(16), start_cond, widget.w_name, end_cond)
     else:
-        outputCode += "%s'%s': %sself.uiModel.%s%s,\n" \
-                     % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
+        opt_start = opt_end = ''
+        if widget.is_optional():
+            opt_start = '(None \nif not self.uiModel.use_%s \nelse ' \
+                        % widget.w_name 
+            opt_end = ')'
+        outputCode += "%s'%s': %s%sself.uiModel.%s%s%s,\n" \
+                     % (spc(16), widget.w_name, opt_start, start_cond, 
+                                 widget.w_name, end_cond, opt_end)
 
     return outputCode
 

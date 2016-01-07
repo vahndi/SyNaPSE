@@ -1,0 +1,77 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from .._base.ABCs import ABCDataFrameToSeries
+
+
+
+class CountNonNull_Model(ABCDataFrameToSeries):
+
+
+    elementName = 'Count Non-Null'
+
+
+    class ui(Atom):
+
+        # axis
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        axis_tooltip = 'The axis over which the calculation should be applied.'
+        # numeric_only
+        numeric_only = Bool()
+        numeric_only_tooltip = 'Include only float, int, boolean data.'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = CountNonNull_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'numeric_only': self.uiModel.numeric_only
+                }
+                
+            series = self._dataframe.count(**args)
+            series.index.name = self.uiModel.axis
+            series.name = 'non-null count'
+            
+            return {'series': series}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef CountNonNull_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Numeric Only'
+            tool_tip = model.numeric_only_tooltip
+        CheckBox:
+            checked := model.numeric_only
+            tool_tip = model.numeric_only_tooltip

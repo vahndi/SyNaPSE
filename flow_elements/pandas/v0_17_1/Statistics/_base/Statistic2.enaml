@@ -18,11 +18,11 @@ class Statistic2_Model(ABCDataFrameToSeries):
         # axis
         axis = Str('index')
         axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied'
+        axis_tooltip = 'The axis over which the calculation should be applied.'
         # skipna
         skipna = Bool(False)
         skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
-                          'is NA, the result will be NA')
+                          'is NA, the result will be NA.')
         # ddof
         ddof = Int(1)
         ddof_min = Int(1)
@@ -31,7 +31,7 @@ class Statistic2_Model(ABCDataFrameToSeries):
         numeric_only = Bool(True)
         numeric_only_tooltip = ('Include only float, int, boolean data.\n' +
                                 'If False, will attempt to use everything, ' +
-                                'then use only numeric data')
+                                'then use only numeric data.')
 
 
     def setInputs(self, dataframe):

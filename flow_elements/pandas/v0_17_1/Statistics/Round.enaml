@@ -1,0 +1,71 @@
+# Atom
+from atom.api import Atom, Int
+
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import IntField
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame
+
+from pandas import concat
+
+
+
+class Round_Model(ABCDataFrameToDataFrame):
+
+
+    elementName = 'Round'
+
+
+    class ui(Atom):
+
+        # decimals
+        decimals = Int()
+        decimals_min = Int(0)
+        decimals_tooltip = 'Number of decimal places to round each column to.'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = Round_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'decimals': self.uiModel.decimals
+                }
+            
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
+            df_numeric_round = df_numeric.round(** args)
+            df_joined = concat([df_object, df_numeric_round], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            
+            return {'dataframe': df_joined}  
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Round_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Decimals'
+            tool_tip = model.decimals_tooltip
+        IntField:
+            value := model.decimals
+            minimum = model.decimals_min
+            tool_tip = model.decimals_tooltip

@@ -1,0 +1,111 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame
+
+
+
+
+class PercentageChange_Model(ABCDataFrameToDataFrame):
+
+
+    elementName = 'Percentage Change'
+
+
+    class ui(Atom):
+
+        # axis
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        axis_tooltip = 'The axis over which the calculation should be applied.'
+        # periods
+        periods = Int(1)
+        periods_min = Int(1)
+        periods_tooltip = 'Periods to shift for forming percent change.'
+        # fill_method
+        fill_method = Str('pad')
+        fill_method_list = List(str, ['pad', 'bfill'])
+        fill_method_tooltip = 'How to handle NAs before computing percent changes.'
+        # limit
+        limit = Int()
+        use_limit = Bool()
+        limit_tooltip = 'The number of consecutive NAs to fill before stopping.'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = PercentageChange_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'periods': self.uiModel.periods,
+                'fill_method': self.uiModel.fill_method,
+                'limit': (None 
+                          if not self.uiModel.use_limit 
+                          else self.uiModel.limit)
+                }
+            
+            df_numeric = self._dataframe.select_dtypes(['number'])
+            df_pctchange = df_numeric.pct_change(** args)
+            return {'dataframe': df_pctchange}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef PercentageChange_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Periods'
+            tool_tip = model.periods_tooltip
+        IntField:
+            value := model.periods
+            minimum = model.periods_min
+            tool_tip = model.periods_tooltip
+
+        Label:
+            text = 'Fill Method'
+            tool_tip = model.fill_method_tooltip
+        ObjectCombo:
+            items = model.fill_method_list
+            selected := model.fill_method
+            tool_tip = model.fill_method_tooltip
+
+        CheckBox:
+            tool_tip = model.limit_tooltip
+            text = 'Limit'
+            checked := model.use_limit
+        Label:
+            text = 'N/A'
+            visible << not model.use_limit
+        IntField:
+            value := model.limit
+            visible << model.use_limit
+            tool_tip = model.limit_tooltip

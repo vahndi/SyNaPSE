@@ -1,0 +1,76 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from .._base.ABCs import ABCDataFrameToSeries
+
+
+
+class MeanAbsoluteDeviation_Model(ABCDataFrameToSeries):
+
+
+    elementName = 'Mean Absolute Deviation'
+
+
+    class ui(Atom):
+
+        # axis
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        axis_tooltip = 'The axis over which the calculation should be applied.'
+        # skipna
+        skipna = Bool()
+        skipna_tooltip = 'Exclude NA / null values. If an entire row / column is NA, the result will be NA.'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = MeanAbsoluteDeviation_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'skipna': self.uiModel.skipna
+                }
+                
+            series = self._dataframe.mad(**args)
+            series.index.name = self.uiModel.axis
+            series.name = 'mean absolute deviation'
+            
+            return {'series': series}
+            
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef MeanAbsoluteDeviation_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Skipna'
+            tool_tip = model.skipna_tooltip
+        CheckBox:
+            checked := model.skipna
+            tool_tip = model.skipna_tooltip

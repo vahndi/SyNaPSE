@@ -42,11 +42,12 @@ class widget(object):
                       widget_row['Widget Values'],
                       widget_row['Visibility Condition'],
                       widget_row['Widget Page'],
-                      widget_row['Widget Args'])
+                      widget_row['Widget Args'],
+                      widget_row['Widget Tooltip'])
 
     
     def __init__(self, w_name, w_type, w_value, w_values, v_condition, w_page,
-                 w_args):
+                 w_args, w_tooltip):
         
         self.w_name = w_name
         self.w_type = w_type
@@ -55,6 +56,7 @@ class widget(object):
         self.v_condition = v_condition
         self.w_page = w_page
         self.w_args = w_args
+        self.w_tooltip = w_tooltip
         
         
     def get_int_min_value(self):
@@ -125,3 +127,20 @@ class widget(object):
         if isinstance(self.w_page, (str, unicode)):
             return spc(20)
         return spc(12)
+    
+    
+    def is_optional(self):
+        
+        if isinstance(self.w_args, (str, unicode)):
+            if 'optional' in self.w_args:
+                return True
+        return False
+
+    
+    def has_tooltip(self):
+        
+        return isinstance(self.w_tooltip, (str, unicode))
+        
+    def get_tooltip(self):
+        
+        return str(self.w_tooltip).encode('string-escape')

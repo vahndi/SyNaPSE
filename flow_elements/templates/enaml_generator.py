@@ -3,14 +3,21 @@ import pandas as pd
 
 def get_enaml_Label(widget):
     
-    return "%sLabel:\n%stext = '%s'\n" % (widget.indent1(), 
-                                          widget.indent2(), 
-                                          to_words(widget.w_name))
+    enamlCode = "%sLabel:\n%stext = '%s'\n" % (widget.indent1(), 
+                                               widget.indent2(), 
+                                              to_words(widget.w_name))
+    if widget.has_tooltip():
+        enamlCode += '%stool_tip = model.%s_tooltip\n' % (widget.indent2(), 
+                                                          widget.w_name)
+    return enamlCode
 
 
 def get_enaml_OptionalStart(widget):
     
     enamlCode = '%sCheckBox:\n' % widget.indent1()
+    if widget.has_tooltip():
+        enamlCode += '%stool_tip = model.%s_tooltip\n' % (widget.indent2(), 
+                                                          widget.w_name)
     enamlCode += "%stext = '%s'\n" % (widget.indent2(), 
                                       to_words(widget.w_name))
     enamlCode += '%schecked := model.use_%s\n' % (widget.indent2(), 
@@ -156,10 +163,14 @@ def getEnamlWidgetCode(widget, widget_names):
     enamlCode += getEnamlfunc[widget.w_type](widget)
     
     # Closer for optional values
-    if isinstance(widget.w_args, (str, unicode)):
-        if 'optional' in widget.w_args:
+    if widget.is_optional():
             enamlCode += get_enaml_OptionalEnd(widget)
     
+    # Add Tooltip
+    if widget.has_tooltip():
+        enamlCode += '%stool_tip = model.%s_tooltip\n' % (widget.indent2(), 
+                                                          widget.w_name)
+
     # Add Conditional code
     if isinstance(widget.v_condition, (str, unicode)):
         enamlCode = conditionVisibility(enamlCode, 
