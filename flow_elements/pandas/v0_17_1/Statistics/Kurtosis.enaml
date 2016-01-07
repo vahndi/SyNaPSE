@@ -1,9 +1,9 @@
-from ._base.Statistic import Statistic_Model
-from ._base.Statistic import Statistic_View
+from ._base.Statistic1 import Statistic1_Model
+from ._base.Statistic1 import Statistic1_View
 
 
 
-class Kurtosis_Model(Statistic_Model):
+class Kurtosis_Model(Statistic1_Model):
     
     
     elementName = 'Kurtosis'
@@ -15,6 +15,6 @@ class Kurtosis_Model(Statistic_Model):
 
 
 
-enamldef Kurtosis_View(Statistic_View):
+enamldef Kurtosis_View(Statistic1_View):
     
     pass

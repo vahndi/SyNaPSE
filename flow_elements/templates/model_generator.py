@@ -31,19 +31,21 @@ def getOutputCode(widget):
     start_cond = end_cond = ''
     if isinstance(widget.v_condition, (str, unicode)):
         start_cond = '('
-        end_cond = ' if self.uiModel.%s else None)' % widget.v_condition
+        cond_indent = len(widget.w_name) + 21
+        end_cond = '\n%sif self.uiModel.%s \n%selse None)' \
+                   % (spc(cond_indent), widget.v_condition, spc(cond_indent))
     
     if widget.w_type == 'CheckBoxList':
         outputCode += '%s%s = %sself.%s.getCheckedItemNames()%s\n' \
-                      % (spc(8), widget.w_name, start_cond, widget.w_name, end_cond)
+                      % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
     elif widget.w_type == 'InputsTargetsSelector':
         outputCode += '%sinput_columns = %sself.%s.checked_inputs()%s\n' \
-                      % (spc(8), start_cond, widget.w_name, end_cond)
+                      % (spc(16), start_cond, widget.w_name, end_cond)
         outputCode += '%starget_column = %sself.%s.selected_target()%s\n' \
-                      % (spc(8), start_cond, widget.w_name, end_cond)
+                      % (spc(16), start_cond, widget.w_name, end_cond)
     else:
         outputCode += "%s'%s': %sself.uiModel.%s%s,\n" \
-                     % (spc(8), widget.w_name, start_cond, widget.w_name, end_cond)
+                     % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
 
     return outputCode
 
@@ -85,13 +87,15 @@ def getModelCode(element_name, dataframe):
     modelCode += ')\n'
     
     # Get outputs
-    modelCode += '\n\n%sdef getOutputs(self):\n\n' % spc(4)
-    modelCode += '%s# Assign local variables\n' % spc(8)
-    modelCode += '%sargs = {\n' % spc(8)
+    modelCode += '\n\n%sdef getOutputs(self):' % spc(4)
+    modelCode += '\n\n%stry:' % spc(8)
+    modelCode += '\n\n%s# Assign local variables\n' % spc(12)
+    modelCode += '%sargs = {\n' % spc(12)
     for widge in widgets:
         modelCode += getOutputCode(widge)
-    modelCode += '}\n'
-    
-    modelCode += "\n%sreturn {'Outputs': 'No Output'}" % spc(8)
+    modelCode = modelCode[:-2]
+    modelCode += '\n%s}' % spc(16)
+    modelCode += '\n\n%sexcept Exception as e:' % spc(8)
+    modelCode += "\n\n%sreturn self.standard_exception(e)" % spc(12)
     
     return modelCode

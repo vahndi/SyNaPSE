@@ -9,7 +9,7 @@ from ..._base.ABCs import ABCDataFrameToSeries
 
 
 
-class Statistic_Model(ABCDataFrameToSeries):
+class Statistic1_Model(ABCDataFrameToSeries):
 
 
     class ui(Atom):
@@ -26,7 +26,7 @@ class Statistic_Model(ABCDataFrameToSeries):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
-        self.uiModel = Statistic_Model.ui()
+        self.uiModel = Statistic1_Model.ui()
         
 
     def getOutputs(self):
@@ -51,7 +51,7 @@ class Statistic_Model(ABCDataFrameToSeries):
 
 
 
-enamldef Statistic_View(GroupBox):
+enamldef Statistic1_View(GroupBox):
 
     attr model
 

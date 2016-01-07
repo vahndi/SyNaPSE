@@ -1,9 +1,9 @@
-from ._base.Statistic import Statistic_Model
-from ._base.Statistic import Statistic_View
+from ._base.Statistic1 import Statistic1_Model
+from ._base.Statistic1 import Statistic1_View
 
 
 
-class Mean_Model(Statistic_Model):
+class Mean_Model(Statistic1_Model):
     
     
     elementName = 'Mean'
@@ -15,6 +15,6 @@ class Mean_Model(Statistic_Model):
 
 
 
-enamldef Mean_View(Statistic_View):
+enamldef Mean_View(Statistic1_View):
     
     pass

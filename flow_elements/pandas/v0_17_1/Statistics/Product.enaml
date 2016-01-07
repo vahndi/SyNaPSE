@@ -1,9 +1,9 @@
-from ._base.Statistic import Statistic_Model
-from ._base.Statistic import Statistic_View
+from ._base.Statistic1 import Statistic1_Model
+from ._base.Statistic1 import Statistic1_View
 
 
 
-class Product_Model(Statistic_Model):
+class Product_Model(Statistic1_Model):
     
     
     elementName = 'Product'
@@ -15,6 +15,6 @@ class Product_Model(Statistic_Model):
 
 
 
-enamldef Product_View(Statistic_View):
+enamldef Product_View(Statistic1_View):
     
     pass

@@ -1,9 +1,9 @@
-from ._base.Statistic import Statistic_Model
-from ._base.Statistic import Statistic_View
+from ._base.Statistic1 import Statistic1_Model
+from ._base.Statistic1 import Statistic1_View
 
 
 
-class Skew_Model(Statistic_Model):
+class Skew_Model(Statistic1_Model):
 
 
     elementName = 'Skew'
@@ -15,6 +15,6 @@ class Skew_Model(Statistic_Model):
 
 
 
-enamldef Skew_View(Statistic_View):
+enamldef Skew_View(Statistic1_View):
 
     pass

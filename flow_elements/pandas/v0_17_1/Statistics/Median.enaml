@@ -1,9 +1,9 @@
-from ._base.Statistic import Statistic_Model
-from ._base.Statistic import Statistic_View
+from ._base.Statistic1 import Statistic1_Model
+from ._base.Statistic1 import Statistic1_View
 
 
 
-class Median_Model(Statistic_Model):
+class Median_Model(Statistic1_Model):
     
     
     elementName = 'Median'
@@ -15,6 +15,6 @@ class Median_Model(Statistic_Model):
 
 
 
-enamldef Median_View(Statistic_View):
+enamldef Median_View(Statistic1_View):
     
     pass

@@ -26,12 +26,20 @@ class ABCTakesSeries():
 
 
 
-class ABCDataFrameToDataFrame(ABCTakesDataFrame, ABCOutputsDataFrame):
+class ABCDataFrameToDataFrame(ABCTakesDataFrame, 
+                              ABCOutputsDataFrame):
     
     pass
 
 
+class ABCDataFrameToDataFrameOrSeries(ABCTakesDataFrame, 
+                                      ABCOutputsDataFrame,
+                                      ABCOutputsSeries):
+    
+    pass
 
-class ABCDataFrameToSeries(ABCTakesDataFrame, ABCOutputsSeries):
+
+class ABCDataFrameToSeries(ABCTakesDataFrame, 
+                           ABCOutputsSeries):
     
     pass
