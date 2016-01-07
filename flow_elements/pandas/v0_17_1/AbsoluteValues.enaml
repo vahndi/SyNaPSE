@@ -15,24 +15,24 @@ class AbsoluteValues_Model(ABCDataFrameToDataFrame):
     elementName = 'Absolute Values'
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
-        self._df_numeric = dataFrame.select_dtypes(exclude = [object])
-        self._df_object = dataFrame.select_dtypes(include = [object])        
+        self._dataframe = dataframe
+        self._df_numeric = dataframe.select_dtypes(exclude = [object])
+        self._df_object = dataframe.select_dtypes(include = [object])        
 
 
     def getOutputs(self):
 
         try:
             
-            df_object = self._dataFrame.select_dtypes(include = [object])        
-            df_numeric = self._dataFrame.select_dtypes(exclude = [object])
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
             df_numeric_abs = df_numeric.abs()
             df_joined = concat([df_object, df_numeric_abs], axis = 1)
-            df_joined = df_joined[[col for col in self._dataFrame.columns]]
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
             
-            return {'dataFrame': df_joined}        
+            return {'dataframe': df_joined}        
 
         except Exception as e:
             

@@ -75,11 +75,11 @@ class RandomForestClassifier_Model(SKLearnElement):
         cores_selector = Value(Atom)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.selector = InputsTargetsSelector_Model(
-                                dataFrame,
+                                dataframe,
                                 input_dtypes = [float64, int64, str, object]
                                 )
         self.cores_selector = CoresSelector_Model()

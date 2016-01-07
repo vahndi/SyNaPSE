@@ -48,9 +48,9 @@ class LassoLarsIC_Model(ABCRegressionModel):
         positive = Bool(False)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self.set_inputs(dataFrame)
+        self.set_inputs(dataframe)
         self.uiModel = LassoLarsIC_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
@@ -87,7 +87,7 @@ class LassoLarsIC_Model(ABCRegressionModel):
             
             return {'Attributes': attributes,
                     'Metrics': metrics,
-                    'dataFrame': self.df_predictions,
+                    'dataframe': self.df_predictions,
                     'Target vs. Predicted': self.df_targets_predictions}
 
         except Exception as e:

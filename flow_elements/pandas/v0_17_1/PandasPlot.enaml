@@ -60,10 +60,10 @@ class PandasPlot_Model(FlowElement):
         yColumns = Value(Atom)
 
     
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
         
-        self._dataFrame = dataFrame
-        cols = sorted(list(dataFrame.columns))
+        self._dataframe = dataframe
+        cols = sorted(list(dataframe.columns))
         self.yCols = CheckBoxList_Model(cols)
         self.uiModel = PandasPlot_Model.ui(columns = cols,
                                            yColumns = self.yCols.uiModel)
@@ -78,7 +78,7 @@ class PandasPlot_Model(FlowElement):
             else:
                 y = self.yCols.getCheckedItemNames()
 
-            axis = self._dataFrame.plot(kind = self.uiModel.plotKind,
+            axis = self._dataframe.plot(kind = self.uiModel.plotKind,
                                         x = self.uiModel.xColumn,
                                         y = y)
             figure = axis.figure              

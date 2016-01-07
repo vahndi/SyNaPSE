@@ -16,11 +16,11 @@ from sklearn.metrics import confusion_matrix
 class ABCClassificationModel(ABCLinearModel):
 
     
-    def set_inputs(self, dataFrame):
+    def set_inputs(self, dataframe):
         
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.input_selector = InputsTargetsSelector_Model(
-                                            dataFrame, 
+                                            dataframe, 
                                             target_dtypes = [int64, object]
                                             )
     
@@ -39,7 +39,7 @@ class ABCClassificationModel(ABCLinearModel):
         self.y_pred_test = self.estimator.predict(X_test)            
 
         # Create confusion matrices
-        self.labels = sorted(self._dataFrame[target_column].unique())
+        self.labels = sorted(self._dataframe[target_column].unique())
         self.confusion_matrix_train = DataFrame(confusion_matrix(y_train, 
                                                                  y_pred_train),
                                                 index = self.labels,

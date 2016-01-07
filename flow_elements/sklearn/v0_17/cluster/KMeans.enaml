@@ -61,11 +61,11 @@ class KMeans_Model(SKLearnElement):
         cores_selector = Value(Atom)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.inputs_targets_selector = InputsTargetsSelector_Model(
-                                               dataFrame,
+                                               dataframe,
                                                show_shuffle_examples = True,
                                                show_pct_training = False,
                                                target_mandatory = False
@@ -146,7 +146,7 @@ class KMeans_Model(SKLearnElement):
                                                    range(number_of_clusters)],
                                            name = 'Cluster Center'))
             outputs['Attributes'] = {'inertia': kmeans.inertia_}
-            outputs['dataFrame'] = df_pred
+            outputs['dataframe'] = df_pred
             
             if target_column:
                 outputs['Confusion Matrix'] = conf_mat

@@ -23,9 +23,9 @@ class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
         skipna = Bool()
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = CumulativeStatistic_Model.ui()
         
 
@@ -36,17 +36,17 @@ class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
             args = {'axis': self.uiModel.axis,
                     'skipna': self.uiModel.skipna}
             # split numeric and object types
-            df_object = self._dataFrame.select_dtypes(include = [object])        
-            df_numeric = self._dataFrame.select_dtypes(exclude = [object])
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
             # apply cumulative function
             func = getattr(df_numeric, self.outputFunction)
             df_stat = func(** args)
             df_stat = df_stat.convert_objects(convert_numeric = True)
             # join back together
             df_joined = concat([df_object, df_stat], axis = 1)
-            df_joined = df_joined[[col for col in self._dataFrame.columns]]
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
             
-            return {'dataFrame': df_joined}    
+            return {'dataframe': df_joined}    
 
         except Exception as e:
             

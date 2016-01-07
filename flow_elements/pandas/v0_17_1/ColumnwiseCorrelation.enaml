@@ -28,9 +28,9 @@ class ColumnwiseCorrelation_Model(ABCDataFrameToDataFrame):
         min_periods_min = Int(1)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = ColumnwiseCorrelation_Model.ui()
 
 
@@ -44,7 +44,7 @@ class ColumnwiseCorrelation_Model(ABCDataFrameToDataFrame):
                                                                'spearman') 
                                     else None)}
                                     
-            return {'dataFrame': self._dataFrame.corr(**args)}
+            return {'dataframe': self._dataframe.corr(**args)}
         
         except Exception as e:
             

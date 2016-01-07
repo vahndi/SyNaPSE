@@ -53,9 +53,9 @@ class TheilSenRegressor_Model(ABCRegressionModel):
         cores_selector = Value(Atom)
         
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
         
-        self.set_inputs(dataFrame)
+        self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
         self.uiModel = TheilSenRegressor_Model.ui(
                             input_selector = self.input_selector.uiModel,
@@ -94,7 +94,7 @@ class TheilSenRegressor_Model(ABCRegressionModel):
             
             return {'Attributes': attributes,
                     'Metrics': metrics,
-                    'dataFrame': self.df_predictions,
+                    'dataframe': self.df_predictions,
                     'Target vs. Predicted': self.df_targets_predictions}
 
         except Exception as e:

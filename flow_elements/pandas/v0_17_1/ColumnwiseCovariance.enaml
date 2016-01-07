@@ -24,9 +24,9 @@ class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
         use_min_periods = Bool()
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = ColumnwiseCovariance_Model.ui()
 
 
@@ -36,7 +36,7 @@ class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
             
             # Assign local variables
             args = {'min_periods': self.uiModel.min_periods}
-            return {'dataFrame': self._dataFrame.cov(** args)}
+            return {'dataframe': self._dataframe.cov(** args)}
 
         except Exception as e:
             

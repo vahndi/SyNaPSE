@@ -49,9 +49,9 @@ class LassoLars_Model(ABCRegressionModel):
         fit_path = Bool(True)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self.set_inputs(dataFrame)
+        self.set_inputs(dataframe)
         self.uiModel = LassoLars_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
@@ -89,7 +89,7 @@ class LassoLars_Model(ABCRegressionModel):
             
             return {'Attributes': attributes,
                     'Metrics': metrics,
-                    'dataFrame': self.df_predictions,
+                    'dataframe': self.df_predictions,
                     'Target vs. Predicted': self.df_targets_predictions}
 
         except Exception as e:

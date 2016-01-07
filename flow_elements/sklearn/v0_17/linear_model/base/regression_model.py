@@ -14,11 +14,11 @@ from ...metrics.regression_metrics import RegressionMetrics as RM
 class ABCRegressionModel(ABCLinearModel):
 
     
-    def set_inputs(self, dataFrame):
+    def set_inputs(self, dataframe):
         
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.input_selector = InputsTargetsSelector_Model(
-                                            dataFrame, 
+                                            dataframe, 
                                             target_dtypes = [float64, int64]
                                             )
     

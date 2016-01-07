@@ -102,18 +102,18 @@ class DataFrameInfo_Model(ABCTakesDataFrame):
 #    precedingElements = [ReadDataFrame_Model]
 
     
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
 
 
     def getOutputs(self):
         
         try:
             
-            df = self._dataFrame
+            df = self._dataframe
             
-            return {'dataFrame': df,
+            return {'dataframe': df,
                     'Attributes':
                         {'columns':  getIndexAttributes(df.columns),
                         'dtypes': labelSeries(df.dtypes, 'dtype', 'column'),

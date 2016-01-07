@@ -28,10 +28,10 @@ class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
         axis_list = List(str, ['index', 'columns'])
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
-        self._df_numeric = dataFrame.select_dtypes(exclude = [object])
+        self._dataframe = dataframe
+        self._df_numeric = dataframe.select_dtypes(exclude = [object])
         df_shape = self._df_numeric.shape
         self.uiModel = ElementwiseDifference_Model.ui(
                                         periods_max_axis0 = df_shape[0] - 1,
@@ -47,7 +47,7 @@ class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
 
             df_diff_numeric = self._df_numeric.diff(** args)
             
-            return {'dataFrame': df_diff_numeric}        
+            return {'dataframe': df_diff_numeric}        
 
         except Exception as e:
             

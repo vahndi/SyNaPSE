@@ -12,16 +12,16 @@ class IsNull_Model(ABCDataFrameToDataFrame):
     elementName = 'Is Null'
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame      
+        self._dataframe = dataframe      
 
 
     def getOutputs(self):
 
         try:
             
-            return {'dataFrame': self._dataFrame.isnull()}        
+            return {'dataframe': self._dataframe.isnull()}        
 
         except Exception as e:
             

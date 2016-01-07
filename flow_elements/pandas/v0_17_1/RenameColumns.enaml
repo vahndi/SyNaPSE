@@ -37,18 +37,18 @@ class RenameColumns_Model(ABCDataFrameToDataFrame):
         replace = Str()
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = RenameColumns_Model.ui()
-        self.original_columns = dataFrame.columns
+        self.original_columns = dataframe.columns
 
 
     def getOutputs(self):
 
         try:
 
-            df = self._dataFrame
+            df = self._dataframe
             df.columns = self.original_columns
             
             if self.uiModel.use_prefix:
@@ -71,7 +71,7 @@ class RenameColumns_Model(ABCDataFrameToDataFrame):
                     if len(set(cols)) == len(cols):
                         df.columns = cols
 
-            return {'dataFrame': df}
+            return {'dataframe': df}
                             
 
         except Exception as e:

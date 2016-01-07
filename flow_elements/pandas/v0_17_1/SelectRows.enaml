@@ -61,21 +61,21 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
         order_alphabetically = Bool(False)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         # Limit selection methods based on the dtype of the index
-        if dataFrame.index.dtype == object:
+        if dataframe.index.dtype == object:
             method_list = ['string', 'regex', 'index range', 
                            'name range', 'manual', 'head', 'tail']
         else:
             method_list = ['index range', 'manual', 'head', 'tail']
             
-        self.manual_rows = CheckBoxList_Model(dataFrame.index)
+        self.manual_rows = CheckBoxList_Model(dataframe.index)
         self.uiModel = SelectRows_Model.ui(
                             method_list = method_list,
                             manual_rows = self.manual_rows.uiModel,
-                            fl_rows = [str(i) for i in list(dataFrame.index)]
+                            fl_rows = [str(i) for i in list(dataframe.index)]
                             )
 
     
@@ -83,12 +83,12 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
 
         try:
             
-            df = self._dataFrame            
+            df = self._dataframe            
             
             if self.uiModel.method == 'string':
                 
                 rows = getRowNames(
-                       self._dataFrame,
+                       self._dataframe,
                        startsWith = self.uiModel.starts_with,
                        endsWith = self.uiModel.ends_with,
                        contains = self.uiModel.contains,
@@ -143,7 +143,7 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
             if self.uiModel.order_alphabetically:
                 df = df[sorted(list(df.index))]
 
-            return {'dataFrame': df}
+            return {'dataframe': df}
             
         except Exception as e:
             

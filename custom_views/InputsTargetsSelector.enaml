@@ -67,7 +67,7 @@ class InputsTargetsSelector_Model(object):
 
 
     def __init__(
-            self, dataFrame, 
+            self, dataframe, 
             shuffle_examples = True, percent_training = 70,
             input_dtypes = [float64, int64], target_dtypes = [str, object],
             input_cardinality = 'multiple', target_cardinality = 'single',
@@ -75,13 +75,13 @@ class InputsTargetsSelector_Model(object):
             show_shuffle_examples = True, show_pct_training = True
             ):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.target_mandatory = target_mandatory
         self.show_shuffle_examples = show_shuffle_examples
         self.show_pct_training = show_pct_training
 
-        input_cols = getColumnNamesByDType(dataFrame, input_dtypes)
-        target_cols = getColumnNamesByDType(dataFrame, target_dtypes)
+        input_cols = getColumnNamesByDType(dataframe, input_dtypes)
+        target_cols = getColumnNamesByDType(dataframe, target_dtypes)
 
         self.input_cols = CheckBoxList_Model(input_cols)
         self.uiModel = InputsTargetsSelector_Model.ui(
@@ -104,7 +104,7 @@ class InputsTargetsSelector_Model(object):
         '''
         Returns a DataFrame with columns corresponding to the checked inputs
         '''
-        return self._dataFrame[self.checked_inputs()]
+        return self._dataframe[self.checked_inputs()]
 
     def selected_target(self):
         '''
@@ -116,7 +116,7 @@ class InputsTargetsSelector_Model(object):
         '''
         Returns a Series with the selected target column
         '''
-        return self._dataFrame[self.selected_target()]
+        return self._dataframe[self.selected_target()]
 
     def validate_inputs(self):
         '''
@@ -140,8 +140,8 @@ class InputsTargetsSelector_Model(object):
         input_cols = self.checked_inputs()
         target_column = self.selected_target()
 
-        df_shuffled = {True: shuffleRows(self._dataFrame),
-                       False: self._dataFrame
+        df_shuffled = {True: shuffleRows(self._dataframe),
+                       False: self._dataframe
                        }[self.show_shuffle_examples]
 
         if not target_column:            
@@ -166,7 +166,7 @@ class InputsTargetsSelector_Model(object):
         if target_column == '':
             
             X_train, X_test = splitTrainingTest(
-                                        dataframe = self._dataFrame, 
+                                        dataframe = self._dataframe, 
                                         training_fraction = training_fraction, 
                                         shuffle_rows = shuffle_examples,
                                         input_columns = input_cols,
@@ -178,7 +178,7 @@ class InputsTargetsSelector_Model(object):
         else:
             
             X_train, y_train, X_test, y_test = splitTrainingTest(
-                                        dataframe = self._dataFrame, 
+                                        dataframe = self._dataframe, 
                                         training_fraction = training_fraction, 
                                         shuffle_rows = shuffle_examples,
                                         input_columns = input_cols,

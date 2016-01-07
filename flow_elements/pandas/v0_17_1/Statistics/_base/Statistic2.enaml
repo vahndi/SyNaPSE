@@ -27,9 +27,9 @@ class Statistic2_Model(ABCDataFrameToSeries):
         numeric_only = Bool(True)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = Statistic2_Model.ui()
 
 
@@ -46,7 +46,7 @@ class Statistic2_Model(ABCDataFrameToSeries):
                 }
             
             # apply function
-            func = getattr(self._dataFrame, self.outputFunction)
+            func = getattr(self._dataframe, self.outputFunction)
             series = func(** args)
             series.index.name = self.uiModel.axis
             series.name = self.elementName.lower()

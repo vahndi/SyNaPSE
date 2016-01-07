@@ -57,17 +57,17 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
         order_alphabetically = Bool(False)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         # Limit selection methods based on the dtype of the columns
-        if dataFrame.columns.dtype == object:
+        if dataframe.columns.dtype == object:
             method_list = ['string', 'regex', 'index range', 
                            'name range', 'dtypes', 'manual']
         else:
             method_list = ['index range', 'dtypes', 'manual']
             
-        self.manual_columns = CheckBoxList_Model(dataFrame.columns)
+        self.manual_columns = CheckBoxList_Model(dataframe.columns)
         self.dtype_dict = {'float': float,
                            'int': int,
                            'number': 'number',
@@ -77,7 +77,7 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
                             method_list = method_list,
                             manual_columns = self.manual_columns.uiModel,
                             dtype_columns = self.dtype_columns.uiModel,
-                            fl_columns = list(dataFrame.columns)
+                            fl_columns = list(dataframe.columns)
                             )
 
     
@@ -85,12 +85,12 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
 
         try:
             
-            df = self._dataFrame            
+            df = self._dataframe            
             
             if self.uiModel.method == 'string':
                 
                 columns = getColumnNames(
-                       self._dataFrame,
+                       self._dataframe,
                        startsWith = self.uiModel.starts_with,
                        endsWith = self.uiModel.ends_with,
                        contains = self.uiModel.contains,
@@ -141,7 +141,7 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
                 if self.uiModel.order_alphabetically:
                     df = df[sorted(list(df.columns))]
 
-            return {'dataFrame': df}
+            return {'dataframe': df}
             
         except Exception as e:
             

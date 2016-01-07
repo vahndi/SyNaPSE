@@ -12,16 +12,16 @@ class Transpose_Model(ABCDataFrameToDataFrame):
     elementName = 'Transpose'
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame      
+        self._dataframe = dataframe      
 
 
     def getOutputs(self):
 
         try:
             
-            return {'dataFrame': self._dataFrame.transpose()}        
+            return {'dataframe': self._dataframe.transpose()}        
 
         except Exception as e:
             

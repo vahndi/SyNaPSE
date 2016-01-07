@@ -95,28 +95,28 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
                     target = pd.Series(ds['target'], name = 'Target')
                 
                 # Join data and target columns and return
-                dataFrame = pd.concat([data, target], axis = 1)
+                dataframe = pd.concat([data, target], axis = 1)
             
             elif self.uiModel.sourceType == 'seaborn':
                 
-                dataFrame = seabornDatasets[self.uiModel.seabornDSname]
+                dataframe = seabornDatasets[self.uiModel.seabornDSname]
                 
             elif self.uiModel.sourceType in ('.csv', '.xls'):
                 if os.path.exists(self.uiModel.sourcePath):
                     if self.uiModel.sourceType == 'csv':
-                        dataFrame = pd.read_csv(self.uiModel.sourcePath)
+                        dataframe = pd.read_csv(self.uiModel.sourcePath)
                     elif self.uiModel.sourceType == 'xls':
                         sheet_name = self.uiModel.sheetName
                         if sheet_name == '':
                             sheet_name = None
-                        dataFrame = pd.read_excel(self.uiModel.sourcePath,
+                        dataframe = pd.read_excel(self.uiModel.sourcePath,
                                                   sheetname = sheet_name)
                 else:
                     return {'Outputs': 'Path does not exist'}
             else:
                 return {'Outputs': 'Please select a source type'}    
         
-            return {'dataFrame': dataFrame}        
+            return {'dataframe': dataframe}        
 
         except Exception as e:
             

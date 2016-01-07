@@ -34,11 +34,11 @@ class PCA_Model(SKLearnElement):
         whiten = Bool(False)
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
         
-        self._dataFrame = dataFrame
-        self._dfCategorical = dataFrame.select_dtypes([object])
-        self._dfNumeric = dataFrame.select_dtypes(['number'])
+        self._dataframe = dataframe
+        self._dfCategorical = dataframe.select_dtypes([object])
+        self._dfNumeric = dataframe.select_dtypes(['number'])
         self.uiModel = PCA_Model.ui(n_components_int = 2,
                                     n_cols = len(self._dfNumeric.columns))
 
@@ -85,7 +85,7 @@ class PCA_Model(SKLearnElement):
                              result.n_components_,
                          'noise variance': 
                              result.noise_variance_},
-                    'dataFrame': dfTransformed}
+                    'dataframe': dfTransformed}
 
         except Exception as e:
                 

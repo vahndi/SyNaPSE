@@ -26,9 +26,9 @@ class ClipValues_Model(ABCDataFrameToDataFrame):
         use_upper = Bool()
 
 
-    def setInputs(self, dataFrame):
+    def setInputs(self, dataframe):
 
-        self._dataFrame = dataFrame
+        self._dataframe = dataframe
         self.uiModel = ClipValues_Model.ui()
 
 
@@ -43,7 +43,7 @@ class ClipValues_Model(ABCDataFrameToDataFrame):
                               if self.uiModel.use_upper
                               else None)}
 
-            return {'dataFrame': self._dataFrame.clip(** args)}
+            return {'dataframe': self._dataframe.clip(** args)}
 
         except Exception as e:
             
