@@ -1,0 +1,61 @@
+# Atom
+from atom.api import Atom, Bool, Int
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import IntField
+
+# Models
+from ._base.ABCs import ABCDataFrameToDataFrame
+
+
+
+class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
+
+
+    elementName = 'Column-wise Covariance'
+
+
+    class ui(Atom):
+
+        # min_periods
+        min_periods = Int()
+        use_min_periods = Bool()
+
+
+    def setInputs(self, dataFrame):
+
+        self._dataFrame = dataFrame
+        self.uiModel = ColumnwiseCovariance_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+            
+            # Assign local variables
+            args = {'min_periods': self.uiModel.min_periods}
+            return {'dataFrame': self._dataFrame.cov(** args)}
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+
+
+enamldef ColumnwiseCovariance_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            text = 'Min Periods'
+            checked := model.use_min_periods
+        Label:
+            text = 'N/A'
+            visible << not model.use_min_periods
+        IntField:
+            value := model.min_periods
+            visible << model.use_min_periods

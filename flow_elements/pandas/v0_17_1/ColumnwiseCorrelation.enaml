@@ -12,10 +12,10 @@ from ._base.ABCs import ABCDataFrameToDataFrame
 
 
 
-class PairwiseCorrelation_Model(ABCDataFrameToDataFrame):
+class ColumnwiseCorrelation_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Pairwise Correlation'
+    elementName = 'Column-wise Correlation'
 
 
     class ui(Atom):
@@ -31,7 +31,7 @@ class PairwiseCorrelation_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataFrame):
 
         self._dataFrame = dataFrame
-        self.uiModel = PairwiseCorrelation_Model.ui()
+        self.uiModel = ColumnwiseCorrelation_Model.ui()
 
 
     def getOutputs(self):
@@ -52,7 +52,7 @@ class PairwiseCorrelation_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef PairwiseCorrelation_View(GroupBox): me:
+enamldef ColumnwiseCorrelation_View(GroupBox): me:
 
     attr model
 
