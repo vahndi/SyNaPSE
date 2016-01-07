@@ -22,6 +22,8 @@ class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
         # min_periods
         min_periods = Int()
         use_min_periods = Bool()
+        min_periods_tooltip = ('Minimum number of observations required per ' +
+                               'pair of columns to have a valid result.')
 
 
     def setInputs(self, dataframe):
@@ -44,7 +46,7 @@ class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef ColumnwiseCovariance_View(GroupBox): me:
+enamldef ColumnwiseCovariance_View(GroupBox):
 
     attr model
 
@@ -53,9 +55,12 @@ enamldef ColumnwiseCovariance_View(GroupBox): me:
         CheckBox:
             text = 'Min Periods'
             checked := model.use_min_periods
+            tool_tip = model.min_periods_tooltip
         Label:
             text = 'N/A'
             visible << not model.use_min_periods
         IntField:
             value := model.min_periods
             visible << model.use_min_periods
+            tool_tip = model.min_periods_tooltip
+

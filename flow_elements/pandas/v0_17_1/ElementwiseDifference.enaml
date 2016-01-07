@@ -23,9 +23,11 @@ class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
         periods = Int(1)
         periods_max_axis0 = Int()
         periods_max_axis1 = Int()
+        periods_tooltip = 'Periods to shift for forming difference.'
         # axis
         axis = Str('index')
         axis_list = List(str, ['index', 'columns'])
+        axis_tooltip = 'Take difference over rows (index) or columns.'
 
 
     def setInputs(self, dataframe):
@@ -55,7 +57,7 @@ class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef ElementwiseDifference_View(GroupBox): me:
+enamldef ElementwiseDifference_View(GroupBox):
 
     attr model
 
@@ -63,15 +65,20 @@ enamldef ElementwiseDifference_View(GroupBox): me:
 
         Label:
             text = 'Periods'
+            tool_tip = model.periods_tooltip
         IntField:
             value := model.periods
             minimum = 1
             maximum << (model.periods_max_axis0
                         if model.axis == 0
                         else model.periods_max_axis1)
+            tool_tip = model.periods_tooltip
 
         Label:
             text = 'Axis'
+            tool_tip = model.axis_tooltip
         ObjectCombo:
             items = model.axis_list
             selected := model.axis
+            tool_tip = model.axis_tooltip
+

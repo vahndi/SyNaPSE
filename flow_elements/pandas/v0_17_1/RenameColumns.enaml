@@ -23,18 +23,25 @@ class RenameColumns_Model(ABCDataFrameToDataFrame):
         # prefix
         prefix = Str()
         use_prefix = Bool()
+        prefix_tooltip = 'The text to prepend to each column name.'
         # suffix
         suffix = Str()
         use_suffix = Bool()
+        suffix_tooltip = 'The text to append to each column name.'
         # find_and_replace
         find_and_replace = Bool()
+        find_and_replace_tooltip = 'Find and replace text within column names?'
         # findrep_method
         findrep_method = Str('normal')
         findrep_method_list = List(str, ['normal', 'regex'])
+        findrep_method_tooltip = ('normal: standard string replacement\n' +
+                                  'regex: regular expression replacement')
         # find
         find = Str()
+        find_tooltip = 'The text or pattern to find within column names.'
         # replace
         replace = Str()
+        replace_tooltip = 'The text to replace the found text / pattern.'
 
 
     def setInputs(self, dataframe):
@@ -89,43 +96,56 @@ enamldef RenameColumns_View(GroupBox): me:
         CheckBox:
             text = 'Prefix'
             checked := model.use_prefix
+            tool_tip = model.prefix_tooltip
         Label:
             text = 'N/A'
             visible << not model.use_prefix
         Field:
             text := model.prefix
             visible << model.use_prefix
-
+            tool_tip = model.prefix_tooltip
+            
         CheckBox:
             text = 'Suffix'
             checked := model.use_suffix
+            tool_tip = model.suffix_tooltip
         Label:
             text = 'N/A'
             visible << not model.use_suffix
         Field:
             text := model.suffix
             visible << model.use_suffix
+            tool_tip = model.suffix_tooltip
             
         Label:
             text = 'Find And Replace'
+            tool_tip = model.find_and_replace_tooltip
         CheckBox:
             checked := model.find_and_replace
+            tool_tip = model.find_and_replace_tooltip
 
         Conditional:
             condition << model.find_and_replace == True
             
             Label:
                 text = 'Method'
+                tool_tip = model.findrep_method_tooltip
             ObjectCombo:
                 items = model.findrep_method_list
                 selected := model.findrep_method
-
+                tool_tip = model.findrep_method_tooltip
+                
             Label:
                 text = 'Find'
+                tool_tip = model.find_tooltip
             Field:
                 text := model.find
+                tool_tip = model.find_tooltip
 
             Label:
                 text = 'Replace'
+                tool_tip = model.replace_tooltip
             Field:
                 text := model.replace
+                tool_tip = model.replace_tooltip
+

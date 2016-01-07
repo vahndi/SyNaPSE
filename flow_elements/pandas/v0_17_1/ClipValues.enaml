@@ -21,10 +21,11 @@ class ClipValues_Model(ABCDataFrameToDataFrame):
         # lower
         lower = Float()
         use_lower = Bool()
+        lower_tooltip = 'The lower bound to truncate values'
         # upper
         upper = Float()
         use_upper = Bool()
-
+        upper_tooltip = 'The upper bound to truncate values'
 
     def setInputs(self, dataframe):
 
@@ -60,19 +61,23 @@ enamldef ClipValues_View(GroupBox): me:
         CheckBox:
             text = 'Lower'
             checked := model.use_lower
+            tool_tip = model.lower_tooltip
         Label:
             text = 'N/A'
             visible << not model.use_lower
         FloatField:
             value := model.lower
             visible << model.use_lower
+            tool_tip = model.lower_tooltip
 
         CheckBox:
             text = 'Upper'
             checked := model.use_upper
+            tool_tip = model.upper_tooltip
         Label:
             text = 'N/A'
             visible << not model.use_upper
         FloatField:
             value := model.upper
             visible << model.use_upper
+            tool_tip = model.upper_tooltip

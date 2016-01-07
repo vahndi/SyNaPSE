@@ -18,13 +18,20 @@ class Statistic2_Model(ABCDataFrameToSeries):
         # axis
         axis = Str('index')
         axis_list = List(str, ['index', 'columns'])
+        axis_tooltip = 'The axis over which the calculation should be applied'
         # skipna
         skipna = Bool(False)
+        skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
+                          'is NA, the result will be NA')
         # ddof
         ddof = Int(1)
         ddof_min = Int(1)
+        ddof_tooltip = 'Degrees of Freedom'
         # numeric_only
         numeric_only = Bool(True)
+        numeric_only_tooltip = ('Include only float, int, boolean data.\n' +
+                                'If False, will attempt to use everything, ' +
+                                'then use only numeric data')
 
 
     def setInputs(self, dataframe):
@@ -67,22 +74,32 @@ enamldef Statistic2_View(GroupBox): me:
 
         Label:
             text = 'Axis'
+            tool_tip = model.axis_tooltip
         ObjectCombo:
             items = model.axis_list
             selected := model.axis
+            tool_tip = model.axis_tooltip
 
         Label:
             text = 'Skip NA / Null Values'
+            tool_tip = model.skipna_tooltip
         CheckBox:
             checked := model.skipna
+            tool_tip = model.skipna_tooltip
 
         Label:
             text = 'Degrees of Freedom'
+            tool_tip = model.ddof_tooltip
         IntField:
             value := model.ddof
             minimum = model.ddof_min
+            tool_tip = model.ddof_tooltip
 
         Label:
             text = 'Numeric Only'
+            tool_tip = model.numeric_only_tooltip
         CheckBox:
             checked := model.numeric_only
+            tool_tip = model.numeric_only_tooltip
+
+

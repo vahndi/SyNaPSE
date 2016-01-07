@@ -90,9 +90,7 @@ def inspect_element_args(pickle_name, module_name = ''):
             merge_made = False
             for i, new_at in enumerate(new_list):
                 if len(set(at).intersection(new_at)) > 0:
-                    new_list[i] = tuple(
-                                    sorted(list(set(at).union(new_at)))
-                                    )
+                    new_list[i] = tuple(sorted(list(set(at).union(new_at))))
                     merge_made = True
                     merges_made = True
                     break

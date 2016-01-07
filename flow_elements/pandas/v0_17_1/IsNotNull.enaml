@@ -29,7 +29,7 @@ class IsNotNull_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef IsNotNull_View(GroupBox): me:
+enamldef IsNotNull_View(GroupBox):
 
     Form:
         

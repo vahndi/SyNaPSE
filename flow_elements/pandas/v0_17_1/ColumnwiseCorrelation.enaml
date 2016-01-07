@@ -23,9 +23,16 @@ class ColumnwiseCorrelation_Model(ABCDataFrameToDataFrame):
         # method
         method = Str('pearson')
         method_list = List(str, ['pearson', 'kendall', 'spearman'])
+        method_tooltip = ('pearson : standard correlation coefficient\n' +
+                          'kendall : Kendall Tau correlation coefficient\n' +
+                          'spearman : Spearman rank correlation')
         # min_periods
         min_periods = Int(1)
         min_periods_min = Int(1)
+        min_periods_tooltip = ('Minimum number of observations required per' + 
+                               'pair of columns to have a valid result.\n' + 
+                               'Currently only available for pearson and ' + 
+                               'spearman correlation.')
 
 
     def setInputs(self, dataframe):
@@ -60,14 +67,18 @@ enamldef ColumnwiseCorrelation_View(GroupBox): me:
 
         Label:
             text = 'Method'
+            tool_tip = model.method_tooltip
         ObjectCombo:
             items = model.method_list
             selected := model.method
+            tool_tip = model.method_tooltip
 
         Conditional:
             condition << model.method in ('pearson', 'spearman')
             Label:
                 text = 'Min Periods'
+                tool_tip = mode.min_periods_tooltip
             IntField:
                 value := model.min_periods
                 minimum = model.min_periods_min
+                tool_tip = mode.min_periods_tooltip

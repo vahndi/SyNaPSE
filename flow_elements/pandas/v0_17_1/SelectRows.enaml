@@ -16,12 +16,26 @@ from pandasFunctions import getRowNames
 from ReadDataFrame import ReadDataFrame_Model
 
 
+method_tooltips = {'string' : ('select rows whose names start with, ' +
+                                'end with, contain or do not contain ' + 
+                                'user-specified text'),
+                    'regex': ('select rows whose names match a regular ' + 
+                              'expression'),
+                    'index range': ('select rows whose indices are ' + 
+                                    'within an integer range'),
+                    'name range': ('select a row range by the first ' +
+                                   'and last row names'), 
+                   'manual': 'manually select rows from a list', 
+                   'head': ('select a specified number of rows from the top ' +
+                            'of the dataframe'), 
+                   'tail': ('select a specified number of rows from the ' +
+                            'bottom of the dataframe'), }
+
 
 class SelectRows_Model(ABCDataFrameToDataFrame):
     
 
     elementName = 'Select Rows'
-#    precedingElements = [ReadDataFrame_Model]
     
     
     class ui(Atom):
@@ -29,36 +43,54 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
         # method
         method = Str('string')
         method_list = List(str)
+        method_tooltip = Str()
         # starts_with
         starts_with = Str()
+        starts_with_tooltip = ('Select rows whose names start with this ' +
+                               'text.')
         # ends_with
         ends_with = Str()
+        ends_with_tooltip = 'Select rows whose names end with this text.'
         # contains
         contains = Str()
+        contains_tooltip = 'Select rows whose names contain this text.'
         # does_not_contain
         does_not_contain = Str()
+        does_notcontain_tooltip = ('Select rows whose names do not ' +
+                                   'contain this text.')
         # regular expression
         expression = Str()
+        expression_tooltip = ('Select rows whose names match this regular' +
+                              ' expression.')
         # start index
         range_start_int = Int()
         use_range_start_int = Bool()
+        range_start_int_tooltip = ('The 0-based index of the first row to' +
+                                   ' select.')
         # end index
         range_end_int = Int()
         use_range_end_int = Bool()
+        range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
+                                 'row to select.')
         # first and last rows
         fl_rows = List(str)
         # first row name
         first_row_name = Str()
         use_first_row_name = Bool()
+        first_row_name_tooltip = 'The name of the first row to select.'
         # last row name
         last_row_name = Str()
         use_last_row_name = Bool() 
+        last_row_name_tooltip = 'The name of the last row to select.'
         # manual selection
-        manual_rows = Value(Atom)        
+        manual_rows = Value(Atom)
+        manual_rows_tooltip = 'Check row names to select.'
         # head_tail_number
         head_tail_number = Int(10)
         # order_alphabetically
         order_alphabetically = Bool(False)
+        order_alphabetically_tooltip = ('Order the returned row names ' +
+                                        'alphabetically.')
 
 
     def setInputs(self, dataframe):
@@ -70,12 +102,15 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
                            'name range', 'manual', 'head', 'tail']
         else:
             method_list = ['index range', 'manual', 'head', 'tail']
-            
+        method_tooltip = '\n'.join(['%s: %s' % (m, method_tooltips[m]) 
+                                    for m in method_list])
+
         self.manual_rows = CheckBoxList_Model(dataframe.index)
         self.uiModel = SelectRows_Model.ui(
                             method_list = method_list,
                             manual_rows = self.manual_rows.uiModel,
-                            fl_rows = [str(i) for i in list(dataframe.index)]
+                            fl_rows = [str(i) for i in list(dataframe.index)],
+                            method_tooltip = method_tooltip
                             )
 
     
@@ -170,24 +205,32 @@ enamldef SelectRows_View(GroupBox): me:
             
             Label:
                 text = 'Starts With'
+                tool_tip = model.starts_with_tooltip
             Field:
                 text := model.starts_with
+                tool_tip = model.starts_with_tooltip
 
             Label:
                 text = 'Ends With'
+                tool_tip = model.ends_with_tooltip
             Field:
                 text := model.ends_with
+                tool_tip = model.ends_with_tooltip
 
             Label:
                 text = 'Contains'
+                tool_tip = model.contains_tooltip
             Field:
                 text := model.contains
+                tool_tip = model.contains_tooltip
 
             Label:
                 text = 'Does Not Contain'
+                tool_tip = model.does_not_contain_tooltip
             Field:
                 text := model.does_not_contain
-    
+                tool_tip = model.does_not_contain_tooltip    
+
 
         Conditional:
             condition << (model.method == 'regex' and 
@@ -195,8 +238,10 @@ enamldef SelectRows_View(GroupBox): me:
 
             Label:
                 text = 'Expression'
+                tool_tip = model.expression_tooltip
             Field:
                 text := model.expression
+                tool_tip = model.expression_tooltip
 
 
         Conditional:
@@ -205,18 +250,22 @@ enamldef SelectRows_View(GroupBox): me:
             CheckBox: 
                 text = 'Lower Index (inclusive)'
                 checked := model.use_range_start_int
+                tool_tip = model.range_start_int_tooltip
             Label:
                 text = 'N/A'
                 visible << not model.use_range_start_int
+                
             IntField:
                 value := model.range_start_int
                 minimum = 0
                 maximum = len(model.fl_rows)
                 visible << model.use_range_start_int
-
+                tool_tip = model.range_start_int_tooltip
+                
             CheckBox:
                 text = 'Upper Index (exclusive)'
                 checked := model.use_range_end_int
+                tool_tip = model.range_end_int_tooltip
             Label:
                 text = 'N/A'
                 visible << not model.use_range_end_int
@@ -225,6 +274,7 @@ enamldef SelectRows_View(GroupBox): me:
                 minimum = 0
                 maximum = len(model.fl_rows)
                 visible << model.use_range_end_int
+                tool_tip = model.range_end_int_tooltip
 
 
         Conditional:
@@ -234,6 +284,7 @@ enamldef SelectRows_View(GroupBox): me:
             CheckBox: 
                 text = 'First Name'
                 checked := model.use_first_row_name
+                tool_tip = model.first_row_name_tooltip
             Label:
                 text = 'N/A'
                 visible << not model.use_first_row_name
@@ -241,10 +292,13 @@ enamldef SelectRows_View(GroupBox): me:
                 items = model.fl_rows
                 selected := model.first_row_name
                 visible << model.use_first_row_name
+                tool_tip = model.first_row_name_tooltip
+                
 
             CheckBox:
                 text = 'Last Name'
                 checked := model.use_last_row_name
+                tool_tip = model.last_row_name_tooltip
             Label:
                 text = 'N/A'
                 visible << not model.use_last_row_name
@@ -252,6 +306,7 @@ enamldef SelectRows_View(GroupBox): me:
                 items = model.fl_rows
                 selected := model.last_row_name
                 visible << model.use_last_row_name
+                tool_tip = model.last_row_name_tooltip
 
 
         Conditional:
@@ -259,8 +314,10 @@ enamldef SelectRows_View(GroupBox): me:
 
             Label:
                 text = 'Rows'
+                tool_tip = model.manual_rows_tooltip
             CheckBoxList_View:
                 model := me.model.manual_rows
+                tool_tip = model.manual_rows_tooltip
         
         Conditional:
             condition << model.method in ('head', 'tail')
@@ -273,5 +330,7 @@ enamldef SelectRows_View(GroupBox): me:
 
         Label:
             text = 'Order Alphabetically'
+            tool_tip = model.order_alphabetically_tooltip
         CheckBox:
             checked := model.order_alphabetically
+            tool_tip = model.order_alphabetically_tooltip

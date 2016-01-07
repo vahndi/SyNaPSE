@@ -46,19 +46,29 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
     
     class ui(Atom):
         
-        sourcePath = Str()
-        sourceType = Str()
-        sheetName = Str()
-        sourceTypes = List(str, ['csv', 'xls', 'seaborn', 'sklearn'])
-        sheetNames = List(str)    
-        sklearnDSnames = List(str, sorted(sklearnDatasets.keys()))
-        sklearnDSname = Str()
-        seabornDSnames = List(str, sorted(seabornDatasets.keys()))
-        seabornDSname = Str()
+        # source_type
+        source_type = Str()
+        source_type_list = List(str, ['csv', 'xls', 'seaborn', 'sklearn'])
+        source_type_tooltip = 'Select the source of the dataframe'
+        # source path
+        source_path = Str()
+        source_path_tooltip = 'Enter the path to the data source'
+        # sheet_name
+        sheet_name = Str()
+        sheet_name_list = List(str)
+        sheet_name_tooltip = 'Select the Excel data Worksheet'
+        # sklearn_dataset
+        sklearn_dataset = Str()
+        sklearn_dataset_list = List(str, sorted(sklearnDatasets.keys()))
+        sklearn_dataset_tooltip = 'Select the scikit-learn dataset to read'
+        # seaborn_dataset
+        seaborn_dataset = Str()
+        seaborn_dataset_list = List(str, sorted(seabornDatasets.keys()))
+        seaborn_dataset_tooltip = 'Select the seaborn  dataset to read'
 
-        def getSheetNames(self):
+        def get_sheet_name_list(self):
             
-            return getExcelSheetNames(self.sourcePath)
+            return getExcelsheet_name_list(self.source_path)
     
     
     def __init__(self):
@@ -69,9 +79,9 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
     def getOutputs(self):
         
         try:
-            if self.uiModel.sourceType == 'sklearn':
+            if self.uiModel.source_type == 'sklearn':
                 # Load dataset
-                ds = sklearnDatasets[self.uiModel.sklearnDSname]()
+                ds = sklearnDatasets[self.uiModel.sklearn_dataset]()
                 if 'feature_names' in ds.keys():
                     # Has feature names
                     data = pd.DataFrame(ds['data'], 
@@ -97,20 +107,20 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
                 # Join data and target columns and return
                 dataframe = pd.concat([data, target], axis = 1)
             
-            elif self.uiModel.sourceType == 'seaborn':
+            elif self.uiModel.source_type == 'seaborn':
                 
-                dataframe = seabornDatasets[self.uiModel.seabornDSname]
+                dataframe = seabornDatasets[self.uiModel.seaborn_dataset]
                 
-            elif self.uiModel.sourceType in ('.csv', '.xls'):
-                if os.path.exists(self.uiModel.sourcePath):
-                    if self.uiModel.sourceType == 'csv':
-                        dataframe = pd.read_csv(self.uiModel.sourcePath)
-                    elif self.uiModel.sourceType == 'xls':
-                        sheet_name = self.uiModel.sheetName
+            elif self.uiModel.source_type in ('.csv', '.xls'):
+                if os.path.exists(self.uiModel.source_path):
+                    if self.uiModel.source_type == 'csv':
+                        dataframe = pd.read_csv(self.uiModel.source_path)
+                    elif self.uiModel.source_type == 'xls':
+                        sheet_name = self.uiModel.sheet_name
                         if sheet_name == '':
                             sheet_name = None
-                        dataframe = pd.read_excel(self.uiModel.sourcePath,
-                                                  sheetname = sheet_name)
+                        dataframe = pd.read_excel(self.uiModel.source_path,
+                                                  sheet_name = sheet_name)
                 else:
                     return {'Outputs': 'Path does not exist'}
             else:
@@ -131,37 +141,47 @@ enamldef ReadDataFrame_View(GroupBox):
     Form:
         Label:
             text = 'Type'
-        ObjectCombo: cboxDStype:
-            items = model.sourceTypes
-            selected := model.sourceType
+            tool_tip =  model.source_type_tooltip
+        ObjectCombo:
+            items = model.source_type_list
+            selected := model.source_type
+            tool_tip =  model.source_type_tooltip
             
         Conditional:
-            condition << cboxDStype.selected in ('xls', 'csv')
+            condition << model.source_type in ('xls', 'csv')
             Label:
                 text = 'Path'
+                tool_tip = model.source_type_tooltip
             Field:
-                text := model.sourcePath
+                text := model.source_path
+                tool_tip = model.source_type_tooltip
 
         Conditional:
-            condition << cboxDStype.selected == 'seaborn'
+            condition << model.source_type == 'seaborn'
             Label:
                 text = 'Dataset'
+                tool_tip = model.seaborn_dataset_tooltip
             ObjectCombo: 
-                items = model.seabornDSnames
-                selected := model.seabornDSname
+                items = model.seaborn_dataset_list
+                selected := model.seaborn_dataset
+                tool_tip = model.seaborn_dataset_tooltip
                 
         Conditional:
-            condition << cboxDStype.selected == 'sklearn'
+            condition << model.source_type == 'sklearn'
             Label:
                 text = 'Dataset'
+                tool_tip = model.sklearn_dataset_tooltip
             ObjectCombo:
-                items = model.sklearnDSnames
-                selected := model.sklearnDSname
-
+                items = model.sklearn_dataset_list
+                selected := model.sklearn_dataset
+                tool_tip = model.sklearn_dataset_tooltip
+                
         Conditional:
-            condition << cboxDStype.selected == 'xls'
+            condition << model.source_type == 'xls'
             Label:
                 text = 'Sheet Name'
-            ObjectCombo: cboxSheetNames:
-                items = model.getSheetNames()
-                selected := model.sheetName
+                tool_tip = model.sheet_name_tooltip
+            ObjectCombo:
+                items = model.get_sheet_name_list()
+                selected := model.sheet_name
+                tool_tip = model.sheet_name_tooltip
