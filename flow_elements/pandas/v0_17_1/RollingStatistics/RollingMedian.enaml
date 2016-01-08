@@ -13,6 +13,7 @@ class RollingMedian_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_median'
         self.window_min = 1
+        self.how = 'median'
 
 
 enamldef RollingMedian_View(RollingStatistic_View):

@@ -13,6 +13,7 @@ class RollingMaximum_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_max'
         self.window_min = 1
+        self.how = 'max'
 
 
 enamldef RollingMaximum_View(RollingStatistic_View):

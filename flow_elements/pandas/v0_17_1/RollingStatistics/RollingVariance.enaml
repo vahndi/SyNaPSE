@@ -13,6 +13,7 @@ class RollingVariance_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_var'
         self.window_min = 2
+        self.how = 'mean'
 
 
 enamldef RollingVariance_View(RollingStatistic_View):

@@ -13,6 +13,7 @@ class RollingSkew_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_skew'
         self.window_min = 3
+        self.how = 'mean'
 
 
 enamldef RollingSkew_View(RollingStatistic_View):

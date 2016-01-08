@@ -13,6 +13,7 @@ class RollingMinimum_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_min'
         self.window_min = 1
+        self.how = 'min'
 
 
 enamldef RollingMinimum_View(RollingStatistic_View):

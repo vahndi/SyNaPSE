@@ -13,6 +13,7 @@ class RollingKurtosis_Model(RollingStatistic_Model):
         
         self.outputFunction = 'rolling_kurt'
         self.window_min = 4
+        self.how = 'mean'
 
 
 enamldef RollingKurtosis_View(RollingStatistic_View):
