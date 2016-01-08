@@ -6,14 +6,13 @@ from enaml.widgets.api import (
     )
 from custom_views.fields import Field
 
-# Plotting                             
-from matplotlib.figure import Figure
-
 # Numerical
 import pandas as pd
 from pandas import DataFrame, Series
 from numpy import ndarray
 
+# Plotting                             
+from matplotlib.figure import Figure
 
 # Custom Views
 from custom_views.DataFrame_View import (
@@ -26,6 +25,9 @@ from custom_views.list_View import list_TableView
 
 
 
+# Matplotlib templates
+# --------------------
+
 template OutputTemplate(model_type: Figure):
 
     Container:
@@ -33,29 +35,26 @@ template OutputTemplate(model_type: Figure):
             figure = output_model
 
 
+# Pandas templates
+# ----------------
+
 template OutputTemplate(model_type: DataFrame):
 
     DataFrame_FigureView:
         model = DataFrame_FigureModel(output_model)
-    
     DataFrame_TableView:
         model = output_model
-
 
 template OutputTemplate(model_type: Series): 
 
     Series_FigureView:
         model = Series_FigureModel(output_model)
-
     Series_TableView:
         model = output_model
 
 
-template OutputTemplate(model_type: list):
-    
-    list_TableView:
-        model = output_model
-
+# Numpy templates
+# ---------------
 
 template OutputTemplate(model_type: ndarray):
     
@@ -71,19 +70,19 @@ template OutputTemplate(model_type: ndarray):
             text = str(output_model)
 
 
-template OutputTemplate(model_type: str): 
+# Primitives templates
+# --------------------     
 
-    MultilineField:
-        read_only = True
-        text = str(output_model)
+template OutputTemplate(model_type: dict):
+
+    OutputsGroupBox:
+        output_model = parent.output_model
     
-
 template OutputTemplate(model_type: float): 
 
     Field:
         read_only = True
         text = str(output_model)
-
 
 template OutputTemplate(model_type: int): 
 
@@ -91,19 +90,23 @@ template OutputTemplate(model_type: int):
         read_only = True
         text = str(output_model)
 
+template OutputTemplate(model_type: list):
+    
+    list_TableView:
+        model = output_model
+
+template OutputTemplate(model_type: str): 
+
+    MultilineField:
+        read_only = True
+        text = str(output_model)
 
 template OutputTemplate(model_type: tuple): 
 
     Field:
         read_only = True
         text = str(output_model)
-        
 
-template OutputTemplate(model_type: dict):
-
-    OutputsGroupBox:
-        
-        output_model = parent.output_model
 
 
 enamldef OutputContainer(Container):
@@ -157,22 +160,17 @@ enamldef ElementOutput_View(DockPane):
 
 
     GroupBox:
-        
-        PushButton:
-            
+        PushButton:    
             text = 'Refresh Output'
             clicked::
                 flowList.refreshSelectedElementOutputs()
                 model = flowList.uiModel.selectedElementOutputs
                 
-        Notebook:
-            
-            Looper:
+        Notebook:    
+            Looper:        
+                iterable << [key for key in model.keys()]        
                 
-                iterable << [key for key in model.keys()]
-                
-                Page:
-                    
+                Page:            
                     title = loop_item
                     closable = False
                     OutputContainer:

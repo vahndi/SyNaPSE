@@ -12,12 +12,13 @@ from modules.dataframe_figures import (
     box_fig_lf, box_fig_wf, box_fig_grouped_wf, 
     confmat_fig, confmat_cat__a_fig, 
     distribution_fig, 
-    scatter_fig, scatter_cat__acm_fig, scatter_cat__c_fig, scatter_cat__cm_fig
+    scatter_fig, scatter_cat__acm_fig, scatter_cat__c_fig, scatter_cat__cm_fig,
+    timeseries_fig
     )
 
 # Numerical
 from numpy import int32, int64, float64
-from pandas import melt
+from pandas import melt, DatetimeIndex
 
 
 def _getDataFrameRowHtml(dataframe, ix, max_cols):
@@ -116,6 +117,10 @@ def getDataFrameFigure(dataframe):
     if len(dataframe) == 0:
         return None
     
+    # Time-series
+    if isinstance(dataframe.index, DatetimeIndex):
+        return timeseries_fig(dataframe)
+        
     # Get sub-dataframes by dtype
     df_object = dataframe.select_dtypes([object])
     df_integer = dataframe.select_dtypes(['integer'])

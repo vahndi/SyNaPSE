@@ -286,3 +286,11 @@ def scatter_cat__acm_fig(dataframe):
                         label = '%s - %s' % (m, c))
         ax.legend()
         return fig
+
+
+def timeseries_fig(dataframe):
+    
+    fig = Figure()
+    ax = fig.add_subplot(111)
+    dataframe.plot(kind = 'line', ax = ax)
+    return fig
