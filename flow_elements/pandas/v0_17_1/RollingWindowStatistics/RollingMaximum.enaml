@@ -1,0 +1,22 @@
+from ._base.RollingStatistic import RollingStatistic_Model
+from ._base.RollingStatistic import RollingStatistic_View
+
+
+
+class RollingMaximum_Model(RollingStatistic_Model):
+    
+    
+    elementName = 'Rolling Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_max'
+        self.window_min = 1
+        self.how = 'max'
+
+
+
+enamldef RollingMaximum_View(RollingStatistic_View):
+    
+    pass

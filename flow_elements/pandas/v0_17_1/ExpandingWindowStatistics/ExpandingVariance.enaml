@@ -1,0 +1,20 @@
+from ._base.ExpandingStatistic import ExpandingStatistic_Model
+from ._base.ExpandingStatistic import ExpandingStatistic_View
+
+
+
+class ExpandingVariance_Model(ExpandingStatistic_Model):
+    
+    
+    elementName = 'Expanding Variance'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_var'
+
+
+
+enamldef ExpandingVariance_View(ExpandingStatistic_View):
+    
+    pass

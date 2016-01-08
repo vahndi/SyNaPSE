@@ -1,0 +1,22 @@
+from ._base.RollingStatistic import RollingStatistic_Model
+from ._base.RollingStatistic import RollingStatistic_View
+
+
+
+class RollingMinimum_Model(RollingStatistic_Model):
+    
+    
+    elementName = 'Rolling Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_min'
+        self.window_min = 1
+        self.how = 'min'
+
+
+
+enamldef RollingMinimum_View(RollingStatistic_View):
+    
+    pass

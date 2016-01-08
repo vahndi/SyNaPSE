@@ -1,0 +1,22 @@
+from ._base.RollingStatistic import RollingStatistic_Model
+from ._base.RollingStatistic import RollingStatistic_View
+
+
+
+class RollingSkew_Model(RollingStatistic_Model):
+    
+    
+    elementName = 'Rolling Skew'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_skew'
+        self.window_min = 3
+        self.how = 'mean'
+
+
+
+enamldef RollingSkew_View(RollingStatistic_View):
+    
+    pass

@@ -1,0 +1,20 @@
+from ._base.ExpandingStatistic import ExpandingStatistic_Model
+from ._base.ExpandingStatistic import ExpandingStatistic_View
+
+
+
+class ExpandingMinimum_Model(ExpandingStatistic_Model):
+    
+    
+    elementName = 'Expanding Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_min'
+
+
+
+enamldef ExpandingMinimum_View(ExpandingStatistic_View):
+    
+    pass

@@ -1,0 +1,20 @@
+from ._base.ExpandingStatistic import ExpandingStatistic_Model
+from ._base.ExpandingStatistic import ExpandingStatistic_View
+
+
+
+class ExpandingKurtosis_Model(ExpandingStatistic_Model):
+    
+    
+    elementName = 'Expanding Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_kurt'
+
+
+
+enamldef ExpandingKurtosis_View(ExpandingStatistic_View):
+    
+    pass
