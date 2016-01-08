@@ -8,11 +8,11 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectC
 from custom_views.fields import IntField
 
 # Models
-from ..._base.ABCs import ABCDataFrameToDataFrame, ABCDataFrameToSeries
+from ..._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
 
 # Pandas
 import pandas as pd
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, concat
 
 
 
@@ -25,7 +25,7 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
     class ui(Atom):
 
         # window
-        window = Int()
+        window = Int(1)
         window_min = Int(1)
         window_tooltip = 'Size of the moving window. This is the number of observations used for calculating the statistic.'
         # min_periods
@@ -49,10 +49,12 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
         how_tooltip = 'Method for down- or re-sampling.'
 
 
-    def setInputs(self, dataframe_or_series):
+    def setInputs(self, dataframe = None, series = None):
 
-        self._dataframe_or_series = dataframe_or_series
-        self.uiModel = RollingStatistic_Model.ui()
+        self._dataframe = dataframe
+        self._series = series
+        self.uiModel = RollingStatistic_Model.ui(window_min = self.window_min,
+                                                 window = self.window_min)
 
 
     def getOutputs(self):
@@ -61,7 +63,6 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
             # Assign local variables
             args = {
-                'arg': self._dataframe_or_series
                 'window': self.uiModel.window,
                 'min_periods': (None 
                                 if not self.uiModel.use_min_periods 
@@ -74,15 +75,23 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
                         if self.uiModel.resample == True 
                         else None)
                 }
+            if self._dataframe is not None:
+                df_numeric = self._dataframe.select_dtypes(['number'])
+                df_object = self._dataframe.select_dtypes(['object'])
+                args['arg'] = df_numeric
+            else:
+                args['arg'] = self._series
                 
             # apply function
             func = getattr(pd, self.outputFunction)
-            df_or_ser_out = func(** args)
+            rolling_stat = func(** args)
             
-            if type(df_or_ser_out) is DataFrame:
-                return {'dataframe': df_or_ser_out}                
-            elif type(df_or_ser_out) is Series:
-                return {'series': df_or_ser_out}
+            if self._dataframe is not None:
+                df_joined = concat([df_object, rolling_stat], axis = 1)
+                df_joined = df_joined[[col for col in self._dataframe.columns]]
+                return {'dataframe': df_joined}                
+            else:
+                return {'series': rolling_stat}
 
         except Exception as e:
 

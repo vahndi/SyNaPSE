@@ -1,0 +1,20 @@
+from ._base.RollingStatistic import RollingStatistic_Model
+from ._base.RollingStatistic import RollingStatistic_View
+
+
+
+class RollingKurtosis_Model(RollingStatistic_Model):
+    
+    
+    elementName = 'Rolling Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_kurt'
+        self.window_min = 4
+
+
+enamldef RollingKurtosis_View(RollingStatistic_View):
+    
+    pass

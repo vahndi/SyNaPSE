@@ -10,8 +10,7 @@ from custom_views.fields import Field, IntField
 # Models
 from ._base.ABCs import ABCDataFrameToDataFrame
 
-import pandas as pd
-
+from pandas import date_range
 
 
 class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
@@ -23,8 +22,10 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
     class ui(Atom):
 
         # method
-        method = Str('start / end')
-        method_list = List(str, ['start / end', 'start / # periods', 'end / # periods'])
+        method = Str('start / # periods')
+        method_list = List(str, ['start / # periods', 
+                                 'end / # periods', 
+                                 'start / end'])
         method_tooltip = 'Select the pair of variables to specify to generate the index.'
         # start
         start = Str()
@@ -37,7 +38,10 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
         periods_tooltip = 'Number of date periods.'
         # freq
         freq = Str('D')
-        freq_list = List(str, ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+        freq_list = List(str, 
+                         ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
+                         'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
+                         'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
         freq_tooltip = 'Frequency of the new index.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
         # tz
         tz = Str()
@@ -95,7 +99,7 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
                 }
             
             
-            index = pd.date_range(**args)
+            index = date_range(**args)
             return {'dataframe': self._dataframe.set_index(index)}
 
         except Exception as e:
@@ -126,7 +130,6 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
             Field:
                 text := model.start
                 tool_tip = model.start_tooltip
-    
 
         Conditional:
             condition << 'end' in model.method
@@ -136,7 +139,6 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
             Field:
                 text := model.end
                 tool_tip = model.end_tooltip
-    
 
         Conditional:
             condition << 'periods' in model.method
@@ -146,7 +148,6 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
             IntField:
                 value := model.periods
                 tool_tip = model.periods_tooltip
-    
 
         Label:
             text = 'Frequency'
@@ -155,11 +156,10 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
             items = model.freq_list
             selected := model.freq
             tool_tip = model.freq_tooltip
-    
 
         CheckBox:
             tool_tip = model.tz_tooltip
-            text = 'Tz'
+            text = 'Time Zone'
             checked := model.use_tz
         Label:
             text = 'N/A'

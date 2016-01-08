@@ -31,7 +31,7 @@ class AbsoluteValues_Model(ABCDataFrameToDataFrame):
             df_numeric_abs = df_numeric.abs()
             df_joined = concat([df_object, df_numeric_abs], axis = 1)
             df_joined = df_joined[[col for col in self._dataframe.columns]]
-            
+
             return {'dataframe': df_joined}        
 
         except Exception as e:

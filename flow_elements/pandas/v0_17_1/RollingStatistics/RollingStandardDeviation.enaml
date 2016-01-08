@@ -1,0 +1,20 @@
+from ._base.RollingStatistic import RollingStatistic_Model
+from ._base.RollingStatistic import RollingStatistic_View
+
+
+
+class RollingStandardDeviation_Model(RollingStatistic_Model):
+    
+    
+    elementName = 'Rolling Standard Deviation'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_std'
+        self.window_min = 2
+
+
+enamldef RollingStandardDeviation_View(RollingStatistic_View):
+    
+    pass

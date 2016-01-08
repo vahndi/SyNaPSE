@@ -43,3 +43,9 @@ class ABCDataFrameToSeries(ABCTakesDataFrame,
                            ABCOutputsSeries):
     
     pass
+
+class ABCSeriesToSeries(ABCTakesSeries,
+                        ABCOutputsSeries):
+    
+    pass
+

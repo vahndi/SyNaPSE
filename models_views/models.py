@@ -11,6 +11,8 @@ pkg_sys = (('flow_elements.pandas.v0_17_1',
             './flow_elements/pandas/v0_17_1/Statistics'),
            ('flow_elements.pandas.v0_17_1.CumulativeStatistics', 
             './flow_elements/pandas/v0_17_1/CumulativeStatistics'),
+           ('flow_elements.pandas.v0_17_1.RollingStatistics', 
+            './flow_elements/pandas/v0_17_1/RollingStatistics'),
            ('flow_elements.sklearn.v0_17.linear_model',
             './flow_elements/sklearn/v0_17/linear_model'),
            ('flow_elements.sklearn.v0_17.cluster',
@@ -57,7 +59,7 @@ class Main_Model(object):
 
 
     def __init__(self):
-                     
+
         self.elementDict = {e.elementName: e for e in Main_Model.elementModels}                     
 
         self.chooseElement = ChooseElement(parent = self,
@@ -246,7 +248,9 @@ class FlowList(object):
                     # following line that also traverses through the outputs in
                     # case the required argument is nested below the top level 
                     # of the outputs
-                    inputArgsDict = {a: prevOutputs[a] for a in inputArgNames}
+                    inputArgsDict = {a: prevOutputs[a] 
+                                     for a in inputArgNames
+                                     if a in prevOutputs}
                     newElement.setInputs(inputArgsDict)  
                     
                 except Exception as e:
