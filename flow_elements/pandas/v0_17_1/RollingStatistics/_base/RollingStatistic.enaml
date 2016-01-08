@@ -1,0 +1,151 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
+
+# Models
+from ..._base.ABCs import ABCDataFrameToDataFrame, ABCDataFrameToSeries
+
+# Pandas
+import pandas as pd
+from pandas import DataFrame, Series
+
+
+
+class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+
+    elementName = 'Rolling Statistic'
+
+
+    class ui(Atom):
+
+        # window
+        window = Int()
+        window_min = Int(1)
+        window_tooltip = 'Size of the moving window. This is the number of observations used for calculating the statistic.'
+        # min_periods
+        min_periods = Int()
+        min_periods_min = Int(1)
+        use_min_periods = Bool()
+        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+        # center
+        center = Bool()
+        center_tooltip = 'Set the labels at the center of the window.\n(By default, the result is set to the right edge of the window).'
+        # resample
+        resample = Bool()
+        resample_tooltip = 'Resample the data to a user-specified frequency before computing the statistic.'
+        # freq
+        freq = Str('D')
+        freq_list = List(str, ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+        freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+        # how
+        how = Str('mean')
+        how_list = List(str, ['sum', 'mean', 'std', 'sem', 'max', 'min', 'median', 'first', 'last', 'ohlc'])
+        how_tooltip = 'Method for down- or re-sampling.'
+
+
+    def setInputs(self, dataframe_or_series):
+
+        self._dataframe_or_series = dataframe_or_series
+        self.uiModel = RollingStatistic_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'arg': self._dataframe_or_series
+                'window': self.uiModel.window,
+                'min_periods': (None 
+                                if not self.uiModel.use_min_periods 
+                                else self.uiModel.min_periods),
+                'center': self.uiModel.center,
+                'freq': (self.uiModel.freq
+                         if self.uiModel.resample == True 
+                         else None),
+                'how': (self.uiModel.how
+                        if self.uiModel.resample == True 
+                        else None)
+                }
+                
+            # apply function
+            func = getattr(pd, self.outputFunction)
+            df_or_ser_out = func(** args)
+            
+            if type(df_or_ser_out) is DataFrame:
+                return {'dataframe': df_or_ser_out}                
+            elif type(df_or_ser_out) is Series:
+                return {'series': df_or_ser_out}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef RollingStatistic_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Window'
+            tool_tip = model.window_tooltip
+        IntField:
+            value := model.window
+            minimum = model.window_min
+            tool_tip = model.window_tooltip
+
+        CheckBox:
+            tool_tip = model.min_periods_tooltip
+            text = 'Min Periods'
+            checked := model.use_min_periods
+        Label:
+            text = 'N/A'
+            visible << not model.use_min_periods
+        IntField:
+            value := model.min_periods
+            minimum = model.min_periods_min
+            visible << model.use_min_periods
+            tool_tip = model.min_periods_tooltip
+
+        Label:
+            text = 'Center'
+            tool_tip = model.center_tooltip
+        CheckBox:
+            checked := model.center
+            tool_tip = model.center_tooltip
+
+        Label:
+            text = 'Resample'
+            tool_tip = model.resample_tooltip
+        CheckBox:
+            checked := model.resample
+            tool_tip = model.resample_tooltip
+
+        Conditional:
+            condition << model.resample == True
+            
+            Label:
+                text = 'Freq'
+                tool_tip = model.freq_tooltip
+            ObjectCombo:
+                items = model.freq_list
+                selected := model.freq
+                tool_tip = model.freq_tooltip
+
+            Label:
+                text = 'How'
+                tool_tip = model.how_tooltip
+            ObjectCombo:
+                items = model.how_list
+                selected := model.how
+                tool_tip = model.how_tooltip
