@@ -1,3 +1,6 @@
+import sys
+
+
 def spc(num_spaces):
     
     return ' ' * num_spaces
@@ -143,4 +146,8 @@ class widget(object):
         
     def get_tooltip(self):
         
-        return str(self.w_tooltip).encode('string-escape')
+        try:
+            return str(self.w_tooltip).encode('string-escape')
+        except:
+            print self.w_tooltip
+            sys.exit()

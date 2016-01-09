@@ -1,0 +1,173 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import FloatField, IntField
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from pandas import DataFrame, Series, concat
+from pandas.stats.moments import ewmvol
+
+
+
+class EWMVolume_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+
+    elementName = 'Exponentially Weighted Moving Volume'
+
+
+    class ui(Atom):
+
+        # decay_method
+        decay_method = Str('center of mass')
+        decay_method_list = List(str, ['center of mass', 'span', 'halflife'])
+        decay_method_tooltip = 'Specify how to calculate the Decay.'
+        # com
+        com = Float()
+        com_tooltip = 'Calculate Decay from Center of Mass.\\nalpha = 1 / (1 + CoM)'
+        # span
+        span = Float()
+        span_tooltip = 'Calculate Decay from Span.\\nalpha = 2 / (Span + 1)'
+        # halflife
+        halflife = Float()
+        halflife_tooltip = 'Calculate Decay from Halflife.\\nalpha = 1 - exp( log(0.5) / Halflife )'
+        # min_periods
+        min_periods = Int(0)
+        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+        # bias
+        bias = Bool()
+        bias_tooltip = 'Use a standard estimation bias correction.'
+        # ignore_na
+        ignore_na = Bool()
+        ignore_na_tooltip = 'Ignore missing values when calculating weights.'
+        # adjust
+        adjust = Bool(True)
+        adjust_tooltip = 'Divide by decaying adjustment factor in beginning periods to account for imbalance in relative weightings (viewing EWMA as a moving average).'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        self.uiModel = EWMVolume_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'com': (self.uiModel.com
+                        if self.uiModel.decay_method == 'center of mass' 
+                        else None),
+                'span': (self.uiModel.span
+                         if self.uiModel.decay_method == 'span' 
+                         else None),
+                'halflife': (self.uiModel.halflife
+                             if self.uiModel.decay_method == 'halflife' 
+                             else None),
+                'min_periods': self.uiModel.min_periods,
+                'bias': self.uiModel.bias,
+                'ignore_na': self.uiModel.ignore_na,
+                'adjust': self.uiModel.adjust
+                }
+            
+            if self._dataframe is not None:
+                df_numeric = self._dataframe.select_dtypes(['number'])
+                df_object = self._dataframe.select_dtypes(['object'])
+                args['arg'] = df_numeric
+            else:
+                args['arg'] = self._series
+
+            # apply function
+            ewm_stat = ewmvol(** args)
+            
+            if self._dataframe is not None:
+                df_joined = concat([df_object, ewm_stat], axis = 1)
+                df_joined = df_joined[[col for col in self._dataframe.columns]]
+                return {'dataframe': df_joined}                
+            else:
+                return {'series': ewm_stat}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef EWMVolume_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Decay Method'
+            tool_tip = model.decay_method_tooltip
+        ObjectCombo:
+            items = model.decay_method_list
+            selected := model.decay_method
+            tool_tip = model.decay_method_tooltip
+
+        Conditional:
+            condition << model.decay_method == 'center of mass'
+            Label:
+                text = 'Center of Mass'
+                tool_tip = model.com_tooltip
+            FloatField:
+                value := model.com
+                tool_tip = model.com_tooltip
+    
+
+        Conditional:
+            condition << model.decay_method == 'span'
+            Label:
+                text = 'Span'
+                tool_tip = model.span_tooltip
+            FloatField:
+                value := model.span
+                tool_tip = model.span_tooltip
+    
+
+        Conditional:
+            condition << model.decay_method == 'halflife'
+            Label:
+                text = 'Halflife'
+                tool_tip = model.halflife_tooltip
+            FloatField:
+                value := model.halflife
+                tool_tip = model.halflife_tooltip
+    
+
+        Label:
+            text = 'Min Periods'
+            tool_tip = model.min_periods_tooltip
+        IntField:
+            value := model.min_periods
+            tool_tip = model.min_periods_tooltip
+
+        Label:
+            text = 'Bias'
+            tool_tip = model.bias_tooltip
+        CheckBox:
+            checked := model.bias
+            tool_tip = model.bias_tooltip
+
+
+        Label:
+            text = 'Ignore NA'
+            tool_tip = model.ignore_na_tooltip
+        CheckBox:
+            checked := model.ignore_na
+            tool_tip = model.ignore_na_tooltip
+
+        Label:
+            text = 'Adjust'
+            tool_tip = model.adjust_tooltip
+        CheckBox:
+            checked := model.adjust
+            tool_tip = model.adjust_tooltip
