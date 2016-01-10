@@ -174,7 +174,7 @@ enamldef EWMAverage_View(GroupBox): me:
             tool_tip = model.freq_tooltip
 
         Label:
-            text = 'How'
+            text = 'Resampling Method'
             tool_tip = model.how_tooltip
         ObjectCombo:
             items = model.how_list

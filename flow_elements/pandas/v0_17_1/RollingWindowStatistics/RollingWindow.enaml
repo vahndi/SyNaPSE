@@ -1,0 +1,237 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str
+
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import FloatField, IntField
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from pandas import DataFrame, Series, concat
+from pandas.stats.moments import rolling_window
+
+
+
+class RollingWindow_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+
+    elementName = 'Rolling Window'
+
+
+    class ui(Atom):
+
+        # window
+        window = Int(1)
+        window_min = Int(1)
+        window_tooltip = 'Window length.'
+        # win_type
+        win_type = Str('boxcar')
+        win_type_list = List(str, ['boxcar', 'triang', 'blackman', 'hamming', 'bartlett', 'parzen', 'bohman', 'blackmanharris', 'nuttall', 'barthann', 'kaiser', 'gaussian', 'general_gaussian', 'slepian'])
+        win_type_tooltip = 'Window type.'
+        # beta
+        beta = Float()
+        # std
+        std = Float()
+        # power
+        power = Float()
+        # width
+        width = Float()
+        # min_periods
+        min_periods = Int(1)
+        min_periods_min = Int(1)
+        use_min_periods = Bool()
+        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+        # freq
+        freq = Str('D')
+        freq_list = List(str, ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+        use_freq = Bool()
+        freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+        # center
+        center = Bool()
+        center_tooltip = 'Whether the label should correspond with center of window.'
+        # mean
+        mean = Bool(True)
+        mean_tooltip = 'If True computes weighted mean, else weighted sum.'
+        # axis
+        show_axis = Bool()
+        axis = Str('index')
+        axis_list = List(str, ['index', 'columns'])
+        # how
+        how = Str('mean')
+        how_list = List(str, ['sum', 'mean', 'std', 'sem', 'max', 'min', 
+                              'median', 'first', 'last', 'ohlc'])
+        how_tooltip = 'Method for down- or re-sampling.'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        self.uiModel = RollingWindow_Model.ui(show_axis = series is None)
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'window': self.uiModel.window,
+                'win_type': self.uiModel.win_type,
+                'beta': (self.uiModel.beta
+                         if self.uiModel.win_type == 'kaiser' 
+                         else None),
+                'std': (self.uiModel.std
+                        if self.uiModel.win_type == 'gaussian' 
+                        else None),
+                'power': (self.uiModel.power
+                          if self.uiModel.win_type == 'general gaussian' 
+                          else None),
+                'width': (self.uiModel.width
+                          if self.uiModel.win_type in ('general gaussian', 
+                                                       'slepian') 
+                          else None),
+                'min_periods': (None 
+                                if not self.uiModel.use_min_periods 
+                                else self.uiModel.min_periods),
+                'freq': (None 
+                         if not self.uiModel.use_freq 
+                         else self.uiModel.freq),
+                'center': self.uiModel.center,
+                'mean': self.uiModel.mean,
+                'axis': ({'index': 0, 'columns': 1 }[self.uiModel.axis]
+                         if self.uiModel.show_axis
+                         else 0),
+                'how': self.uiModel.how
+                }
+            if self._dataframe is not None:
+                df_numeric = self._dataframe.select_dtypes(['number'])
+                df_object = self._dataframe.select_dtypes(['object'])
+                args['arg'] = df_numeric
+            else:
+                args['arg'] = self._series
+
+            # apply function
+            statistic = rolling_window(** args)
+            
+            if self._dataframe is not None:
+                df_joined = concat([df_object, statistic], axis = 1)
+                df_joined = df_joined[[col for col in self._dataframe.columns]]
+                return {'dataframe': df_joined}                
+            else:
+                return {'series': statistic}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef RollingWindow_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Window Length'
+            tool_tip = model.window_tooltip
+        IntField:
+            value := model.window
+            minimum = model.window_min
+            tool_tip = model.window_tooltip
+
+        Label:
+            text = 'Window Type'
+            tool_tip = model.win_type_tooltip
+        ObjectCombo:
+            items = model.win_type_list
+            selected := model.win_type
+            tool_tip = model.win_type_tooltip
+
+        Conditional:
+            condition << model.win_type == 'kaiser'
+            Label:
+                text = 'Beta'
+            FloatField:
+                value := model.beta
+    
+        Conditional:
+            condition << model.win_type == 'gaussian'
+            Label:
+                text = 'Std'
+            FloatField:
+                value := model.std
+    
+        Conditional:
+            condition << model.win_type == 'general gaussian'
+            Label:
+                text = 'Power'
+            FloatField:
+                value := model.power
+    
+        Conditional:
+            condition << model.win_type in ('general gaussian', 'slepian')
+            Label:
+                text = 'Width'
+            FloatField:
+                value := model.width
+    
+
+        CheckBox:
+            tool_tip = model.min_periods_tooltip
+            text = 'Min Periods'
+            checked := model.use_min_periods
+        Label:
+            text = 'N/A'
+            visible << not model.use_min_periods
+        IntField:
+            value := model.min_periods
+            minimum = model.min_periods_min
+            visible << model.use_min_periods
+            tool_tip = model.min_periods_tooltip
+
+        CheckBox:
+            tool_tip = model.freq_tooltip
+            text = 'Freq'
+            checked := model.use_freq
+        Label:
+            text = 'N/A'
+            visible << not model.use_freq
+        ObjectCombo:
+            items = model.freq_list
+            selected := model.freq
+            visible << model.use_freq
+            tool_tip = model.freq_tooltip
+
+        Label:
+            text = 'Center'
+            tool_tip = model.center_tooltip
+        CheckBox:
+            checked := model.center
+            tool_tip = model.center_tooltip
+
+        Label:
+            text = 'Mean'
+            tool_tip = model.mean_tooltip
+        CheckBox:
+            checked := model.mean
+            tool_tip = model.mean_tooltip
+
+        Conditional:
+            condition = model.show_axis
+            Label:
+                text = 'Axis'
+            ObjectCombo:
+                items = model.axis_list
+                selected := model.axis
+
+        Label:
+            text = 'Resampling Method'
+            tool_tip = model.how_tooltip
+        ObjectCombo:
+            items = model.how_list
+            selected := model.how
+            tool_tip = model.how_tooltip

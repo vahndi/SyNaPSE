@@ -8,16 +8,20 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectC
 from custom_views.fields import IntField
 
 # Models
-from ..._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from .._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
 
 # Pandas
 import pandas as pd
 from pandas import DataFrame, Series, concat
+from pandas.stats.moments import rolling_count
 
 
 
-class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class RollingCount_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
+
+    elementName = 'Rolling Count'
+    
 
     class ui(Atom):
 
@@ -25,11 +29,6 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
         window = Int(1)
         window_min = Int(1)
         window_tooltip = 'Size of the moving window. This is the number of observations used for calculating the statistic.'
-        # min_periods
-        min_periods = Int()
-        min_periods_min = Int(1)
-        use_min_periods = Bool()
-        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
         # center
         center = Bool()
         center_tooltip = 'Set the labels at the center of the window.\n(By default, the result is set to the right edge of the window).'
@@ -54,9 +53,7 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
         self._dataframe = dataframe
         self._series = series
-        self.uiModel = RollingStatistic_Model.ui(window_min = self.window_min,
-                                                 window = self.window_min,
-                                                 how = self.how)
+        self.uiModel = RollingCount_Model.ui()
 
 
     def getOutputs(self):
@@ -66,9 +63,6 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
             # Assign local variables
             args = {
                 'window': self.uiModel.window,
-                'min_periods': (None 
-                                if not self.uiModel.use_min_periods 
-                                else self.uiModel.min_periods),
                 'center': self.uiModel.center,
                 'freq': (self.uiModel.freq
                          if self.uiModel.resample == True 
@@ -86,8 +80,7 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
                 args['arg'] = self._series
                 
             # apply function
-            func = getattr(pd, self.outputFunction)
-            rolling_stat = func(** args)
+            rolling_stat = rolling_count(** args)
             
             if self._dataframe is not None:
                 df_joined = concat([df_object, rolling_stat], axis = 1)
@@ -102,7 +95,7 @@ class RollingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
 
-enamldef RollingStatistic_View(GroupBox): me:
+enamldef RollingCount_View(GroupBox): me:
 
     attr model
 
@@ -115,19 +108,6 @@ enamldef RollingStatistic_View(GroupBox): me:
             value := model.window
             minimum = model.window_min
             tool_tip = model.window_tooltip
-
-        CheckBox:
-            tool_tip = model.min_periods_tooltip
-            text = 'Min Periods'
-            checked := model.use_min_periods
-        Label:
-            text = 'N/A'
-            visible << not model.use_min_periods
-        IntField:
-            value := model.min_periods
-            minimum = model.min_periods_min
-            visible << model.use_min_periods
-            tool_tip = model.min_periods_tooltip
 
         Label:
             text = 'Center'

@@ -111,7 +111,7 @@ def inspect_element_args(pickle_name, module_name = ''):
 if __name__ == '__main__':
 
     generate_element(spreadsheet_name = 'pandas.stats.moments',
-                     element_name = 'ExpandingQuantile')
+                     element_name = 'RollingWindow')
 
 #    inspect_element_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')
