@@ -1,0 +1,123 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import FloatField, IntField
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+
+from pandas import concat, DataFrame, expanding_quantile, Series
+
+
+
+
+class ExpandingQuantile_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+
+    elementName = 'Expanding Quantile'
+
+
+    class ui(Atom):
+
+        # quantile
+        quantile = Float(0.5)
+        quantile_min = Float(0)
+        quantile_max = Float(1)
+        # min_periods
+        min_periods = Int(1)
+        min_periods_min = Int(1)
+        use_min_periods = Bool(True)
+        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+        # freq
+        freq = Str('D')
+        freq_list = List(str, ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+        use_freq = Bool()
+        freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        self.uiModel = ExpandingQuantile_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'quantile': self.uiModel.quantile,
+                'min_periods': (None 
+                                if not self.uiModel.use_min_periods 
+                                else self.uiModel.min_periods),
+                'freq': (None 
+                         if not self.uiModel.use_freq 
+                         else self.uiModel.freq)
+                }
+
+            if self._dataframe is not None:
+                df_numeric = self._dataframe.select_dtypes(['number'])
+                df_object = self._dataframe.select_dtypes(['object'])
+                args['arg'] = df_numeric
+            else:
+                args['arg'] = self._series
+
+            # apply function
+            statistic = expanding_quantile(** args)
+            
+            if self._dataframe is not None:
+                df_joined = concat([df_object, statistic], axis = 1)
+                df_joined = df_joined[[col for col in self._dataframe.columns]]
+                return {'dataframe': df_joined}                
+            else:
+                return {'series': statistic}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef ExpandingQuantile_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Quantile'
+        FloatField:
+            value := model.quantile
+            minimum = model.quantile_min
+            maximum = model.quantile_max
+
+        CheckBox:
+            tool_tip = model.min_periods_tooltip
+            text = 'Min Periods'
+            checked := model.use_min_periods
+        Label:
+            text = 'N/A'
+            visible << not model.use_min_periods
+        IntField:
+            value := model.min_periods
+            minimum = model.min_periods_min
+            visible << model.use_min_periods
+            tool_tip = model.min_periods_tooltip
+
+        CheckBox:
+            tool_tip = model.freq_tooltip
+            text = 'Freq'
+            checked := model.use_freq
+        Label:
+            text = 'N/A'
+            visible << not model.use_freq
+        ObjectCombo:
+            items = model.freq_list
+            selected := model.freq
+            visible << model.use_freq
+            tool_tip = model.freq_tooltip

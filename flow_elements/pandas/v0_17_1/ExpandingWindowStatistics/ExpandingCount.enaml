@@ -1,0 +1,91 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from .._base.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+
+from pandas import concat, DataFrame, expanding_count, Series
+
+
+
+class ExpandingCount_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+
+    elementName = 'Expanding Count'
+
+
+    class ui(Atom):
+
+        # freq
+        freq = Str('D')
+        freq_list = List(str, 
+                         ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
+                         'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
+                         'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+        use_freq = Bool()
+        freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        self.uiModel = ExpandingCount_Model.ui()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'freq': (None 
+                         if not self.uiModel.use_freq 
+                         else self.uiModel.freq)
+                }
+
+            if self._dataframe is not None:
+                df_numeric = self._dataframe.select_dtypes(['number'])
+                df_object = self._dataframe.select_dtypes(['object'])
+                args['arg'] = df_numeric
+            else:
+                args['arg'] = self._series
+
+            # apply function
+            statistic = expanding_count(** args)
+            
+            if self._dataframe is not None:
+                df_joined = concat([df_object, statistic], axis = 1)
+                df_joined = df_joined[[col for col in self._dataframe.columns]]
+                return {'dataframe': df_joined}                
+            else:
+                return {'series': statistic}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef ExpandingCount_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.freq_tooltip
+            text = 'Freq'
+            checked := model.use_freq
+        Label:
+            text = 'N/A'
+            visible << not model.use_freq
+        ObjectCombo:
+            items = model.freq_list
+            selected := model.freq
+            visible << model.use_freq
+            tool_tip = model.freq_tooltip
