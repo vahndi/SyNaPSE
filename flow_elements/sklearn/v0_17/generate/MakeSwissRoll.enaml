@@ -1,0 +1,23 @@
+from ._base.Make1 import Make1_Model
+from ._base.Make1 import Make1_View
+
+from sklearn.datasets import make_swiss_roll
+
+
+
+class MakeSwissRoll_Model(Make1_Model):
+    
+    
+    elementName = 'Make Swiss Roll'
+
+    
+    def __init__(self):
+        
+        Make1_Model.__init__(self)
+        self.outputFunction = make_swiss_roll
+        
+
+
+enamldef MakeSwissRoll_View(Make1_View):
+    
+    pass

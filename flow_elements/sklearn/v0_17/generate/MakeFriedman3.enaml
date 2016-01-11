@@ -1,0 +1,23 @@
+from ._base.Make1 import Make1_Model
+from ._base.Make1 import Make1_View
+
+from sklearn.datasets import make_friedman3
+
+
+
+class MakeFriedman3_Model(Make1_Model):
+    
+    
+    elementName = 'Make Friedman 3'
+
+    
+    def __init__(self):
+        
+        Make1_Model.__init__(self)
+        self.outputFunction = make_friedman3
+        
+
+
+enamldef MakeFriedman3_View(Make1_View):
+    
+    pass

@@ -1,0 +1,23 @@
+from ._base.Make1 import Make1_Model
+from ._base.Make1 import Make1_View
+
+from sklearn.datasets import make_s_curve
+
+
+
+class MakeSCurve_Model(Make1_Model):
+    
+    
+    elementName = 'Make S Curve'
+
+    
+    def __init__(self):
+        
+        Make1_Model.__init__(self)
+        self.outputFunction = make_s_curve
+        
+
+
+enamldef MakeSCurve_View(Make1_View):
+    
+    pass
