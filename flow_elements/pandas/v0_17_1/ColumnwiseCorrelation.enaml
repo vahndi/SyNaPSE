@@ -8,7 +8,7 @@ from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.fields import IntField
 
 # Models
-from ._base.ABCs import ABCDataFrameToDataFrame
+from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 
 
 

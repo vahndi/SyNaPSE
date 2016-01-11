@@ -21,7 +21,7 @@ from pandasFunctions import getConfusionMatrix
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from ..sklearn_element import SKLearnElement
-from ..metrics.clustering_metrics import ClusteringMetrics as cm
+from ..metrics.clustering_metrics import ClusteringMetrics as CM
 
 
 
@@ -121,7 +121,7 @@ class KMeans_Model(SKLearnElement):
             kmeans.fit(X)
             y_pred = Series(kmeans.labels_, 
                             index = X.index, 
-                            name = 'Cluster')
+                            name = 'Predicted Cluster')
             y_pred_cluster = 'Cluster ' + y_pred.apply(str)
             if target_column:
                 df_pred = concat([X, y, y_pred_cluster], axis = 1)
@@ -152,22 +152,32 @@ class KMeans_Model(SKLearnElement):
                 outputs['Confusion Matrix'] = conf_mat
 
             # Create a figure using PCA reduced data (if num input_columns > 2)
-            points_2d = DataFrame(PCA(n_components = 2).fit_transform(X),
-                                  columns = ['PC1', 'PC2'], index = X.index)
-            if target_column:
-                points_2d = concat([points_2d, y, y_pred], axis = 1)
+            if len(input_columns) > 2:
+                clust_fig_name = 'PCA Clusters'
+                points_2d = DataFrame(PCA(n_components = 2).fit_transform(X),
+                                      columns = ['PC1', 'PC2'], index = X.index)
             else:
-                points_2d = concat([points_2d, y_pred], axis = 1)
-            points_2d['Cluster'] = 'Cluster ' + points_2d['Cluster'].apply(str)
-            outputs['PCA Clusters'] = getDataFrameFigure(points_2d)
+                clust_fig_name = 'Clusters'
+                points_2d = self._dataframe[input_columns]
+
+            if target_column:
+                points_2d = concat([points_2d, y, y_pred], 
+                                   axis = 1)
+            else:
+                points_2d = concat([points_2d, y_pred], 
+                                   axis = 1)
+            points_2d['Predicted Cluster'] = (
+                'Cluster ' + points_2d['Predicted Cluster'].apply(str)
+                )
+            outputs[clust_fig_name] = getDataFrameFigure(points_2d)
 
             outputs['Metrics'] = {}
             outputs['Metrics']['Unsupervised'] = ( 
-                                        cm.get_unsupervised_metrics(X, y_pred)
+                                        CM.get_unsupervised_metrics(X, y_pred)
                                                  )
             if target_column:
                 outputs['Metrics']['Supervised'] = ( 
-                                        cm.get_supervised_metrics(y, y_pred)
+                                        CM.get_supervised_metrics(y, y_pred)
                                                  )
             return outputs
         

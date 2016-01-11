@@ -2,7 +2,7 @@
 from enaml.widgets.api import GroupBox
 
 #from models_views.flowElement import FlowElement
-from ._base.ABCs import ABCTakesDataFrame
+from flow_elements.core.ABCs import ABCTakesDataFrame
 # Previous elements
 from flow_elements.pandas.v0_17_1.ReadDataFrame import ReadDataFrame_Model
 

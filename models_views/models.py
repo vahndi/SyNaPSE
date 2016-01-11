@@ -6,7 +6,9 @@ from fileFunctions import getFileNames
 
 
 pkg_sys = (('flow_elements.pandas.v0_17_1', 
-            './flow_elements/pandas/v0_17_1/'),
+            './flow_elements/pandas/v0_17_1'),
+           ('flow_elements.sklearn.v0_17.generate',
+            './flow_elements/sklearn/v0_17/generate'),
            ('flow_elements.pandas.v0_17_1.Statistics', 
             './flow_elements/pandas/v0_17_1/Statistics'),
            ('flow_elements.pandas.v0_17_1.CumulativeStatistics', 
