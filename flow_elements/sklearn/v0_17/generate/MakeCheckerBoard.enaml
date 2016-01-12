@@ -1,0 +1,23 @@
+from ._base.Make2 import Make2_Model
+from ._base.Make2 import Make2_View
+
+from sklearn.datasets import make_checkerboard
+
+
+
+class MakeCheckerBoard_Model(Make2_Model):
+    
+    
+    elementName = 'Make CheckerBoard'
+
+    
+    def __init__(self):
+        
+        Make2_Model.__init__(self)
+        self.outputFunction = make_checkerboard
+        
+
+
+enamldef MakeCheckerBoard_View(Make2_View):
+    
+    pass

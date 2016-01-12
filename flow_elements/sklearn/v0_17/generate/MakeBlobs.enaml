@@ -1,21 +1,18 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int
 
-
 # Enaml
 from enaml.core.api import Conditional
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from flow_elements.core.ABCs import ABCOutputsDataFrame
-
+from _base.ClassificationGenerator import ClassificationGenerator
 from sklearn.datasets import make_blobs
-from pandas import DataFrame, Series, concat
 
 
 
-class MakeBlobs_Model(ABCOutputsDataFrame):
+class MakeBlobs_Model(ClassificationGenerator):
 
 
     elementName = 'Make Blobs'
@@ -55,45 +52,27 @@ class MakeBlobs_Model(ABCOutputsDataFrame):
     def __init__(self):
         
         self.uiModel = MakeBlobs_Model.ui()
+        self.outputFunction = make_blobs
 
 
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'n_samples': self.uiModel.n_samples,
-                'n_features': self.uiModel.n_features,
-                'centers': (None 
-                            if not self.uiModel.use_centers 
-                            else self.uiModel.centers),
-                'cluster_std': (None 
-                                if not self.uiModel.use_cluster_std 
-                                else self.uiModel.cluster_std),
-                'center_box': (self.uiModel.center_box_min,
-                               self.uiModel.center_box_max),
-                'shuffle': self.uiModel.shuffle,
-                'random_state': (None 
-                                 if not self.uiModel.use_random_state 
-                                 else self.uiModel.random_state)
-                }
-
-            X, y = make_blobs(** args)
-            inputs = DataFrame(X)
-            targets = Series(y)
-            targets = 'Class ' + targets.apply(str)
-            
-            dataframe = concat([inputs, targets], axis = 1)
-            dataframe.columns = (['X%i' % i 
-                                  for i in range(self.uiModel.n_features)] + 
-                                 ['Target Class'])
-                                 
-            return {'dataframe': dataframe}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+    def getArgs(self):
+        
+        return {
+            'n_samples': self.uiModel.n_samples,
+            'n_features': self.uiModel.n_features,
+            'centers': (None 
+                        if not self.uiModel.use_centers 
+                        else self.uiModel.centers),
+            'cluster_std': (None 
+                            if not self.uiModel.use_cluster_std 
+                            else self.uiModel.cluster_std),
+            'center_box': (self.uiModel.center_box_min,
+                           self.uiModel.center_box_max),
+            'shuffle': self.uiModel.shuffle,
+            'random_state': (None 
+                             if not self.uiModel.use_random_state 
+                             else self.uiModel.random_state)
+            }
 
 
 

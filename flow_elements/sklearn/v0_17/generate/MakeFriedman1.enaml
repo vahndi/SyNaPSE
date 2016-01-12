@@ -1,17 +1,20 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from RegressionGenerator import RegressionGenerator
+from _base.RegressionGenerator import RegressionGenerator
+from sklearn.datasets import make_friedman1
 
 
 
-class Make1_Model(RegressionGenerator):
+class MakeFriedman1_Model(RegressionGenerator):
+
+
+    elementName = 'Make Friedman 1'
 
 
     class ui(Atom):
@@ -20,6 +23,10 @@ class Make1_Model(RegressionGenerator):
         n_samples = Int(100)
         n_samples_min = Int(1)
         n_samples_tooltip = 'The total number of points generated.'
+        # n_features
+        n_features = Int(10)
+        n_features_min = Int(5)
+        n_features_tooltip = 'The number of features. Should be at least 5.'
         # noise
         noise = Float(0)
         noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
@@ -31,13 +38,15 @@ class Make1_Model(RegressionGenerator):
 
     def __init__(self):
         
-        self.uiModel = Make1_Model.ui()
+        self.uiModel = MakeFriedman1_Model.ui()
+        self.outputFunction = make_friedman1
 
 
     def getArgs(self):
         
         return {
             'n_samples': self.uiModel.n_samples,
+            'n_features': self.uiModel.n_features,
             'noise': self.uiModel.noise,
             'random_state': (None 
                              if not self.uiModel.use_random_state 
@@ -46,19 +55,27 @@ class Make1_Model(RegressionGenerator):
 
 
 
-enamldef Make1_View(GroupBox):
+enamldef MakeFriedman1_View(GroupBox): me:
 
     attr model
 
     Form:
 
         Label:
-            text = '# Samples'
+            text = 'N Samples'
             tool_tip = model.n_samples_tooltip
         IntField:
             value := model.n_samples
             minimum = model.n_samples_min
             tool_tip = model.n_samples_tooltip
+
+        Label:
+            text = 'N Features'
+            tool_tip = model.n_features_tooltip
+        IntField:
+            value := model.n_features
+            minimum = model.n_features_min
+            tool_tip = model.n_features_tooltip
 
         Label:
             text = 'Noise'

@@ -138,6 +138,14 @@ class widget(object):
             if 'optional' in self.w_args:
                 return True
         return False
+        
+    
+    def option_is_True(self):
+        
+        if isinstance(self.w_args, (str, unicode)):
+            if 'optional(True)' in self.w_args:
+                return True
+        return False
 
     
     def has_tooltip(self):

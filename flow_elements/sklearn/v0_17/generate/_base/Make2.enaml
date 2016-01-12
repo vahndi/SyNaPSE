@@ -1,0 +1,148 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField, IntField
+
+# Models
+from flow_elements.core.ABCs import ABCOutputsDataFrame
+
+from pandas import DataFrame, Series, concat
+
+
+
+class Make2_Model(ABCOutputsDataFrame):
+
+
+    class ui(Atom):
+
+        # shape_rows
+        shape_rows = Int(100)
+        shape_rows_tooltip = 'The number of samples to generate.'
+        # shape_cols
+        shape_cols = Int(2)
+        shape_cols_tooltip = 'The number of dimensions of each sample.'
+        # n_clusters
+        n_clusters = Int(5)
+        n_clusters_tooltip = 'The number of biclusters.'
+        # noise
+        noise = Float(0)
+        noise_tooltip = 'The standard deviation of the gaussian noise.'
+        # minval
+        minval = Int(10)
+        minval_tooltip = 'Minimum value of a bicluster.'
+        # maxval
+        maxval = Int(100)
+        maxval_tooltip = 'Maximum value of a bicluster.'
+        # shuffle
+        shuffle = Bool(True)
+        shuffle_tooltip = 'Shuffle the samples.'
+        # random_state
+        random_state = Int(1)
+        use_random_state = Bool()
+        random_state_tooltip = 'The random state seed.'
+
+
+    def __init__(self):
+        
+        self.uiModel = Make2_Model.ui()
+       
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'shape': (self.uiModel.shape_rows,
+                          self.uiModel.shape_cols),
+                'n_clusters': self.uiModel.n_clusters,
+                'noise': self.uiModel.noise,
+                'minval': self.uiModel.minval,
+                'maxval': self.uiModel.maxval,
+                'shuffle': self.uiModel.shuffle,
+                'random_state': (None 
+                                 if not self.uiModel.use_random_state 
+                                 else self.uiModel.random_state)
+                }
+                
+            X, rows, cols = self.outputFunction(** args)
+            dataframe = DataFrame(X)
+            dataframe.columns = ['X%i' % i 
+                                 for i in range(self.uiModel.shape_cols)]
+            
+            return {'dataframe': dataframe}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Make2_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Shape Rows'
+            tool_tip = model.shape_rows_tooltip
+        IntField:
+            value := model.shape_rows
+            tool_tip = model.shape_rows_tooltip
+
+        Label:
+            text = 'Shape Cols'
+            tool_tip = model.shape_cols_tooltip
+        IntField:
+            value := model.shape_cols
+            tool_tip = model.shape_cols_tooltip
+
+        Label:
+            text = 'N Clusters'
+            tool_tip = model.n_clusters_tooltip
+        IntField:
+            value := model.n_clusters
+            tool_tip = model.n_clusters_tooltip
+
+        Label:
+            text = 'Noise'
+            tool_tip = model.noise_tooltip
+        FloatField:
+            value := model.noise
+            tool_tip = model.noise_tooltip
+
+        Label:
+            text = 'Minval'
+            tool_tip = model.minval_tooltip
+        IntField:
+            value := model.minval
+            tool_tip = model.minval_tooltip
+
+        Label:
+            text = 'Maxval'
+            tool_tip = model.maxval_tooltip
+        IntField:
+            value := model.maxval
+            tool_tip = model.maxval_tooltip
+
+        Label:
+            text = 'Shuffle'
+            tool_tip = model.shuffle_tooltip
+        CheckBox:
+            checked := model.shuffle
+            tool_tip = model.shuffle_tooltip
+
+        CheckBox:
+            tool_tip = model.random_state_tooltip
+            text = 'Random State'
+            checked := model.use_random_state
+        Label:
+            text = 'N/A'
+            visible << not model.use_random_state
+        IntField:
+            value := model.random_state
+            visible << model.use_random_state
+            tool_tip = model.random_state_tooltip

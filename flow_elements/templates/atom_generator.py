@@ -1,10 +1,10 @@
 import pandas as pd
 from helpers import spc, widget, strlist_to_liststr
-
+from numpy import int32, int64, float32, float64
 
 
 indent = spc(8)
-
+nums = (int, float, int32, int64, float32, float64)
 
 def get_Atom_Field(widget):
 
@@ -36,8 +36,7 @@ def get_Atom_InputsTargetsSelector(widget):
 
 def get_Atom_IntField(widget):
     
-    str_value = ''    
-    if isinstance(widget.w_value, (int, float)) and pd.notnull(widget.w_value):
+    if isinstance(widget.w_value, nums) and pd.notnull(widget.w_value):
         str_value = str(int(widget.w_value))
     str_atom = '%s%s = Int(%s)\n' % (indent, widget.w_name, str_value)    
 
@@ -54,7 +53,7 @@ def get_Atom_IntField(widget):
 def get_Atom_FloatField(widget):
     
     str_value = ''    
-    if isinstance(widget.w_value, (int, float)) and pd.notnull(widget.w_value):
+    if isinstance(widget.w_value, nums) and pd.notnull(widget.w_value):
         str_value = str(widget.w_value)
     str_atom = '%s%s = Float(%s)\n' % (indent, widget.w_name, str_value) 
 
@@ -118,8 +117,10 @@ def getAtomWidgetCode(widget_row):
     atomCode = '%s# %s\n' % (indent, widge.w_name)
     atomCode += getAtomFunc[widge.w_type](widge)
     if widge.is_optional():
-        if 'optional' in widge.w_args:
-            atomCode += '%suse_%s = Bool()\n' % (indent, widge.w_name)
+        true_str = ('True' if widge.option_is_True()
+                      else '')
+        atomCode += '%suse_%s = Bool(%s)\n' % (indent, widge.w_name, true_str)
+            
     if widge.has_tooltip():
         atomCode += "%s%s_tooltip = '%s'\n" % (indent, widge.w_name, 
                                                widge.get_tooltip())

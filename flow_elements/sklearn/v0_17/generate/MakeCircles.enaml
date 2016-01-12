@@ -1,20 +1,17 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from flow_elements.core.ABCs import ABCOutputsDataFrame
-
+from _base.ClassificationGenerator import ClassificationGenerator
 from sklearn.datasets import make_circles
-from pandas import DataFrame, Series, concat
 
 
 
-class MakeCircles_Model(ABCOutputsDataFrame):
+class MakeCircles_Model(ClassificationGenerator):
 
 
     elementName = 'Make Circles'
@@ -47,39 +44,22 @@ class MakeCircles_Model(ABCOutputsDataFrame):
     def __init__(self):
         
         self.uiModel = MakeCircles_Model.ui()
+        self.outputFunction = make_circles
 
 
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'n_samples': self.uiModel.n_samples,
-                'factor': self.uiModel.factor,
-                'noise': (None 
-                          if not self.uiModel.use_noise 
-                          else self.uiModel.noise),
-                'shuffle': self.uiModel.shuffle,
-                'random_state': (None 
-                                 if not self.uiModel.use_random_state 
-                                 else self.uiModel.random_state)
-                }
-
-            X, y = make_circles(** args)
-            inputs = DataFrame(X)
-            targets = Series(y)
-            targets = 'Class ' + targets.apply(str)
-            
-            dataframe = concat([inputs, targets], axis = 1)
-            dataframe.columns = (['X1', 'X2', 'Target Class'])
-
-            return {'dataframe': dataframe}
-            
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+    def getArgs(self):
+        
+        return {
+            'n_samples': self.uiModel.n_samples,
+            'factor': self.uiModel.factor,
+            'noise': (None 
+                      if not self.uiModel.use_noise 
+                      else self.uiModel.noise),
+            'shuffle': self.uiModel.shuffle,
+            'random_state': (None 
+                             if not self.uiModel.use_random_state 
+                             else self.uiModel.random_state)
+            }
 
 
 

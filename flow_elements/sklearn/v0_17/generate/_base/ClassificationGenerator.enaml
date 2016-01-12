@@ -1,0 +1,28 @@
+from pandas import DataFrame, Series, concat
+from flow_elements.core.ABCs import ABCOutputsDataFrame
+
+
+
+class ClassificationGenerator(ABCOutputsDataFrame):
+
+
+    def getOutputs(self):
+
+        try:
+
+            args = self.getArgs()
+            X, y = self.outputFunction(** args)
+            inputs = DataFrame(X)
+            targets = Series(y)
+            targets = 'Class ' + targets.apply(str)
+            
+            dataframe = concat([inputs, targets], axis = 1)
+            dataframe.columns = (['X%i' % i 
+                                  for i in range(X.shape[1])] + 
+                                 ['Target Class'])
+                                 
+            return {'dataframe': dataframe}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
