@@ -24,7 +24,7 @@ class ABCClassificationModel(ABCLinearModel):
                                             target_dtypes = [int64, object]
                                             )
     
-    
+
     def train_test_model(self):
         
         target_column = self.input_selector.selected_target()        
@@ -40,15 +40,16 @@ class ABCClassificationModel(ABCLinearModel):
 
         # Create confusion matrices
         self.labels = sorted(self._dataframe[target_column].unique())
-        self.confusion_matrix_train = DataFrame(confusion_matrix(y_train, 
-                                                                 y_pred_train),
-                                                index = self.labels,
-                                                columns = self.labels)
-        self.confusion_matrix_test = DataFrame(confusion_matrix(self.y_test, 
-                                                                self.y_pred_test),
-                                                index = self.labels,
-                                                columns = self.labels)
-
+        self.confusion_matrix_train = DataFrame(
+                            confusion_matrix(y_train,  y_pred_train),
+                            index = self.labels,
+                            columns = self.labels
+                            )
+        self.confusion_matrix_test = DataFrame(
+                            confusion_matrix(self.y_test, self.y_pred_test),
+                            index = self.labels,
+                            columns = self.labels
+                            )
 
         # Create a prediction summary dataframe
         self.df_predictions = joinInputsTargetsPredictions(
@@ -69,3 +70,45 @@ class ABCClassificationModel(ABCLinearModel):
         return CM.get_metrics(self.y_test, self.y_pred_test,
                               'multiclass') # TODO: pass the right classification type
 
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}              
+
+            # Create Logistic Regression model
+            self.estimator = self.estimator_type(** args)
+            self.train_test_model()
+    
+            # Return outputs 
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()       
+
+#            return {'Attributes': attributes,
+#                    'Metrics': metrics,
+#                    'dataframe': self.df_predictions,
+#                    'Confusion Matrix': 
+#                        {'training': self.confusion_matrix_train,
+#                         'test': self.confusion_matrix_test}
+#                    }
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataframe': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions,
+                    'Confusion Matrix': 
+                        {'training': self.confusion_matrix_train,
+                         'test': self.confusion_matrix_test}
+                    }
+
+        except Exception as e:
+                
+            return {'Exception':{'__class__': str(e.__class__),
+                                 '__doc__': e.__doc__,
+                                 'message': e.message}}

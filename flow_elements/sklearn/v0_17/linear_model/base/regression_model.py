@@ -13,7 +13,7 @@ from ...metrics.regression_metrics import RegressionMetrics as RM
 
 class ABCRegressionModel(ABCLinearModel):
 
-    
+
     def set_inputs(self, dataframe):
         
         self._dataframe = dataframe
@@ -21,8 +21,8 @@ class ABCRegressionModel(ABCLinearModel):
                                             dataframe, 
                                             target_dtypes = [float64, int64]
                                             )
-    
-    
+
+
     def train_test_model(self):
         
         target_column = self.input_selector.selected_target()        
@@ -55,3 +55,31 @@ class ABCRegressionModel(ABCLinearModel):
         
         return RM.get_metrics(self.y_test, self.y_pred_test)
 
+
+    def getOutputs(self):
+
+        try:
+            
+            # Assign local variables
+            args = self.getArgs()
+            
+            # Validate inputs
+            if not self.input_selector.validate_inputs():
+                return {'Outputs': 'No Outputs'}  
+    
+            # Create Regression model
+            self.estimator = self.estimator_type(** args)
+            self.train_test_model()
+
+            # Return outputs
+            attributes = self.get_attributes()
+            metrics = self.get_metrics()
+            
+            return {'Attributes': attributes,
+                    'Metrics': metrics,
+                    'dataframe': self.df_predictions,
+                    'Target vs. Predicted': self.df_targets_predictions}
+
+        except Exception as e:
+
+            return self.standard_exception(e)

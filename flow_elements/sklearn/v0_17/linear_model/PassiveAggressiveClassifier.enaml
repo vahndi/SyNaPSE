@@ -54,7 +54,8 @@ class PassiveAggressiveClassifier_Model(ABCClassificationModel):
 
 
     def setInputs(self, dataframe):
-
+        
+        self.estimator_type = PassiveAggressiveClassifier
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
         self.uiModel = PassiveAggressiveClassifier_Model.ui(
@@ -63,50 +64,20 @@ class PassiveAggressiveClassifier_Model(ABCClassificationModel):
                             )
 
 
-    def getOutputs(self):
-
-        try:
-    
-            # Assign local variables
-            args = {'C': self.uiModel.C,
-                    'fit_intercept': self.uiModel.fit_intercept,
-                    'n_iter': self.uiModel.n_iter,
-                    'shuffle': self.uiModel.shuffle,
-                    'verbose': self.uiModel.verbose,
-                    'loss': self.uiModel.loss,
-                    'random_state': self.uiModel.random_state,
-                    'warm_start': self.uiModel.warm_start,
-                    'class_weight': ('auto'
-                                     if self.uiModel.class_weight == 'balanced'
-                                     else None),
-                    'n_jobs': self.cores_selector.number_of_cores()}
-
-            # Validate inputs
-            if not self.input_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}              
-
-            # Create PassiveAggressiveClassifier model
-            self.estimator = PassiveAggressiveClassifier(**args)
-            self.train_test_model()
-
-            # Return outputs 
-            attributes = self.get_attributes()
-            metrics = self.get_metrics()       
-
-            return {'Attributes': attributes,
-                    'Metrics': metrics,
-                    'dataframe': self.df_predictions,
-                    'Target vs. Predicted': self.df_targets_predictions,
-                    'Confusion Matrix': 
-                        {'training': self.confusion_matrix_train,
-                         'test': self.confusion_matrix_test}
-                    }
-
-        except Exception as e:
-                
-            return {'Exception':{'__class__': str(e.__class__),
-                                 '__doc__': e.__doc__,
-                                 'message': e.message}}
+    def getArgs(self):
+        
+        return {'C': self.uiModel.C,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'n_iter': self.uiModel.n_iter,
+                'shuffle': self.uiModel.shuffle,
+                'verbose': self.uiModel.verbose,
+                'loss': self.uiModel.loss,
+                'random_state': self.uiModel.random_state,
+                'warm_start': self.uiModel.warm_start,
+                'class_weight': ('auto'
+                                 if self.uiModel.class_weight == 'balanced'
+                                 else None),
+                'n_jobs': self.cores_selector.number_of_cores()}
 
 
 

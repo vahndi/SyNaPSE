@@ -15,7 +15,8 @@ from sklearn.linear_model import Ridge
 
 class Ridge_Model(ABCRegressionModel):
 
-    elementName = 'Ridge'
+
+    elementName = 'Ridge Regression'
     elementDescription = 'Linear least squares with l2 regularization.'
     elementDocumentation = ABCRegressionModel.doc_root + 'Ridge.html'
 
@@ -50,48 +51,25 @@ class Ridge_Model(ABCRegressionModel):
 
     def setInputs(self, dataframe):
         
+        self.estimator_type = Ridge
         self.set_inputs(dataframe)
         self.uiModel = Ridge_Model.ui(
                             input_selector = self.input_selector.uiModel
                             )
 
 
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {'alpha': self.uiModel.alpha,
-                    'fit_intercept': self.uiModel.fit_intercept,
-                    'normalize': self.uiModel.normalize,
-                    'copy_X': self.uiModel.copy_X,
-                    'max_iter': (self.uiModel.max_iter_int 
-                                 if self.uiModel.max_iter_type == 'int'
-                                 else None),
-                    'tol': self.uiModel.tol,
-                    'solver': self.uiModel.solver,
-                    'random_state': self.uiModel.random_state}
-
-            # Validate inputs
-            if not self.input_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}  
-    
-            # Create Ridge Regression model
-            self.estimator = Ridge(**args)
-            self.train_test_model()
-
-            # Return outputs
-            attributes = self.get_attributes()
-            metrics = self.get_metrics()
-            
-            return {'Attributes': attributes,
-                    'Metrics': metrics,
-                    'dataframe': self.df_predictions,
-                    'Target vs. Predicted': self.df_targets_predictions}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+    def getArgs(self):
+        
+        return {'alpha': self.uiModel.alpha,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'normalize': self.uiModel.normalize,
+                'copy_X': self.uiModel.copy_X,
+                'max_iter': (self.uiModel.max_iter_int 
+                             if self.uiModel.max_iter_type == 'int'
+                             else None),
+                'tol': self.uiModel.tol,
+                'solver': self.uiModel.solver,
+                'random_state': self.uiModel.random_state}
 
 
 

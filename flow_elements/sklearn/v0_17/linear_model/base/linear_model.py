@@ -65,7 +65,6 @@ class ABCLinearModel(SKLearnElement):
                                           
         if hasattr(self.estimator, 'n_iter_'):
             if self.estimator.n_iter_ is not None:
-                print 'n_iter_'
                 attributes['num_iterations'] = squeeze(self.estimator.n_iter_)
 
         if hasattr(self.estimator, 'n_subpopulation_'):

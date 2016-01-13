@@ -89,7 +89,6 @@ class ClassificationMetrics(object):
         scores_dict = {}
         losses_dict = {}
         metrics = cls.metrics[classification_type]
-        print 'metrics:', metrics
         averages = [None, 'binary', 'micro', 'macro', 'samples', 'weighted']
         averages_m = [None, 'micro', 'macro', 'samples', 'weighted']
 
@@ -97,7 +96,6 @@ class ClassificationMetrics(object):
             pos_label = None
 
         if accuracy_score in metrics:
-            print 'accuracy_score'
             scores_dict['accuracy'] = accuracy_score(
                                                 y_true, y_pred, 
                                                 normalize = normalize, 
@@ -105,7 +103,6 @@ class ClassificationMetrics(object):
                                                 )
 
         if f1_score in metrics:
-            print 'f1_score'
             for average in averages:
                 scores_dict['F1'] = f1_score(y_true, y_pred, 
                                              labels = labels, 
@@ -114,7 +111,6 @@ class ClassificationMetrics(object):
                                              sample_weight = sample_weights)
         
         if fbeta_score in metrics and beta is not None:
-            print 'fbeta_score'
             f_beta = 'F%s' % str(beta)
             scores_dict[f_beta] = {}
             for average in averages:
@@ -128,31 +124,26 @@ class ClassificationMetrics(object):
 
 
         if hamming_loss in metrics:
-            print 'hamming'
             losses_dict['hamming'] = hamming_loss(y_true, y_pred, 
                                                   classes = classes)
 
         if jaccard_similarity_score in metrics:
-            print 'jaccard_similarity'
             scores_dict['jaccard_similarity_score'] = jaccard_similarity_score(
                                                 y_true, y_pred, 
                                                 normalize = normalize,
                                                 sample_weight = sample_weights
                                                 )
         if log_loss in metrics:
-            print 'log'
             losses_dict['log_loss'] = log_loss(y_true, y_pred, 
                                                eps = eps, 
                                                normalize = normalize, 
                                                sample_weight = sample_weights)
         
         if matthews_corrcoef in metrics:
-            print 'matthews_corrcoef'
             scores_dict['matthews_corrcoef'
                         ] = matthews_corrcoef(y_true, y_pred)
 
         if precision_score in metrics:
-            print 'precision score'
             scores_dict['precision'] = {}
             for average in averages:
                 scores_dict['Precision'
@@ -165,7 +156,6 @@ class ClassificationMetrics(object):
                                                 )
 
         if recall_score in metrics:
-            print 'recall score'
             scores_dict['recall'] = {}
             for average in averages:
                 scores_dict['Recall'][average] = recall_score(
@@ -177,7 +167,6 @@ class ClassificationMetrics(object):
                                                 )
 
         if precision_recall_fscore_support in metrics:
-            print 'precision_recall_fscore_support'
             for average in averages:
                 (scores_dict['precision'], 
                  scores_dict['recall'], 
@@ -193,7 +182,6 @@ class ClassificationMetrics(object):
                                                 )
 
         if roc_auc_score in metrics and y_proba is not None:
-            print 'roc_auc_score'
             scores_dict['roc_auc'] = {}
             for average in averages_m:
                 scores_dict['roc_auc'][average] = roc_auc_score(
@@ -206,7 +194,6 @@ class ClassificationMetrics(object):
 #            pass
 #        
         if zero_one_loss in metrics:
-            print 'zero_one_loss'
             losses_dict['zero_one'] = zero_one_loss(
                                                 y_true, y_pred,
                                                 normalize = normalize,
@@ -214,7 +201,6 @@ class ClassificationMetrics(object):
 
         
         if average_precision_score in metrics and y_proba is not None:
-            print 'average_precision_score'
             scores_dict['average_precision'] = {}
             for average in averages_m:
                 scores_dict['average_precision'
@@ -224,7 +210,6 @@ class ClassificationMetrics(object):
                                                 sample_weight = sample_weights)
         
         if confusion_matrix in metrics:
-            print 'confusion_matrix'
             conf_mat = confusion_matrix(y_true, y_pred,
                                         labels = labels)
             if classes is not None:

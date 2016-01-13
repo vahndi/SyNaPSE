@@ -75,6 +75,7 @@ class LogisticRegression_Model(ABCClassificationModel):
 
     def setInputs(self, dataframe):
 
+        self.estimator_type = LogisticRegression
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
         self.uiModel = LogisticRegression_Model.ui(
@@ -83,66 +84,36 @@ class LogisticRegression_Model(ABCClassificationModel):
                             )
 
 
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {'solver': self.uiModel.solver,
-                    'penalty': ('l2' 
-                                if self.uiModel.solver in ('newton-cg', 
-                                                           'lbfgs')
-                                else self.uiModel.penalty),
-                    'dual': (self.uiModel.dual
-                             if (self.uiModel.penalty == 'l2' and 
-                                 self.uiModel.solver == 'liblinear')
-                             else None),
-                    'tol': self.uiModel.tolerance,
-                    'C': self.uiModel.C,
-                    'fit_intercept': self.uiModel.fit_intercept,
-                    'intercept_scaling': (self.uiModel.intercept_scaling
-                                          if self.uiModel.fit_intercept
-                                          else None),
-                    'class_weight': ('balanced'
-                                     if self.uiModel.class_weight_type == 'balanced'
-                                     else None),
-                    'max_iter': self.uiModel.max_iterations,
-                    'multi_class': (self.uiModel.multi_class
-                                    if self.uiModel.solver == 'lbfgs'
-                                    else 'ovr'),
-                    'random_state': self.uiModel.random_state_seed,
-                    'verbose': self.uiModel.verbose,
-                    'warm_start': (self.uiModel.warm_start
-                                   if self.uiModel.solver != 'liblinear'
-                                   else None),
-                    'n_jobs': self.cores_selector.number_of_cores()}
-            
-            # Validate inputs
-            if not self.input_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}              
-
-            # Create Logistic Regression model
-            self.estimator = LogisticRegression(**args)
-            self.train_test_model()
-    
-            # Return outputs 
-            attributes = self.get_attributes()
-            metrics = self.get_metrics()       
-
-            return {'Attributes': attributes,
-                    'Metrics': metrics,
-                    'dataframe': self.df_predictions,
-                    'Target vs. Predicted': self.df_targets_predictions,
-                    'Confusion Matrix': 
-                        {'training': self.confusion_matrix_train,
-                         'test': self.confusion_matrix_test}
-                    }
-
-        except Exception as e:
-                
-            return {'Exception':{'__class__': str(e.__class__),
-                                 '__doc__': e.__doc__,
-                                 'message': e.message}}
+    def getArgs(self):
+        
+        return {'solver': self.uiModel.solver,
+                'penalty': ('l2' 
+                            if self.uiModel.solver in ('newton-cg', 
+                                                       'lbfgs')
+                            else self.uiModel.penalty),
+                'dual': (self.uiModel.dual
+                         if (self.uiModel.penalty == 'l2' and 
+                             self.uiModel.solver == 'liblinear')
+                         else None),
+                'tol': self.uiModel.tolerance,
+                'C': self.uiModel.C,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'intercept_scaling': (self.uiModel.intercept_scaling
+                                      if self.uiModel.fit_intercept
+                                      else None),
+                'class_weight': ('balanced'
+                                 if self.uiModel.class_weight_type == 'balanced'
+                                 else None),
+                'max_iter': self.uiModel.max_iterations,
+                'multi_class': (self.uiModel.multi_class
+                                if self.uiModel.solver == 'lbfgs'
+                                else 'ovr'),
+                'random_state': self.uiModel.random_state_seed,
+                'verbose': self.uiModel.verbose,
+                'warm_start': (self.uiModel.warm_start
+                               if self.uiModel.solver != 'liblinear'
+                               else None),
+                'n_jobs': self.cores_selector.number_of_cores()}
 
 
 

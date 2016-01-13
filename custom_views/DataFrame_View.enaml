@@ -142,8 +142,8 @@ def getDataFrameFigure(dataframe):
     # Determine if the unique values of the first 2 columns are identical
     cols01uniqueequal = False
     if len(dataframe) > 0 and nc >= 2:
-        cols01uniqueequal = (dataframe.ix[:, 0].unique() == 
-                             dataframe.ix[:, 1].unique())
+        cols01uniqueequal = (set(dataframe.ix[:, 0].unique()) == 
+                             set(dataframe.ix[:, 1].unique()))
 
     # Create plot function mapping based on number of numeric and object cols    
     nnc_noc_fig = {(1, 0): distribution_fig,
@@ -157,7 +157,7 @@ def getDataFrameFigure(dataframe):
     if all_cols_int and index_is_obj:
         return confmat_fig(dataframe)
 
-    elif nnc == 0 and noc == 3 and cols01uniqueequal:        
+    elif nnc == 0 and noc == 3 and cols01uniqueequal:    
         return confmat_cat__a_fig(dataframe)            
 
     elif (nnc, noc) in nnc_noc_fig.keys():
