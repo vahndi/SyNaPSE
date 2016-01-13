@@ -189,7 +189,7 @@ class ClassificationMetrics(object):
                                                 average = average,
                                                 sample_weight = sample_weights
                                                 )
-        
+        #TODO: roc_curve
 #        if roc_curve in metrics:
 #            pass
 #        
@@ -218,6 +218,7 @@ class ClassificationMetrics(object):
                                      columns = classes)
             scores_dict['confusion_matrix'] = conf_mat
         
+        #TODO: hinge_loss
 #        if  hinge_loss in metrics:
 #            pass
 #

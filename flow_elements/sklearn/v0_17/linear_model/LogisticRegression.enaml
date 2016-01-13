@@ -16,7 +16,7 @@ from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
 # Other
-from .base.classification_model import ABCClassificationModel
+from ._base.classification_model import ABCClassificationModel
 from sklearn.linear_model import LogisticRegression
 
 from pandas import DataFrame, Series

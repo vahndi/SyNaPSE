@@ -1,20 +1,21 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int
 
+
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from _base.ClassificationGenerator import LabelClassificationGenerator
-from sklearn.datasets import make_circles
+from ._base.ClassificationGenerator import NumericClassificationGenerator
+from sklearn.datasets import make_moons
 
 
 
-class MakeCircles_Model(LabelClassificationGenerator):
+class MakeMoons_Model(NumericClassificationGenerator):
 
 
-    elementName = 'Make Circles'
+    elementName = 'Make Moons'
 
 
     class ui(Atom):
@@ -23,38 +24,30 @@ class MakeCircles_Model(LabelClassificationGenerator):
         n_samples = Int(100)
         n_samples_min = Int(1)
         n_samples_tooltip = 'The total number of points generated.'
-        # factor
-        factor = Float(0.8)
-        factor_min = Float(0)
-        factor_max = Float(1)
-        factor_tooltip = 'Scale factor between inner and outer circle.'
         # noise
-        noise = Float(0.05)
-        use_noise = Bool()
-        noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
+        noise = Float(1)
+        noise_min = Float(1e-9)
+        noise_tooltip = 'Standard deviation of Gaussian noise added to the data (>0).'
         # shuffle
         shuffle = Bool(True)
         shuffle_tooltip = 'Whether to shuffle the samples.'
         # random_state
         random_state = Int(1)
-        use_random_state = Bool()
+        use_random_state = Bool(True)
         random_state_tooltip = 'The random state seed.'
 
 
     def __init__(self):
         
-        self.uiModel = MakeCircles_Model.ui()
-        self.outputFunction = make_circles
+        self.uiModel = MakeMoons_Model.ui()
+        self.outputFunction = make_moons
 
 
     def getArgs(self):
-        
+
         return {
             'n_samples': self.uiModel.n_samples,
-            'factor': self.uiModel.factor,
-            'noise': (None 
-                      if not self.uiModel.use_noise 
-                      else self.uiModel.noise),
+            'noise': self.uiModel.noise,
             'shuffle': self.uiModel.shuffle,
             'random_state': (None 
                              if not self.uiModel.use_random_state 
@@ -63,14 +56,14 @@ class MakeCircles_Model(LabelClassificationGenerator):
 
 
 
-enamldef MakeCircles_View(GroupBox): me:
+enamldef MakeMoons_View(GroupBox): me:
 
     attr model
 
     Form:
 
         Label:
-            text = 'N Samples'
+            text = '# Samples'
             tool_tip = model.n_samples_tooltip
         IntField:
             value := model.n_samples
@@ -78,24 +71,11 @@ enamldef MakeCircles_View(GroupBox): me:
             tool_tip = model.n_samples_tooltip
 
         Label:
-            text = 'Factor'
-            tool_tip = model.factor_tooltip
-        FloatField:
-            value := model.factor
-            minimum = model.factor_min
-            maximum = model.factor_max
-            tool_tip = model.factor_tooltip
-
-        CheckBox:
-            tool_tip = model.noise_tooltip
             text = 'Noise'
-            checked := model.use_noise
-        Label:
-            text = 'N/A'
-            visible << not model.use_noise
+            tool_tip = model.noise_tooltip
         FloatField:
             value := model.noise
-            visible << model.use_noise
+            minimum = model.noise_min
             tool_tip = model.noise_tooltip
 
         Label:

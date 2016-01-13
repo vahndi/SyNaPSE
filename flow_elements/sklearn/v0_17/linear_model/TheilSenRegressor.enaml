@@ -12,7 +12,7 @@ from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 
 # Models
-from .base.regression_model import ABCRegressionModel
+from ._base.regression_model import ABCRegressionModel
 from sklearn.linear_model import TheilSenRegressor
 
 

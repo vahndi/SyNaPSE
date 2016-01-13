@@ -1,26 +1,57 @@
-from pandas import DataFrame, Series, concat
-from flow_elements.core.ABCs import ABCOutputsDataFrame
+from pandas import DataFrame, Series, Index, concat
+from flow_elements.core.ABCs import ABCOutputsDataFrame, ABCOutputsSeries
 
 
 
-class RegressionGenerator(ABCOutputsDataFrame):
+class RegressionGenerator(ABCOutputsDataFrame, ABCOutputsSeries):
 
 
     def getOutputs(self):
 
         try:
-
-            args = self.getArgs()
-            X, y = self.outputFunction(** args)
-            inputs = DataFrame(X)
-            targets = Series(y)
             
-            dataframe = concat([inputs, targets], axis = 1)
-            dataframe.columns = (['X%i' % i 
-                                  for i in range(X.shape[1])] + 
-                                 ['Target Value'])
+            # Calculate outputs
+            args = self.getArgs()
+            model_outputs = self.outputFunction(** args)
+            
+            # Get features(X) and targets(Y)
+            X, Y = model_outputs[0], model_outputs[1]
 
-            return {'dataframe': dataframe}
+            # Features
+            features = DataFrame(X)
+            feature_columns = ['X%i' % i for i in range(X.shape[1])]
+
+            # Targets                        
+            if Y.ndim == 1:
+                targets = Series(Y)
+                target_columns = ['y']
+            else:
+                targets = DataFrame(Y)                
+                target_columns = ['Y%i' % i for i in range(Y.shape[1])]
+            
+            # Join Features and Targets
+            dataframe = concat([features, targets], axis = 1)
+            dataframe.columns = (feature_columns + target_columns)
+            outputs = {'dataframe': dataframe}
+
+            # Add coefficients
+            if len(model_outputs) == 3:
+                if model_outputs[2].ndim == 1:
+                    coefficients = Series(model_outputs[2],
+                                          index = Index(feature_columns,
+                                                        name = 'feature'),
+                                          name = 'coefficient')
+                else:
+                    coefficients = DataFrame(
+                        model_outputs[2],
+                        index = Index(feature_columns,
+                                      name = 'feature'),
+                        columns = ['coefficient_%i' %i
+                                   for i in range(model_outputs[2].shape[1])]
+                        )
+                outputs ['coefficients'] = coefficients      
+
+            return outputs
 
         except Exception as e:
 

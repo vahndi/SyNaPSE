@@ -1,0 +1,197 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int
+
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField, IntField
+
+# Models
+from ._base.RegressionGenerator import RegressionGenerator
+from sklearn.datasets import make_regression
+
+
+
+class MakeRegression_Model(RegressionGenerator):
+
+
+    elementName = 'Make Regression'
+
+
+    class ui(Atom):
+
+        # n_samples
+        n_samples = Int(100)
+        n_samples_min = Int(1)
+        n_samples_tooltip = 'The number of samples.'
+        # n_features
+        n_features = Int(20)
+        n_features_min = Int(1)
+        n_features_tooltip = 'The number of features.'
+        # n_informative
+        n_informative = Int(10)
+        n_informative_min = Int(0)
+        n_informative_tooltip = 'The number of informative features, i.e., the number of features used to build the linear model used to generate the output.'
+        # n_targets
+        n_targets = Int(1)
+        n_targets_min = Int(1)
+        n_targets_tooltip = 'The number of regression targets, i.e., the dimension of the y output vector associated with a sample. By default, the output is a scalar.'
+        # bias
+        bias = Float(0.0)
+        bias_tooltip = 'The bias term in the underlying model.'
+        # effective_rank
+        effective_rank = Int(1)
+        use_effective_rank = Bool()
+        effective_rank_tooltip = 'if not None:\n\\tThe approximate number of singular vectors required to explain most of the input data by linear combinations. \n\\tUsing this kind of singular spectrum in the input allows the generator to reproduce the correlations often observed in practice.\nif None:\n\\tThe input set is well conditioned, centered and gaussian with unit variance.'
+        # tail_strength
+        tail_strength = Float(0.5)
+        tail_strength_min = Float(0)
+        tail_strength_max = Float(1)
+        tail_strength_tooltip = 'The relative importance of the fat noisy tail of the singular values profile if effective_rank is not None.'
+        # noise
+        noise = Float(0.0)
+        noise_tooltip = 'The standard deviation of the gaussian noise applied to the output.\n'
+        # coef
+        coef = Bool()
+        coef_tooltip = 'If True, the coefficients of the underlying linear model are returned.'
+        # shuffle
+        shuffle = Bool(True)
+        shuffle_tooltip = 'Shuffle the samples and the features.'
+        # random_state
+        random_state = Int(1)
+        use_random_state = Bool()
+        random_state_tooltip = 'The random state seed.'
+
+
+    def __init__(self):
+        
+        self.uiModel = MakeRegression_Model.ui()
+        self.outputFunction = make_regression
+
+
+    def getArgs(self):
+
+        return {
+            'n_samples': self.uiModel.n_samples,
+            'n_features': self.uiModel.n_features,
+            'n_informative': self.uiModel.n_informative,
+            'n_targets': self.uiModel.n_targets,
+            'bias': self.uiModel.bias,
+            'effective_rank': (None 
+                               if not self.uiModel.use_effective_rank 
+                               else self.uiModel.effective_rank),
+            'tail_strength': (self.uiModel.tail_strength
+                              if self.uiModel.use_effective_rank 
+                              else None),
+            'noise': self.uiModel.noise,
+            'coef': self.uiModel.coef,
+            'shuffle': self.uiModel.shuffle,
+            'random_state': (None 
+                             if not self.uiModel.use_random_state 
+                             else self.uiModel.random_state)
+            }
+
+
+
+enamldef MakeRegression_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = '# Samples'
+            tool_tip = model.n_samples_tooltip
+        IntField:
+            value := model.n_samples
+            minimum = model.n_samples_min
+            tool_tip = model.n_samples_tooltip
+
+        Label:
+            text = '# Features'
+            tool_tip = model.n_features_tooltip
+        IntField:
+            value := model.n_features
+            minimum = model.n_features_min
+            tool_tip = model.n_features_tooltip
+
+        Label:
+            text = '# Informative'
+            tool_tip = model.n_informative_tooltip
+        IntField:
+            value := model.n_informative
+            minimum = model.n_informative_min
+            tool_tip = model.n_informative_tooltip
+
+        Label:
+            text = '# Targets'
+            tool_tip = model.n_targets_tooltip
+        IntField:
+            value := model.n_targets
+            minimum = model.n_targets_min
+            tool_tip = model.n_targets_tooltip
+
+        Label:
+            text = 'Bias'
+            tool_tip = model.bias_tooltip
+        FloatField:
+            value := model.bias
+            tool_tip = model.bias_tooltip
+
+        CheckBox:
+            tool_tip = model.effective_rank_tooltip
+            text = 'Effective Rank'
+            checked := model.use_effective_rank
+        Label:
+            text = 'N/A'
+            visible << not model.use_effective_rank
+        IntField:
+            value := model.effective_rank
+            visible << model.use_effective_rank
+            tool_tip = model.effective_rank_tooltip
+
+        Conditional:
+            condition << model.use_effective_rank
+            Label:
+                text = 'Tail Strength'
+                tool_tip = model.tail_strength_tooltip
+            FloatField:
+                value := model.tail_strength
+                minimum = model.tail_strength_min
+                maximum = model.tail_strength_max
+                tool_tip = model.tail_strength_tooltip
+    
+
+        Label:
+            text = 'Noise'
+            tool_tip = model.noise_tooltip
+        FloatField:
+            value := model.noise
+            tool_tip = model.noise_tooltip
+
+        Label:
+            text = 'Return Coefficients'
+            tool_tip = model.coef_tooltip
+        CheckBox:
+            checked := model.coef
+            tool_tip = model.coef_tooltip
+
+        Label:
+            text = 'Shuffle'
+            tool_tip = model.shuffle_tooltip
+        CheckBox:
+            checked := model.shuffle
+            tool_tip = model.shuffle_tooltip
+
+        CheckBox:
+            tool_tip = model.random_state_tooltip
+            text = 'Random State'
+            checked := model.use_random_state
+        Label:
+            text = 'N/A'
+            visible << not model.use_random_state
+        IntField:
+            value := model.random_state
+            visible << model.use_random_state
+            tool_tip = model.random_state_tooltip

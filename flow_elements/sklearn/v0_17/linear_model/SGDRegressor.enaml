@@ -10,7 +10,7 @@ from custom_views.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from .base.regression_model import ABCRegressionModel
+from ._base.regression_model import ABCRegressionModel
 from ..shared.CoresSelector import CoresSelector_Model
 from ..shared.CoresSelector import CoresSelector_View
 from sklearn.linear_model import SGDRegressor
