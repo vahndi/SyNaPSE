@@ -21,7 +21,7 @@ class CheckBoxListItem(object):
 
     def toggle(self, value):
         
-        self.container.toggleItem(self, value)
+        self.container.toggle_item(self, value)
 
 
 
@@ -30,62 +30,114 @@ class CheckBoxList_Model(object):
 
     class ui(Atom):
 
-        checkItems = ContainerList(CheckBoxListItem)
-        checkedIndices = ContainerList(int)
-        hasScrollArea = Bool(True)
-        checkAllFunction = Callable(None)
-        uncheckAllFunction = Callable(None)
+        check_items = ContainerList(CheckBoxListItem)
+        checked_indices = ContainerList(int)
+        fn_check_all = Callable(None)
+        fn_uncheck_all = Callable(None)
         
     
-    def __init__(self, itemNames, checkedIndices = [],
-                 hasScrollArea = True, checkAll = True, uncheckAll = True):
+    def __init__(self, item_names, checked_indices = [],
+                 check_all = True, uncheck_all = True):
 
         self.items = [CheckBoxListItem(name, self) 
-                       for name in list(itemNames)]   
-        self.checkedIndices = checkedIndices
-        checkAllFunc = None
-        uncheckAllFunc = None
-        if checkAll:
-            checkAllFunc = self.checkAll
-        if uncheckAll:
-            uncheckAllFunc = self.uncheckAll
+                       for name in list(item_names)]   
+        self.checked_indices = checked_indices
+        fn_check_all = None
+        fn_uncheck_all = None
+        if check_all:
+            fn_check_all = self.check_all
+        if uncheck_all:
+            fn_uncheck_all = self.uncheck_all
             
-        self.uiModel = CheckBoxList_Model.ui(checkItems = self.items,
-                                             checkedIndices = checkedIndices,
-                                             hasScrollArea = hasScrollArea,
-                                             checkAllFunction = checkAllFunc,
-                                             uncheckAllFunction = uncheckAllFunc)
+        self.uiModel = CheckBoxList_Model.ui(check_items = self.items,
+                                             checked_indices = checked_indices,
+                                             fn_check_all = fn_check_all,
+                                             fn_uncheck_all = fn_uncheck_all)
+
+    
+    def get_item(self, item_name):
+        
+        for item in self.items:
+            if item.name == item_name:
+                return item
+        return None
 
 
-    def checkAll(self):
+    def get_item_index(self, item_name):
         
-        self.uiModel.checkedIndices = list(range(len(self.items)))
+        item =  self.get_item(item_name)
+        if item is None:
+            return None
+        else:
+            return self.items.index(item)
+
+
+    def set_item_names(self, item_names):
+        '''
+        Adds or removes items from the existing list of items, depending if the
+        name already exists. Preserves the check state of existing items
+        '''
+        new_items = []
+        new_checked_indices = []
+        # Create new list of items
+        for item_name in item_names:
+            existing_item = self.get_item(item_name)
+            if existing_item is None:
+                new_item = CheckBoxListItem(item_name, self)
+            else:
+                new_item = existing_item
+                old_item_index = self.get_item_index(existing_item.name)
+                if old_item_index in self.uiModel.checked_indices:
+                    new_checked_indices.append(item_names.index(item_name))
+            new_items.append(new_item)
+
+        self.items = new_items
+        self.checked_indices = new_checked_indices
+        self.uiModel.check_items = self.items
+        self.uiModel.checked_indices = self.checked_indices
+
+        
+
+    def check_all(self):
+        
+        self.uiModel.checked_indices = list(range(len(self.items)))
         
         
-    def uncheckAll(self):
+    def uncheck_all(self):
         
-        self.uiModel.checkedIndices = []
+        self.uiModel.checked_indices = []
         
         
-    def toggleItem(self, item, value):
+    def toggle_item(self, item, value):
         
-        itemIndex = self.items.index(item)
-        checkedIndices = [i for i in self.uiModel.checkedIndices]
+        item_index = self.items.index(item)
+        checked_indices = [i for i in self.uiModel.checked_indices]
         
         if value:
-            checkedIndices.append(itemIndex)
+            checked_indices.append(item_index)
         else:
-            checkedIndices.remove(itemIndex)
+            checked_indices.remove(item_index)
 
-        self.uiModel.checkedIndices = checkedIndices
+        self.uiModel.checked_indices = checked_indices
     
     
-    def getCheckedItemNames(self):
-        
-        return [self.uiModel.checkItems[i].name
-                for i in self.uiModel.checkedIndices]
+    def checked_item_names(self):
+        '''
+        Returns a list of the names of the items which are checked
+        '''
+        return [self.uiModel.check_items[i].name
+                for i in self.uiModel.checked_indices]
 
-            
+
+    def item_check_values(self):
+        '''
+        Returns a list of bools, indicating whether each item is checked or not
+        '''
+        return [i in self.uiModel.checked_indices
+                for i in range(len(self.uiModel.items))]
+
+
+
 enamldef CheckBoxList_View(GroupBox):
     '''
     A container for a list of CheckBoxes which hold a ContainerList of 
@@ -106,7 +158,7 @@ enamldef CheckBoxList_View(GroupBox):
         The method to call when the CheckBox is toggled by the user. boolValue
         will receive True if the box was checked or if it was unchecked.
 
-    N.B. in order to update the checkedIndices ContainerList, the individual
+    N.B. in order to update the checked_indices ContainerList, the individual
     items must call a function on their parent when item.toggle() is invoked, 
     which should get a copy of the items in the list and append or remove the
     index of the item.
@@ -115,52 +167,32 @@ enamldef CheckBoxList_View(GroupBox):
     attr model
 
 
-    Conditional:
-        
-        condition = model.hasScrollArea == True
-        
-        Container:
-            ScrollArea:
-                Container:
-                    Looper:
-                    
-                        iterable << [obj for obj in model.checkItems]
+    Container:
+        ScrollArea:
+            Container:
+                Looper:
                 
-                        CheckBox: cb1:
-                            text = str(loop_item)
-                            checked << loop_index in model.checkedIndices
-                            toggled:: 
-                                loop_item.toggle(cb1.checked)
+                    iterable << [obj for obj in model.check_items]
             
-        
-
-    Conditional:
+                    CheckBox: cb1:
+                        text = str(loop_item)
+                        checked << loop_index in model.checked_indices
+                        toggled:: 
+                            loop_item.toggle(cb1.checked)
     
-        condition = model.hasScrollArea == False
-
-        Looper:
-            
-            iterable << [obj for obj in model.checkItems]
-    
-            CheckBox: cb2:
-                text = str(loop_item)
-                checked << loop_index in model.checkedIndices
-                toggled:: 
-                    loop_item.toggle(cb2.checked)
-
 
     Conditional:
 
-        condition = model.checkAllFunction is not None
+        condition = model.fn_check_all is not None
         PushButton:
             text = 'Check All'
             clicked::
-                model.checkAllFunction()
+                model.fn_check_all()
 
     Conditional:
 
-        condition = model.uncheckAllFunction is not None
+        condition = model.fn_uncheck_all is not None
         PushButton:
             text = 'Uncheck All'
             clicked::
-                model.uncheckAllFunction()
+                model.fn_uncheck_all()

@@ -42,7 +42,7 @@ def getOutputCode(widget):
                    % (spc(cond_indent), widget.v_condition, spc(cond_indent))
     
     if widget.w_type == 'CheckBoxList':
-        outputCode += '%s%s = %sself.%s.getCheckedItemNames()%s\n' \
+        outputCode += '%s%s = %sself.%s.checked_item_names()%s\n' \
                       % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
     elif widget.w_type == 'InputsTargetsSelector':
         outputCode += '%sinput_columns = %sself.%s.checked_inputs()%s\n' \

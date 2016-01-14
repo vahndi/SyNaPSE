@@ -98,7 +98,7 @@ class InputsTargetsSelector_Model(object):
         '''
         Returns the names of the checked input columns as a list of str
         '''
-        return self.input_cols.getCheckedItemNames()
+        return self.input_cols.checked_item_names()
         
     def get_inputs(self):
         '''

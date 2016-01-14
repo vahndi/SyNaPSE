@@ -165,12 +165,12 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
             elif self.uiModel.method == 'dtypes':
                 df = df.select_dtypes(
                         [self.dtype_dict[dt]
-                         for dt in self.dtype_columns.getCheckedItemNames()]
+                         for dt in self.dtype_columns.checked_item_names()]
                          )
 
             else:
                 
-                df = df[self.manual_columns.getCheckedItemNames()]
+                df = df[self.manual_columns.checked_item_names()]
                 # sort, if specified
                 if self.uiModel.order_alphabetically:
                     df = df[sorted(list(df.columns))]

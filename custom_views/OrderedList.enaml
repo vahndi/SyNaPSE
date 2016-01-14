@@ -30,7 +30,6 @@ class OrderedList_Model(object):
         selected_items = ContainerList(OrderedListItem) 
         selected_item = Value(OrderedListItem)
         unselected_item = Value(OrderedListItem)
-        scroll_areas = Bool()
         fn_select_item = Callable()
         fn_unselect_item = Callable()
         fn_move_item_up = Callable()
@@ -38,20 +37,19 @@ class OrderedList_Model(object):
         
     
     def __init__(self, item_names, selected_item_names = [], 
-                 scroll_areas = True,
-                 selected_changed_subscriber = None):
+                 fn_selected_changed = None):
         '''
         Arguments
         ---------
         item_names:
-            a list of the names of the items which can be selected
+            A list of the names of the items which can be selected.
         selected_item_names:
-            a list of the names of the items which are already selected
-        scroll_areas:
-            whether to show lists in scroll areas to save space
-        selected_changed_subscriber:
-            a function to call when the selected items are changed, in case
-            the contents of other widgets depend on the selected items
+            A list of the names of the items which are already selected.
+        fn_selected_changed:
+            A function to call when the selected items are changed, in case
+            the contents of other widgets depend on the selected items. The 
+            function will be called with a list of names of items which are
+            selected.
         '''
         self.item_names = item_names
         self.selected_items = [OrderedListItem(name, self) 
@@ -61,14 +59,13 @@ class OrderedList_Model(object):
                                  [n for n in list(item_names) 
                                   if n not in selected_item_names]]
 
-        self.selected_changed_subscriber = selected_changed_subscriber
+        self.fn_selected_changed = fn_selected_changed
 
         self.uiModel = OrderedList_Model.ui(
                         selected_items = self.selected_items,
                         unselected_items = self.unselected_items,
                         selected_item = None,
                         unselected_item = self.unselected_items[0],
-                        scroll_areas = scroll_areas,
                         fn_select_item = self.select_item,
                         fn_unselect_item = self.unselect_item,
                         fn_move_item_up = self.move_item_up,
@@ -91,8 +88,8 @@ class OrderedList_Model(object):
             self.uiModel.unselected_item = None
             self.uiModel.selected_item = item
             
-            if self.selected_changed_subscriber:
-                self.selected_changed_subscriber()
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
 
     
     def unselect_item(self):
@@ -111,8 +108,8 @@ class OrderedList_Model(object):
             self.uiModel.selected_item = None
             self.uiModel.unselected_item = item
 
-            if self.selected_changed_subscriber:
-                self.selected_changed_subscriber()
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
 
 
     def move_item_up(self):
@@ -129,8 +126,8 @@ class OrderedList_Model(object):
             self.uiModel.selected_items = self.selected_items
             self.uiModel.selected_item = item
 
-            if self.selected_changed_subscriber:
-                self.selected_changed_subscriber()
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
 
 
     def move_item_down(self):
@@ -147,8 +144,8 @@ class OrderedList_Model(object):
             self.uiModel.selected_items = self.selected_items
             self.uiModel.selected_item = item
 
-            if self.selected_changed_subscriber:
-                self.selected_changed_subscriber()
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
 
     def selected_item_names(self):
         
@@ -178,15 +175,16 @@ enamldef OrderedList_View(GroupBox):
 
         Label: lbl_unselected:
             text = 'Unselected Items'
-            
-        Container: rbs_unselected:   
-            Looper: lpr_unselected:
-                iterable << [obj for obj in model.unselected_items]
-                RadioButton: 
-                    text << str(loop_item)
-                    clicked:: 
-                        model.unselected_item = loop_item
-                    checked << loop_item == model.unselected_item
+        
+        ScrollArea: rbs_unselected:
+            Container:    
+                Looper: lpr_unselected:
+                    iterable << [obj for obj in model.unselected_items]
+                    RadioButton: 
+                        text << str(loop_item)
+                        clicked:: 
+                            model.unselected_item = loop_item
+                        checked << loop_item == model.unselected_item
 
         PushButton: btn_select:
             text = 'Select'
@@ -196,14 +194,16 @@ enamldef OrderedList_View(GroupBox):
         
         Label: lbl_selected:
             text = 'Selected Items'
-        Container: rbs_selected:
-            Looper: lpr_selected:
-                iterable << [obj for obj in model.selected_items]
-                RadioButton: 
-                    text << str(loop_item)
-                    clicked:: 
-                        model.selected_item = loop_item
-                    checked << loop_item == model.selected_item
+
+        ScrollArea: rbs_selected:            
+            Container: 
+                Looper: lpr_selected:
+                    iterable << [obj for obj in model.selected_items]
+                    RadioButton: 
+                        text << str(loop_item)
+                        clicked:: 
+                            model.selected_item = loop_item
+                        checked << loop_item == model.selected_item
     
         PushButton: btn_unselect:
             text = 'Unselect'

@@ -284,7 +284,7 @@ class FlowList(object):
 #    elementDict = Dict()
 #    numNodes = 1
 #    
-#    def addElement(self, elementTypeName, parentElementName = None):
+#    def add_element(self, elementTypeName, parentElementName = None):
 #        
 #        self.flowGraph.add_node('%s_%i' %(elementTypeName, numNodes)
 #        self.elementDict[elementName]

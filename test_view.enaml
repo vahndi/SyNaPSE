@@ -38,7 +38,7 @@ class element(object):
         
         print '%s was toggled to %s' % (self.name, value)
         if self.parent is not None:
-            self.parent.toggleItem(self, value)
+            self.parent.toggle_item(self, value)
 
     
 
@@ -49,7 +49,7 @@ class MainModel(object):
 
         elements = ContainerList(element)
         selectedElement = Value(element)
-        checkedIndices = ContainerList(int)
+        checked_indices = ContainerList(int)
 
 
     def __init__(self):
@@ -60,34 +60,34 @@ class MainModel(object):
 
         self.uiModel = MainModel.ui(elements = self.elements,
                                     selectedElement = self.elements[0],
-                                    checkedIndices = [1])
+                                    checked_indices = [1])
 
 
-    def addElement(self):
+    def add_element(self):
         
         self.elements.append(element('d', parent = self))
         self.uiModel.elements = self.elements
         
     
-    def checkAll(self):
+    def check_all(self):
         print 'checking all'
-        self.uiModel.checkedIndices = list(range(len(self.elements)))
+        self.uiModel.checked_indices = list(range(len(self.elements)))
         
-    def uncheckAll(self):
+    def uncheck_all(self):
         
-        self.uiModel.checkedIndices = []
+        self.uiModel.checked_indices = []
         
-    def toggleItem(self, item, value):
+    def toggle_item(self, item, value):
         
-        itemIndex = self.elements.index(item)
-        checkedIndices = [i for i in self.uiModel.checkedIndices]
+        item_index = self.elements.index(item)
+        checked_indices = [i for i in self.uiModel.checked_indices]
         if value:
-            print 'appending item %i' % itemIndex
-            checkedIndices.append(itemIndex)
+            print 'appending item %i' % item_index
+            checked_indices.append(item_index)
         else:
-            print 'removing item %i' % itemIndex            
-            checkedIndices.remove(itemIndex)
-        self.uiModel.checkedIndices = checkedIndices
+            print 'removing item %i' % item_index            
+            checked_indices.remove(item_index)
+        self.uiModel.checked_indices = checked_indices
 
 
 
@@ -110,7 +110,7 @@ enamldef Main(Window): main:
             PushButton:
                 text = 'Add New Element'
                 clicked::
-                    model.addElement()
+                    model.add_element()
                     print [str(e) for e in model.uiModel.elements]
 
 
@@ -121,11 +121,11 @@ enamldef Main(Window): main:
         
         CheckBoxList_View:
             
-            checkItems := main.model.uiModel.elements
-            checkedIndices := main.model.uiModel.checkedIndices
-            hasScrollArea = True
-            checkAllFunction = main.model.checkAll
-            uncheckAllFunction = main.model.uncheckAll
+            check_items := main.model.uiModel.elements
+            checked_indices := main.model.uiModel.checked_indices
+            scroll_area = True
+            fn_check_all = main.model.check_all
+            fn_uncheck_all = main.model.uncheck_all
         
 
 

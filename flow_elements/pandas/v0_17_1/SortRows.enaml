@@ -5,6 +5,7 @@ from atom.api import Atom, Bool, ContainerList, List, Str, Value
 from enaml.core.api import Conditional
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 # Models
 from flow_elements.core.ABCs import ABCDataFrameToDataFrame
@@ -26,13 +27,20 @@ class SortRows_Model(ABCDataFrameToDataFrame):
         # by_single
         by_single = Str()
         by_single_list = List(str)
-        by_single_tooltip = 'string name or list of names which refer to the axis items'
+        by_single_tooltip = 'Select the column to sort by.'
         # by_multiple
         by_multiple = Value(Atom)
         by_multiple_tooltip = 'Select the list of column names to sort by, in order of priority.'
-        # ascending
-        ascending = Bool(True)
-        ascending_tooltip = 'Sort the selected columns in ascending (True) or descending (False) order.'
+        # ascending_type
+        ascending_type = Str('uniform')
+        ascending_type_list = List(str, ['uniform', 'individual'])
+        ascending_type_tooltip = 'Specify the sort order for sort columns all at once (uniform) or individually.'
+        # ascending_uniform
+        ascending_uniform = Bool(True)
+        ascending_uniform_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
+        # ascending_individual
+        ascending_individual = Value(Atom)
+        ascending_individual_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
         # kind
         kind = Str('quicksort')
         kind_list = List(str, ['quicksort', 'mergesort', 'heapsort'])
@@ -40,18 +48,23 @@ class SortRows_Model(ABCDataFrameToDataFrame):
         # na_position
         na_position = Str('last')
         na_position_list = List(str, ['first', 'last'])
-        na_position_tooltip = 'first puts NaNs at the beginning, last puts NaNs at the end'
+        na_position_tooltip = 'first: put NaNs at the beginning\nlast: put NaNs at the end'
 
 
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
         cols = list(dataframe.columns)
-        self.by_multiple = OrderedList_Model(item_names = cols)
+        self.ascending_individual = CheckBoxList_Model([])
+        self.by_multiple = OrderedList_Model(
+                item_names = cols,
+                fn_selected_changed = self.ascending_individual.set_item_names
+                )
         self.uiModel = SortRows_Model.ui(
             by_single = cols[0],
             by_single_list = cols, 
-            by_multiple = self.by_multiple.uiModel
+            by_multiple = self.by_multiple.uiModel,
+            ascending_individual = self.ascending_individual.uiModel
             )
 
 
@@ -64,7 +77,10 @@ class SortRows_Model(ABCDataFrameToDataFrame):
                 'by': (self.uiModel.by_single
                        if self.uiModel.by_type == 'single' 
                        else self.by_multiple.selected_item_names()),
-                'ascending': self.uiModel.ascending,
+                'ascending': (self.ascending_individual.item_values()
+                              if (self.uiModel.ascending_type == 'individual' and
+                                  self.uiModel.by_type == 'multiple')
+                              else self.uiModel.ascending_uniform),
                 'kind': self.uiModel.kind,
                 'na_position': self.uiModel.na_position
                 }
@@ -84,7 +100,7 @@ enamldef SortRows_View(GroupBox): me:
     Form:
 
         Label:
-            text = 'By Type'
+            text = 'Column Type'
             tool_tip = model.by_type_tooltip
         ObjectCombo:
             items = model.by_type_list
@@ -94,7 +110,7 @@ enamldef SortRows_View(GroupBox): me:
         Conditional:
             condition << model.by_type == 'single'
             Label:
-                text = 'By Column'
+                text = 'Sort Column'
                 tool_tip = model.by_single_tooltip
             ObjectCombo:
                 items = model.by_single_list
@@ -105,19 +121,44 @@ enamldef SortRows_View(GroupBox): me:
         Conditional:
             condition << model.by_type == 'multiple'
             Label:
-                text = 'By Columns'
+                text = 'Sort Columns'
                 tool_tip = model.by_multiple_tooltip
             OrderedList_View:
                 model:= me.model.by_multiple
                 tool_tip = me.model.by_multiple_tooltip
     
+        Conditional:
+            condition << model.by_type == 'multiple'
+            Label:
+                text = 'Ascending Type'
+                tool_tip = model.ascending_type_tooltip
+            ObjectCombo:
+                items = model.ascending_type_list
+                selected := model.ascending_type
+                tool_tip = model.ascending_type_tooltip
 
-        Label:
-            text = 'Ascending'
-            tool_tip = model.ascending_tooltip
-        CheckBox:
-            checked := model.ascending
-            tool_tip = model.ascending_tooltip
+
+        Conditional:
+            condition << not (model.ascending_type == 'individual' and
+                              model.by_type == 'multiple')
+            Label:
+                text = 'Ascending'
+                tool_tip = model.ascending_uniform_tooltip
+            CheckBox:
+                checked := model.ascending_uniform
+                tool_tip = model.ascending_uniform_tooltip
+    
+
+        Conditional:
+            condition << (model.ascending_type == 'individual' and 
+                          model.by_type == 'multiple')
+            Label:
+                text = 'Ascending'
+                tool_tip = model.ascending_individual_tooltip
+            CheckBoxList_View:
+                model:= me.model.ascending_individual
+                tool_tip = me.model.ascending_individual_tooltip
+    
 
         Label:
             text = 'Kind'
