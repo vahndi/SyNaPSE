@@ -99,6 +99,14 @@ def get_enaml_ObjectCombo(widget):
     return enamlCode
 
 
+def get_enaml_OrderedList_View(widget):
+    
+    enamlCode = '%sOrderedList_View:\n' % widget.indent1()
+    enamlCode += '%smodel:= me.model.%s\n' % (widget.indent2(), 
+                                              widget.w_name)
+    return enamlCode
+    
+
 def get_enaml_Spinbox(widget):
     
     enamlCode = '%sSpinBox:\n' % widget.indent1()
@@ -131,6 +139,7 @@ getEnamlfunc = {'Field': get_enaml_Field,
                 'InputsTargetsSelector': get_enaml_InputsTargetsSelector,
                 'IntField': get_enaml_IntField,
                 'ObjectCombo': get_enaml_ObjectCombo,
+                'OrderedList': get_enaml_OrderedList_View,
                 'SpinBox': get_enaml_Spinbox}  
 
 

@@ -1,6 +1,7 @@
 custom_widgets = ('CheckBoxList',
-                  'RadioButtonList',
-                  'InputsTargetsSelector')
+                  'InputsTargetsSelector',
+                  'OrderedList',
+                  'RadioButtonList')
                   
 fields_widgets = ('Field',
                   'FloatField', 
@@ -12,7 +13,8 @@ widgets_atoms = {'Field': ['Str'],
                  'FloatField': ['Float'],
                  'InputsTargetsSelector': ['Atom', 'Value'],
                  'IntField': ['Int'],
-                 'ObjectCombo': ['List', 'Str'],                 
+                 'ObjectCombo': ['List', 'Str'],  
+                 'OrderedList': ['Atom', 'Value'],               
                  'RadioButtonList': ['ContainerList', 'Int', 'Value'],
                  'SpinBox': ['Int', 'Value']} 
 

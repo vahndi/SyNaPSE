@@ -110,8 +110,8 @@ def inspect_element_args(pickle_name, module_name = ''):
 
 if __name__ == '__main__':
 
-    generate_element(spreadsheet_name = 'sklearn.samples_generator',
-                     element_name = 'MakeRegression')
+    generate_element(spreadsheet_name = 'pandas.DataFrame',
+                     element_name = 'SortRows')
 
 #    inspect_element_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')

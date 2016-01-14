@@ -13,6 +13,12 @@ def setInputCode_CheckBoxList(widget):
             spc(8), widget.w_name, cbl_items)
 
 
+def setInputCode_OrderedList(widget):
+    
+    return '%sself.%s = OrderedList_Model()\n' % (
+            spc(8), widget.w_name)
+
+
 def setInputCode_InputsTargetsSelector(widget):
     
     args = ''
@@ -43,6 +49,9 @@ def getOutputCode(widget):
                       % (spc(16), start_cond, widget.w_name, end_cond)
         outputCode += '%starget_column = %sself.%s.selected_target()%s\n' \
                       % (spc(16), start_cond, widget.w_name, end_cond)
+    elif widget.w_type == 'OrderedList':
+        outputCode += '%s%s = %sself.%s.selected_item_names()%s\n' \
+                      % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
     else:
         opt_start = opt_end = ''
         if widget.is_optional():
@@ -75,6 +84,8 @@ def getModelCode(element_name, dataframe):
     for widge in widgets:  
         if widge.w_type == 'CheckBoxList':
             modelCode += setInputCode_CheckBoxList(widge)
+        elif widge.w_type == 'OrderedList':
+            modelCode += setInputCode_OrderedList(widge)
         elif widge.w_type == 'InputsTargetsSelector':
             modelCode += setInputCode_InputsTargetsSelector(widge)
             
@@ -85,7 +96,9 @@ def getModelCode(element_name, dataframe):
         if widge.w_type == 'ObjectCombo':            
             if not(isinstance(widge.w_values, (str, unicode))):
                 uiArgs.append('%s_list = [???]' % widge.w_name)
-        elif widge.w_type in ('CheckBoxList', 'InputsTargetsSelector'):
+        elif widge.w_type in ('CheckBoxList', 
+                              'InputsTargetsSelector',
+                              'OrderedList'):
             uiArgs.append('%s = self.%s.uiModel' % (widge.w_name, 
                                                     widge.w_name))
     if uiArgs:

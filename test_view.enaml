@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 12 14:16:07 2015
-
-@author: Vahndi
-"""
-
+#Atom
 from atom.api import Atom, Value, ContainerList, Str
 
-
+# Enaml
 import enaml
 from enaml.core.api import Include
 from enaml.qt.qt_application import QtApplication
