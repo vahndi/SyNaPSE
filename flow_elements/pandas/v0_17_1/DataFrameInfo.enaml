@@ -99,7 +99,6 @@ class DataFrameInfo_Model(ABCTakesDataFrame):
     
 
     elementName = 'Info'
-#    precedingElements = [ReadDataFrame_Model]
 
     
     def setInputs(self, dataframe):

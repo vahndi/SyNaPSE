@@ -9,15 +9,15 @@ from pandas import concat
 
 
 
-class AbsoluteValues_Model(ABCDataFrameToDataFrame):
+class ZScoreStandardization_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Absolute Values'
+    elementName = 'Z-Score Standardization'
 
 
     def setInputs(self, dataframe):
 
-        self._dataframe = dataframe      
+        self._dataframe = dataframe       
 
 
     def getOutputs(self):
@@ -26,8 +26,9 @@ class AbsoluteValues_Model(ABCDataFrameToDataFrame):
             
             df_object = self._dataframe.select_dtypes(include = [object])        
             df_numeric = self._dataframe.select_dtypes(exclude = [object])
-            df_numeric_abs = df_numeric.abs()
-            df_joined = concat([df_object, df_numeric_abs], axis = 1)
+            df_numeric_stdz = ((df_numeric - df_numeric.mean()) / 
+                               df_numeric.std())
+            df_joined = concat([df_object, df_numeric_stdz], axis = 1)
             df_joined = df_joined[[col for col in self._dataframe.columns]]
 
             return {'dataframe': df_joined}        
@@ -38,7 +39,7 @@ class AbsoluteValues_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef AbsoluteValues_View(GroupBox): me:
+enamldef ZScoreStandardization_View(GroupBox): me:
 
     Form:
         

@@ -7,6 +7,8 @@ from fileFunctions import getFileNames
 
 pkg_sys = (('flow_elements.pandas.v0_17_1', 
             './flow_elements/pandas/v0_17_1'),
+           ('flow_elements.pandas.v0_17_1.IO', 
+            './flow_elements/pandas/v0_17_1/IO'),
            ('flow_elements.sklearn.v0_17.generate',
             './flow_elements/sklearn/v0_17/generate'),
            ('flow_elements.pandas.v0_17_1.Statistics', 
@@ -38,15 +40,6 @@ def getModels(package_path, sys_path):
         print 'Loading element: %s...' % model_name
         model_list.append(locate('%s.%s.%s_Model' 
                                      % (package_path, model_name, model_name)))
-#        try:
-#            model_list.append(locate('%s.%s.%s_Model' 
-#                                     % (package_path, model_name, model_name)))
-#        except Exception as e:
-#            print '!!! Error !!!'
-#            print {'__class__': str(e.__class__),
-#                   '__doc__': e.__doc__,
-#                   'message': e.message,
-#                   'args': str(e.args)}
             
     return model_list
     
