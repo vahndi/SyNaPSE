@@ -1,0 +1,94 @@
+from atom.api import Atom, Str, Value
+from enaml.widgets.api import GroupBox, Label, ObjectCombo
+from pytz import country_timezones
+
+
+# Get tuples of all timezones (max 3 values)
+tzs = [tz for lst_tz in country_timezones.values() for tz in lst_tz]
+tz_tuples = [tz.split('/') for tz in tzs]
+tz_2_tuples = [tzt for tzt in tz_tuples if len(tzt) == 2]
+tz_3_tuples = [tzt for tzt in tz_tuples if len(tzt) == 3]
+tz_3_tuples.sort(key = lambda tzt: tzt[2])
+tz_tuples = tz_2_tuples + tz_3_tuples
+tz_tuples.sort(key = lambda tzt: tzt[1])
+tz_tuples.sort(key = lambda tzt: tzt[0])
+
+
+def getPlaces1():
+
+    return sorted(set([tz[0] for tz in tz_tuples]))
+
+
+def getPlaces2(place_1):
+    
+    return sorted(set([tz[1] for tz in tz_tuples
+                       if tz[0] == place_1]))
+
+
+def getPlaces3(place_1, place_2):
+    
+    try:
+        return sorted(set([tz[2] for tz in tz_tuples
+                           if tz[0] == place_1
+                           and tz[1] == place_2]))
+    except:
+        return []
+
+
+def hasPlaces3(place_1, place_2):
+    
+    return len(getPlaces3(place_1, place_2)) > 0
+    
+
+
+class TimeZone_Model(object):
+    
+    
+    class ui(Atom):
+        
+        place_1 = Str()
+        place_2 = Str()
+        place_3 = Str()
+
+
+    def __init__(self):
+        
+        self.uiModel = TimeZone_Model.ui()
+
+
+    def get_time_zone(self):
+        
+        if self.uiModel.place_3 == '':
+            return '/'.join([self.uiModel.place_1,
+                             self.uiModel.place_2])
+        else:
+            return '/'.join([self.uiModel.place_1,
+                             self.uiModel.place_2,
+                             self.uiModel.place_3])
+
+
+
+enamldef TimeZone_View(GroupBox):
+    
+    attr model
+    
+    Label:
+        text = 'Region'
+    ObjectCombo:
+        items = getPlaces1()
+        selected := model.place_1
+    
+    Label:
+        text = 'Area'
+    ObjectCombo:
+        items << getPlaces2(model.place_1)
+        selected := model.place_2
+
+    Label:
+        text = 'Place'
+        visible << hasPlaces3(model.place_1, model.place_2)
+    ObjectCombo:
+        items << getPlaces3(model.place_1, model.place_2)
+        visible << hasPlaces3(model.place_1, model.place_2)
+        selected := model.place_3
+    

@@ -1,11 +1,12 @@
 # Atom
-from atom.api import Atom, Bool, Int, List, Str
+from atom.api import Atom, Bool, Int, List, Str, Value
 
 
 # Enaml
 from enaml.core.api import Conditional
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.fields import Field, IntField
+from custom_views.TimeZone import TimeZone_Model,TimeZone_View
 
 # Models
 from flow_elements.core.ABCs import ABCDataFrameToDataFrame
@@ -44,7 +45,7 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
                          'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
         freq_tooltip = 'Frequency of the new index.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
         # tz
-        tz = Str()
+        tz = Value(Atom)
         use_tz = Bool()
         tz_tooltip = 'Select to use a local timezone for the data.'
         # normalize
@@ -64,7 +65,9 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = SetIndexToDateRange_Model.ui(periods = len(dataframe))
+        self.tz = TimeZone_Model()
+        self.uiModel = SetIndexToDateRange_Model.ui(periods = len(dataframe),
+                                                    tz = self.tz.uiModel)
 
 
     def getOutputs(self):
@@ -88,7 +91,7 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
                 'freq': self.uiModel.freq,
                 'tz': (None 
                        if not self.uiModel.use_tz 
-                       else self.uiModel.tz),
+                       else self.tz.get_time_zone()),
                 'normalize': self.uiModel.normalize,
                 'name': (None 
                          if not self.uiModel.use_name 
@@ -156,7 +159,8 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
             items = model.freq_list
             selected := model.freq
             tool_tip = model.freq_tooltip
-
+        
+        
         CheckBox:
             tool_tip = model.tz_tooltip
             text = 'Time Zone'
@@ -164,10 +168,10 @@ enamldef SetIndexToDateRange_View(GroupBox): me:
         Label:
             text = 'N/A'
             visible << not model.use_tz
-        Field:
-            text := model.tz
-            visible << model.use_tz
-            tool_tip = model.tz_tooltip
+        TimeZone_View:
+            model = me.model.tz
+            visible << me.model.use_tz
+            tool_tip = me.model.tz_tooltip
 
         Label:
             text = 'Normalize'
