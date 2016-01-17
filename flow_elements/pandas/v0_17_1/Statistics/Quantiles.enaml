@@ -16,7 +16,7 @@ from pandas import Series, DataFrame
 class Quantiles_Model(ABCDataFrameToDataFrameOrSeries):
 
 
-    elementName = 'Quantiles'
+    calc_name = 'Quantiles'
 
 
     class ui(Atom):

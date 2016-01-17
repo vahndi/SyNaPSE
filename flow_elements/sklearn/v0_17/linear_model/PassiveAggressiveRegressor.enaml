@@ -16,9 +16,9 @@ from sklearn.linear_model import PassiveAggressiveRegressor
 class PassiveAggressiveRegressor_Model(ABCRegressionModel):
 
 
-    elementName = 'Passive Aggressive Regressor'
-    elementDescription = 'Passive Aggressive Regressor.'
-    elementDocumentation = ABCRegressionModel.doc_root + \
+    calc_name = 'Passive Aggressive Regressor'
+    calc_desc = 'Passive Aggressive Regressor.'
+    calc_docs = ABCRegressionModel.doc_root + \
                            'PassiveAggressiveRegressor.html'
 
     class ui(Atom):

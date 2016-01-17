@@ -6,7 +6,7 @@ from ._base.Statistic2 import Statistic2_View
 class Variance_Model(Statistic2_Model):
     
     
-    elementName = 'Variance'
+    calc_name = 'Variance'
 
     
     def __init__(self):

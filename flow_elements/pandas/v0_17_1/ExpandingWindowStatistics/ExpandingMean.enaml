@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingMean_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Mean'
+    calc_name = 'Expanding Mean'
 
     
     def __init__(self):

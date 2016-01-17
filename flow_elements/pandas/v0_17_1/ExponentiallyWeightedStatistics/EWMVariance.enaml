@@ -16,7 +16,7 @@ from pandas.stats.moments import ewmvar
 class EWMVariance_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Exponentially Weighted Moving Variance'
+    calc_name = 'Exponentially Weighted Moving Variance'
 
 
     class ui(Atom):

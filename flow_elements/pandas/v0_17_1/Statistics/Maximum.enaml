@@ -6,7 +6,7 @@ from ._base.Statistic1 import Statistic1_View
 class Maximum_Model(Statistic1_Model):
     
     
-    elementName = 'Maximum'
+    calc_name = 'Maximum'
 
     
     def __init__(self):

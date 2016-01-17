@@ -8,7 +8,7 @@ from sklearn.datasets import make_biclusters
 class MakeBiClusters_Model(Make2_Model):
     
     
-    elementName = 'Make Bi-Clusters'
+    calc_name = 'Make Bi-Clusters'
 
     
     def __init__(self):

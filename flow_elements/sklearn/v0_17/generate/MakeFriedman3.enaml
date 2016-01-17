@@ -8,7 +8,7 @@ from sklearn.datasets import make_friedman3
 class MakeFriedman3_Model(Make1_Model):
     
     
-    elementName = 'Make Friedman 3'
+    calc_name = 'Make Friedman 3'
 
     
     def __init__(self):

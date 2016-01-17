@@ -6,7 +6,7 @@ from ._base.Statistic2 import Statistic2_View
 class StandardDeviation_Model(Statistic2_Model):
     
     
-    elementName = 'Standard Deviation'
+    calc_name = 'Standard Deviation'
 
     
     def __init__(self):

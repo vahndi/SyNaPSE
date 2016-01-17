@@ -15,7 +15,7 @@ from pandas import concat, DataFrame, expanding_count, Series
 class ExpandingCount_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Expanding Count'
+    calc_name = 'Expanding Count'
 
 
     class ui(Atom):

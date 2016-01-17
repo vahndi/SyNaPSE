@@ -6,7 +6,7 @@ from ._base.Statistic1 import Statistic1_View
 class Sum_Model(Statistic1_Model):
     
     
-    elementName = 'Sum'
+    calc_name = 'Sum'
 
     
     def __init__(self):

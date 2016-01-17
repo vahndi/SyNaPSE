@@ -15,7 +15,7 @@ from sklearn.datasets import make_blobs
 class MakeBlobs_Model(LabelClassificationGenerator):
 
 
-    elementName = 'Make Blobs'
+    calc_name = 'Make Blobs'
 
 
     class ui(Atom):

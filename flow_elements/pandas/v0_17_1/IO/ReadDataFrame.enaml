@@ -39,7 +39,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
 class ReadDataFrame_Model(ABCOutputsDataFrame):
     
     
-    elementName = 'Read DataFrame'
+    calc_name = 'Read DataFrame'
     
     
     class ui(Atom):

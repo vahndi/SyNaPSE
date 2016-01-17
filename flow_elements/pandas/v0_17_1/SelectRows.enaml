@@ -35,7 +35,7 @@ method_tooltips = {'string' : ('select rows whose names start with, ' +
 class SelectRows_Model(ABCDataFrameToDataFrame):
     
 
-    elementName = 'Select Rows'
+    calc_name = 'Select Rows'
     
     
     class ui(Atom):

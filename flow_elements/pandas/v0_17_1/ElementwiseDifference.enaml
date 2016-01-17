@@ -14,7 +14,7 @@ from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Element-wise Difference'
+    calc_name = 'Element-wise Difference'
 
 
     class ui(Atom):

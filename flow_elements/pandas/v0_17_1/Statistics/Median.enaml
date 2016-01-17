@@ -6,7 +6,7 @@ from ._base.Statistic1 import Statistic1_View
 class Median_Model(Statistic1_Model):
     
     
-    elementName = 'Median'
+    calc_name = 'Median'
 
     
     def __init__(self):

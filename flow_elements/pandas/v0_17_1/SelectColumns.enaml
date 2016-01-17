@@ -28,7 +28,7 @@ method_tooltips = {'string' : ('select columns whose names start with, ' +
 class SelectColumns_Model(ABCDataFrameToDataFrame):
     
 
-    elementName = 'Select Columns'
+    calc_name = 'Select Columns'
     
     
     class ui(Atom):

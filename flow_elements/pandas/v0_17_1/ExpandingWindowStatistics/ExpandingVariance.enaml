@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingVariance_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Variance'
+    calc_name = 'Expanding Variance'
 
     
     def __init__(self):

@@ -1,16 +1,16 @@
-from models_views.flowElement import FlowElement
+from models_views.calculation import Calculation_Model
 
 
 
-class ABCOutputsDataFrame(FlowElement):
+class ABCOutputsDataFrame(Calculation_Model):
     
     pass
 
 
 
-class ABCTakesDataFrame(FlowElement):
+class ABCTakesDataFrame(Calculation_Model):
 
-    precedingElements = [ABCOutputsDataFrame]
+    preceding_elements = [ABCOutputsDataFrame]
 
 
 
@@ -22,7 +22,7 @@ class ABCOutputsSeries():
 
 class ABCTakesSeries():
     
-    precedingElements = [ABCOutputsSeries]
+    preceding_elements = [ABCOutputsSeries]
 
 
 

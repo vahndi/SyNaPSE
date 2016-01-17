@@ -16,7 +16,7 @@ from pandas.stats.moments import ewmvol
 class EWMVolume_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Exponentially Weighted Moving Volume'
+    calc_name = 'Exponentially Weighted Moving Volume'
 
 
     class ui(Atom):

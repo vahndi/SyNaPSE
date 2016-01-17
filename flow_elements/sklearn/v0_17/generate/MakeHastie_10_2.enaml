@@ -15,7 +15,7 @@ from sklearn.datasets import make_hastie_10_2
 class MakeHastie_10_2_Model(NumericClassificationGenerator):
 
 
-    elementName = 'Make Hastie 10 2'
+    calc_name = 'Make Hastie 10 2'
 
 
     class ui(Atom):

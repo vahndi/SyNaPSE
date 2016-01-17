@@ -70,6 +70,6 @@ def getImportsCode(element_name, dataframe):
     
     # Models
     importsCode += '\n# Models\n'
-    importsCode += 'from models_views.flowElement import FlowElement\n'
+    importsCode += 'from models_views.calculation import Calculation_Model\n'
 
     return importsCode

@@ -6,7 +6,7 @@ from ._base.RollingStatistic import RollingStatistic_View
 class RollingMedian_Model(RollingStatistic_Model):
     
     
-    elementName = 'Rolling Median'
+    calc_name = 'Rolling Median'
 
     
     def __init__(self):

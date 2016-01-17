@@ -15,10 +15,10 @@ from sklearn.linear_model import LassoLars
 
 class LassoLars_Model(ABCRegressionModel):
 
-    elementName = 'Lasso Lars'
-    elementDescription = \
+    calc_name = 'Lasso Lars'
+    calc_desc = \
         'Lasso model fit with Least Angle Regression a.k.a. Lars.'
-    elementDocumentation = ABCRegressionModel.doc_root + 'LassoLars.html'
+    calc_docs = ABCRegressionModel.doc_root + 'LassoLars.html'
 
     class ui(Atom):
         

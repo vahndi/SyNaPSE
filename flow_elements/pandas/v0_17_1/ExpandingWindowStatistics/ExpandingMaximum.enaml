@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingMaximum_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Maximum'
+    calc_name = 'Expanding Maximum'
 
     
     def __init__(self):

@@ -6,7 +6,7 @@ from ._base.CumulativeStatistic import CumulativeStatistic_View
 class CumulativeProduct_Model(CumulativeStatistic_Model):
     
     
-    elementName = 'Cumulative Product'
+    calc_name = 'Cumulative Product'
 
     
     def __init__(self):

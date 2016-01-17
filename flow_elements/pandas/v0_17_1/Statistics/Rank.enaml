@@ -13,7 +13,7 @@ from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 class Rank_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Rank'
+    calc_name = 'Rank'
 
 
     class ui(Atom):

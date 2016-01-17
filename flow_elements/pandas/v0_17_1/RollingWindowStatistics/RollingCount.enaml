@@ -20,7 +20,7 @@ from pandas.stats.moments import rolling_count
 class RollingCount_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Rolling Count'
+    calc_name = 'Rolling Count'
     
 
     class ui(Atom):

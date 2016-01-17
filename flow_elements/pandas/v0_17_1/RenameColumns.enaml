@@ -16,7 +16,7 @@ import re
 
 class RenameColumns_Model(ABCDataFrameToDataFrame):
     
-    elementName = 'Rename Columns'
+    calc_name = 'Rename Columns'
 
     class ui(Atom):
 

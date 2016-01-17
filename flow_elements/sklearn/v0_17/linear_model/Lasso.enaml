@@ -16,10 +16,10 @@ from sklearn.linear_model import Lasso
 class Lasso_Model(ABCRegressionModel):
 
 
-    elementName = 'Lasso'
-    elementDescription = \
+    calc_name = 'Lasso'
+    calc_desc = \
         'Linear Model trained with L1 prior as regularizer (aka the Lasso).'
-    elementDocumentation = ABCRegressionModel.doc_root + 'Lasso.html'
+    calc_docs = ABCRegressionModel.doc_root + 'Lasso.html'
 
 
     class ui(Atom):

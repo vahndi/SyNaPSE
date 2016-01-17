@@ -16,7 +16,7 @@ from pandas.stats.moments import ewma
 class EWMAverage_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Exponentially Weighted Moving Average'
+    calc_name = 'Exponentially Weighted Moving Average'
 
 
     class ui(Atom):

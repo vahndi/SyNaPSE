@@ -6,7 +6,7 @@ from ._base.CumulativeStatistic import CumulativeStatistic_View
 class CumulativeMinimum_Model(CumulativeStatistic_Model):
     
     
-    elementName = 'Cumulative Minimum'
+    calc_name = 'Cumulative Minimum'
 
     
     def __init__(self):

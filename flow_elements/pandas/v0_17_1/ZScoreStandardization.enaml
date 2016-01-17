@@ -12,7 +12,7 @@ from pandas import concat
 class ZScoreStandardization_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Z-Score Standardization'
+    calc_name = 'Z-Score Standardization'
 
 
     def setInputs(self, dataframe):

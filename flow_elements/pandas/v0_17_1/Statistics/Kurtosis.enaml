@@ -6,7 +6,7 @@ from ._base.Statistic1 import Statistic1_View
 class Kurtosis_Model(Statistic1_Model):
     
     
-    elementName = 'Kurtosis'
+    calc_name = 'Kurtosis'
 
     
     def __init__(self):

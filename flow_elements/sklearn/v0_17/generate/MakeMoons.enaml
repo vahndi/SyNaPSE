@@ -15,7 +15,7 @@ from sklearn.datasets import make_moons
 class MakeMoons_Model(NumericClassificationGenerator):
 
 
-    elementName = 'Make Moons'
+    calc_name = 'Make Moons'
 
 
     class ui(Atom):

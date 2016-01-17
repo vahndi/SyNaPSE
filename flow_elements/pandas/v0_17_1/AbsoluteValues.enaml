@@ -12,7 +12,7 @@ from pandas import concat
 class AbsoluteValues_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Absolute Values'
+    calc_name = 'Absolute Values'
 
 
     def setInputs(self, dataframe):

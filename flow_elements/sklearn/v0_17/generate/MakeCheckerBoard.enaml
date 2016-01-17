@@ -8,7 +8,7 @@ from sklearn.datasets import make_checkerboard
 class MakeCheckerBoard_Model(Make2_Model):
     
     
-    elementName = 'Make CheckerBoard'
+    calc_name = 'Make CheckerBoard'
 
     
     def __init__(self):

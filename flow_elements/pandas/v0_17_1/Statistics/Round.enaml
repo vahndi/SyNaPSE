@@ -16,7 +16,7 @@ from pandas import concat
 class Round_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Round'
+    calc_name = 'Round'
 
 
     class ui(Atom):

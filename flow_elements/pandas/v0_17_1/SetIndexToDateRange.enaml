@@ -17,7 +17,7 @@ from pandas import date_range
 class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Set Index To Date Range'
+    calc_name = 'Set Index To Date Range'
 
 
     class ui(Atom):

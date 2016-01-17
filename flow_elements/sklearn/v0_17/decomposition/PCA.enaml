@@ -17,9 +17,9 @@ from pandas import Series, DataFrame, concat
 
 class PCA_Model(SKLearnElement):
     
-    elementName = 'PCA'
-    elementDescription = 'Principal component analysis.'
-    elementDocumentation = SKLearnElement.doc_root + \
+    calc_name = 'PCA'
+    calc_desc = 'Principal component analysis.'
+    calc_docs = SKLearnElement.doc_root + \
                            'sklearn.decomposition.PCA.html'
 
     

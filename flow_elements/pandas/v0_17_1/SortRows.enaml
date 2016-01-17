@@ -15,7 +15,7 @@ from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 class SortRows_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Sort Rows'
+    calc_name = 'Sort Rows'
 
 
     class ui(Atom):

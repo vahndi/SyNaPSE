@@ -17,9 +17,9 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 class PassiveAggressiveClassifier_Model(ABCClassificationModel):
 
 
-    elementName = 'Passive Aggressive Classifier'
-    elementDescription = 'Passive Aggressive Classifier.'
-    elementDocumentation = \
+    calc_name = 'Passive Aggressive Classifier'
+    calc_desc = 'Passive Aggressive Classifier.'
+    calc_docs = \
         ABCClassificationModel.doc_root + 'PassiveAggressiveClassifier.html'
 
 

@@ -31,9 +31,9 @@ from ..metrics.classification_metrics import ClassificationMetrics as CM
 
 class RandomForestClassifier_Model(SKLearnElement):
 
-    elementName = 'Random Forest Classifier'
-    elementDescription = 'A random forest classifier.'
-    elementDocumentation = SKLearnElement.doc_root + \
+    calc_name = 'Random Forest Classifier'
+    calc_desc = 'A random forest classifier.'
+    calc_docs = SKLearnElement.doc_root + \
                            'sklearn.ensemble.RandomForestClassifier.html'
 
 

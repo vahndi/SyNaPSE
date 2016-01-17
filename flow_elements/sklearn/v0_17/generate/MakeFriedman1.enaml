@@ -14,7 +14,7 @@ from sklearn.datasets import make_friedman1
 class MakeFriedman1_Model(RegressionGenerator):
 
 
-    elementName = 'Make Friedman 1'
+    calc_name = 'Make Friedman 1'
 
 
     class ui(Atom):

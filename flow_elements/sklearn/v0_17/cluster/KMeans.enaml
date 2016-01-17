@@ -27,9 +27,9 @@ from ..metrics.clustering_metrics import ClusteringMetrics as CM
 
 class KMeans_Model(SKLearnElement):
 
-    elementName = 'K Means'
-    elementDescription = 'K-means clustering algorithm.'
-    elementDocumentation = SKLearnElement.doc_root + \
+    calc_name = 'K Means'
+    calc_desc = 'K-means clustering algorithm.'
+    calc_docs = SKLearnElement.doc_root + \
                            'sklearn.cluster.k_means.html'
 
     class ui(Atom):

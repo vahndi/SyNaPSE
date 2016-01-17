@@ -15,9 +15,9 @@ from sklearn.linear_model import ARDRegression
 class ARDRegression_Model(ABCRegressionModel):
 
 
-    elementName = 'ARD Regression'
-    elementDescription = 'Bayesian ARD regression.'
-    elementDocumentation = ABCRegressionModel.doc_root + 'ARDRegression.html'
+    calc_name = 'ARD Regression'
+    calc_desc = 'Bayesian ARD regression.'
+    calc_docs = ABCRegressionModel.doc_root + 'ARDRegression.html'
 
 
     class ui(Atom):

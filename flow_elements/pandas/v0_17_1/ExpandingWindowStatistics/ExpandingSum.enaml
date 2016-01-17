@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingSum_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Sum'
+    calc_name = 'Expanding Sum'
 
     
     def __init__(self):

@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingMedian_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Median'
+    calc_name = 'Expanding Median'
 
     
     def __init__(self):

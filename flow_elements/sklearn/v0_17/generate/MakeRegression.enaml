@@ -16,7 +16,7 @@ from sklearn.datasets import make_regression
 class MakeRegression_Model(RegressionGenerator):
 
 
-    elementName = 'Make Regression'
+    calc_name = 'Make Regression'
 
 
     class ui(Atom):

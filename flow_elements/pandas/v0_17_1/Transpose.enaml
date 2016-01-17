@@ -9,7 +9,7 @@ from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 class Transpose_Model(ABCDataFrameToDataFrame):
 
 
-    elementName = 'Transpose'
+    calc_name = 'Transpose'
 
 
     def setInputs(self, dataframe):

@@ -1,13 +1,13 @@
 # Parent
-from models_views.flowElement import FlowElement
+from models_views.calculation import Calculation_Model
 
 # Preceding elements
 from flow_elements.core.ABCs import ABCOutputsDataFrame
 
 
 
-class SKLearnElement(FlowElement):
+class SKLearnElement(Calculation_Model):
     
     doc_root = 'http://scikit-learn.org/stable/modules/generated/'
-    precedingElements = [ABCOutputsDataFrame]
+    preceding_elements = [ABCOutputsDataFrame]
     

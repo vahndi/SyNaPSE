@@ -17,7 +17,7 @@ from pandas.stats.moments import rolling_quantile
 class RollingQuantile_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Rolling Quantile'
+    calc_name = 'Rolling Quantile'
 
 
     class ui(Atom):

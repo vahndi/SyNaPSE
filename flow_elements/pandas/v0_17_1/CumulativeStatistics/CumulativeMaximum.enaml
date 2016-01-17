@@ -6,7 +6,7 @@ from ._base.CumulativeStatistic import CumulativeStatistic_View
 class CumulativeMaximum_Model(CumulativeStatistic_Model):
     
     
-    elementName = 'Cumulative Maximum'
+    calc_name = 'Cumulative Maximum'
 
     
     def __init__(self):

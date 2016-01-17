@@ -6,7 +6,7 @@ from ._base.RollingStatistic import RollingStatistic_View
 class RollingVariance_Model(RollingStatistic_Model):
     
     
-    elementName = 'Rolling Variance'
+    calc_name = 'Rolling Variance'
 
     
     def __init__(self):

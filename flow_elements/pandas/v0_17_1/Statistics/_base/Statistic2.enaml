@@ -56,7 +56,7 @@ class Statistic2_Model(ABCDataFrameToSeries):
             func = getattr(self._dataframe, self.outputFunction)
             series = func(** args)
             series.index.name = self.uiModel.axis
-            series.name = self.elementName.lower()
+            series.name = self.calc_name.lower()
             
             return {'series': series}    
 

@@ -59,7 +59,8 @@ class Main_Model(object):
 
     def __init__(self):
 
-        self.elementDict = {e.elementName: e for e in Main_Model.elementModels}                     
+        self.elementDict = {e.calculation_name: e 
+                            for e in Main_Model.elementModels}                     
 
         self.chooseElement = ChooseElement(parent = self,
                                            elementTypes = 
@@ -112,16 +113,16 @@ class ChooseElement(object):
             
             self.elementTypes = elementTypes
             ets = self.getFollowingElementTypes(precedingElementType)
-            etNames = [et.elementName for et in ets]
+            etNames = [et.calculation_name for et in ets]
             self.uiModel = ChooseElement.ui(elementTypes = etNames)
 
 
     def updateUIElementTypes(self, precedingElementTypeName):
         
         elementType = [et for et in self.elementTypes 
-                       if et.elementName == precedingElementTypeName][0]
+                       if et.calculation_name == precedingElementTypeName][0]
         followingElementTypes = self.getFollowingElementTypes(elementType)
-        self.uiModel.elementTypes = [et.elementName 
+        self.uiModel.elementTypes = [et.calculation_name 
                                      for et in followingElementTypes]
 
 
@@ -129,10 +130,10 @@ class ChooseElement(object):
         
         if forElementType is None:
             return [et for et in self.elementTypes 
-                    if not et.precedingElements]
+                    if not et.preceding_elements]
         else:
             return [et for et in self.elementTypes
-                    for etPreceder in et.precedingElements
+                    for etPreceder in et.preceding_elements
                     if issubclass(forElementType, etPreceder)]
 
 
@@ -160,7 +161,7 @@ class FlowElement(object):
 
     def __str__(self):
         
-        return self._model.elementName
+        return self._model.calculation_name
         
     
     def select(self):
@@ -229,11 +230,11 @@ class FlowList(object):
         self.selectElement(flowElement)
 
 
-    def appendElement(self, elementName = None):
+    def appendElement(self, calculation_name = None):
         
-        if elementName is not None:
+        if calculation_name is not None:
             
-            constructor = self._elementDict[elementName]
+            constructor = self._elementDict[calculation_name]
             newElement = FlowElement(model = constructor(),
                                      container = self)
 
@@ -267,7 +268,7 @@ class FlowList(object):
             self.uiModel.elements = self._elements
             self.selectElement(newElement)
             
-            self._parent.updateChooseElementTypes(elementName)
+            self._parent.updateChooseElementTypes(calculation_name)
 
     
     
@@ -277,8 +278,8 @@ class FlowList(object):
 #    elementDict = Dict()
 #    numNodes = 1
 #    
-#    def add_element(self, elementTypeName, parentElementName = None):
+#    def add_element(self, elementTypeName, parentcalculation_name = None):
 #        
 #        self.flowGraph.add_node('%s_%i' %(elementTypeName, numNodes)
-#        self.elementDict[elementName]
+#        self.elementDict[calculation_name]
 

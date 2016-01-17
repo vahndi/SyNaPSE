@@ -6,7 +6,7 @@ from ._base.Statistic1 import Statistic1_View
 class Mean_Model(Statistic1_Model):
     
     
-    elementName = 'Mean'
+    calc_name = 'Mean'
 
     
     def __init__(self):

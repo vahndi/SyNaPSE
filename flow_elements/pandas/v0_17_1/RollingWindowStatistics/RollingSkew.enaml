@@ -6,7 +6,7 @@ from ._base.RollingStatistic import RollingStatistic_View
 class RollingSkew_Model(RollingStatistic_Model):
     
     
-    elementName = 'Rolling Skew'
+    calc_name = 'Rolling Skew'
 
     
     def __init__(self):

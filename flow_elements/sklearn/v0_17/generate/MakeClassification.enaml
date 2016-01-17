@@ -15,7 +15,7 @@ from sklearn.datasets import make_classification
 class MakeClassification_Model(NumericClassificationGenerator):
 
 
-    elementName = 'Make Classification'
+    calc_name = 'Make Classification'
 
 
     class ui(Atom):

@@ -20,10 +20,10 @@ from sklearn.linear_model import TheilSenRegressor
 class TheilSenRegressor_Model(ABCRegressionModel):
 
 
-    elementName = 'Theil Sen Regressor'
-    elementDescription = \
+    calc_name = 'Theil Sen Regressor'
+    calc_desc = \
         'Theil-Sen Estimator: robust multivariate regression model.'
-    elementDocumentation = ABCRegressionModel.doc_root + \
+    calc_docs = ABCRegressionModel.doc_root + \
         'TheilSenRegressor.html'
 
 

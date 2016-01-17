@@ -70,9 +70,9 @@ def getModelCode(element_name, dataframe):
     widgets = [widget.from_DataFrame_row(dataframe.iloc[iRow])
                for iRow in range(len(dataframe))]
     
-    modelCode = '\n\n\nclass %s_Model(FlowElement):\n\n' % element_name
-    modelCode += "%selementName = '%s'\n" % (spc(4), ToWords(element_name))
-    modelCode += '%sprecedingElements = []\n' % spc(4)
+    modelCode = '\n\n\nclass %s_Model(Calculation_Model):\n\n' % element_name
+    modelCode += "%scalculation_name = '%s'\n" % (spc(4), ToWords(element_name))
+    modelCode += '%spreceding_elements = []\n' % spc(4)
 
     modelCode += getAtomCode(dataframe)
     

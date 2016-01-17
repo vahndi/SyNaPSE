@@ -8,7 +8,7 @@ from sklearn.datasets import make_swiss_roll
 class MakeSwissRoll_Model(Make1_Model):
     
     
-    elementName = 'Make Swiss Roll'
+    calc_name = 'Make Swiss Roll'
 
     
     def __init__(self):

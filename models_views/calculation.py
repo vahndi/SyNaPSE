@@ -1,11 +1,11 @@
-class FlowElement(object):
+class Calculation_Model(object): # rename this to Node_Model or something
     '''
     The base class for all flow elements
     '''    
-    elementName = ''
-    elementDescription = ''
-    elementDocumentation = ''
-    precedingElements = []
+    calculation_name = ''
+    calculation_description = ''
+    calculation_documentation = ''
+    preceding_elements = []
     doc_root = ''
 
 

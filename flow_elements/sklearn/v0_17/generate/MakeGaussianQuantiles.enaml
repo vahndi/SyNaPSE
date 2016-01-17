@@ -14,7 +14,7 @@ from sklearn.datasets import make_gaussian_quantiles
 class MakeGaussianQuantiles_Model(LabelClassificationGenerator):
 
 
-    elementName = 'Make Gaussian Quantiles'
+    calc_name = 'Make Gaussian Quantiles'
 
 
     class ui(Atom):

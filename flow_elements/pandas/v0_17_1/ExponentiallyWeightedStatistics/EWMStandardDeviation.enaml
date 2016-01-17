@@ -16,7 +16,7 @@ from pandas.stats.moments import ewmstd
 class EWMStandardDeviation_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Exponentially Weighted Moving Standard Deviation'
+    calc_name = 'Exponentially Weighted Moving Standard Deviation'
 
 
     class ui(Atom):

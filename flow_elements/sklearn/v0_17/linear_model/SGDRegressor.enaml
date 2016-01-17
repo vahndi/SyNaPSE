@@ -20,10 +20,10 @@ from sklearn.linear_model import SGDRegressor
 class SGDRegressor_Model(ABCRegressionModel):
 
 
-    elementName = 'SGD Regressor'
-    elementDescription = \
+    calc_name = 'SGD Regressor'
+    calc_desc = \
     'Linear model fitted by minimizing a regularized empirical loss with SGD.'
-    elementDocumentation = ABCRegressionModel.doc_root + 'SGDRegressor.html'
+    calc_docs = ABCRegressionModel.doc_root + 'SGDRegressor.html'
 
 
     class ui(Atom):

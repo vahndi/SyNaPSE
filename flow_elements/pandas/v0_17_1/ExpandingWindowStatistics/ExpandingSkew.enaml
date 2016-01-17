@@ -6,7 +6,7 @@ from ._base.ExpandingStatistic import ExpandingStatistic_View
 class ExpandingSkew_Model(ExpandingStatistic_Model):
     
     
-    elementName = 'Expanding Skew'
+    calc_name = 'Expanding Skew'
 
     
     def __init__(self):

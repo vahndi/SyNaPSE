@@ -17,7 +17,7 @@ from pandas import concat, DataFrame, expanding_quantile, Series
 class ExpandingQuantile_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
-    elementName = 'Expanding Quantile'
+    calc_name = 'Expanding Quantile'
 
 
     class ui(Atom):

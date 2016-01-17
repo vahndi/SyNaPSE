@@ -8,7 +8,6 @@ from enaml.widgets.api import (
 from custom_views.fields import IntField, FloatField
 
 # Models
-from models_views.flowElement import FlowElement 
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
@@ -28,9 +27,9 @@ from pandasFunctions import joinInputsTargetsPredictions
 class LogisticRegression_Model(ABCClassificationModel):
 
 
-    elementName = 'Logistic Regression'
-    elementDescription = 'Logistic Regression (aka logit, MaxEnt) classifier.'
-    elementDocumentation = \
+    calc_name = 'Logistic Regression'
+    calc_desc = 'Logistic Regression (aka logit, MaxEnt) classifier.'
+    calc_docs = \
         ABCClassificationModel.doc_root + 'LogisticRegression.html'
 
 

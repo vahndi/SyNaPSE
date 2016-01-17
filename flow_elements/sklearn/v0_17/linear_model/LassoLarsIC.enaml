@@ -16,10 +16,10 @@ from sklearn.linear_model import LassoLarsIC
 class LassoLarsIC_Model(ABCRegressionModel):
 
 
-    elementName = 'Lasso Lars IC'
-    elementDescription = \
+    calc_name = 'Lasso Lars IC'
+    calc_desc = \
         'Lasso model fit with Lars using BIC or AIC for model selection.'
-    elementDocumentation = ABCRegressionModel.doc_root + \
+    calc_docs = ABCRegressionModel.doc_root + \
                            'LassoLarsIC.html'
 
     class ui(Atom):
