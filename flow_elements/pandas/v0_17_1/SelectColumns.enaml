@@ -10,7 +10,8 @@ from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 
-from pandasFunctions import getColumnNames
+from modules.pandas_helpers import get_column_names
+
 
 method_tooltips = {'string' : ('select columns whose names start with, ' +
                                 'end with, contain or do not contain ' + 
@@ -123,7 +124,7 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
             
             if self.uiModel.method == 'string':
                 
-                columns = getColumnNames(
+                columns = get_column_names(
                        self._dataframe,
                        startsWith = self.uiModel.starts_with,
                        endsWith = self.uiModel.ends_with,

@@ -10,7 +10,7 @@ from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 from flow_elements.core.ABCs import ABCDataFrameToDataFrame
 
-from pandasFunctions import getRowNames
+from modules.pandas_helpers import get_row_names
 
 # Previous elements
 from ReadDataFrame import ReadDataFrame_Model
@@ -122,7 +122,7 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
             
             if self.uiModel.method == 'string':
                 
-                rows = getRowNames(
+                rows = get_row_names(
                        self._dataframe,
                        startsWith = self.uiModel.starts_with,
                        endsWith = self.uiModel.ends_with,

@@ -17,7 +17,7 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Other
 from pandas import DataFrame, Series, concat
-from pandasFunctions import getConfusionMatrix
+from modules.pandas_helpers import get_confusion_matrix
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from ..sklearn_element import SKLearnElement
@@ -129,7 +129,7 @@ class KMeans_Model(SKLearnElement):
                 df_pred = concat([X, y_pred_cluster], axis = 1)
             
             if target_column:
-                conf_mat = getConfusionMatrix(
+                conf_mat = get_confusion_matrix(
                                     DataFrame({'Actual': y, 
                                                'Predicted': y_pred}),
                                               'Actual', 'Predicted')

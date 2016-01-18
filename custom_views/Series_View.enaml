@@ -6,7 +6,6 @@ from enaml.core.api import Conditional
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
-from plotFunctions import getFigureShape
 import seaborn as sns
 
 

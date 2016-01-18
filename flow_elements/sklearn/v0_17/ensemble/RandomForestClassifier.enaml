@@ -18,13 +18,10 @@ from .subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
 # Models
 from ..sklearn_element import SKLearnElement
 
-
 # Other
 from sklearn.ensemble import RandomForestClassifier
 from numpy import int64, float64
 from pandas import Series, DataFrame
-from pandasFunctions import getColumnNamesByDType
-from pandasFunctions import splitTrainingTest
 from ..metrics.classification_metrics import ClassificationMetrics as CM
 
 

@@ -6,9 +6,10 @@ from enaml.core.api import Conditional
 from numpy import float64, int64
 
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from pandasFunctions import getColumnNamesByDType
-from pandasFunctions import shuffleRows
-from pandasFunctions import splitTrainingTest
+
+from modules.pandas_helpers import get_column_names_by_dtype
+from modules.pandas_helpers import shuffle_dataframe_rows
+from modules.pandas_helpers import split_training_test
 
 
 
@@ -80,8 +81,8 @@ class InputsTargetsSelector_Model(object):
         self.show_shuffle_examples = show_shuffle_examples
         self.show_pct_training = show_pct_training
 
-        input_cols = getColumnNamesByDType(dataframe, input_dtypes)
-        target_cols = getColumnNamesByDType(dataframe, target_dtypes)
+        input_cols = get_column_names_by_dtype(dataframe, input_dtypes)
+        target_cols = get_column_names_by_dtype(dataframe, target_dtypes)
 
         self.input_cols = CheckBoxList_Model(input_cols)
         self.uiModel = InputsTargetsSelector_Model.ui(
@@ -140,7 +141,7 @@ class InputsTargetsSelector_Model(object):
         input_cols = self.checked_inputs()
         target_column = self.selected_target()
 
-        df_shuffled = {True: shuffleRows(self._dataframe),
+        df_shuffled = {True: shuffle_dataframe_rows(self._dataframe),
                        False: self._dataframe
                        }[self.show_shuffle_examples]
 
@@ -165,7 +166,7 @@ class InputsTargetsSelector_Model(object):
         
         if target_column == '':
             
-            X_train, X_test = splitTrainingTest(
+            X_train, X_test = split_training_test(
                                         dataframe = self._dataframe, 
                                         training_fraction = training_fraction, 
                                         shuffle_rows = shuffle_examples,
@@ -177,7 +178,7 @@ class InputsTargetsSelector_Model(object):
 
         else:
             
-            X_train, y_train, X_test, y_test = splitTrainingTest(
+            X_train, y_train, X_test, y_test = split_training_test(
                                         dataframe = self._dataframe, 
                                         training_fraction = training_fraction, 
                                         shuffle_rows = shuffle_examples,

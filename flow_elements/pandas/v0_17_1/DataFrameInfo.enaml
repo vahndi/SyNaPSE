@@ -3,12 +3,17 @@ from enaml.widgets.api import GroupBox
 
 # Models
 from flow_elements.core.ABCs import ABCTakesDataFrame
-
-
-from metacodeFunctions import getPublicAttributes
 from pandas import Series, Index, concat
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+
+def getPublicAttributes(obj):
+    '''
+    Returns a list of an object's public attributes
+    '''
+    return [a for a in dir(obj) 
+            if not a.startswith('_') and not callable(getattr(obj, a))]
 
 
 def labelSeries(series, name, index_name):

@@ -9,7 +9,6 @@ from enaml.core.api import Conditional
 from custom_views.fields import Field
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from flow_elements.core.ABCs import ABCDataFrameToDataFrame
-from pandasFunctions import getColumnNames
 import re
 
 

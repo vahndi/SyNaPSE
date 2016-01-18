@@ -5,7 +5,6 @@ from enaml.core.api import Conditional
 # Plotting                             
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from plotFunctions import getFigureShape
 import seaborn as sns
 from modules.dataframe_figures import (
     bar_fig_grouped_wf,

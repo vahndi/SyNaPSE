@@ -1,10 +1,12 @@
 from matplotlib.figure import Figure
 from sklearn.metrics import confusion_matrix
 from matplotlib.markers import MarkerStyle
-from plotFunctions import getFigureShape
+import numpy as np
 import seaborn as sns
 from pandas import melt
 markers = MarkerStyle.filled_markers
+from math import floor
+
 
 # Definitions
 # -----------
@@ -12,6 +14,19 @@ markers = MarkerStyle.filled_markers
 # A long-form dataframe is a dataframe where the each row represents the value
 # of a variable, and one or more of the columns contains a categorical value,
 # which represents the corresponding variable(s)
+
+def _get_figure_shape(num_plots):
+    '''
+    Returns the number of rows and columns required to fit numPlots into a figure
+    Favours longer plots (more columns than rows)
+    '''
+    num_rows = floor(np.sqrt(num_plots))
+    num_cols = num_rows
+    while num_rows * num_cols < num_plots:
+        num_cols += 1
+    
+    return num_rows, num_cols
+
 
 def bar_fig_grouped_wf(dataframe):
     '''
@@ -134,7 +149,7 @@ def confmat_cat__a_fig(dataframe):
     col1 = dataframe.columns[1]
     axis_col = dataframe.columns[2]
     axis_names = list(dataframe[axis_col].unique())
-    r, c = getFigureShape(len(axis_names))
+    r, c = _get_figure_shape(len(axis_names))
     i_ax = 0
     for a in axis_names:
         i_ax += 1
@@ -266,7 +281,7 @@ def scatter_cat__acm_fig(dataframe):
     palette = sns.color_palette('cubehelix', len(colour_labels))
 
     fig = Figure()
-    fig_nrows, fig_ncols = getFigureShape(len(axis_labels))
+    fig_nrows, fig_ncols = _get_figure_shape(len(axis_labels))
     
     i_ax = 0
     for a in axis_labels:

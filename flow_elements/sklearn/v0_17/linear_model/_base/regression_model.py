@@ -6,7 +6,7 @@ from linear_model import ABCLinearModel
 
 # Other
 from numpy import float64, int64
-from pandasFunctions import joinInputsTargetsPredictions
+from modules.pandas_helpers import join_inputs_targets_predictions
 from ...metrics.regression_metrics import RegressionMetrics as RM
 
 
@@ -37,7 +37,7 @@ class ABCRegressionModel(ABCLinearModel):
         self.y_pred_test = self.estimator.predict(X_test)            
 
         # Create a prediction summary dataframe
-        self.df_predictions = joinInputsTargetsPredictions(
+        self.df_predictions = join_inputs_targets_predictions(
                                            train_inputs = X_train, 
                                            train_targets = y_train, 
                                            train_predictions = y_pred_train,

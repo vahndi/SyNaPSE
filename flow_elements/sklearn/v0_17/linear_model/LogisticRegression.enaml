@@ -19,8 +19,6 @@ from ._base.classification_model import ABCClassificationModel
 from sklearn.linear_model import LogisticRegression
 
 from pandas import DataFrame, Series
-from pandasFunctions import splitTrainingTest
-from pandasFunctions import joinInputsTargetsPredictions
 
 
 
