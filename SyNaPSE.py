@@ -22,7 +22,7 @@ if __name__ == '__main__' and __package__ is None:
 if __name__ == '__main__':
 
     with enaml.imports():
-        from models_views.main_View import Main_View
+        from models_views.Main import Main_View
 
     app = QtApplication()
     view = Main_View()

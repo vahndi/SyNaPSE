@@ -1,4 +1,4 @@
-from models_views.calculation import Calculation_Model
+from models_views.Calculation import Calculation_Model
 
 
 
@@ -10,7 +10,7 @@ class ABCOutputsDataFrame(Calculation_Model):
 
 class ABCTakesDataFrame(Calculation_Model):
 
-    preceding_elements = [ABCOutputsDataFrame]
+    preceding_calcs = [ABCOutputsDataFrame]
 
 
 
@@ -22,7 +22,7 @@ class ABCOutputsSeries():
 
 class ABCTakesSeries():
     
-    preceding_elements = [ABCOutputsSeries]
+    preceding_calcs = [ABCOutputsSeries]
 
 
 

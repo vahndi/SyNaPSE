@@ -65,7 +65,7 @@ enamldef Statistic1_View(GroupBox):
 
         Label:
             text = 'Axis'
-            tool_tip = axis_tooltip
+            tool_tip = model.axis_tooltip
         ObjectCombo:
             items = model.axis_list
             selected := model.axis
@@ -73,7 +73,7 @@ enamldef Statistic1_View(GroupBox):
             
         Label:
             text = 'Skip NA / Null Values'
-            tool_tip = skipna_tooltip
+            tool_tip = model.skipna_tooltip
         CheckBox:
             checked := model.skipna
             tool_tip = model.skipna_tooltip

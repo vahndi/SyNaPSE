@@ -1,0 +1,37 @@
+# Enaml
+from enaml.core.api import Include
+from enaml.widgets.api import DockPane, Form, GroupBox
+
+# Other
+from modules.startup import model_view_dict
+
+
+def _get_calculation_view(calculation_item):
+    
+    try:
+        
+        calc = calculation_item.get_model()
+        view_constructor = model_view_dict[type(calc)]
+        view = view_constructor(model = calc.uiModel)
+        return view
+
+    except:
+        
+        return Form()
+
+
+
+enamldef CalculationConfig_View(DockPane):
+
+
+    attr model
+
+    
+    title = 'Calculation Configuration'
+    dock_area = 'left'
+    allowed_dock_areas = ['left', 'right'] 
+    closable = False
+    
+    GroupBox:
+        Include:
+            objects << [_get_calculation_view(model)]

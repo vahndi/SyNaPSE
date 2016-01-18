@@ -1,0 +1,88 @@
+# Enaml
+from enaml.widgets.api import MainWindow
+
+# Subviews
+from Menu import Menu_View
+from CalculationList import CalculationList_Model, CalculationList_View
+from CalculationConfig import CalculationConfig_View
+from CalculationOutput import CalculationOutput_View
+from ChooseCalculation import ChooseCalculation_Model
+
+# Other
+from modules.startup import calculation_models
+
+
+
+class Main_Model(object):
+    '''
+    The Main Model class.
+    
+    Class Attributes
+    ----------------
+    calculation_models:
+        A list of all the calculation models available to the program.
+
+    Instance Attributes
+    -------------------
+    _calc_dict (dict):
+        A dict mapping the calculation names to their respective models.
+    chooseCalc_Model (ChooseCalculation_Model):
+        An instance of the model used to select a calculation to display the 
+        model for
+    
+    '''
+
+    calc_models = calculation_models
+
+
+    def __init__(self):
+
+        self._calc_dict = {cm.calc_name: cm 
+                          for cm in Main_Model.calc_models}                     
+
+        self.chooseCalc_Model = ChooseCalculation_Model(
+            parent = self,
+            calc_types = Main_Model.calc_models
+            )
+
+        self.calcList_Model = CalculationList_Model(
+            parent = self,
+            calc_dict = self._calc_dict
+            )
+
+
+    def update_choosable_calc_types(self, preceding_calc_type_name):
+        
+        self.chooseCalc_Model.update_UI_calc_types(preceding_calc_type_name)
+
+
+
+enamldef Main_View(MainWindow): me:
+
+
+    attr model = Main_Model()
+
+
+    title = 'SyNaPSE'
+
+
+    Menu_View:
+
+        model << me.model
+
+
+    CalculationList_View:
+        
+        model << me.model.calcList_Model
+        main_model << me.model
+
+ 
+    CalculationConfig_View:
+
+        model := me.model.calcList_Model.uiModel.selected_calc_item
+
+
+    CalculationOutput_View:
+        
+        model << me.model.calcList_Model.uiModel.selected_calc_item_outputs
+        calculationList << parent.model.calcList_Model

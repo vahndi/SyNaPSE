@@ -1,0 +1,75 @@
+# Atom
+from atom.api import Atom, ContainerList, Str
+# Enaml
+from enaml.widgets.api import Form, Label, ObjectCombo, PopupView, PushButton
+
+
+
+class ChooseCalculation_Model(object):
+    
+    
+    class ui(Atom):
+        
+        calc_types = ContainerList(str)
+        selected_calc_type = Str()
+        
+    
+    def __init__(self, parent, calc_types, preceding_calc_type = None):
+
+        self._parent = parent
+
+        if not preceding_calc_type:
+            
+            self.calc_types = calc_types
+            cts = self.following_calc_types(preceding_calc_type)
+            ct_names = [ct.calc_name for ct in cts]
+            self.uiModel = ChooseCalculation_Model.ui(calc_types = ct_names)
+
+
+    def update_UI_calc_types(self, preceding_calc_type_name):
+        '''
+        Update the list of choosable calculation types in the uiModel based on
+        the name of the preceding calculation type.
+        '''
+        calc_type = [ct for ct in self.calc_types 
+                     if ct.calc_name == preceding_calc_type_name][0]
+        following_calc_types = self.following_calc_types(calc_type)
+        self.uiModel.calc_types = [ct.calc_name 
+                                   for ct in following_calc_types]
+
+
+    def following_calc_types(self, calc_type):
+        '''
+        Returns a list of the calculations which can follow calc_type
+        '''
+        if calc_type is None:
+            return [ct for ct in self.calc_types 
+                    if not ct.preceding_calcs]
+        else:
+            return [ct for ct in self.calc_types
+                    for ct_preceder in ct.preceding_calcs
+                    if issubclass(calc_type, ct_preceder)]
+
+
+
+enamldef ChooseCalculation_View(PopupView): me:
+
+
+    attr model
+    attr clvModel
+
+
+    Form:
+        Label:
+            text = 'Calculation Type'
+        ObjectCombo: oc:
+            items << model.uiModel.calc_types
+            selected := model.uiModel.selected_calc_type
+        PushButton:
+            text = 'OK'
+            enabled << oc.selected != ''
+            clicked :: 
+                # Add a new calc to the list and update choosable types
+                clvModel.append_calc_item(model.uiModel.selected_calc_type)                
+                # Close this window
+                me.close()

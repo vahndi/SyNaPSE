@@ -71,8 +71,8 @@ def getModelCode(element_name, dataframe):
                for iRow in range(len(dataframe))]
     
     modelCode = '\n\n\nclass %s_Model(Calculation_Model):\n\n' % element_name
-    modelCode += "%scalculation_name = '%s'\n" % (spc(4), ToWords(element_name))
-    modelCode += '%spreceding_elements = []\n' % spc(4)
+    modelCode += "%scalc_name = '%s'\n" % (spc(4), ToWords(element_name))
+    modelCode += '%spreceding_calcs = []\n' % spc(4)
 
     modelCode += getAtomCode(dataframe)
     

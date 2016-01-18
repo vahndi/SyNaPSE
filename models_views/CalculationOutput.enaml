@@ -139,7 +139,7 @@ enamldef OutputsGroupBox(GroupBox): ogb:
 
 
 
-enamldef ElementOutput_View(DockPane):
+enamldef CalculationOutput_View(DockPane):
     '''
     A view to display the outputs of a Calculation_Model
 
@@ -150,10 +150,10 @@ enamldef ElementOutput_View(DockPane):
     '''
     
     attr model
-    attr flowList
+    attr calculationList
 
     
-    title = 'Element Output'
+    title = 'Calculation Output'
     dock_area = 'right'
     allowed_dock_areas = ['left', 'right']
     closable = False
@@ -163,13 +163,12 @@ enamldef ElementOutput_View(DockPane):
         PushButton:    
             text = 'Refresh Output'
             clicked::
-                flowList.refreshSelectedElementOutputs()
-                model = flowList.uiModel.selectedElementOutputs
+                calculationList.refresh_selected_calc_item_outputs()
+                model = calculationList.uiModel.selected_calc_item_outputs
                 
         Notebook:    
             Looper:        
                 iterable << [key for key in model.keys()]        
-                
                 Page:            
                     title = loop_item
                     closable = False

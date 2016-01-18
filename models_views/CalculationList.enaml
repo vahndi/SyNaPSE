@@ -1,0 +1,119 @@
+# Atom
+from atom.api import Atom, ContainerList, Dict, Int, Value
+
+# Enaml
+from enaml.widgets.api import DockPane, GroupBox, PushButton
+from custom_views.RadioButtonList import RadioButtonList_View
+
+# Models
+from Calculation import CalculationItem
+from ChooseCalculation import ChooseCalculation_View
+
+
+
+class CalculationList_Model(object):
+
+    
+    class ui(Atom):
+        
+        calc_items = ContainerList(CalculationItem)
+        selected_calc_item = Value(CalculationItem)
+        selected_index = Int(-1)
+        selected_calc_item_outputs = Dict(default = {})
+
+        
+    def __init__(self, parent, calc_dict):
+        
+        self._parent = parent
+        self._calc_dict = calc_dict
+        self.uiModel = CalculationList_Model.ui()
+        self._calc_items = []
+        
+        
+    def get_calc_items(self):
+        
+        return self._calc_items
+
+    
+    def num_calcs(self):
+        
+        return len(self._calc_items)
+        
+
+    def select_calc_item(self, calc_item):
+        
+        self.uiModel.selected_calc_item = calc_item        
+        self.uiModel.selected_calc_item_outputs = calc_item.get_outputs()
+
+        
+    def refresh_selected_calc_item_outputs(self):
+        
+        calc_item = self.uiModel.selected_calc_item
+        self.uiModel.selected_calc_item = None
+        self.uiModel.selected_calc_item_outputs = {}
+        self.select_calc_item(calc_item)
+
+
+    def append_calc_item(self, calc_name = None):
+        
+        if calc_name is not None:
+            
+            constructor = self._calc_dict[calc_name]
+            new_calc_item = CalculationItem(model = constructor(),
+                                            container = self)
+
+            if self.num_calcs() > 0:
+
+                try:
+                    # Map outputs of previous calc to inputs of this calc
+                    input_arg_names = new_calc_item.model_arg_names()
+                    prev_outputs = self.uiModel.calc_items[-1].get_outputs()
+                    # TODO: write a function to replace prevOutputs[a] in the 
+                    # following line that also traverses through the outputs in
+                    # case the required argument is nested below the top level 
+                    # of the outputs
+                    input_args_dict = {a: prev_outputs[a] 
+                                       for a in input_arg_names
+                                       if a in prev_outputs}
+                    new_calc_item.set_inputs(input_args_dict)  
+                    
+                except Exception as e:
+                    
+                    print 'Error adding new calculation'
+                    print '__class__:', str(e.__class__)
+                    print '__doc__:', e.__doc__
+                    print 'message:', e.message
+                    print 'args:', str(e.args)
+                    
+                    return
+            
+            self._calc_items.append(new_calc_item)
+            self.uiModel.selected_index = len(self._calc_items) - 1
+            self.uiModel.calc_items = self._calc_items
+            self.select_calc_item(new_calc_item)
+            self._parent.update_choosable_calc_types(calc_name)
+
+
+
+enamldef CalculationList_View(DockPane): me:
+
+
+    attr model
+    attr main_model
+    
+    
+    title = 'Calculation List'
+    dock_area = 'left'
+    allowed_dock_areas = ['left', 'right']
+    closable = False
+    
+    GroupBox: 
+        RadioButtonList_View:
+            model << me.model.uiModel.calc_items
+            selectedIndex << me.model.uiModel.selected_index
+                                                 
+        PushButton:            
+            text = 'Add New Element'            
+            clicked ::
+                ChooseCalculation_View(model = me.main_model.chooseCalc_Model,
+                                       clvModel = model).show()
