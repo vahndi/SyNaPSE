@@ -6,7 +6,7 @@ from enaml.widgets.api import DockPane, GroupBox, PushButton
 from custom_views.RadioButtonList import RadioButtonList_View
 
 # Models
-from Calculation import CalculationItem
+from calculation import CalculationItem
 from ChooseCalculation import ChooseCalculation_View
 
 
@@ -94,7 +94,7 @@ enamldef CalculationList_View(DockPane): me:
 
 
     attr model
-    attr main_model
+    attr chooseCalc_Model
     
     
     title = 'Calculation List'
@@ -110,5 +110,5 @@ enamldef CalculationList_View(DockPane): me:
         PushButton:            
             text = 'Add New Element'            
             clicked ::
-                ChooseCalculation_View(model = me.main_model.chooseCalc_Model,
-                                       clvModel = model).show()
+                ChooseCalculation_View(model = me.chooseCalc_Model,
+                                       calcListView_Model = model).show()

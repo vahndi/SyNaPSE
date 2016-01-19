@@ -2,11 +2,15 @@
 from atom.api import Atom, ContainerList, Dict, Int, Value
 
 # Enaml
-from enaml.widgets.api import DockPane, GroupBox, PushButton
+from enaml.widgets.api import (
+    Container, DockPane, GroupBox, PushButton, RadioButton)
 from custom_views.RadioButtonList import RadioButtonList_View
+from custom_views.CalcItem_GraphView import CalcItem_GraphView
+from enaml.layout.api import hbox, vbox
+from enaml.core.api import Include
 
 # Models
-from Calculation import CalculationItem
+from calculation import CalculationItem
 from ChooseCalculation import ChooseCalculation_View
 
 # Other
@@ -28,7 +32,7 @@ class CalculationGraph_Model(object):
         
         self._parent = parent
         self._calc_dict = calc_dict
-        self.uiModel = CalculationGraph_Model.ui()
+        self.uiModel = CalculationGraph_Model.ui(selected_calc_item = None)
         self._calc_items = nx.DiGraph()
 
         
@@ -44,25 +48,38 @@ class CalculationGraph_Model(object):
         self.uiModel.selected_calc_item = None
         self.uiModel.selected_calc_item_outputs = {}
         self.select_calc_item(calc_item)
+    
+    
+    def item_names(self):
+        
+        return [node.item_name for node in self._calc_items.nodes()]
         
 
-    def append_calc_item(self, calc_type_name = None):
-
+    def add_calc_item(self, calc_type_name = None):
+        
+        # Get coords of selected item
+        new_x = 0
+        new_y = 0
+        selected_item = self.uiModel.selected_calc_item
+        if selected_item is not None:
+            new_x = selected_item.x
+            new_y = selected_item.y + 20
+        
         # Create new item            
         constructor = self._calc_dict[calc_type_name]
         new_item = CalculationItem(model = constructor(),
-                                        container = self)
+                                   container = self,
+                                   x = new_x, y = new_y)
 
         # Rename if the item name already exists
-        while new_item.item_name in self.get_item_names():
+        while new_item.item_name in self.item_names():
             new_item.item_name += '_'
 
         # Add new node to the graph
         self._calc_items.add_node(new_item)
 
         # Link outputs of selected item to new item
-        selected_item = self.uiModel.selected_calc_item
-        if selected_item is not None:
+        if selected_item is not None: #TODO: remove this condition later, once the append button's enabled property is dependent on there being an item selected
             try:
                 # Map outputs of previous calc to inputs of this calc
                 input_arg_names = new_item.model_arg_names()
@@ -105,10 +122,11 @@ def get_constraints(ui_objects, calc_items):
 
 
 
-enamldef CalculationGraph_View(DockPane):
+enamldef CalculationGraph_View(DockPane): me:
 
 
     attr model
+    attr chooseCalc_Model
 
     
     title = 'Calculation Graph'
@@ -116,10 +134,25 @@ enamldef CalculationGraph_View(DockPane):
     allowed_dock_areas = ['left', 'right'] 
     closable = False
     
-    Container: 
-        constraints << get_constraints(inc.objects, model.calc_items)
-        Include: inc:
-            objects = [RadioButton(text = b.name) 
-                       for b in model.buttons]
+    Container:
+        constraints = [vbox(button_cntnr, calcs_cntnr)]
+        
+        Container: button_cntnr:
+            constraints = [hbox(btn_add, btn_delete)]
+            PushButton: btn_add:
+                text = 'Add Calculation'
+                clicked ::
+                    ChooseCalculation_View(model = me.chooseCalc_Model,
+                                           calcGraphView_Model = model).show()
+            PushButton: btn_delete:
+                text = 'Delete Calculation'
+
+        Container: calcs_cntnr:
+            constraints << get_constraints(inc.objects, 
+                                           model.uiModel.calc_items)
+            Include: inc:
+                objects << [CalcItem_GraphView(model = calc_item,
+                                               graph_uiModel = model.uiModel) 
+                            for calc_item in model.uiModel.calc_items]
     
     

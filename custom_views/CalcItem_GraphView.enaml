@@ -1,0 +1,13 @@
+from enaml.widgets.api import RadioButton
+
+
+
+enamldef CalcItem_GraphView(RadioButton):
+    
+    attr model # an instance of `CalculationItem`
+    attr graph_uiModel # an instance of 
+    
+    text = model.item_name
+    clicked::
+        model.select()
+    checked << model == graph_uiModel.selected_calc_item

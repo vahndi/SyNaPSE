@@ -56,7 +56,7 @@ enamldef ChooseCalculation_View(PopupView): me:
 
 
     attr model
-    attr clvModel
+    attr calcGraphView_Model
 
 
     Form:
@@ -70,6 +70,7 @@ enamldef ChooseCalculation_View(PopupView): me:
             enabled << oc.selected != ''
             clicked :: 
                 # Add a new calc to the list and update choosable types
-                clvModel.append_calc_item(model.uiModel.selected_calc_type)                
+                calcGraphView_Model.add_calc_item(
+                                            model.uiModel.selected_calc_type)                
                 # Close this window
                 me.close()

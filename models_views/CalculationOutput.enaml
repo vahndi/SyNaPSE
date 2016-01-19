@@ -150,7 +150,7 @@ enamldef CalculationOutput_View(DockPane):
     '''
     
     attr model
-    attr calculationList
+    attr calculationGraph
 
     
     title = 'Calculation Output'
@@ -163,8 +163,8 @@ enamldef CalculationOutput_View(DockPane):
         PushButton:    
             text = 'Refresh Output'
             clicked::
-                calculationList.refresh_selected_calc_item_outputs()
-                model = calculationList.uiModel.selected_calc_item_outputs
+                calculationGraph.refresh_selected_calc_item_outputs()
+                model = calculationGraph.uiModel.selected_calc_item_outputs
                 
         Notebook:    
             Looper:        

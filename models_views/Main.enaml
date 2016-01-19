@@ -4,6 +4,7 @@ from enaml.widgets.api import MainWindow
 # Subviews
 from Menu import Menu_View
 from CalculationList import CalculationList_Model, CalculationList_View
+from CalculationGraph import CalculationGraph_Model, CalculationGraph_View
 from CalculationConfig import CalculationConfig_View
 from CalculationOutput import CalculationOutput_View
 from ChooseCalculation import ChooseCalculation_Model
@@ -45,10 +46,14 @@ class Main_Model(object):
             calc_types = Main_Model.calc_models
             )
 
-        self.calcList_Model = CalculationList_Model(
+#        self.calcList_Model = CalculationList_Model(
+#            parent = self,
+#            calc_dict = self._calc_dict
+#            )
+            
+        self.calcGraph_Model = CalculationGraph_Model(
             parent = self,
-            calc_dict = self._calc_dict
-            )
+            calc_dict = self._calc_dict)
 
 
     def update_choosable_calc_types(self, preceding_calc_type_name):
@@ -71,18 +76,24 @@ enamldef Main_View(MainWindow): me:
         model << me.model
 
 
-    CalculationList_View:
+#    CalculationList_View:
+#        
+#        model << me.model.calcList_Model
+#        chooseCalc_Model << me.model.chooseCalc_Model
+
+
+    CalculationGraph_View:
         
-        model << me.model.calcList_Model
-        main_model << me.model
+        model << me.model.calcGraph_Model
+        chooseCalc_Model << me.model.chooseCalc_Model
 
  
     CalculationConfig_View:
 
-        model := me.model.calcList_Model.uiModel.selected_calc_item
+        model := me.model.calcGraph_Model.uiModel.selected_calc_item
 
 
     CalculationOutput_View:
         
-        model << me.model.calcList_Model.uiModel.selected_calc_item_outputs
-        calculationList << parent.model.calcList_Model
+        model << me.model.calcGraph_Model.uiModel.selected_calc_item_outputs
+        calculationGraph << parent.model.calcGraph_Model

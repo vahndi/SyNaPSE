@@ -20,25 +20,6 @@ class Calculation_Model(object): # rename this to Node_Model or something
                     'message': e.message,
                     'args': str(e.args)}
                 }
-                              
-
-class CalculationType(object):
-
-    
-    def __init__(self, calc_type_name, calc_type):
-        
-        self._calc_type_name = calc_type_name
-        self._calc_type = calc_type  
-
-        
-    def __str__(self):
-        
-        return self._calc_type_name
-        
-        
-    def getType(self):
-        
-        return self._calc_type
 
 
 
@@ -47,7 +28,7 @@ class CalculationItem(object):
     An object which wraps `Calculation_Model`s and links to a container object 
     e.g. a `CalculationList` or `CalculationGraph`
     '''
-    def __init__(self, model, container):
+    def __init__(self, model, container, x = 0, y = 0):
         '''
         Arguments
         ---------
@@ -60,6 +41,8 @@ class CalculationItem(object):
         self._model = model
         self._container = container
         self.item_name = model.calc_name
+        self.x = x
+        self.y = y
         
     
     def get_model(self):
