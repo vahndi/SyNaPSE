@@ -1,3 +1,3 @@
 # SyNaPSE
 
-This repo is currently under development and requires some custom modules not in the repo. Please contact me if you are interested in trying / contributing to the application and I will upload them to the repo.
+This is an open-source data science and visualization application with a GUI created using enaml. It uses pandas, scikit-learn and (soon) networkx to implement calculation lists (soon graphs).
