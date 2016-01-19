@@ -59,6 +59,7 @@ class CalculationItem(object):
         '''
         self._model = model
         self._container = container
+        self.item_name = model.calc_name
         
     
     def get_model(self):

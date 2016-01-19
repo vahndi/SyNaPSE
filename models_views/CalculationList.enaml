@@ -29,11 +29,6 @@ class CalculationList_Model(object):
         self.uiModel = CalculationList_Model.ui()
         self._calc_items = []
         
-        
-    def get_calc_items(self):
-        
-        return self._calc_items
-
     
     def num_calcs(self):
         
