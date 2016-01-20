@@ -26,7 +26,7 @@ class Calculation_Model(object): # rename this to Node_Model or something
 class CalculationItem(object):
     '''
     An object which wraps `Calculation_Model`s and links to a container object 
-    e.g. a `CalculationList` or `CalculationGraph`
+    e.g. a `CalculationGraph`
     '''
     def __init__(self, model, container, x = 0, y = 0):
         '''
@@ -35,14 +35,20 @@ class CalculationItem(object):
         model: 
             An instance of a `Calculation_Model`, defined in `Main_Model`.
         container: 
-            The container of the `CalculationItem` e.g. a `CalculationList`.
-            Must have a `select_calc` method.
+            The container of the `CalculationItem` e.g. a `CalculationGraph`.
+            Must have a `select_calc_item` method.
         '''
         self._model = model
         self._container = container
         self.item_name = model.calc_name
         self.x = x
         self.y = y
+        
+    def calc_type_name(self):
+        '''
+        Returns the name of the item's model calculation type
+        '''
+        return self._model.calc_name
         
     
     def get_model(self):

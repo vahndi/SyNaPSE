@@ -3,7 +3,6 @@ from enaml.widgets.api import MainWindow
 
 # Subviews
 from Menu import Menu_View
-from CalculationList import CalculationList_Model, CalculationList_View
 from CalculationGraph import CalculationGraph_Model, CalculationGraph_View
 from CalculationConfig import CalculationConfig_View
 from CalculationOutput import CalculationOutput_View
@@ -46,10 +45,6 @@ class Main_Model(object):
             calc_types = Main_Model.calc_models
             )
 
-#        self.calcList_Model = CalculationList_Model(
-#            parent = self,
-#            calc_dict = self._calc_dict
-#            )
             
         self.calcGraph_Model = CalculationGraph_Model(
             parent = self,
@@ -74,12 +69,6 @@ enamldef Main_View(MainWindow): me:
     Menu_View:
 
         model << me.model
-
-
-#    CalculationList_View:
-#        
-#        model << me.model.calcList_Model
-#        chooseCalc_Model << me.model.chooseCalc_Model
 
 
     CalculationGraph_View:
