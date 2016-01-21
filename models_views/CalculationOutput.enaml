@@ -1,3 +1,6 @@
+# Atom
+from atom.api import Atom, Callable, Dict, Value
+
 # Enaml
 from enaml.core.api import Conditional, DynamicTemplate, Looper
 from enaml.widgets.api import (
@@ -139,7 +142,30 @@ enamldef OutputsGroupBox(GroupBox): ogb:
 
 
 
-enamldef CalculationOutput_View(DockPane):
+class CalculationOutput_Model(object):
+
+
+    class ui(Atom):
+        
+        calc_outputs = Value({})
+
+
+    def __init__(self, calculationGraph):
+
+        self.uiModel = CalculationOutput_Model.ui()
+        self.calculationGraph = calculationGraph
+
+  
+    def refresh_output(self):
+        
+        self.uiModel.calc_outputs = {'foo':'bar'} # needed to clear output view
+        self.calculationGraph.refresh_selected_calc_item_outputs()
+        self.uiModel.calc_outputs = \
+            self.calculationGraph.uiModel.selected_calc_item_outputs
+
+    
+
+enamldef CalculationOutput_View(DockPane): me:
     '''
     A view to display the outputs of a Calculation_Model
 
@@ -149,28 +175,27 @@ enamldef CalculationOutput_View(DockPane):
         The named outputs of the currently selected Calculation_Model
     '''
     
-    attr model
-    attr calculationGraph
+    attr calc_outputs
+    attr refreshFunction
 
     
     title = 'Calculation Output'
     dock_area = 'right'
     allowed_dock_areas = ['left', 'right']
     closable = False
-
+    
 
     GroupBox:
         PushButton:    
             text = 'Refresh Output'
             clicked::
-                calculationGraph.refresh_selected_calc_item_outputs()
-                model = calculationGraph.uiModel.selected_calc_item_outputs
-                
-        Notebook:    
+                refreshFunction()
+
+        Notebook:   
             Looper:        
-                iterable << [key for key in model.keys()]        
+                iterable << [key for key in calc_outputs.keys()]        
                 Page:            
                     title = loop_item
                     closable = False
                     OutputContainer:
-                        output_model = model[loop_item]
+                        output_model = calc_outputs[loop_item]

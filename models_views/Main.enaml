@@ -5,7 +5,7 @@ from enaml.widgets.api import MainWindow
 from Menu import Menu_View
 from CalculationGraph import CalculationGraph_Model, CalculationGraph_View
 from CalculationConfig import CalculationConfig_View
-from CalculationOutput import CalculationOutput_View
+from CalculationOutput import CalculationOutput_Model, CalculationOutput_View
 from ChooseCalculation import ChooseCalculation_Model
 
 # Other
@@ -41,14 +41,18 @@ class Main_Model(object):
                           for cm in Main_Model.calc_models}                     
 
         self.chooseCalc_Model = ChooseCalculation_Model(
-            parent = self,
-            calc_types = Main_Model.calc_models
-            )
+                                    parent = self,
+                                    calc_types = Main_Model.calc_models
+                                    )
 
-            
         self.calcGraph_Model = CalculationGraph_Model(
-            parent = self,
-            calc_dict = self._calc_dict)
+                                    parent = self,
+                                    calc_dict = self._calc_dict
+                                    )
+            
+        self.calcOutput_Model = CalculationOutput_Model(
+                                    calculationGraph = self.calcGraph_Model
+                                    )
 
 
     def update_choosable_calc_types(self, preceding_calc_type_name):
@@ -84,5 +88,6 @@ enamldef Main_View(MainWindow): me:
 
     CalculationOutput_View:
         
-        model << me.model.calcGraph_Model.uiModel.selected_calc_item_outputs
-        calculationGraph << parent.model.calcGraph_Model
+        calc_outputs << me.model.calcOutput_Model.uiModel.calc_outputs
+        refreshFunction = me.model.calcOutput_Model.refresh_output
+        
