@@ -246,19 +246,29 @@ class CalculationGraph_Model(object):
 
     def delete_selected_item(self):
         
-        selected_item = self.uiModel.selected_calc_item
+        selected_node = self.uiModel.selected_calc_item
         graph = self._calc_graph
         
         # If node has no successors
-        if graph.out_degree(selected_item) == 0:
-            self.uiModel.selected_calc_item = None
-            self.uiModel.selected_calc_item_outputs = {}
-            graph.remove_node(selected_item)
-            self.uiModel.calc_items = [item for item in 
-                                       graph.nodes()]
-            self.draw_graph_figure()
-            self._parent.calcOutput_Model.refresh_output()
-            
+        if graph.out_degree(selected_node) == 0:
+            if graph.in_degree(selected_node) == 0:
+                # node has no predecessors
+                self.uiModel.selected_calc_item = None
+                self.uiModel.selected_calc_item_outputs = {}
+                graph.remove_node(selected_node)
+                self.uiModel.calc_items = [item for item in 
+                                           graph.nodes()]
+                self.draw_graph_figure()
+                self._parent.calcOutput_Model.refresh_output()
+            else:
+                # node has >=1 predecessor - select the first
+                previous_node = graph.predecessors(selected_node)[0]
+                graph.remove_node(selected_node)
+                self.uiModel.calc_items = [item for item in 
+                                           graph.nodes()]
+                self.select_calc_item(previous_node)
+                self.draw_graph_figure()
+                self._parent.calcOutput_Model.refresh_output()
 
 
 enamldef CalculationGraph_View(DockPane): me:
@@ -277,7 +287,7 @@ enamldef CalculationGraph_View(DockPane): me:
         constraints = [vbox(button_cntnr, calcs_cntnr)]
         
         Container: button_cntnr:
-            constraints = [hbox(btn_add, btn_delete, btn_relayout)]
+            constraints = [hbox(btn_add, btn_delete)]
             PushButton: btn_add:
                 text = 'Add Calculation'
                 clicked ::
@@ -289,12 +299,7 @@ enamldef CalculationGraph_View(DockPane): me:
                 clicked ::
                     me.model.delete_selected_item()
                     main_cntnr.request_relayout()
-                
-            PushButton: btn_relayout:
-                text = 'Re-Layout'
-                clicked ::
-                    model.relayout_nodes()
-                    main_cntnr.request_relayout()
+
 
         MPLCanvas: calcs_cntnr:
             
