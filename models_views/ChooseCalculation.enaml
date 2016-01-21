@@ -1,8 +1,9 @@
 # Atom
 from atom.api import Atom, ContainerList, Str
 # Enaml
-from enaml.widgets.api import Form, Label, ObjectCombo, PopupView, PushButton
-
+from enaml.widgets.api import (
+    Form, Dialog, Label, ObjectCombo, PopupView, PushButton
+    )
 
 
 class ChooseCalculation_Model(object):
@@ -56,7 +57,7 @@ class ChooseCalculation_Model(object):
 
 
 
-enamldef ChooseCalculation_View(PopupView): me:
+enamldef ChooseCalculation_View(Dialog): me:
 
 
     attr model
@@ -77,4 +78,8 @@ enamldef ChooseCalculation_View(PopupView): me:
                 calcGraphView_Model.add_calc_item(
                                             model.uiModel.selected_calc_type)                
                 # Close this window
-                me.close()
+                me.accept()
+        PushButton:
+            text = 'Cancel'
+            clicked ::
+                me.reject()

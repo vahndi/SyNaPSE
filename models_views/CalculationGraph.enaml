@@ -261,7 +261,7 @@ class CalculationGraph_Model(object):
                 self.draw_graph_figure()
                 self._parent.calcOutput_Model.refresh_output()
             else:
-                # node has >=1 predecessor - select the first
+                # node has >=1 predecessor - select the first one
                 previous_node = graph.predecessors(selected_node)[0]
                 graph.remove_node(selected_node)
                 self.uiModel.calc_items = [item for item in 
@@ -292,7 +292,7 @@ enamldef CalculationGraph_View(DockPane): me:
                 text = 'Add Calculation'
                 clicked ::
                     ChooseCalculation_View(model = me.chooseCalc_Model,
-                                           calcGraphView_Model = model).show()
+                                           calcGraphView_Model = model).exec_()
 
             PushButton: btn_delete:
                 text = 'Delete Calculation'
