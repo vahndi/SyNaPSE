@@ -43,7 +43,8 @@ class CalculationItem(object):
         self.item_name = model.calc_name
         self.x = x
         self.y = y
-        
+
+
     def calc_type_name(self):
         '''
         Returns the name of the item's model calculation type

@@ -21,6 +21,13 @@ from matplotlib.patches import Arrow, Circle
 from functools import partial
 
 
+fig = plt.figure(facecolor = 'white')
+ax = fig.add_subplot('111', axis_bgcolor = 'white')
+fig.tight_layout()
+ax.set_xticks([])
+ax.set_yticks([])
+
+
 
 class CalculationGraph_Model(object):
 
@@ -78,10 +85,8 @@ class CalculationGraph_Model(object):
         node_labels = [node.item_name.replace(' ', '\n') 
                        for node in nodes]
         
-        # Create figure and axes
-        fig = plt.figure(facecolor = 'white')
-        ax = fig.add_subplot('111',
-                             axis_bgcolor = 'white')
+        # Clear axes
+        ax.clear()
 
         # Draw Edges
         for edge in edges:
@@ -101,16 +106,21 @@ class CalculationGraph_Model(object):
             ax.add_artist(arrow)
             
         # Draw nodes
+        self.circles_nodes = {}
         for node in nodes:
-            ax.add_artist(Circle(xy = node_coords[node], 
+            circle = Circle(xy = node_coords[node], 
                                  radius = node_radius, 
                                  color = ('green' if node is selected_node
                                           else 'red'),
-                                 alpha = 0.5))
+                                 alpha = 0.5,
+                                 picker = True)
+            self.circles_nodes[circle] = node
+            ax.add_artist(circle)
 
         # Axes
         ax.set_xticks([])
         ax.set_yticks([])
+        ax.set_axis_bgcolor('white')
         min_x = min(node_x) - 2 * node_radius
         max_x = max(node_x) + 2 * node_radius
         min_y = min(node_y) - 2 * node_radius
@@ -133,15 +143,15 @@ class CalculationGraph_Model(object):
         
         # Attach event handler
         fig.canvas.mpl_connect('pick_event', self.plot_item_picked)
-        
         self.uiModel.graph_figure = fig
 
 
     def plot_item_picked(self, event):
         
-        print 'item picked'
         if isinstance(event.artist, Circle):
-            print 'Circle picked'
+            selected_node = self.circles_nodes[event.artist]
+            self.select_calc_item(selected_node)
+            self.draw_graph_figure()
         elif isinstance(event.artist, Arrow):
             print 'Arrow Picked'
 
@@ -215,17 +225,6 @@ class CalculationGraph_Model(object):
 
 
 
-def get_constraints(ui_objects, calc_items):
-    
-    constraints = []
-    
-    for ui_object, calc_item in zip(ui_objects, calc_items):
-        constraints.extend([ui_object.left == calc_item.x,
-                            ui_object.top == calc_item.y])
-
-    return constraints
-
-
 enamldef CalculationGraph_View(DockPane): me:
 
 
@@ -259,22 +258,5 @@ enamldef CalculationGraph_View(DockPane): me:
 
         MPLCanvas: calcs_cntnr:
             
-            activated:: 
-                model.uiModel.graph_figure.canvas.mpl_connect(
-                                            'pick_event', 
-                                            partial(model.plot_item_picked))
-            figure << model.uiModel.graph_figure
-
-#        Container: calcs_cntnr:
-#            ScrollArea:
-#                Container:
-#                    constraints << get_constraints(inc.objects, 
-#                                                   model.uiModel.calc_items)
-#                    Include: inc:
-#                        objects << [CalcItem_GraphView(
-#                                        model = calc_item,
-#                                        graph_uiModel = model.uiModel
-#                                        ) 
-#                                    for calc_item in model.uiModel.calc_items]
-
+            figure << fig
 
