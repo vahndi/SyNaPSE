@@ -31,11 +31,15 @@ class ChooseCalculation_Model(object):
         Update the list of choosable calculation types in the uiModel based on
         the name of the preceding calculation type.
         '''
-        calc_type = [ct for ct in self.calc_types 
-                     if ct.calc_name == preceding_calc_type_name][0]
-        following_calc_types = self.following_calc_types(calc_type)
-        self.uiModel.calc_types = [ct.calc_name 
-                                   for ct in following_calc_types]
+        if preceding_calc_type_name:
+            calc_type = [ct for ct in self.calc_types 
+                         if ct.calc_name == preceding_calc_type_name][0]
+            following_calc_types = self.following_calc_types(calc_type)
+            self.uiModel.calc_types = [ct.calc_name 
+                                       for ct in following_calc_types]
+        else:
+            self.uiModel.calc_types = [ct.calc_name for ct in self.calc_types 
+                                       if not ct.preceding_calcs]
 
 
     def following_calc_types(self, calc_type):
