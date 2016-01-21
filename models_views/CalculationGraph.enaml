@@ -18,6 +18,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.patches import Arrow, Circle
+from functools import partial
 
 
 
@@ -36,7 +37,8 @@ class CalculationGraph_Model(object):
         
         self._parent = parent
         self._calc_dict = calc_dict
-        self.uiModel = CalculationGraph_Model.ui(selected_calc_item = None)
+        self.uiModel = CalculationGraph_Model.ui(selected_calc_item = None,
+                                                 graph_figure = plt.figure())
         self._calc_graph = nx.DiGraph()
 
         
@@ -129,7 +131,19 @@ class CalculationGraph_Model(object):
                         ha = 'center', va = 'center', 
                         multialignment = 'center')
         
+        # Attach event handler
+        fig.canvas.mpl_connect('pick_event', self.plot_item_picked)
+        
         self.uiModel.graph_figure = fig
+
+
+    def plot_item_picked(self, event):
+        
+        print 'item picked'
+        if isinstance(event.artist, Circle):
+            print 'Circle picked'
+        elif isinstance(event.artist, Arrow):
+            print 'Arrow Picked'
 
 
     def relayout_nodes(self):
@@ -245,6 +259,10 @@ enamldef CalculationGraph_View(DockPane): me:
 
         MPLCanvas: calcs_cntnr:
             
+            activated:: 
+                model.uiModel.graph_figure.canvas.mpl_connect(
+                                            'pick_event', 
+                                            partial(model.plot_item_picked))
             figure << model.uiModel.graph_figure
 
 #        Container: calcs_cntnr:
