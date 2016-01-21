@@ -16,6 +16,8 @@ from ChooseCalculation import ChooseCalculation_View
 # Other
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib.patches import Arrow, Circle
 
 
 
@@ -59,22 +61,74 @@ class CalculationGraph_Model(object):
 
 
     def draw_graph_figure(self):
-
-        # Drawing properties
-        node_labels = {node: node.item_name.replace(' ', '\n') 
-                       for node in self._calc_graph.nodes()}
-        node_colors = [(0.0, 1.0, 0.0)
-                       if node is self.uiModel.selected_calc_item
-                       else (1.0, 0.0, 0.0)
-                       for node in self._calc_graph.nodes()]
         
-        fig = plt.figure()
-        ax = fig.add_subplot('111')
-        nx.draw_graphviz(self._calc_graph, prog = 'dot', ax = ax,
-                         node_size = 2000,
-                         node_color = node_colors, alpha = 0.5,
-                         labels = node_labels)
+        # variables and shorthands
+        selected_node = self.uiModel.selected_calc_item
+        graph = self._calc_graph
+        nodes = graph.nodes()
+        edges = graph.edges()
+        node_radius = 10.0
+        
+        # Drawing properties
+        node_coords = nx.graphviz_layout(graph, prog = 'dot')
+        node_x = [node_coords[node][0] for node in nodes]
+        node_y = [node_coords[node][1] for node in nodes]
+        node_labels = [node.item_name.replace(' ', '\n') 
+                       for node in nodes]
+        
+        # Create figure and axes
+        fig = plt.figure(facecolor = 'white')
+        ax = fig.add_subplot('111',
+                             axis_bgcolor = 'white')
 
+        # Draw Edges
+        for edge in edges:
+            # calculate start and end coordinates
+            xy_0 = node_coords[edge[0]]
+            xy_1 = node_coords[edge[1]]
+            node_dist = ((xy_0[0] - xy_1[0]) ** 2 +
+                         (xy_0[1] - xy_1[1]) ** 2) ** 0.5
+            x0 = xy_0[0] + (node_radius / node_dist) * (xy_1[0] - xy_0[0])
+            y0 = xy_0[1] + (node_radius / node_dist) * (xy_1[1] - xy_0[1])
+            x1 = xy_1[0] - (node_radius / node_dist) * (xy_1[0] - xy_0[0])
+            y1 = xy_1[1] - (node_radius / node_dist) * (xy_1[1] - xy_0[1])
+            # make and draw arrow
+            arrow = Arrow(x = x0, y = y0, 
+                          dx = x1 - x0, dy = y1 - y0, 
+                          color = 'blue')
+            ax.add_artist(arrow)
+            
+        # Draw nodes
+        for node in nodes:
+            ax.add_artist(Circle(xy = node_coords[node], 
+                                 radius = node_radius, 
+                                 color = ('green' if node is selected_node
+                                          else 'red'),
+                                 alpha = 0.5))
+
+        # Axes
+        ax.set_xticks([])
+        ax.set_yticks([])
+        min_x = min(node_x) - 2 * node_radius
+        max_x = max(node_x) + 2 * node_radius
+        min_y = min(node_y) - 2 * node_radius
+        max_y = max(node_y) + 2 * node_radius
+        width = max_x - min_x
+        height = max_y - min_y
+        max_dim = max(width, height)
+        x_center = (min_x + max_x) / 2
+        y_center = (min_y + max_y) / 2
+        ax.set_xlim([x_center - max_dim / 2, 
+                     x_center + max_dim / 2])
+        ax.set_ylim([y_center - max_dim / 2, 
+                     y_center + max_dim / 2])
+        
+        # Annotate nodes
+        for x, y, label in zip(node_x, node_y, node_labels):
+            ax.annotate(s = label, xy = (x, y), 
+                        ha = 'center', va = 'center', 
+                        multialignment = 'center')
+        
         self.uiModel.graph_figure = fig
 
 
@@ -125,8 +179,6 @@ class CalculationGraph_Model(object):
                                           {a: a
                                            for a in input_arg_names
                                            if a in prev_outputs})
-#                # Update choosable types (should go in select_calc_item)
-#                self._parent.update_choosable_calc_types(calc_type_name)
                 # Update uiModel calc items and redraw graph
                 self.uiModel.calc_items = [item for item in 
                                            self._calc_graph.nodes()]
@@ -141,8 +193,6 @@ class CalculationGraph_Model(object):
                 print 'args:', str(e.args)                
                 return
         else:
-#            # Update choosable types (should go in select_calc_item)
-#            self._parent.update_choosable_calc_types(calc_type_name)
             # Update uiModel calc items and redraw graph
             self.uiModel.calc_items = [item for item in 
                                        self._calc_graph.nodes()]
