@@ -24,8 +24,6 @@ from functools import partial
 fig = plt.figure(facecolor = 'white')
 ax = fig.add_subplot('111', axis_bgcolor = 'white')
 fig.tight_layout()
-ax.set_xticks([])
-ax.set_yticks([])
 
 
 
@@ -94,6 +92,7 @@ class CalculationGraph_Model(object):
         
         # Drawing properties
         node_coords = nx.graphviz_layout(graph, prog = 'dot')
+        print node_coords
         node_x = [node_coords[node][0] for node in nodes]
         node_y = [node_coords[node][1] for node in nodes]
         node_labels = [node.item_name.replace(' ', '\n') 
@@ -157,7 +156,9 @@ class CalculationGraph_Model(object):
         
         # Attach event handler
         fig.canvas.mpl_connect('pick_event', self.plot_item_picked)
+        fig.canvas.draw()
         self.uiModel.graph_figure = fig
+        
 
 
     def plot_item_picked(self, event):
@@ -256,19 +257,18 @@ class CalculationGraph_Model(object):
                 self.uiModel.selected_calc_item = None
                 self.uiModel.selected_calc_item_outputs = {}
                 graph.remove_node(selected_node)
-                self.uiModel.calc_items = [item for item in 
-                                           graph.nodes()]
+                self.uiModel.calc_items = [item for item in graph.nodes()]
                 self.draw_graph_figure()
                 self._parent.calcOutput_Model.refresh_output()
             else:
                 # node has >=1 predecessor - select the first one
                 previous_node = graph.predecessors(selected_node)[0]
                 graph.remove_node(selected_node)
-                self.uiModel.calc_items = [item for item in 
-                                           graph.nodes()]
+                self.uiModel.calc_items = [item for item in graph.nodes()]
                 self.select_calc_item(previous_node)
                 self.draw_graph_figure()
                 self._parent.calcOutput_Model.refresh_output()
+
 
 
 enamldef CalculationGraph_View(DockPane): me:
@@ -284,6 +284,7 @@ enamldef CalculationGraph_View(DockPane): me:
     closable = False
     
     Container: main_cntnr:
+        
         constraints = [vbox(button_cntnr, calcs_cntnr)]
         
         Container: button_cntnr:
@@ -293,7 +294,6 @@ enamldef CalculationGraph_View(DockPane): me:
                 clicked ::
                     ChooseCalculation_View(model = me.chooseCalc_Model,
                                            calcGraphView_Model = model).exec_()
-
             PushButton: btn_delete:
                 text = 'Delete Calculation'
                 clicked ::
@@ -303,5 +303,6 @@ enamldef CalculationGraph_View(DockPane): me:
 
         MPLCanvas: calcs_cntnr:
             
-            figure << fig
+#            figure << fig
+            figure << model.uiModel.graph_figure
 
