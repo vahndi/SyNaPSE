@@ -29,25 +29,34 @@ fig.tight_layout()
 
 
 
+class CalculationGraph_UI(Atom):
+    
+    calc_items = ContainerList(CalculationItem)
+    selected_calc_item = Value(CalculationItem)
+    selected_calc_item_outputs = Dict(default = {})
+    graph_figure = Value()
+
+
+
 class CalculationGraph_Model(object):
 
     
-    class ui(Atom):
-        
-        calc_items = ContainerList(CalculationItem)
-        selected_calc_item = Value(CalculationItem)
-        selected_calc_item_outputs = Dict(default = {})
-        graph_figure = Value()
-        
-    
-    def __init__(self, parent, calc_dict):
+    def __init__(self, parent, calc_dict, calc_graph = None):
         
         self._parent = parent
         self._calc_dict = calc_dict
-        self.uiModel = CalculationGraph_Model.ui(selected_calc_item = None,
-                                                 graph_figure = plt.figure())
-        self._calc_graph = nx.DiGraph()
-
+        self.uiModel = CalculationGraph_UI(selected_calc_item = None,
+                                           graph_figure = plt.figure())
+        if not calc_graph:
+            self._calc_graph = nx.DiGraph()
+        else:
+            self._calc_graph = calc_graph
+    
+    
+    def calc_graph(self):
+        
+        return self._calc_graph
+        
         
     def select_calc_item(self, calc_item, recalculate = False):
         '''

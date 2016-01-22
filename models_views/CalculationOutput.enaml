@@ -141,6 +141,10 @@ enamldef OutputsGroupBox(GroupBox): ogb:
                             output_model = ogb.output_model[loop_item]
 
 
+class CalculationOutput_UI(Atom):
+
+    calc_outputs = Value({})
+
 
 class CalculationOutput_Model(object):
 
@@ -152,7 +156,7 @@ class CalculationOutput_Model(object):
 
     def __init__(self, calculationGraph):
 
-        self.uiModel = CalculationOutput_Model.ui()
+        self.uiModel = CalculationOutput_UI()
         self.calculationGraph = calculationGraph
 
   

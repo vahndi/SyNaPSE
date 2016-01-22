@@ -36,15 +36,7 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
                    'tips': sns.load_dataset('tips'),
                    'titanic': sns.load_dataset('titanic')}
 
-
-
-class ReadDataFrame_Model(ABCOutputsDataFrame):
-    
-    
-    calc_name = 'Read DataFrame'
-    
-    
-    class ui(Atom):
+class ReadDataFrame_UI(Atom):
         
         # source_type
         source_type = Str()
@@ -80,10 +72,19 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
                 except:
                     print 'failed'                
             return []
+            
+
+class ReadDataFrame_Model(ABCOutputsDataFrame):
+    
+    
+    calc_name = 'Read DataFrame'
+    
+
+
     
     def __init__(self):
         
-        self.uiModel = ReadDataFrame_Model.ui()
+        self.uiModel = ReadDataFrame_UI()
         
     
     def getOutputs(self):

@@ -8,7 +8,17 @@ enamldef Menu_View(MenuBar):
     
     Menu:
         title = '&File'
+
         Action:
-            text = '&Save Flow'
-            triggered :: print 'Flow Saved'
+            text = '&Load Graph'
+            triggered :: 
+                model.load_graph()
+                print 'Graph Loaded'
+                
+        Action:
+            text = '&Save Graph'
+            triggered :: 
+                model.save_graph()
+                print 'Graph Saved'
+
 

@@ -7,6 +7,12 @@ from enaml.widgets.api import (
 
 
 
+class ChooseCalculation_UI(Atom):
+        
+        calc_types = ContainerList(str)
+        selected_calc_type = Str()
+
+
 class ChooseCalculation_Model(object):
     
     
@@ -25,7 +31,7 @@ class ChooseCalculation_Model(object):
             self.calc_types = calc_types
             cts = self.following_calc_types(preceding_calc_type)
             ct_names = [ct.calc_name for ct in cts]
-            self.uiModel = ChooseCalculation_Model.ui(calc_types = ct_names)
+            self.uiModel = ChooseCalculation_UI(calc_types = ct_names)
 
 
     def update_UI_calc_types(self, preceding_calc_type_name):

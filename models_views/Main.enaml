@@ -1,3 +1,5 @@
+# Atom
+from atom.api import Atom, Dict, Value
 # Enaml
 from enaml.widgets.api import MainWindow
 
@@ -11,9 +13,11 @@ from ChooseCalculation import ChooseCalculation_Model
 # Other
 from modules.startup import calculation_models
 
+import networkx as nx
 
 
-class Main_Model(object):
+
+class Main_Model(Atom):
     '''
     The Main Model class.
     
@@ -33,13 +37,22 @@ class Main_Model(object):
     '''
 
     calc_models = calculation_models
-
+    _calc_dict = Dict()
+    chooseCalc_Model = Value(ChooseCalculation_Model)
+    calcGraph_Model = Value(CalculationGraph_Model)
+    calcOutput_Model = Value(CalculationOutput_Model)
+    
 
     def __init__(self):
 
         self._calc_dict = {cm.calc_name: cm 
                           for cm in Main_Model.calc_models}                     
-
+        
+        self._initialise()
+    
+    
+    def _initialise(self, calc_graph = None):
+        
         self.chooseCalc_Model = ChooseCalculation_Model(
                                     parent = self,
                                     calc_types = Main_Model.calc_models
@@ -47,17 +60,34 @@ class Main_Model(object):
 
         self.calcGraph_Model = CalculationGraph_Model(
                                     parent = self,
-                                    calc_dict = self._calc_dict
+                                    calc_dict = self._calc_dict,
+                                    calc_graph = calc_graph
                                     )
             
         self.calcOutput_Model = CalculationOutput_Model(
                                     calculationGraph = self.calcGraph_Model
                                     )
-
+        
 
     def update_choosable_calc_types(self, preceding_calc_type_name):
         
         self.chooseCalc_Model.update_UI_calc_types(preceding_calc_type_name)
+
+
+    def load_graph(self):
+        
+        calc_graph = nx.read_gpickle('test.gpickle')
+        self._initialise(calc_graph = calc_graph)
+        self.calcGraph_Model.draw_graph_figure()
+        
+
+    def save_graph(self):
+        
+        nx.write_gpickle(self.calcGraph_Model.calc_graph(), 
+                         'test.gpickle')
+
+
+
 
 
 
