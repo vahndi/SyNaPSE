@@ -8,12 +8,10 @@ from enaml.core.api import Conditional
 from custom_views.fields import Field
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
-from flow_elements.core.ABCs import ABCDataFrameToDataFrame
+from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 from modules.pandas_helpers import get_row_names
 
-# Previous elements
-from ReadDataFrame import ReadDataFrame_Model
 
 
 method_tooltips = {'string' : ('select rows whose names start with, ' +

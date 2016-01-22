@@ -2,7 +2,7 @@
 from enaml.widgets.api import GroupBox
 
 # Models
-from flow_elements.core.ABCs import ABCTakesDataFrame
+from calculations.core.ABCs import ABCTakesDataFrame
 from pandas import Series, Index, concat
 import matplotlib.pyplot as plt
 import seaborn as sns
