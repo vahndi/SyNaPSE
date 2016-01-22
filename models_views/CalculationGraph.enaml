@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.patches import Arrow, Circle
 from functools import partial
+from copy import deepcopy
+
 
 
 fig = plt.figure(facecolor = 'white')
@@ -90,13 +92,20 @@ class CalculationGraph_Model(object):
         edges = graph.edges()
         node_radius = 10.0
         
-        # Drawing properties
-        node_coords = nx.graphviz_layout(graph, prog = 'dot')
-        print node_coords
-        node_x = [node_coords[node][0] for node in nodes]
-        node_y = [node_coords[node][1] for node in nodes]
-        node_labels = [node.item_name.replace(' ', '\n') 
-                       for node in nodes]
+        # Drawing properties (need to use `item_name`s as keys to prevent calcs
+        #                     of the same type from being displayed at the same
+        #                     location - perhaps an issue with length of name?)
+        coord_graph = nx.DiGraph()
+        for node in graph.nodes():
+            coord_graph.add_node(node.item_name)
+        for edge in graph.edges():
+            coord_graph.add_edge(edge[0].item_name, edge[1].item_name)
+        node_coords = nx.graphviz_layout(coord_graph, prog = 'dot')
+        node_x = [node_coords[node][0] for node in coord_graph.nodes()]
+        node_y = [node_coords[node][1] for node in coord_graph.nodes()]
+        node_labels = [node.replace(' ', '\n') 
+                       for node in coord_graph.nodes()]
+
         
         # Clear axes
         ax.clear()
@@ -104,8 +113,8 @@ class CalculationGraph_Model(object):
         # Draw Edges
         for edge in edges:
             # calculate start and end coordinates
-            xy_0 = node_coords[edge[0]]
-            xy_1 = node_coords[edge[1]]
+            xy_0 = node_coords[edge[0].item_name]
+            xy_1 = node_coords[edge[1].item_name]
             node_dist = ((xy_0[0] - xy_1[0]) ** 2 +
                          (xy_0[1] - xy_1[1]) ** 2) ** 0.5
             x0 = xy_0[0] + (node_radius / node_dist) * (xy_1[0] - xy_0[0])
@@ -121,7 +130,7 @@ class CalculationGraph_Model(object):
         # Draw nodes
         self.circles_nodes = {}
         for node in nodes:
-            circle = Circle(xy = node_coords[node], 
+            circle = Circle(xy = node_coords[node.item_name], 
                                  radius = node_radius, 
                                  color = ('green' if node is selected_node
                                           else 'red'),
