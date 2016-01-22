@@ -49,7 +49,7 @@ class CalculationGraph_Model(object):
         self._calc_graph = nx.DiGraph()
 
         
-    def select_calc_item(self, calc_item):
+    def select_calc_item(self, calc_item, recalculate = False):
         '''
         Select a specific calc item from the graph
         '''
@@ -59,21 +59,26 @@ class CalculationGraph_Model(object):
         
         # Assign the item and its outputs to the ui model
         self.uiModel.selected_calc_item = calc_item
-        self.uiModel.selected_calc_item_outputs = calc_item.get_outputs()
+        self.uiModel.selected_calc_item_outputs = (
+                                                calc_item.calculate_outputs()
+                                                if recalculate
+                                                else calc_item.get_outputs()
+                                                )
+
         
         # Update the appendable calc item types
         self._parent.update_choosable_calc_types(calc_item.calc_type_name())
 
 
-    def refresh_selected_calc_item_outputs(self):
+    def refresh_selected_calc_item_outputs(self, recalculate = False):
         
         calc_item = self.uiModel.selected_calc_item
         if calc_item is not None:
-            self.select_calc_item(calc_item)
+            self.select_calc_item(calc_item, recalculate = recalculate)
         else:
             self.uiModel.selected_calc_item_outputs = {
                                                 'Output':
-                                                ' No Calculation Selected'
+                                                'No Calculation Selected'
                                                 }
             # Update the appendable calc item types
             self._parent.update_choosable_calc_types(None)
@@ -175,7 +180,7 @@ class CalculationGraph_Model(object):
         if isinstance(event.artist, Circle):
             
             selected_node = self.circles_nodes[event.artist]
-            self.select_calc_item(selected_node)
+            self.uiModel.selected_calc_item = selected_node
             self._parent.calcOutput_Model.refresh_output()
             self.draw_graph_figure()
             
@@ -234,8 +239,11 @@ class CalculationGraph_Model(object):
                 # Update uiModel calc items and redraw graph
                 self.uiModel.calc_items = [item for item in 
                                            self._calc_graph.nodes()]
-                self.select_calc_item(new_item)
-                self._parent.calcOutput_Model.refresh_output()
+                #### lines 2 + 3 work when used but calculate twice, 1 + 3 cause an error but produce the right output
+                self.uiModel.selected_calc_item = new_item
+#                self.select_calc_item(new_item)                               
+                self._parent.calcOutput_Model.calculate_output()
+                ####
                 self.draw_graph_figure()
             except Exception as e:
                 self._calc_graph.remove_node(new_item)
@@ -249,8 +257,11 @@ class CalculationGraph_Model(object):
             # Update uiModel calc items and redraw graph
             self.uiModel.calc_items = [item for item in 
                                        self._calc_graph.nodes()]
-            self.select_calc_item(new_item)
-            self._parent.calcOutput_Model.refresh_output()
+            #### 
+            self.uiModel.selected_calc_item = new_item
+#            self.select_calc_item(new_item)
+            self._parent.calcOutput_Model.calculate_output()
+            ####
             self.draw_graph_figure()
 
 
@@ -297,7 +308,7 @@ enamldef CalculationGraph_View(DockPane): me:
         constraints = [vbox(button_cntnr, calcs_cntnr)]
         
         Container: button_cntnr:
-            constraints = [hbox(btn_add, btn_delete)]
+            constraints = [hbox(btn_add, btn_delete, btn_clear_selection)]
             PushButton: btn_add:
                 text = 'Add Calculation'
                 clicked ::
@@ -308,6 +319,9 @@ enamldef CalculationGraph_View(DockPane): me:
                 clicked ::
                     me.model.delete_selected_item()
                     main_cntnr.request_relayout()
+            PushButton: btn_clear_selection:
+                text = 'Clear Selection'
+                
 
 
         MPLCanvas: calcs_cntnr:

@@ -77,7 +77,7 @@ class SortRows_Model(ABCDataFrameToDataFrame):
                 'by': (self.uiModel.by_single
                        if self.uiModel.by_type == 'single' 
                        else self.by_multiple.selected_item_names()),
-                'ascending': (self.ascending_individual.item_values()
+                'ascending': (self.ascending_individual.item_check_values()
                               if (self.uiModel.ascending_type == 'individual' and
                                   self.uiModel.by_type == 'multiple')
                               else self.uiModel.ascending_uniform),

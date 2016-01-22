@@ -89,5 +89,5 @@ enamldef Main_View(MainWindow): me:
     CalculationOutput_View:
         
         calc_outputs << me.model.calcOutput_Model.uiModel.calc_outputs
-        refreshFunction = me.model.calcOutput_Model.refresh_output
+        recalculateFunction = me.model.calcOutput_Model.calculate_output
         

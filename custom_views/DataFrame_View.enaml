@@ -182,16 +182,17 @@ enamldef DataFrame_TableView(Container):
     
     Html:
         source = getDataFrameHtml(model)
-
-
+#        source = model.to_html(max_cols = 20, max_rows = 50)
+        
 
 class DataFrame_FigureModel(object):
     
     
     def __init__(self, dataframe):
         
-        self.figure = getDataFrameFigure(dataframe)
-
+        self.figure = (getDataFrameFigure(dataframe)
+                       if len(dataframe.columns) <= 20
+                       else plt.figure())
 
 
 enamldef DataFrame_FigureView(Container):

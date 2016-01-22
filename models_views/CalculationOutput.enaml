@@ -157,12 +157,21 @@ class CalculationOutput_Model(object):
 
   
     def refresh_output(self):
-        
+
         self.uiModel.calc_outputs = {'foo':'bar'} # needed to clear output view
         self.calculationGraph.refresh_selected_calc_item_outputs()
         self.uiModel.calc_outputs = \
             self.calculationGraph.uiModel.selected_calc_item_outputs
 
+
+    def calculate_output(self):
+        
+        self.uiModel.calc_outputs = {'foo':'bar'} # needed to clear output view
+        self.calculationGraph.refresh_selected_calc_item_outputs(
+                                                    recalculate = True
+                                                    )
+        self.uiModel.calc_outputs = \
+            self.calculationGraph.uiModel.selected_calc_item_outputs        
     
 
 enamldef CalculationOutput_View(DockPane): me:
@@ -176,7 +185,7 @@ enamldef CalculationOutput_View(DockPane): me:
     '''
     
     attr calc_outputs
-    attr refreshFunction
+    attr recalculateFunction
 
     
     title = 'Calculation Output'
@@ -189,7 +198,7 @@ enamldef CalculationOutput_View(DockPane): me:
         PushButton:    
             text = 'Refresh Output'
             clicked::
-                refreshFunction()
+                recalculateFunction()
 
         Notebook:   
             Looper:        

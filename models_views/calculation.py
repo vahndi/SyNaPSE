@@ -10,6 +10,7 @@ class Calculation_Model(object): # rename this to Node_Model or something
     calc_description = ''
     calc_documentation = ''
     preceding_calcs = []
+    calc_outputs = None
 
 
     def standard_exception(self, e):
@@ -83,8 +84,27 @@ class CalculationItem(object):
     def set_inputs(self, inputs_dict):
         
         self._model.setInputs(** inputs_dict)
-        
-        
+            
+    
     def get_outputs(self):
+        '''
+        Gets the outputs of the model which have already been calculated. If 
+        they have not yet been calculated then calculate them first
+        '''
+        
+        if self._model.calc_outputs:
+            print 'returning existing calc outputs for %s' % self.item_name
+            return self._model.calc_outputs
+        else:
+            print 'calc outputs for %s do not exist' % self.item_name
+            return self.calculate_outputs()
 
-        return self._model.getOutputs()
+
+    def calculate_outputs(self):
+        '''
+        Calculates the outputs of the model and returns them
+        '''
+        print 'calculating outputs for %s' % self.item_name
+        self._model.calc_outputs = self._model.getOutputs()
+        return self._model.calc_outputs
+        

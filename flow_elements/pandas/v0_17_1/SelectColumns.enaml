@@ -26,6 +26,7 @@ method_tooltips = {'string' : ('select columns whose names start with, ' +
                    'manual': 'manually select columns from a list'}
 
 
+
 class SelectColumns_Model(ABCDataFrameToDataFrame):
     
 
