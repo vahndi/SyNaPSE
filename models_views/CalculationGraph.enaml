@@ -239,11 +239,8 @@ class CalculationGraph_Model(object):
                 # Update uiModel calc items and redraw graph
                 self.uiModel.calc_items = [item for item in 
                                            self._calc_graph.nodes()]
-                #### lines 2 + 3 work when used but calculate twice, 1 + 3 cause an error but produce the right output
                 self.uiModel.selected_calc_item = new_item
-#                self.select_calc_item(new_item)                               
                 self._parent.calcOutput_Model.calculate_output()
-                ####
                 self.draw_graph_figure()
             except Exception as e:
                 self._calc_graph.remove_node(new_item)
@@ -257,11 +254,8 @@ class CalculationGraph_Model(object):
             # Update uiModel calc items and redraw graph
             self.uiModel.calc_items = [item for item in 
                                        self._calc_graph.nodes()]
-            #### 
             self.uiModel.selected_calc_item = new_item
-#            self.select_calc_item(new_item)
             self._parent.calcOutput_Model.calculate_output()
-            ####
             self.draw_graph_figure()
 
 
