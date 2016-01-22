@@ -15,59 +15,59 @@ from pandas import date_range
 
 
 
+class SetIndexToDateRange_UI(Atom):
+
+    # method
+    method = Str('start / # periods')
+    method_list = List(str, ['start / # periods', 
+                             'end / # periods', 
+                             'start / end'])
+    method_tooltip = 'Select the pair of variables to specify to generate the index.'
+    # start
+    start = Str()
+    start_tooltip = 'Left bound for generating dates.'
+    # end
+    end = Str()
+    end_tooltip = 'Right bound for generating dates.'
+    # periods
+    periods = Int()
+    periods_tooltip = 'Number of date periods.'
+    # freq
+    freq = Str('D')
+    freq_list = List(str, 
+                     ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
+                     'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
+                     'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+    freq_tooltip = 'Frequency of the new index.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+    # tz
+    tz = Value(Atom)
+    use_tz = Bool()
+    tz_tooltip = 'Select to use a local timezone for the data.'
+    # normalize
+    normalize = Bool()
+    normalize_tooltip = 'Normalize start/end dates to midnight before generating date range.'
+    # name
+    name = Str('DateTime')
+    use_name = Bool()
+    name_tooltip = 'Name of the resulting index.'
+    # closed
+    closed = Str('left')
+    closed_list = List(str, ['left', 'right'])
+    use_closed = Bool()
+    closed_tooltip = 'Make the interval closed with respect to the given frequency to the left, right, or both sides (None)'
+
+
 class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Set Index To Date Range'
 
 
-    class ui(Atom):
-
-        # method
-        method = Str('start / # periods')
-        method_list = List(str, ['start / # periods', 
-                                 'end / # periods', 
-                                 'start / end'])
-        method_tooltip = 'Select the pair of variables to specify to generate the index.'
-        # start
-        start = Str()
-        start_tooltip = 'Left bound for generating dates.'
-        # end
-        end = Str()
-        end_tooltip = 'Right bound for generating dates.'
-        # periods
-        periods = Int()
-        periods_tooltip = 'Number of date periods.'
-        # freq
-        freq = Str('D')
-        freq_list = List(str, 
-                         ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
-                         'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
-                         'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
-        freq_tooltip = 'Frequency of the new index.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
-        # tz
-        tz = Value(Atom)
-        use_tz = Bool()
-        tz_tooltip = 'Select to use a local timezone for the data.'
-        # normalize
-        normalize = Bool()
-        normalize_tooltip = 'Normalize start/end dates to midnight before generating date range.'
-        # name
-        name = Str('DateTime')
-        use_name = Bool()
-        name_tooltip = 'Name of the resulting index.'
-        # closed
-        closed = Str('left')
-        closed_list = List(str, ['left', 'right'])
-        use_closed = Bool()
-        closed_tooltip = 'Make the interval closed with respect to the given frequency to the left, right, or both sides (None)'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
         self.tz = TimeZone_Model()
-        self.uiModel = SetIndexToDateRange_Model.ui(periods = len(dataframe),
+        self.uiModel = SetIndexToDateRange_UI(periods = len(dataframe),
                                                     tz = self.tz.uiModel)
 
 

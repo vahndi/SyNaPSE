@@ -11,27 +11,27 @@ from RegressionGenerator import RegressionGenerator
 
 
 
+class Make1_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The total number of points generated.'
+    # noise
+    noise = Float(0)
+    noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class Make1_Model(RegressionGenerator):
-
-
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The total number of points generated.'
-        # noise
-        noise = Float(0)
-        noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
 
 
     def __init__(self):
         
-        self.uiModel = Make1_Model.ui()
+        self.uiModel = Make1_UI()
 
 
     def getArgs(self):

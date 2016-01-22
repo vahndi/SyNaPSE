@@ -13,6 +13,32 @@ from sklearn.linear_model import LassoLarsIC
 
 
 
+class LassoLarsIC_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # criterion
+    criterion = Str('aic')
+    criterion_list = List(str, ['aic', 'bic'])
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # verbose
+    verbose = Bool(False)
+    # normalize
+    normalize = Bool(True)
+    # precompute
+    precompute = Str('auto')
+    precompute_list = List(str, ['True', 'False', 'auto'])
+    # max_iter
+    max_iter = Int(500)
+    # eps
+    eps = Float(2.22044604925e-16)
+    # copy_X
+    copy_X = Bool(True)
+    # positive
+    positive = Bool(False)
+
+
 class LassoLarsIC_Model(ABCRegressionModel):
 
 
@@ -22,37 +48,11 @@ class LassoLarsIC_Model(ABCRegressionModel):
     calc_docs = ABCRegressionModel.doc_root + \
                            'LassoLarsIC.html'
 
-    class ui(Atom):
-        
-        input_selector = Value(Atom)
-
-        # criterion
-        criterion = Str('aic')
-        criterion_list = List(str, ['aic', 'bic'])
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # verbose
-        verbose = Bool(False)
-        # normalize
-        normalize = Bool(True)
-        # precompute
-        precompute = Str('auto')
-        precompute_list = List(str, ['True', 'False', 'auto'])
-        # max_iter
-        max_iter = Int(500)
-        # eps
-        eps = Float(2.22044604925e-16)
-        # copy_X
-        copy_X = Bool(True)
-        # positive
-        positive = Bool(False)
-
-
     def setInputs(self, dataframe):
         
         self.estimator_type = LassoLarsIC
         self.set_inputs(dataframe)
-        self.uiModel = LassoLarsIC_Model.ui(
+        self.uiModel = LassoLarsIC_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

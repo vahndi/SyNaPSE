@@ -12,43 +12,43 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class SortRows_UI(Atom):
+
+    # by_type
+    by_type = Str('single')
+    by_type_list = List(str, ['single', 'multiple'])
+    by_type_tooltip = 'Sort by a single or multiple columns.'
+    # by_single
+    by_single = Str()
+    by_single_list = List(str)
+    by_single_tooltip = 'Select the column to sort by.'
+    # by_multiple
+    by_multiple = Value(Atom)
+    by_multiple_tooltip = 'Select the list of column names to sort by, in order of priority.'
+    # ascending_type
+    ascending_type = Str('uniform')
+    ascending_type_list = List(str, ['uniform', 'individual'])
+    ascending_type_tooltip = 'Specify the sort order for sort columns all at once (uniform) or individually.'
+    # ascending_uniform
+    ascending_uniform = Bool(True)
+    ascending_uniform_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
+    # ascending_individual
+    ascending_individual = Value(Atom)
+    ascending_individual_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
+    # kind
+    kind = Str('quicksort')
+    kind_list = List(str, ['quicksort', 'mergesort', 'heapsort'])
+    kind_tooltip = 'Choice of sorting algorithm. See also ndarray.np.sort for more information.\nmergesort is the only stable algorithm. \nFor DataFrames, this option is only applied when sorting on a single column or label.'
+    # na_position
+    na_position = Str('last')
+    na_position_list = List(str, ['first', 'last'])
+    na_position_tooltip = 'first: put NaNs at the beginning\nlast: put NaNs at the end'
+
+
 class SortRows_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Sort Rows'
-
-
-    class ui(Atom):
-
-        # by_type
-        by_type = Str('single')
-        by_type_list = List(str, ['single', 'multiple'])
-        by_type_tooltip = 'Sort by a single or multiple columns.'
-        # by_single
-        by_single = Str()
-        by_single_list = List(str)
-        by_single_tooltip = 'Select the column to sort by.'
-        # by_multiple
-        by_multiple = Value(Atom)
-        by_multiple_tooltip = 'Select the list of column names to sort by, in order of priority.'
-        # ascending_type
-        ascending_type = Str('uniform')
-        ascending_type_list = List(str, ['uniform', 'individual'])
-        ascending_type_tooltip = 'Specify the sort order for sort columns all at once (uniform) or individually.'
-        # ascending_uniform
-        ascending_uniform = Bool(True)
-        ascending_uniform_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
-        # ascending_individual
-        ascending_individual = Value(Atom)
-        ascending_individual_tooltip = 'Sort the selected column(s) in ascending (True) or descending (False) order.'
-        # kind
-        kind = Str('quicksort')
-        kind_list = List(str, ['quicksort', 'mergesort', 'heapsort'])
-        kind_tooltip = 'Choice of sorting algorithm. See also ndarray.np.sort for more information.\nmergesort is the only stable algorithm. \nFor DataFrames, this option is only applied when sorting on a single column or label.'
-        # na_position
-        na_position = Str('last')
-        na_position_list = List(str, ['first', 'last'])
-        na_position_tooltip = 'first: put NaNs at the beginning\nlast: put NaNs at the end'
 
 
     def setInputs(self, dataframe):
@@ -60,7 +60,7 @@ class SortRows_Model(ABCDataFrameToDataFrame):
                 item_names = cols,
                 fn_selected_changed = self.ascending_individual.set_item_names
                 )
-        self.uiModel = SortRows_Model.ui(
+        self.uiModel = SortRows_UI(
             by_single = cols[0],
             by_single_list = cols, 
             by_multiple = self.by_multiple.uiModel,

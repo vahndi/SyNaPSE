@@ -11,36 +11,36 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class PercentageChange_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # periods
+    periods = Int(1)
+    periods_min = Int(1)
+    periods_tooltip = 'Periods to shift for forming percent change.'
+    # fill_method
+    fill_method = Str('pad')
+    fill_method_list = List(str, ['pad', 'bfill'])
+    fill_method_tooltip = 'How to handle NAs before computing percent changes.'
+    # limit
+    limit = Int()
+    use_limit = Bool()
+    limit_tooltip = 'The number of consecutive NAs to fill before stopping.'
+
+
 class PercentageChange_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Percentage Change'
 
 
-    class ui(Atom):
-
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied.'
-        # periods
-        periods = Int(1)
-        periods_min = Int(1)
-        periods_tooltip = 'Periods to shift for forming percent change.'
-        # fill_method
-        fill_method = Str('pad')
-        fill_method_list = List(str, ['pad', 'bfill'])
-        fill_method_tooltip = 'How to handle NAs before computing percent changes.'
-        # limit
-        limit = Int()
-        use_limit = Bool()
-        limit_tooltip = 'The number of consecutive NAs to fill before stopping.'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = PercentageChange_Model.ui()
+        self.uiModel = PercentageChange_UI()
 
 
     def getOutputs(self):

@@ -14,6 +14,36 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 
 
 
+class PassiveAggressiveClassifier_UI(Atom):
+
+    # inputs_targets_selector
+    input_selector = Value(Atom)
+
+    # C
+    C = Float(1)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # n_iter
+    n_iter = Int(5)
+    n_iter_min = Int(1)
+    # shuffle
+    shuffle = Bool(True)
+    # verbose
+    verbose = Bool(False)
+    # loss
+    loss = Str('hinge')
+    loss_list = List(str, ['hinge', 'squared_hinge'])
+    # random_state
+    random_state = Int(1)
+    # warm_start
+    warm_start = Bool(False)
+    # class_weight
+    class_weight = Str('equal')
+    class_weight_list = List(str, ['equal', 'balanced'])
+    # cores_selector
+    cores_selector = Value(Atom)
+
+
 class PassiveAggressiveClassifier_Model(ABCClassificationModel):
 
 
@@ -23,42 +53,12 @@ class PassiveAggressiveClassifier_Model(ABCClassificationModel):
         ABCClassificationModel.doc_root + 'PassiveAggressiveClassifier.html'
 
 
-    class ui(Atom):
-
-        # inputs_targets_selector
-        input_selector = Value(Atom)
-
-        # C
-        C = Float(1)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # n_iter
-        n_iter = Int(5)
-        n_iter_min = Int(1)
-        # shuffle
-        shuffle = Bool(True)
-        # verbose
-        verbose = Bool(False)
-        # loss
-        loss = Str('hinge')
-        loss_list = List(str, ['hinge', 'squared_hinge'])
-        # random_state
-        random_state = Int(1)
-        # warm_start
-        warm_start = Bool(False)
-        # class_weight
-        class_weight = Str('equal')
-        class_weight_list = List(str, ['equal', 'balanced'])
-        # cores_selector
-        cores_selector = Value(Atom)
-
-
     def setInputs(self, dataframe):
         
         self.estimator_type = PassiveAggressiveClassifier
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
-        self.uiModel = PassiveAggressiveClassifier_Model.ui(
+        self.uiModel = PassiveAggressiveClassifier_UI(
                             input_selector = self.input_selector.uiModel,
                             cores_selector = self.cores_selector.uiModel
                             )

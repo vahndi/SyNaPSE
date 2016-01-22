@@ -13,40 +13,40 @@ import re
 
 
 
+class RenameColumns_UI(Atom):
+
+    # prefix
+    prefix = Str()
+    use_prefix = Bool()
+    prefix_tooltip = 'The text to prepend to each column name.'
+    # suffix
+    suffix = Str()
+    use_suffix = Bool()
+    suffix_tooltip = 'The text to append to each column name.'
+    # find_and_replace
+    find_and_replace = Bool()
+    find_and_replace_tooltip = 'Find and replace text within column names?'
+    # findrep_method
+    findrep_method = Str('normal')
+    findrep_method_list = List(str, ['normal', 'regex'])
+    findrep_method_tooltip = ('normal: standard string replacement\n' +
+                              'regex: regular expression replacement')
+    # find
+    find = Str()
+    find_tooltip = 'The text or pattern to find within column names.'
+    # replace
+    replace = Str()
+    replace_tooltip = 'The text to replace the found text / pattern.'
+
+
 class RenameColumns_Model(ABCDataFrameToDataFrame):
     
     calc_name = 'Rename Columns'
 
-    class ui(Atom):
-
-        # prefix
-        prefix = Str()
-        use_prefix = Bool()
-        prefix_tooltip = 'The text to prepend to each column name.'
-        # suffix
-        suffix = Str()
-        use_suffix = Bool()
-        suffix_tooltip = 'The text to append to each column name.'
-        # find_and_replace
-        find_and_replace = Bool()
-        find_and_replace_tooltip = 'Find and replace text within column names?'
-        # findrep_method
-        findrep_method = Str('normal')
-        findrep_method_list = List(str, ['normal', 'regex'])
-        findrep_method_tooltip = ('normal: standard string replacement\n' +
-                                  'regex: regular expression replacement')
-        # find
-        find = Str()
-        find_tooltip = 'The text or pattern to find within column names.'
-        # replace
-        replace = Str()
-        replace_tooltip = 'The text to replace the found text / pattern.'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = RenameColumns_Model.ui()
+        self.uiModel = RenameColumns_UI()
         self.original_columns = dataframe.columns
 
 

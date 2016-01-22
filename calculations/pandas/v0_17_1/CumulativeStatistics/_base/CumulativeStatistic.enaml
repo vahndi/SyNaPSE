@@ -11,25 +11,25 @@ from pandas import concat
 
 
 
+class CumulativeStatistic_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
+                      'is NA, the result will be NA')
+
+
 class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
-
-
-    class ui(Atom):
-
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied'
-        # skipna
-        skipna = Bool()
-        skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
-                          'is NA, the result will be NA')
 
 
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = CumulativeStatistic_Model.ui()
+        self.uiModel = CumulativeStatistic_UI()
         
 
     def getOutputs(self):

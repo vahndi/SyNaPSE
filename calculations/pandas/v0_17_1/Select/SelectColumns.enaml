@@ -27,69 +27,69 @@ method_tooltips = {'string' : ('select columns whose names start with, ' +
 
 
 
+class SelectColumns_UI(Atom):
+        
+    # method
+    method = Str('string')
+    method_list = List(str)
+    method_tooltip = Str() 
+        
+    # starts_with
+    starts_with = Str()
+    starts_with_tooltip = ('Select columns whose names start with this ' +
+                           'text.')
+    # ends_with
+    ends_with = Str()
+    ends_with_tooltip = 'Select columns whose names end with this text.'
+    # contains
+    contains = Str()
+    contains_tooltip = 'Select columns whose names contain this text.'
+    # does_not_contain
+    does_not_contain = Str()
+    does_not_contain_tooltip = ('Select columns whose names do not ' +
+                               'contain this text.')
+    # regular expression
+    expression = Str()
+    expression_tooltip = ('Select columns whose names match this regular' +
+                          ' expression.')
+    # start index
+    range_start_int = Int()
+    use_range_start_int = Bool()
+    range_start_int_tooltip = ('The 0-based index of the first column to' +
+                               ' select.')
+    # end index
+    range_end_int = Int()
+    use_range_end_int = Bool()
+    range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
+                             'column to select.')
+    # first and last columns
+    fl_columns = List(str)
+    # first column name
+    first_col_name = Str()
+    use_first_col_name = Bool()
+    first_col_name_tooltip = 'The name of the first column to select.'
+    # last column name
+    last_col_name = Str()
+    use_last_col_name = Bool()
+    last_col_name_tooltip = 'The name of the last column to select.'
+    # dtypes
+    dtype_columns = Value(Atom)
+    dtype_columns_tooltip = 'The numeric types of the columns to select.'
+    # manual selection
+    manual_columns = Value(Atom)
+    manual_columns_tooltip = 'Check column names to select.'
+    # order_alphabetically
+    order_alphabetically = Bool(False)
+    order_alphabetically_tooltip = ('Order the returned column names ' +
+                                    'alphabetically.')
+
+
 class SelectColumns_Model(ABCDataFrameToDataFrame):
     
 
     calc_name = 'Select Columns'
     
     
-    class ui(Atom):
-        
-        # method
-        method = Str('string')
-        method_list = List(str)
-        method_tooltip = Str() 
-        
-        # starts_with
-        starts_with = Str()
-        starts_with_tooltip = ('Select columns whose names start with this ' +
-                               'text.')
-        # ends_with
-        ends_with = Str()
-        ends_with_tooltip = 'Select columns whose names end with this text.'
-        # contains
-        contains = Str()
-        contains_tooltip = 'Select columns whose names contain this text.'
-        # does_not_contain
-        does_not_contain = Str()
-        does_not_contain_tooltip = ('Select columns whose names do not ' +
-                                   'contain this text.')
-        # regular expression
-        expression = Str()
-        expression_tooltip = ('Select columns whose names match this regular' +
-                              ' expression.')
-        # start index
-        range_start_int = Int()
-        use_range_start_int = Bool()
-        range_start_int_tooltip = ('The 0-based index of the first column to' +
-                                   ' select.')
-        # end index
-        range_end_int = Int()
-        use_range_end_int = Bool()
-        range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
-                                 'column to select.')
-        # first and last columns
-        fl_columns = List(str)
-        # first column name
-        first_col_name = Str()
-        use_first_col_name = Bool()
-        first_col_name_tooltip = 'The name of the first column to select.'
-        # last column name
-        last_col_name = Str()
-        use_last_col_name = Bool()
-        last_col_name_tooltip = 'The name of the last column to select.'
-        # dtypes
-        dtype_columns = Value(Atom)
-        dtype_columns_tooltip = 'The numeric types of the columns to select.'
-        # manual selection
-        manual_columns = Value(Atom)
-        manual_columns_tooltip = 'Check column names to select.'
-        # order_alphabetically
-        order_alphabetically = Bool(False)
-        order_alphabetically_tooltip = ('Order the returned column names ' +
-                                        'alphabetically.')
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
@@ -108,7 +108,7 @@ class SelectColumns_Model(ABCDataFrameToDataFrame):
                            'number': 'number',
                            'string': object}
         self.dtype_columns = CheckBoxList_Model(sorted(self.dtype_dict.keys()))
-        self.uiModel = SelectColumns_Model.ui(
+        self.uiModel = SelectColumns_UI(
                             method_list = method_list,
                             manual_columns = self.manual_columns.uiModel,
                             dtype_columns = self.dtype_columns.uiModel,

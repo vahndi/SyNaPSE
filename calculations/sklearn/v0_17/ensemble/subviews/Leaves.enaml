@@ -8,31 +8,31 @@ from enaml.widgets.api import Container, Form, Label, ObjectCombo, Page
 
 
 
+class Leaves_UI(Atom):
+        
+    # max_depth_type
+    max_depth_type = Str()
+    max_depth_type_list = List(str, ['auto', 'int'])
+    # max_depth_int
+    max_depth_int = Int()
+        
+    # max_leaf_nodes_type
+    max_leaf_nodes_type = Str()
+    max_leaf_nodes_type_list = List(str, ['unlimited', 'int'])
+    # max_leaf_nodes
+    max_leaf_nodes = Int()
+
+    # min_leaf_samples
+    min_leaf_samples = Int()
+        
+    # min_split_samples
+    min_split_samples = Int()
+        
+    # min_leaf_weighted_fraction
+    min_leaf_weighted_fraction = Float()
+
 class Leaves_Model(object):
     
-    class ui(Atom):
-        
-        # max_depth_type
-        max_depth_type = Str()
-        max_depth_type_list = List(str, ['auto', 'int'])
-        # max_depth_int
-        max_depth_int = Int()
-        
-        # max_leaf_nodes_type
-        max_leaf_nodes_type = Str()
-        max_leaf_nodes_type_list = List(str, ['unlimited', 'int'])
-        # max_leaf_nodes
-        max_leaf_nodes = Int()
-
-        # min_leaf_samples
-        min_leaf_samples = Int()
-        
-        # min_split_samples
-        min_split_samples = Int()
-        
-        # min_leaf_weighted_fraction
-        min_leaf_weighted_fraction = Float()
-
     def __init__(self, 
                  max_depth_type = 'auto',
                  max_depth_int = 10,
@@ -42,7 +42,7 @@ class Leaves_Model(object):
                  min_split_samples = 2,
                  min_leaf_weighted_fraction = 0.0):
         
-        self.uiModel = Leaves_Model.ui(
+        self.uiModel = Leaves_UI(
                     max_depth_type = max_depth_type,
                     max_depth_int = max_depth_int,
                     max_leaf_nodes_type = max_leaf_nodes_type,

@@ -13,6 +13,38 @@ from sklearn.linear_model import Lasso
 
 
 
+class Lasso_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # alpha
+    alpha = Float(1)
+    alpha_min = Float(0)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # normalize
+    normalize = Bool(False)
+    # precompute
+    precompute = Str()
+    precompute_list = List(str, ['True', 'False', 'auto'])
+    # copy_X
+    copy_X = Bool(True)
+    # max_iter
+    max_iter = Int(1000)
+    max_iter_min = Int(1)
+    # tol
+    tol = Float(0.0001)
+    # warm_start
+    warm_start = Bool(False)
+    # positive
+    positive = Bool(False)
+    # random_state
+    random_state = Int(1)
+    # selection
+    selection = Str('cyclic')
+    selection_list = List(str, ['cyclic', 'random'])
+
+
 class Lasso_Model(ABCRegressionModel):
 
 
@@ -22,43 +54,11 @@ class Lasso_Model(ABCRegressionModel):
     calc_docs = ABCRegressionModel.doc_root + 'Lasso.html'
 
 
-    class ui(Atom):
-        
-        input_selector = Value(Atom)
-
-        # alpha
-        alpha = Float(1)
-        alpha_min = Float(0)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # normalize
-        normalize = Bool(False)
-        # precompute
-        precompute = Str()
-        precompute_list = List(str, ['True', 'False', 'auto'])
-        # copy_X
-        copy_X = Bool(True)
-        # max_iter
-        max_iter = Int(1000)
-        max_iter_min = Int(1)
-        # tol
-        tol = Float(0.0001)
-        # warm_start
-        warm_start = Bool(False)
-        # positive
-        positive = Bool(False)
-        # random_state
-        random_state = Int(1)
-        # selection
-        selection = Str('cyclic')
-        selection_list = List(str, ['cyclic', 'random'])
-
-
     def setInputs(self, dataframe):
 
         self.estimator_type = Lasso
         self.set_inputs(dataframe)
-        self.uiModel = Lasso_Model.ui(
+        self.uiModel = Lasso_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

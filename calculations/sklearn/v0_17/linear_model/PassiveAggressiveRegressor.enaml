@@ -13,6 +13,34 @@ from sklearn.linear_model import PassiveAggressiveRegressor
 
 
 
+class PassiveAggressiveRegressor_UI(Atom):
+
+    input_selector = Value(Atom)
+
+    # C
+    C = Float(1)
+    # epsilon
+    epsilon = Float(0.1)
+    epsilon_min = Float(0)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # n_iter
+    n_iter = Int(5)
+    n_iter_min = Int(1)
+    # shuffle
+    shuffle = Bool(True)
+    # random_state
+    random_state = Int(1)
+    # verbose
+    verbose = Bool(False)
+    # loss
+    loss = Str('epsilon_insensitive')
+    loss_list = List(str, ['epsilon_insensitive', 
+                           'squared_epsilon_insensitive'])
+    # warm_start
+    warm_start = Bool(False)
+
+
 class PassiveAggressiveRegressor_Model(ABCRegressionModel):
 
 
@@ -21,39 +49,11 @@ class PassiveAggressiveRegressor_Model(ABCRegressionModel):
     calc_docs = ABCRegressionModel.doc_root + \
                            'PassiveAggressiveRegressor.html'
 
-    class ui(Atom):
-
-        input_selector = Value(Atom)
-
-        # C
-        C = Float(1)
-        # epsilon
-        epsilon = Float(0.1)
-        epsilon_min = Float(0)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # n_iter
-        n_iter = Int(5)
-        n_iter_min = Int(1)
-        # shuffle
-        shuffle = Bool(True)
-        # random_state
-        random_state = Int(1)
-        # verbose
-        verbose = Bool(False)
-        # loss
-        loss = Str('epsilon_insensitive')
-        loss_list = List(str, ['epsilon_insensitive', 
-                               'squared_epsilon_insensitive'])
-        # warm_start
-        warm_start = Bool(False)
-
-
     def setInputs(self, dataframe):
 
         self.estimator_type = PassiveAggressiveRegressor
         self.set_inputs(dataframe)
-        self.uiModel = PassiveAggressiveRegressor_Model.ui(
+        self.uiModel = PassiveAggressiveRegressor_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

@@ -17,6 +17,52 @@ from sklearn.linear_model import SGDRegressor
 
 
 
+class SGDRegressor_UI(Atom):
+
+    input_selector = Value(Atom)
+
+    # loss
+    loss = Str('squared_loss')
+    loss_list = List(str, ['squared_loss', 'huber', 'epsilon_insensitive', 
+                           'squared_epsilon_insensitive'])
+    # penalty
+    penalty = Str('l2')
+    penalty_list = List(str, ['none', 'l1', 'l2', 'elasticnet'])
+    # alpha
+    alpha = Float(0.0001)
+    # l1_ratio
+    l1_ratio = Float(0.15)
+    l1_ratio_min = Float(0)
+    l1_ratio_max = Float(1)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # n_iter
+    n_iter = Int(5)
+    # shuffle
+    shuffle = Bool(True)
+    # verbose
+    verbose = Bool(False)
+    # epsilon
+    epsilon = Float(0.1)
+    # random_state
+    random_state = Int(1)
+    # learning_rate
+    learning_rate = Str('invscaling')
+    learning_rate_list = List(str, ['constant', 'invscaling', 'optimal'])
+    # eta0
+    eta0 = Float(0.01)
+    # power_t
+    power_t = Float(0.25)
+    # warm_start
+    warm_start = Bool(False)
+    # average
+    average_type = Str('bool')
+    average_type_list = List(str, ['bool', 'int'])
+    average_bool = Bool(False)
+    average_int = Int(10)
+    average_int_min = Int(2)
+        
+
 class SGDRegressor_Model(ABCRegressionModel):
 
 
@@ -26,58 +72,12 @@ class SGDRegressor_Model(ABCRegressionModel):
     calc_docs = ABCRegressionModel.doc_root + 'SGDRegressor.html'
 
 
-    class ui(Atom):
-
-        input_selector = Value(Atom)
-
-        # loss
-        loss = Str('squared_loss')
-        loss_list = List(str, ['squared_loss', 'huber', 'epsilon_insensitive', 
-                               'squared_epsilon_insensitive'])
-        # penalty
-        penalty = Str('l2')
-        penalty_list = List(str, ['none', 'l1', 'l2', 'elasticnet'])
-        # alpha
-        alpha = Float(0.0001)
-        # l1_ratio
-        l1_ratio = Float(0.15)
-        l1_ratio_min = Float(0)
-        l1_ratio_max = Float(1)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # n_iter
-        n_iter = Int(5)
-        # shuffle
-        shuffle = Bool(True)
-        # verbose
-        verbose = Bool(False)
-        # epsilon
-        epsilon = Float(0.1)
-        # random_state
-        random_state = Int(1)
-        # learning_rate
-        learning_rate = Str('invscaling')
-        learning_rate_list = List(str, ['constant', 'invscaling', 'optimal'])
-        # eta0
-        eta0 = Float(0.01)
-        # power_t
-        power_t = Float(0.25)
-        # warm_start
-        warm_start = Bool(False)
-        # average
-        average_type = Str('bool')
-        average_type_list = List(str, ['bool', 'int'])
-        average_bool = Bool(False)
-        average_int = Int(10)
-        average_int_min = Int(2)
-        
-
     def setInputs(self, dataframe):
         
         self.estimator_type = SGDRegressor
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
-        self.uiModel = SGDRegressor_Model.ui(
+        self.uiModel = SGDRegressor_UI(
                             input_selector = self.input_selector.uiModel,
                             )
 

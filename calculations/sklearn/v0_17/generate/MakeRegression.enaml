@@ -13,60 +13,60 @@ from sklearn.datasets import make_regression
 
 
 
+class MakeRegression_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The number of samples.'
+    # n_features
+    n_features = Int(20)
+    n_features_min = Int(1)
+    n_features_tooltip = 'The number of features.'
+    # n_informative
+    n_informative = Int(10)
+    n_informative_min = Int(0)
+    n_informative_tooltip = 'The number of informative features, i.e., the number of features used to build the linear model used to generate the output.'
+    # n_targets
+    n_targets = Int(1)
+    n_targets_min = Int(1)
+    n_targets_tooltip = 'The number of regression targets, i.e., the dimension of the y output vector associated with a sample. By default, the output is a scalar.'
+    # bias
+    bias = Float(0.0)
+    bias_tooltip = 'The bias term in the underlying model.'
+    # effective_rank
+    effective_rank = Int(1)
+    use_effective_rank = Bool()
+    effective_rank_tooltip = 'if not None:\n\\tThe approximate number of singular vectors required to explain most of the input data by linear combinations. \n\\tUsing this kind of singular spectrum in the input allows the generator to reproduce the correlations often observed in practice.\nif None:\n\\tThe input set is well conditioned, centered and gaussian with unit variance.'
+    # tail_strength
+    tail_strength = Float(0.5)
+    tail_strength_min = Float(0)
+    tail_strength_max = Float(1)
+    tail_strength_tooltip = 'The relative importance of the fat noisy tail of the singular values profile if effective_rank is not None.'
+    # noise
+    noise = Float(0.0)
+    noise_tooltip = 'The standard deviation of the gaussian noise applied to the output.\n'
+    # coef
+    coef = Bool()
+    coef_tooltip = 'If True, the coefficients of the underlying linear model are returned.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Shuffle the samples and the features.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeRegression_Model(RegressionGenerator):
 
 
     calc_name = 'Make Regression'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The number of samples.'
-        # n_features
-        n_features = Int(20)
-        n_features_min = Int(1)
-        n_features_tooltip = 'The number of features.'
-        # n_informative
-        n_informative = Int(10)
-        n_informative_min = Int(0)
-        n_informative_tooltip = 'The number of informative features, i.e., the number of features used to build the linear model used to generate the output.'
-        # n_targets
-        n_targets = Int(1)
-        n_targets_min = Int(1)
-        n_targets_tooltip = 'The number of regression targets, i.e., the dimension of the y output vector associated with a sample. By default, the output is a scalar.'
-        # bias
-        bias = Float(0.0)
-        bias_tooltip = 'The bias term in the underlying model.'
-        # effective_rank
-        effective_rank = Int(1)
-        use_effective_rank = Bool()
-        effective_rank_tooltip = 'if not None:\n\\tThe approximate number of singular vectors required to explain most of the input data by linear combinations. \n\\tUsing this kind of singular spectrum in the input allows the generator to reproduce the correlations often observed in practice.\nif None:\n\\tThe input set is well conditioned, centered and gaussian with unit variance.'
-        # tail_strength
-        tail_strength = Float(0.5)
-        tail_strength_min = Float(0)
-        tail_strength_max = Float(1)
-        tail_strength_tooltip = 'The relative importance of the fat noisy tail of the singular values profile if effective_rank is not None.'
-        # noise
-        noise = Float(0.0)
-        noise_tooltip = 'The standard deviation of the gaussian noise applied to the output.\n'
-        # coef
-        coef = Bool()
-        coef_tooltip = 'If True, the coefficients of the underlying linear model are returned.'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Shuffle the samples and the features.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeRegression_Model.ui()
+        self.uiModel = MakeRegression_UI()
         self.outputFunction = make_regression
 
 

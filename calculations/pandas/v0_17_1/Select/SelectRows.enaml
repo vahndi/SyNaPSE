@@ -30,67 +30,67 @@ method_tooltips = {'string' : ('select rows whose names start with, ' +
                             'bottom of the dataframe'), }
 
 
+class SelectRows_UI(Atom):
+        
+    # method
+    method = Str('string')
+    method_list = List(str)
+    method_tooltip = Str()
+    # starts_with
+    starts_with = Str()
+    starts_with_tooltip = ('Select rows whose names start with this ' +
+                           'text.')
+    # ends_with
+    ends_with = Str()
+    ends_with_tooltip = 'Select rows whose names end with this text.'
+    # contains
+    contains = Str()
+    contains_tooltip = 'Select rows whose names contain this text.'
+    # does_not_contain
+    does_not_contain = Str()
+    does_notcontain_tooltip = ('Select rows whose names do not ' +
+                               'contain this text.')
+    # regular expression
+    expression = Str()
+    expression_tooltip = ('Select rows whose names match this regular' +
+                          ' expression.')
+    # start index
+    range_start_int = Int()
+    use_range_start_int = Bool()
+    range_start_int_tooltip = ('The 0-based index of the first row to' +
+                               ' select.')
+    # end index
+    range_end_int = Int()
+    use_range_end_int = Bool()
+    range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
+                             'row to select.')
+    # first and last rows
+    fl_rows = List(str)
+    # first row name
+    first_row_name = Str()
+    use_first_row_name = Bool()
+    first_row_name_tooltip = 'The name of the first row to select.'
+    # last row name
+    last_row_name = Str()
+    use_last_row_name = Bool() 
+    last_row_name_tooltip = 'The name of the last row to select.'
+    # manual selection
+    manual_rows = Value(Atom)
+    manual_rows_tooltip = 'Check row names to select.'
+    # head_tail_number
+    head_tail_number = Int(10)
+    # order_alphabetically
+    order_alphabetically = Bool(False)
+    order_alphabetically_tooltip = ('Order the returned row names ' +
+                                    'alphabetically.')
+
+
 class SelectRows_Model(ABCDataFrameToDataFrame):
     
 
     calc_name = 'Select Rows'
     
     
-    class ui(Atom):
-        
-        # method
-        method = Str('string')
-        method_list = List(str)
-        method_tooltip = Str()
-        # starts_with
-        starts_with = Str()
-        starts_with_tooltip = ('Select rows whose names start with this ' +
-                               'text.')
-        # ends_with
-        ends_with = Str()
-        ends_with_tooltip = 'Select rows whose names end with this text.'
-        # contains
-        contains = Str()
-        contains_tooltip = 'Select rows whose names contain this text.'
-        # does_not_contain
-        does_not_contain = Str()
-        does_notcontain_tooltip = ('Select rows whose names do not ' +
-                                   'contain this text.')
-        # regular expression
-        expression = Str()
-        expression_tooltip = ('Select rows whose names match this regular' +
-                              ' expression.')
-        # start index
-        range_start_int = Int()
-        use_range_start_int = Bool()
-        range_start_int_tooltip = ('The 0-based index of the first row to' +
-                                   ' select.')
-        # end index
-        range_end_int = Int()
-        use_range_end_int = Bool()
-        range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
-                                 'row to select.')
-        # first and last rows
-        fl_rows = List(str)
-        # first row name
-        first_row_name = Str()
-        use_first_row_name = Bool()
-        first_row_name_tooltip = 'The name of the first row to select.'
-        # last row name
-        last_row_name = Str()
-        use_last_row_name = Bool() 
-        last_row_name_tooltip = 'The name of the last row to select.'
-        # manual selection
-        manual_rows = Value(Atom)
-        manual_rows_tooltip = 'Check row names to select.'
-        # head_tail_number
-        head_tail_number = Int(10)
-        # order_alphabetically
-        order_alphabetically = Bool(False)
-        order_alphabetically_tooltip = ('Order the returned row names ' +
-                                        'alphabetically.')
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
@@ -104,7 +104,7 @@ class SelectRows_Model(ABCDataFrameToDataFrame):
                                     for m in method_list])
 
         self.manual_rows = CheckBoxList_Model(dataframe.index)
-        self.uiModel = SelectRows_Model.ui(
+        self.uiModel = SelectRows_UI(
                             method_list = method_list,
                             manual_rows = self.manual_rows.uiModel,
                             fl_rows = [str(i) for i in list(dataframe.index)],

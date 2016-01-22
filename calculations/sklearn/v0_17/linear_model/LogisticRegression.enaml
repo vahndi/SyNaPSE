@@ -22,6 +22,45 @@ from pandas import DataFrame, Series
 
 
 
+class LogisticRegression_UI(Atom):
+
+    # inputs_targets_selector
+    input_selector = Value(Atom)
+        
+    # solver
+    solver = Unicode('liblinear')
+    solver_list = List(str, ['newton-cg', 'lbfgs', 'liblinear', 'sag'])
+    # penalty
+    penalty = Unicode('l2')
+    penalty_list = List(str, ['l1', 'l2'])
+    # dual
+    dual = Bool(False)
+    # tolerance
+    tolerance = Float(0.0001)
+    # C
+    C = Float(True)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # intercept_scaling
+    intercept_scaling = Float(True)
+    # class_weight_type
+    class_weight_type = Unicode('equal')
+    class_weight_type_list = List(str, ['equal', 'balanced'])
+    # max_iterations
+    max_iterations = Int(100)
+    # multi_class
+    multi_class = Unicode('ovr')
+    multi_class_list = List(str, ['ovr', 'multinomial'])
+    # random_state_seed
+    random_state_seed = Int(1)
+    # verbose
+    verbose = Bool(False)
+    # warm_start
+    warm_start = Bool(False)
+    # cores_selector
+    cores_selector = Value(Atom)
+        
+
 class LogisticRegression_Model(ABCClassificationModel):
 
 
@@ -31,51 +70,12 @@ class LogisticRegression_Model(ABCClassificationModel):
         ABCClassificationModel.doc_root + 'LogisticRegression.html'
 
 
-    class ui(Atom):
-
-        # inputs_targets_selector
-        input_selector = Value(Atom)
-        
-        # solver
-        solver = Unicode('liblinear')
-        solver_list = List(str, ['newton-cg', 'lbfgs', 'liblinear', 'sag'])
-        # penalty
-        penalty = Unicode('l2')
-        penalty_list = List(str, ['l1', 'l2'])
-        # dual
-        dual = Bool(False)
-        # tolerance
-        tolerance = Float(0.0001)
-        # C
-        C = Float(True)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # intercept_scaling
-        intercept_scaling = Float(True)
-        # class_weight_type
-        class_weight_type = Unicode('equal')
-        class_weight_type_list = List(str, ['equal', 'balanced'])
-        # max_iterations
-        max_iterations = Int(100)
-        # multi_class
-        multi_class = Unicode('ovr')
-        multi_class_list = List(str, ['ovr', 'multinomial'])
-        # random_state_seed
-        random_state_seed = Int(1)
-        # verbose
-        verbose = Bool(False)
-        # warm_start
-        warm_start = Bool(False)
-        # cores_selector
-        cores_selector = Value(Atom)
-        
-
     def setInputs(self, dataframe):
 
         self.estimator_type = LogisticRegression
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
-        self.uiModel = LogisticRegression_Model.ui(
+        self.uiModel = LogisticRegression_UI(
                             input_selector = self.input_selector.uiModel,
                             cores_selector = self.cores_selector.uiModel
                             )

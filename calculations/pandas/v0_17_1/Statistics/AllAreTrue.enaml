@@ -10,35 +10,35 @@ from calculations.core.ABCs import ABCDataFrameToSeries
 
 
 
+class AllAreTrue_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = ('Exclude NA / null values.\n' + 
+                      'If an entire row / column is NA, the result will' +
+                      ' be NA.')
+    # bool_only
+    bool_only = Bool()
+    use_bool_only = Bool()
+    bool_only_tooltip = ('Include only boolean data.\n' +
+                         'If None, will attempt to use everything, ' +
+                         'then use only boolean data.')
+
+
 class AllAreTrue_Model(ABCDataFrameToSeries):
 
 
     calc_name = 'All are True'
 
 
-    class ui(Atom):
-
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied.'
-        # skipna
-        skipna = Bool()
-        skipna_tooltip = ('Exclude NA / null values.\n' + 
-                          'If an entire row / column is NA, the result will' +
-                          ' be NA.')
-        # bool_only
-        bool_only = Bool()
-        use_bool_only = Bool()
-        bool_only_tooltip = ('Include only boolean data.\n' +
-                             'If None, will attempt to use everything, ' +
-                             'then use only boolean data.')
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = AllAreTrue_Model.ui()
+        self.uiModel = AllAreTrue_UI()
 
 
     def getOutputs(self):

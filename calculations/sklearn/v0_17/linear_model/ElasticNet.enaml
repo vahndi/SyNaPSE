@@ -13,6 +13,42 @@ from sklearn.linear_model import ElasticNet
 
 
 
+class ElasticNet_UI(Atom):
+
+    input_selector = Value(Atom)
+        
+    # alpha
+    alpha = Float(1)
+    alpha_min = Float(0)
+    # l1_ratio
+    l1_ratio = Float(0.5)
+    l1_ratio_min = Float(0)
+    l1_ratio_max = Float(1)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # normalize
+    normalize = Bool(False)
+    # precompute
+    precompute = Bool(False)
+    # max_iter
+    max_iter = Int(1000)
+    max_iter_min = Int(1)
+    # copy_X
+    copy_X = Bool(True)
+    # tol
+    tol = Float(0.0001)
+    tol_min = Float(0)
+    # warm_start
+    warm_start = Bool(False)
+    # positive
+    positive = Bool(False)
+    # random_state
+    random_state = Int(1)
+    # selection
+    selection = Str('cyclic')
+    selection_list = List(str, ['cyclic', 'random'])
+
+
 class ElasticNet_Model(ABCRegressionModel):
 
 
@@ -21,47 +57,11 @@ class ElasticNet_Model(ABCRegressionModel):
         'Linear regression with combined L1 and L2 priors as regularizer.'
     calc_docs = ABCRegressionModel.doc_root + 'ElasticNet.html'
 
-    class ui(Atom):
-
-        input_selector = Value(Atom)
-        
-        # alpha
-        alpha = Float(1)
-        alpha_min = Float(0)
-        # l1_ratio
-        l1_ratio = Float(0.5)
-        l1_ratio_min = Float(0)
-        l1_ratio_max = Float(1)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # normalize
-        normalize = Bool(False)
-        # precompute
-        precompute = Bool(False)
-        # max_iter
-        max_iter = Int(1000)
-        max_iter_min = Int(1)
-        # copy_X
-        copy_X = Bool(True)
-        # tol
-        tol = Float(0.0001)
-        tol_min = Float(0)
-        # warm_start
-        warm_start = Bool(False)
-        # positive
-        positive = Bool(False)
-        # random_state
-        random_state = Int(1)
-        # selection
-        selection = Str('cyclic')
-        selection_list = List(str, ['cyclic', 'random'])
-
-
     def setInputs(self, dataframe):
         
         self.estimator_type = ElasticNet
         self.set_inputs(dataframe)
-        self.uiModel = ElasticNet_Model.ui(
+        self.uiModel = ElasticNet_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

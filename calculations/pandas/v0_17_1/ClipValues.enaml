@@ -10,27 +10,27 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class ClipValues_UI(Atom):
+
+    # lower
+    lower = Float()
+    use_lower = Bool()
+    lower_tooltip = 'The lower bound to truncate values'
+    # upper
+    upper = Float()
+    use_upper = Bool()
+    upper_tooltip = 'The upper bound to truncate values'
+
 class ClipValues_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Clip Values'
 
 
-    class ui(Atom):
-
-        # lower
-        lower = Float()
-        use_lower = Bool()
-        lower_tooltip = 'The lower bound to truncate values'
-        # upper
-        upper = Float()
-        use_upper = Bool()
-        upper_tooltip = 'The upper bound to truncate values'
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = ClipValues_Model.ui()
+        self.uiModel = ClipValues_UI()
 
 
     def getOutputs(self):

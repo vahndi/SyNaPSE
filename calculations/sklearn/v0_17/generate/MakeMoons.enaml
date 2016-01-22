@@ -12,34 +12,34 @@ from sklearn.datasets import make_moons
 
 
 
+class MakeMoons_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The total number of points generated.'
+    # noise
+    noise = Float(1)
+    noise_min = Float(1e-9)
+    noise_tooltip = 'Standard deviation of Gaussian noise added to the data (>0).'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Whether to shuffle the samples.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool(True)
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeMoons_Model(NumericClassificationGenerator):
 
 
     calc_name = 'Make Moons'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The total number of points generated.'
-        # noise
-        noise = Float(1)
-        noise_min = Float(1e-9)
-        noise_tooltip = 'Standard deviation of Gaussian noise added to the data (>0).'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Whether to shuffle the samples.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool(True)
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeMoons_Model.ui()
+        self.uiModel = MakeMoons_UI()
         self.outputFunction = make_moons
 
 

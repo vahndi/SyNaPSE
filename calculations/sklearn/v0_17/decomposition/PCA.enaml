@@ -15,6 +15,17 @@ from pandas import Series, DataFrame, concat
 
 
 
+class PCA_UI(Atom):
+        
+    n_components_type = Str('all')
+    n_components_types = List(str, ['all', 'int', 'mle'])
+    n_components_int = Value(int)
+    pct_explained_variance = Int(80)
+    n_cols = Int()
+    copy = Bool(True)
+    whiten = Bool(False)
+
+
 class PCA_Model(SKLearnElement):
     
     calc_name = 'PCA'
@@ -23,23 +34,12 @@ class PCA_Model(SKLearnElement):
                            'sklearn.decomposition.PCA.html'
 
     
-    class ui(Atom):
-        
-        n_components_type = Str('all')
-        n_components_types = List(str, ['all', 'int', 'mle'])
-        n_components_int = Value(int)
-        pct_explained_variance = Int(80)
-        n_cols = Int()
-        copy = Bool(True)
-        whiten = Bool(False)
-
-
     def setInputs(self, dataframe):
         
         self._dataframe = dataframe
         self._dfCategorical = dataframe.select_dtypes([object])
         self._dfNumeric = dataframe.select_dtypes(['number'])
-        self.uiModel = PCA_Model.ui(n_components_int = 2,
+        self.uiModel = PCA_UI(n_components_int = 2,
                                     n_cols = len(self._dfNumeric.columns))
 
 

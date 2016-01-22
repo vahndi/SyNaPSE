@@ -12,73 +12,73 @@ from sklearn.datasets import make_classification
 
 
 
+class MakeClassification_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The total number of points generated.'
+    # n_features
+    n_features = Int(20)
+    n_features_min = Int(1)
+    n_features_tooltip = 'The total number of features. These comprise:\nn_informative informative features, \nn_redundant redundant features, \nn_repeated duplicated features, and \nn_features-n_informative-n_redundant- n_repeated useless features drawn at random.'
+    # n_informative
+    n_informative = Int(2)
+    n_informative_min = Int(0)
+    n_informative_tooltip = 'The number of informative features.\nEach class is composed of a number of gaussian clusters each located around the vertices of a hypercube in a subspace of dimension n_informative. \nFor each cluster, informative features are drawn independently from N(0, 1) and then randomly linearly combined within each cluster in order to add covariance. \nThe clusters are then placed on the vertices of the hypercube.'
+    # n_redundant
+    n_redundant = Int(2)
+    n_redundant_min = Int(0)
+    n_redundant_tooltip = 'The number of redundant features. \nThese features are generated as random linear combinations of the informative features.'
+    # n_repeated
+    n_repeated = Int(0)
+    n_repeated_min = Int(0)
+    n_repeated_tooltip = 'The number of duplicated features, drawn randomly from the informative and the redundant features.'
+    # n_classes
+    n_classes = Int(2)
+    n_classes_min = Int(0)
+    n_classes_tooltip = 'The number of classes (or labels) of the classification problem.'
+    # n_clusters_per_class
+    n_clusters_per_class = Int(2)
+    n_clusters_per_class_min = Int(0)
+    n_clusters_per_class_tooltip = 'The number of clusters per class.'
+    # flip_y
+    flip_y = Float(0.01)
+    flip_y_min = Float(0)
+    flip_y_max = Float(1)
+    flip_y_tooltip = 'The fraction of samples whose class are randomly exchanged.'
+    # class_sep
+    class_sep = Float(1.0)
+    class_sep_tooltip = 'The factor multiplying the hypercube dimension.'
+    # hypercube
+    hypercube = Bool(True)
+    hypercube_tooltip = 'If True, the clusters are put on the vertices of a hypercube. \nIf False, the clusters are put on the vertices of a random polytope.'
+    # shift
+    shift = Float(0.0)
+    use_shift = Bool(True)
+    shift_tooltip = 'Shift features by the specified value. \nIf None, then features are shifted by a random value drawn in [-class_sep, class_sep].'
+    # scale
+    scale = Float(1.0)
+    use_scale = Bool(True)
+    scale_tooltip = 'Multiply features by the specified value. \nIf None, then features are scaled by a random value drawn in [1, 100]. \nNote that scaling happens after shifting.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Shuffle the samples and the features.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool(True)
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeClassification_Model(NumericClassificationGenerator):
 
 
     calc_name = 'Make Classification'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The total number of points generated.'
-        # n_features
-        n_features = Int(20)
-        n_features_min = Int(1)
-        n_features_tooltip = 'The total number of features. These comprise:\nn_informative informative features, \nn_redundant redundant features, \nn_repeated duplicated features, and \nn_features-n_informative-n_redundant- n_repeated useless features drawn at random.'
-        # n_informative
-        n_informative = Int(2)
-        n_informative_min = Int(0)
-        n_informative_tooltip = 'The number of informative features.\nEach class is composed of a number of gaussian clusters each located around the vertices of a hypercube in a subspace of dimension n_informative. \nFor each cluster, informative features are drawn independently from N(0, 1) and then randomly linearly combined within each cluster in order to add covariance. \nThe clusters are then placed on the vertices of the hypercube.'
-        # n_redundant
-        n_redundant = Int(2)
-        n_redundant_min = Int(0)
-        n_redundant_tooltip = 'The number of redundant features. \nThese features are generated as random linear combinations of the informative features.'
-        # n_repeated
-        n_repeated = Int(0)
-        n_repeated_min = Int(0)
-        n_repeated_tooltip = 'The number of duplicated features, drawn randomly from the informative and the redundant features.'
-        # n_classes
-        n_classes = Int(2)
-        n_classes_min = Int(0)
-        n_classes_tooltip = 'The number of classes (or labels) of the classification problem.'
-        # n_clusters_per_class
-        n_clusters_per_class = Int(2)
-        n_clusters_per_class_min = Int(0)
-        n_clusters_per_class_tooltip = 'The number of clusters per class.'
-        # flip_y
-        flip_y = Float(0.01)
-        flip_y_min = Float(0)
-        flip_y_max = Float(1)
-        flip_y_tooltip = 'The fraction of samples whose class are randomly exchanged.'
-        # class_sep
-        class_sep = Float(1.0)
-        class_sep_tooltip = 'The factor multiplying the hypercube dimension.'
-        # hypercube
-        hypercube = Bool(True)
-        hypercube_tooltip = 'If True, the clusters are put on the vertices of a hypercube. \nIf False, the clusters are put on the vertices of a random polytope.'
-        # shift
-        shift = Float(0.0)
-        use_shift = Bool(True)
-        shift_tooltip = 'Shift features by the specified value. \nIf None, then features are shifted by a random value drawn in [-class_sep, class_sep].'
-        # scale
-        scale = Float(1.0)
-        use_scale = Bool(True)
-        scale_tooltip = 'Multiply features by the specified value. \nIf None, then features are scaled by a random value drawn in [1, 100]. \nNote that scaling happens after shifting.'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Shuffle the samples and the features.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool(True)
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeClassification_Model.ui()
+        self.uiModel = MakeClassification_UI()
         self.outputFunction = make_classification
     
     

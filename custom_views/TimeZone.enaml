@@ -41,19 +41,19 @@ def hasPlaces3(place_1, place_2):
     
 
 
+class TimeZone_UI(Atom):
+        
+    place_1 = Str()
+    place_2 = Str()
+    place_3 = Str()
+
+
 class TimeZone_Model(object):
     
     
-    class ui(Atom):
-        
-        place_1 = Str()
-        place_2 = Str()
-        place_3 = Str()
-
-
     def __init__(self):
         
-        self.uiModel = TimeZone_Model.ui()
+        self.uiModel = TimeZone_UI()
 
 
     def get_time_zone(self):

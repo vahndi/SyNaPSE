@@ -13,6 +13,35 @@ from sklearn.linear_model import LassoLars
 
 
 
+class LassoLars_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # alpha
+    alpha = Float(1)
+    alpha_min = Float(0)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # positive
+    positive = Bool(False)
+    # verbose
+    verbose = Bool(False)
+    # normalize
+    normalize = Bool(False)
+    # copy_X
+    copy_X = Bool(True)
+    # precompute
+    precompute = Str('auto')
+    precompute_list = List(str, ['True', 'False', 'auto'])
+    # max_iter
+    max_iter = Int(500)
+    max_iter_min = Int(1)
+    # eps
+    eps = Float(2.22044604925e-16)
+    # fit_path
+    fit_path = Bool(True)
+
+
 class LassoLars_Model(ABCRegressionModel):
 
     calc_name = 'Lasso Lars'
@@ -20,40 +49,11 @@ class LassoLars_Model(ABCRegressionModel):
         'Lasso model fit with Least Angle Regression a.k.a. Lars.'
     calc_docs = ABCRegressionModel.doc_root + 'LassoLars.html'
 
-    class ui(Atom):
-        
-        input_selector = Value(Atom)
-
-        # alpha
-        alpha = Float(1)
-        alpha_min = Float(0)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # positive
-        positive = Bool(False)
-        # verbose
-        verbose = Bool(False)
-        # normalize
-        normalize = Bool(False)
-        # copy_X
-        copy_X = Bool(True)
-        # precompute
-        precompute = Str('auto')
-        precompute_list = List(str, ['True', 'False', 'auto'])
-        # max_iter
-        max_iter = Int(500)
-        max_iter_min = Int(1)
-        # eps
-        eps = Float(2.22044604925e-16)
-        # fit_path
-        fit_path = Bool(True)
-
-
     def setInputs(self, dataframe):
         
         self.estimator_type = LassoLars
         self.set_inputs(dataframe)
-        self.uiModel = LassoLars_Model.ui(
+        self.uiModel = LassoLars_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

@@ -11,23 +11,23 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class ElementwiseDifference_UI(Atom):
+
+    # periods
+    periods = Int(1)
+    periods_max_axis0 = Int()
+    periods_max_axis1 = Int()
+    periods_tooltip = 'Periods to shift for forming difference.'
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'Take difference over rows (index) or columns.'
+
+
 class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Element-wise Difference'
-
-
-    class ui(Atom):
-
-        # periods
-        periods = Int(1)
-        periods_max_axis0 = Int()
-        periods_max_axis1 = Int()
-        periods_tooltip = 'Periods to shift for forming difference.'
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'Take difference over rows (index) or columns.'
 
 
     def setInputs(self, dataframe):
@@ -35,7 +35,7 @@ class ElementwiseDifference_Model(ABCDataFrameToDataFrame):
         self._dataframe = dataframe
         self._df_numeric = dataframe.select_dtypes(exclude = [object])
         df_shape = self._df_numeric.shape
-        self.uiModel = ElementwiseDifference_Model.ui(
+        self.uiModel = ElementwiseDifference_UI(
                                         periods_max_axis0 = df_shape[0] - 1,
                                         periods_max_axis1 = df_shape[1] - 1)
 

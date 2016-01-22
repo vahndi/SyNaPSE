@@ -9,27 +9,27 @@ from calculations.core.ABCs import ABCDataFrameToSeries
 
 
 
+class MeanAbsoluteDeviation_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = 'Exclude NA / null values. If an entire row / column is NA, the result will be NA.'
+
+
 class MeanAbsoluteDeviation_Model(ABCDataFrameToSeries):
 
 
     calc_name = 'Mean Absolute Deviation'
 
 
-    class ui(Atom):
-
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied.'
-        # skipna
-        skipna = Bool()
-        skipna_tooltip = 'Exclude NA / null values. If an entire row / column is NA, the result will be NA.'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = MeanAbsoluteDeviation_Model.ui()
+        self.uiModel = MeanAbsoluteDeviation_UI()
 
 
     def getOutputs(self):

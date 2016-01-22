@@ -26,50 +26,50 @@ from ..metrics.classification_metrics import ClassificationMetrics as CM
 
 
 
+class RandomForestClassifier_UI(Atom):
+
+    # inputs_targets_selector
+    inputs_targets_selector = Value(Atom)
+        
+    # number of trees
+    number_of_trees = Int(10)
+    # criterion
+    criterion = Str('gini')
+    criterion_list = List(str, ['gini', 'entropy'])
+    # max_features_type
+    max_features_type = Str('sqrt')
+    max_features_type_list = List(str, ['sqrt', 'log2', 'all', 
+                                        'int', 'percentage'])
+    # max_features_int
+    max_features_int = Int(10)
+    # max_features_percentage
+    max_features_percentage = Int(50)
+    max_features_percentage_min = Int(1)
+    max_features_percentage_max = Int(100)        
+    # leaves
+    leaves = Value(Atom)
+    # bootstrapOOB
+    bootstrapOOB = Value(Atom)
+    # random_state_seed
+    random_state_seed = Int(1)
+    # verbose
+    verbose = Bool(False)
+    # warm_start
+    warm_start = Bool(False)
+    # class_weight
+    class_weight = Str('equal')
+    class_weight_list = List(str, ['equal', 'balanced', 
+                                   'balanced_subsample'])
+    # cores_selector
+    cores_selector = Value(Atom)
+
+
 class RandomForestClassifier_Model(SKLearnElement):
 
     calc_name = 'Random Forest Classifier'
     calc_desc = 'A random forest classifier.'
     calc_docs = SKLearnElement.doc_root + \
                            'sklearn.ensemble.RandomForestClassifier.html'
-
-
-    class ui(Atom):
-
-        # inputs_targets_selector
-        inputs_targets_selector = Value(Atom)
-        
-        # number of trees
-        number_of_trees = Int(10)
-        # criterion
-        criterion = Str('gini')
-        criterion_list = List(str, ['gini', 'entropy'])
-        # max_features_type
-        max_features_type = Str('sqrt')
-        max_features_type_list = List(str, ['sqrt', 'log2', 'all', 
-                                            'int', 'percentage'])
-        # max_features_int
-        max_features_int = Int(10)
-        # max_features_percentage
-        max_features_percentage = Int(50)
-        max_features_percentage_min = Int(1)
-        max_features_percentage_max = Int(100)        
-        # leaves
-        leaves = Value(Atom)
-        # bootstrapOOB
-        bootstrapOOB = Value(Atom)
-        # random_state_seed
-        random_state_seed = Int(1)
-        # verbose
-        verbose = Bool(False)
-        # warm_start
-        warm_start = Bool(False)
-        # class_weight
-        class_weight = Str('equal')
-        class_weight_list = List(str, ['equal', 'balanced', 
-                                       'balanced_subsample'])
-        # cores_selector
-        cores_selector = Value(Atom)
 
 
     def setInputs(self, dataframe):
@@ -82,7 +82,7 @@ class RandomForestClassifier_Model(SKLearnElement):
         self.cores_selector = CoresSelector_Model()
         self.leaves = Leaves_Model()
         self.bootstrapOOB = BootstrapOOB_Model()
-        self.uiModel = RandomForestClassifier_Model.ui(
+        self.uiModel = RandomForestClassifier_UI(
                             inputs_targets_selector = self.selector.uiModel,
                             cores_selector = self.cores_selector.uiModel,
                             leaves = self.leaves.uiModel,

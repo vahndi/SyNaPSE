@@ -11,41 +11,41 @@ from ._base.ClassificationGenerator import LabelClassificationGenerator
 from sklearn.datasets import make_gaussian_quantiles
 
 
+class MakeGaussianQuantiles_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The total number of points equally divided among classes.'
+    # n_features
+    n_features = Int(2)
+    n_features_min = Int(1)
+    n_features_tooltip = 'The number of features for each sample.'
+    # n_classes
+    n_classes = Int(3)
+    n_classes_min = Int(1)
+    n_classes_tooltip = 'The number of classes.'
+    # cov
+    cov = Float()
+    cov_tooltip = 'The covariance matrix will be this value times the unit matrix. \nThis dataset only produces symmetric normal distributions.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Shuffle the samples.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeGaussianQuantiles_Model(LabelClassificationGenerator):
 
 
     calc_name = 'Make Gaussian Quantiles'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The total number of points equally divided among classes.'
-        # n_features
-        n_features = Int(2)
-        n_features_min = Int(1)
-        n_features_tooltip = 'The number of features for each sample.'
-        # n_classes
-        n_classes = Int(3)
-        n_classes_min = Int(1)
-        n_classes_tooltip = 'The number of classes.'
-        # cov
-        cov = Float()
-        cov_tooltip = 'The covariance matrix will be this value times the unit matrix. \nThis dataset only produces symmetric normal distributions.'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Shuffle the samples.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeGaussianQuantiles_Model.ui()
+        self.uiModel = MakeGaussianQuantiles_UI()
         self.outputFunction = make_gaussian_quantiles
 
 

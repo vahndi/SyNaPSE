@@ -21,21 +21,21 @@ class OrderedListItem(object):
 
 
 
+class OrderedList_UI(Atom):
+
+    unselected_items = ContainerList(OrderedListItem)
+    selected_items = ContainerList(OrderedListItem) 
+    selected_item = Value(OrderedListItem)
+    unselected_item = Value(OrderedListItem)
+    fn_select_item = Callable()
+    fn_unselect_item = Callable()
+    fn_move_item_up = Callable()
+    fn_move_item_down = Callable()
+        
+    
 class OrderedList_Model(object):
 
 
-    class ui(Atom):
-
-        unselected_items = ContainerList(OrderedListItem)
-        selected_items = ContainerList(OrderedListItem) 
-        selected_item = Value(OrderedListItem)
-        unselected_item = Value(OrderedListItem)
-        fn_select_item = Callable()
-        fn_unselect_item = Callable()
-        fn_move_item_up = Callable()
-        fn_move_item_down = Callable()
-        
-    
     def __init__(self, item_names, selected_item_names = [], 
                  fn_selected_changed = None):
         '''
@@ -61,7 +61,7 @@ class OrderedList_Model(object):
 
         self.fn_selected_changed = fn_selected_changed
 
-        self.uiModel = OrderedList_Model.ui(
+        self.uiModel = OrderedList_UI(
                         selected_items = self.selected_items,
                         unselected_items = self.unselected_items,
                         selected_item = None,

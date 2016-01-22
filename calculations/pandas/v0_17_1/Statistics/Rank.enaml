@@ -10,49 +10,49 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class Rank_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # numeric_only
+    numeric_only = Bool(True)
+    numeric_only_tooltip = 'Include only float, int, boolean data.'
+    # method
+    method = Str('average')
+    method_list = List(str, ['average', 'min', 'max', 'first', 'dense'])
+    method_tooltip = (
+        'average: average rank of group\n' +
+        'min: lowest rank in group\n' +
+        'max: highest rank in group\n' +
+        'first: ranks assigned in order they appear in the array\n' +
+        'dense: like min, but rank always increases by 1 between groups'
+        )
+    # na_option
+    na_option = Str('keep')
+    na_option_list = List(str, ['keep', 'top', 'bottom'])
+    na_option_tooltip = ('keep: leave NA values where they are\n' +
+                         'top: smallest rank if ascending\n' +
+                         'bottom: smallest rank if descending')
+    # ascending
+    ascending = Bool(True)
+    ascending_tooltip = 'False for ranks by high (1) to low (N)'
+    # pct
+    pct = Bool(False)
+    pct_tooltip = 'Computes percentage rank of data'
+
+
 class Rank_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Rank'
 
 
-    class ui(Atom):
-
-        # axis
-        axis = Str('index')
-        axis_list = List(str, ['index', 'columns'])
-        axis_tooltip = 'The axis over which the calculation should be applied.'
-        # numeric_only
-        numeric_only = Bool(True)
-        numeric_only_tooltip = 'Include only float, int, boolean data.'
-        # method
-        method = Str('average')
-        method_list = List(str, ['average', 'min', 'max', 'first', 'dense'])
-        method_tooltip = (
-            'average: average rank of group\n' +
-            'min: lowest rank in group\n' +
-            'max: highest rank in group\n' +
-            'first: ranks assigned in order they appear in the array\n' +
-            'dense: like min, but rank always increases by 1 between groups'
-            )
-        # na_option
-        na_option = Str('keep')
-        na_option_list = List(str, ['keep', 'top', 'bottom'])
-        na_option_tooltip = ('keep: leave NA values where they are\n' +
-                             'top: smallest rank if ascending\n' +
-                             'bottom: smallest rank if descending')
-        # ascending
-        ascending = Bool(True)
-        ascending_tooltip = 'False for ranks by high (1) to low (N)'
-        # pct
-        pct = Bool(False)
-        pct_tooltip = 'Computes percentage rank of data'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Rank_Model.ui()
+        self.uiModel = Rank_UI()
 
 
     def getOutputs(self):

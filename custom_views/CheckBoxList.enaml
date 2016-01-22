@@ -25,17 +25,17 @@ class CheckBoxListItem(object):
 
 
 
+class CheckBoxList_UI(Atom):
+
+    check_items = ContainerList(CheckBoxListItem)
+    checked_indices = ContainerList(int)
+    fn_check_all = Callable(None)
+    fn_uncheck_all = Callable(None)
+        
+    
 class CheckBoxList_Model(object):
 
 
-    class ui(Atom):
-
-        check_items = ContainerList(CheckBoxListItem)
-        checked_indices = ContainerList(int)
-        fn_check_all = Callable(None)
-        fn_uncheck_all = Callable(None)
-        
-    
     def __init__(self, item_names, checked_indices = [],
                  check_all = True, uncheck_all = True):
 
@@ -49,7 +49,7 @@ class CheckBoxList_Model(object):
         if uncheck_all:
             fn_uncheck_all = self.uncheck_all
             
-        self.uiModel = CheckBoxList_Model.ui(check_items = self.items,
+        self.uiModel = CheckBoxList_UI(check_items = self.items,
                                              checked_indices = checked_indices,
                                              fn_check_all = fn_check_all,
                                              fn_uncheck_all = fn_uncheck_all)

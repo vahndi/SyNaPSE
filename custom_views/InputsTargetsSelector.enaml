@@ -47,24 +47,23 @@ enamldef InputsTargetsSelector_View(Container): me:
                 value := model.pct_training
 
 
+class InputsTargetsSelector_UI(Atom):
+    
+    show_shuffle_examples = Bool()
+    shuffle_examples = Bool()
+
+    input_columns = Value(Atom)
+
+    target_column = Str()
+    target_column_list = List(str)
+
+    show_pct_training = Bool()
+    pct_training = Int()
+    pct_training_min = Int(1)
+    pct_training_max = Int(99)
+
 
 class InputsTargetsSelector_Model(object):
-
-
-    class ui(Atom):
-        
-        show_shuffle_examples = Bool()
-        shuffle_examples = Bool()
-
-        input_columns = Value(Atom)
-
-        target_column = Str()
-        target_column_list = List(str)
-
-        show_pct_training = Bool()
-        pct_training = Int()
-        pct_training_min = Int(1)
-        pct_training_max = Int(99)
 
 
     def __init__(
@@ -85,7 +84,7 @@ class InputsTargetsSelector_Model(object):
         target_cols = get_column_names_by_dtype(dataframe, target_dtypes)
 
         self.input_cols = CheckBoxList_Model(input_cols)
-        self.uiModel = InputsTargetsSelector_Model.ui(
+        self.uiModel = InputsTargetsSelector_UI(
                                 show_shuffle_examples = show_shuffle_examples,
                                 shuffle_examples = shuffle_examples,
                                 show_pct_training = show_pct_training,

@@ -12,41 +12,41 @@ from pandas import DataFrame, Series, concat
 
 
 
+class Make2_UI(Atom):
+
+    # shape_rows
+    shape_rows = Int(100)
+    shape_rows_tooltip = 'The number of samples to generate.'
+    # shape_cols
+    shape_cols = Int(2)
+    shape_cols_tooltip = 'The number of dimensions of each sample.'
+    # n_clusters
+    n_clusters = Int(5)
+    n_clusters_tooltip = 'The number of biclusters.'
+    # noise
+    noise = Float(0)
+    noise_tooltip = 'The standard deviation of the gaussian noise.'
+    # minval
+    minval = Int(10)
+    minval_tooltip = 'Minimum value of a bicluster.'
+    # maxval
+    maxval = Int(100)
+    maxval_tooltip = 'Maximum value of a bicluster.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Shuffle the samples.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class Make2_Model(ABCOutputsDataFrame):
-
-
-    class ui(Atom):
-
-        # shape_rows
-        shape_rows = Int(100)
-        shape_rows_tooltip = 'The number of samples to generate.'
-        # shape_cols
-        shape_cols = Int(2)
-        shape_cols_tooltip = 'The number of dimensions of each sample.'
-        # n_clusters
-        n_clusters = Int(5)
-        n_clusters_tooltip = 'The number of biclusters.'
-        # noise
-        noise = Float(0)
-        noise_tooltip = 'The standard deviation of the gaussian noise.'
-        # minval
-        minval = Int(10)
-        minval_tooltip = 'Minimum value of a bicluster.'
-        # maxval
-        maxval = Int(100)
-        maxval_tooltip = 'Maximum value of a bicluster.'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Shuffle the samples.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
 
 
     def __init__(self):
         
-        self.uiModel = Make2_Model.ui()
+        self.uiModel = Make2_UI()
        
 
     def getOutputs(self):

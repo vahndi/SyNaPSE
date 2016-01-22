@@ -13,46 +13,46 @@ from pandas.stats.moments import ewmstd
 
 
 
+class EWMStandardDeviation_UI(Atom):
+
+    # decay_method
+    decay_method = Str('center of mass')
+    decay_method_list = List(str, ['center of mass', 'span', 'halflife'])
+    decay_method_tooltip = 'Specify how to calculate the Decay.'
+    # com
+    com = Float()
+    com_tooltip = 'Calculate Decay from Center of Mass.\\nalpha = 1 / (1 + CoM)'
+    # span
+    span = Float()
+    span_tooltip = 'Calculate Decay from Span.\\nalpha = 2 / (Span + 1)'
+    # halflife
+    halflife = Float()
+    halflife_tooltip = 'Calculate Decay from Halflife.\\nalpha = 1 - exp( log(0.5) / Halflife )'
+    # min_periods
+    min_periods = Int(0)
+    min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+    # bias
+    bias = Bool()
+    bias_tooltip = 'Use a standard estimation bias correction.'
+    # ignore_na
+    ignore_na = Bool()
+    ignore_na_tooltip = 'Ignore missing values when calculating weights.'
+    # adjust
+    adjust = Bool(True)
+    adjust_tooltip = 'Divide by decaying adjustment factor in beginning periods to account for imbalance in relative weightings (viewing EWMA as a moving average).'
+
+
 class EWMStandardDeviation_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
     calc_name = 'Exponentially Weighted Moving Standard Deviation'
 
 
-    class ui(Atom):
-
-        # decay_method
-        decay_method = Str('center of mass')
-        decay_method_list = List(str, ['center of mass', 'span', 'halflife'])
-        decay_method_tooltip = 'Specify how to calculate the Decay.'
-        # com
-        com = Float()
-        com_tooltip = 'Calculate Decay from Center of Mass.\\nalpha = 1 / (1 + CoM)'
-        # span
-        span = Float()
-        span_tooltip = 'Calculate Decay from Span.\\nalpha = 2 / (Span + 1)'
-        # halflife
-        halflife = Float()
-        halflife_tooltip = 'Calculate Decay from Halflife.\\nalpha = 1 - exp( log(0.5) / Halflife )'
-        # min_periods
-        min_periods = Int(0)
-        min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
-        # bias
-        bias = Bool()
-        bias_tooltip = 'Use a standard estimation bias correction.'
-        # ignore_na
-        ignore_na = Bool()
-        ignore_na_tooltip = 'Ignore missing values when calculating weights.'
-        # adjust
-        adjust = Bool(True)
-        adjust_tooltip = 'Divide by decaying adjustment factor in beginning periods to account for imbalance in relative weightings (viewing EWMA as a moving average).'
-
-
     def setInputs(self, dataframe = None, series = None):
 
         self._dataframe = dataframe
         self._series = series
-        self.uiModel = EWMStandardDeviation_Model.ui()
+        self.uiModel = EWMStandardDeviation_UI()
 
 
     def getOutputs(self):

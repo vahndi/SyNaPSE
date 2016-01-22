@@ -12,6 +12,11 @@ from sklearn.linear_model import LinearRegression
 
 
 
+class LinearRegression_UI(Atom):
+
+    input_selector = Value(Atom)
+    
+    
 class LinearRegression_Model(ABCRegressionModel):
 
 
@@ -19,16 +24,11 @@ class LinearRegression_Model(ABCRegressionModel):
     calc_desc = 'Ordinary least squares Linear Regression.'
     calc_docs = ABCRegressionModel.doc_root + 'LinearRegression.html'
    
-    class ui(Atom):
-
-        input_selector = Value(Atom)
-    
-    
     def setInputs(self, dataframe):
         
         self.estimator_type = LinearRegression
         self.set_inputs(dataframe)
-        self.uiModel = LinearRegression_Model.ui(
+        self.uiModel = LinearRegression_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

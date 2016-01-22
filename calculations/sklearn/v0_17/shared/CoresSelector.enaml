@@ -5,21 +5,21 @@ from enaml.widgets.api import Form, Container, Label, ObjectCombo
 
 
 
-class CoresSelector_Model(object):
-
-
-    class ui(Atom):
+class CoresSelector_UI(Atom):
         
-        # number_of_cores_type
-        number_of_cores_type = Str()
-        number_of_cores_type_list = List(str, ['one', 'all', 'int'])
-        # number_of_cores
-        number_of_cores_int = Int()
+    # number_of_cores_type
+    number_of_cores_type = Str()
+    number_of_cores_type_list = List(str, ['one', 'all', 'int'])
+    # number_of_cores
+    number_of_cores_int = Int()
+
+
+class CoresSelector_Model(object):
 
 
     def __init__(self, number_of_cores_type = 'one', number_of_cores_int = 1):
         
-        self.uiModel = CoresSelector_Model.ui(
+        self.uiModel = CoresSelector_UI(
                             number_of_cores_type = number_of_cores_type,
                             number_of_cores_int = number_of_cores_int
                             )

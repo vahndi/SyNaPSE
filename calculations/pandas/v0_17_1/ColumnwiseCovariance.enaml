@@ -11,25 +11,25 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class ColumnwiseCovariance_UI(Atom):
+
+    # min_periods
+    min_periods = Int()
+    use_min_periods = Bool()
+    min_periods_tooltip = ('Minimum number of observations required per ' +
+                           'pair of columns to have a valid result.')
+
+
 class ColumnwiseCovariance_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Column-wise Covariance'
 
 
-    class ui(Atom):
-
-        # min_periods
-        min_periods = Int()
-        use_min_periods = Bool()
-        min_periods_tooltip = ('Minimum number of observations required per ' +
-                               'pair of columns to have a valid result.')
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = ColumnwiseCovariance_Model.ui()
+        self.uiModel = ColumnwiseCovariance_UI()
 
 
     def getOutputs(self):

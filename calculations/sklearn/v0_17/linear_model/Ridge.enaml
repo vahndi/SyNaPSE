@@ -13,6 +13,34 @@ from sklearn.linear_model import Ridge
 
 
 
+class Ridge_UI(Atom):
+
+    input_selector = Value(Atom)
+
+    # alpha
+    alpha = Float(1)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # normalize
+    normalize = Bool(False)
+    # copy_X
+    copy_X = Bool(True)
+    # max_iter_type
+    max_iter_type = Str('auto, int')
+    max_iter_type_list = List(str)
+    # max_iter_int
+    max_iter_int = Int(1000)
+    max_iter_int_min = Int(1)
+    # tol
+    tol = Float(0.001)
+    # solver
+    solver = Str('auto')
+    solver_list = List(str, ['auto', 'svd', 'cholesky', 
+                             'lsqr', 'sparse_cg', 'sag'])
+    # random_state
+    random_state = Int(1)
+
+
 class Ridge_Model(ABCRegressionModel):
 
 
@@ -21,39 +49,11 @@ class Ridge_Model(ABCRegressionModel):
     calc_docs = ABCRegressionModel.doc_root + 'Ridge.html'
 
 
-    class ui(Atom):
-
-        input_selector = Value(Atom)
-
-        # alpha
-        alpha = Float(1)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # normalize
-        normalize = Bool(False)
-        # copy_X
-        copy_X = Bool(True)
-        # max_iter_type
-        max_iter_type = Str('auto, int')
-        max_iter_type_list = List(str)
-        # max_iter_int
-        max_iter_int = Int(1000)
-        max_iter_int_min = Int(1)
-        # tol
-        tol = Float(0.001)
-        # solver
-        solver = Str('auto')
-        solver_list = List(str, ['auto', 'svd', 'cholesky', 
-                                 'lsqr', 'sparse_cg', 'sag'])
-        # random_state
-        random_state = Int(1)
-
-
     def setInputs(self, dataframe):
         
         self.estimator_type = Ridge
         self.set_inputs(dataframe)
-        self.uiModel = Ridge_Model.ui(
+        self.uiModel = Ridge_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

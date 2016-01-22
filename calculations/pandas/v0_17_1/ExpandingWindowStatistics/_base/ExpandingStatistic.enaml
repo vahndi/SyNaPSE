@@ -15,29 +15,29 @@ from pandas import DataFrame, Series, concat
 
 
 
+class ExpandingStatistic_UI(Atom):
+
+    # min_periods
+    min_periods = Int(1)
+    min_periods_min = Int(1)
+    # freq
+    freq = Str('D')
+    freq_list = List(str, 
+                     ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
+                      'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
+                      'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+    use_freq = Bool()
+    freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+
+
 class ExpandingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
-
-
-    class ui(Atom):
-
-        # min_periods
-        min_periods = Int(1)
-        min_periods_min = Int(1)
-        # freq
-        freq = Str('D')
-        freq_list = List(str, 
-                         ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
-                          'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
-                          'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
-        use_freq = Bool()
-        freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
 
 
     def setInputs(self, dataframe = None, series = None):
 
         self._dataframe = dataframe
         self._series = series
-        self.uiModel = ExpandingStatistic_Model.ui()
+        self.uiModel = ExpandingStatistic_UI()
 
 
     def getOutputs(self):

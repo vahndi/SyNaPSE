@@ -25,41 +25,41 @@ from ..metrics.clustering_metrics import ClusteringMetrics as CM
 
 
 
+class KMeans_UI(Atom):
+
+    # inputs_targets_selector
+    inputs_targets_selector = Value(Atom)
+        
+    # number_of_clusters
+    number_of_clusters = Int(8)
+    # max_iterations
+    max_iterations = Int(300)
+    # number_of_initialisations
+    number_of_initialisations = Int(10)
+    # initialisation_method
+    initialisation_method = Str('k-means++')
+    initialisation_method_list = List(str, ['k-means++', 'random'])
+    # precompute_distances
+    precompute_distances = Str('auto')
+    precompute_distances_list = List(str, ['auto', 'always', 'never'])
+    # tolerance
+    tolerance = Float(0.0001)
+    # random_state_seed
+    random_state_seed = Int(1)
+    # verbose
+    verbose = Bool(False)
+    # copy_x
+    copy_x = Bool(True)
+    # cores_selector
+    cores_selector = Value(Atom)
+
+
 class KMeans_Model(SKLearnElement):
 
     calc_name = 'K Means'
     calc_desc = 'K-means clustering algorithm.'
     calc_docs = SKLearnElement.doc_root + \
                            'sklearn.cluster.k_means.html'
-
-    class ui(Atom):
-
-        # inputs_targets_selector
-        inputs_targets_selector = Value(Atom)
-        
-        # number_of_clusters
-        number_of_clusters = Int(8)
-        # max_iterations
-        max_iterations = Int(300)
-        # number_of_initialisations
-        number_of_initialisations = Int(10)
-        # initialisation_method
-        initialisation_method = Str('k-means++')
-        initialisation_method_list = List(str, ['k-means++', 'random'])
-        # precompute_distances
-        precompute_distances = Str('auto')
-        precompute_distances_list = List(str, ['auto', 'always', 'never'])
-        # tolerance
-        tolerance = Float(0.0001)
-        # random_state_seed
-        random_state_seed = Int(1)
-        # verbose
-        verbose = Bool(False)
-        # copy_x
-        copy_x = Bool(True)
-        # cores_selector
-        cores_selector = Value(Atom)
-
 
     def setInputs(self, dataframe):
 
@@ -71,7 +71,7 @@ class KMeans_Model(SKLearnElement):
                                                target_mandatory = False
                                                )
         self.cores_selector = CoresSelector_Model()
-        self.uiModel = KMeans_Model.ui(
+        self.uiModel = KMeans_UI(
             inputs_targets_selector = self.inputs_targets_selector.uiModel,
             cores_selector = self.cores_selector.uiModel
             )

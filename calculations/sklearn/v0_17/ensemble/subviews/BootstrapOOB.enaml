@@ -4,20 +4,20 @@ from atom.api import Atom, Bool
 from enaml.widgets.api import CheckBox, Container, Form, Label
 
 
+class BootstrapOOB_UI(Atom):
+        
+    # bootstrap
+    bootstrap = Bool(True)
+        
+    # out_of_bag_scoring
+    out_of_bag_scoring = Bool(False)
+    
+    
 class BootstrapOOB_Model(object):
 
-    class ui(Atom):
-        
-        # bootstrap
-        bootstrap = Bool(True)
-        
-        # out_of_bag_scoring
-        out_of_bag_scoring = Bool(False)
-    
-    
     def __init__(self, bootstrap = True, out_of_bag_scoring = False):
         
-        self.uiModel = BootstrapOOB_Model.ui(
+        self.uiModel = BootstrapOOB_UI(
                                     bootstrap = bootstrap,
                                     out_of_bag_scoring = out_of_bag_scoring)
 

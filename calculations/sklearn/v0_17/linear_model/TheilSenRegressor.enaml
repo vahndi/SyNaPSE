@@ -17,6 +17,33 @@ from sklearn.linear_model import TheilSenRegressor
 
 
 
+class TheilSenRegressor_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # copy_X
+    copy_X = Bool(True)
+    # max_subpopulation
+    max_subpopulation = Int(10000)
+    # n_subsamples_type
+    n_subsamples_type = Str('None')
+    n_subsamples_type_list = List(str, ['None', 'int'])
+    # n_subsamples_int
+    n_subsamples_int = Int()
+    # max_iter
+    max_iter = Int(300)
+    # tol
+    tol = Float(0.001)
+    # random_state
+    random_state = Int(1)
+    # verbose
+    verbose = Bool(False)
+    # cores_selector
+    cores_selector = Value(Atom)
+        
+
 class TheilSenRegressor_Model(ABCRegressionModel):
 
 
@@ -27,39 +54,12 @@ class TheilSenRegressor_Model(ABCRegressionModel):
         'TheilSenRegressor.html'
 
 
-    class ui(Atom):
-        
-        input_selector = Value(Atom)
-
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # copy_X
-        copy_X = Bool(True)
-        # max_subpopulation
-        max_subpopulation = Int(10000)
-        # n_subsamples_type
-        n_subsamples_type = Str('None')
-        n_subsamples_type_list = List(str, ['None', 'int'])
-        # n_subsamples_int
-        n_subsamples_int = Int()
-        # max_iter
-        max_iter = Int(300)
-        # tol
-        tol = Float(0.001)
-        # random_state
-        random_state = Int(1)
-        # verbose
-        verbose = Bool(False)
-        # cores_selector
-        cores_selector = Value(Atom)
-        
-
     def setInputs(self, dataframe):
         
         self.estimator_type = TheilSenRegressor
         self.set_inputs(dataframe)
         self.cores_selector = CoresSelector_Model()
-        self.uiModel = TheilSenRegressor_Model.ui(
+        self.uiModel = TheilSenRegressor_UI(
                             input_selector = self.input_selector.uiModel,
                             cores_selector = self.cores_selector.uiModel
                             )

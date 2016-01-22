@@ -11,34 +11,34 @@ from sklearn.datasets import make_friedman1
 
 
 
+class MakeFriedman1_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_min = Int(1)
+    n_samples_tooltip = 'The total number of points generated.'
+    # n_features
+    n_features = Int(10)
+    n_features_min = Int(5)
+    n_features_tooltip = 'The number of features. Should be at least 5.'
+    # noise
+    noise = Float(0)
+    noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeFriedman1_Model(RegressionGenerator):
 
 
     calc_name = 'Make Friedman 1'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_min = Int(1)
-        n_samples_tooltip = 'The total number of points generated.'
-        # n_features
-        n_features = Int(10)
-        n_features_min = Int(5)
-        n_features_tooltip = 'The number of features. Should be at least 5.'
-        # noise
-        noise = Float(0)
-        noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeFriedman1_Model.ui()
+        self.uiModel = MakeFriedman1_UI()
         self.outputFunction = make_friedman1
 
 

@@ -13,24 +13,24 @@ from pandas import concat
 
 
 
+class Round_UI(Atom):
+
+    # decimals
+    decimals = Int()
+    decimals_min = Int(0)
+    decimals_tooltip = 'Number of decimal places to round each column to.'
+
+
 class Round_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Round'
 
 
-    class ui(Atom):
-
-        # decimals
-        decimals = Int()
-        decimals_min = Int(0)
-        decimals_tooltip = 'Number of decimal places to round each column to.'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Round_Model.ui()
+        self.uiModel = Round_UI()
 
 
     def getOutputs(self):

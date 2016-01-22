@@ -12,46 +12,46 @@ from sklearn.datasets import make_blobs
 
 
 
+class MakeBlobs_UI(Atom):
+
+    # n_samples
+    n_samples = Int(100)
+    n_samples_tooltip = 'The total number of points equally divided among clusters.'
+    # n_features
+    n_features = Int(2)
+    n_features_tooltip = 'The number of features for each sample.'
+    # centers
+    centers = Int(5)
+    use_centers = Bool(True)
+    centers_tooltip = 'The number of centers to generate.'
+    # cluster_std
+    cluster_std = Float(1.0)
+    use_cluster_std = Bool(True)
+    cluster_std_tooltip = 'The standard deviation of the clusters.'
+    # center_box_min
+    center_box_min = Float(-10.0)
+    center_box_min_tooltip = 'The lower bound of the bounding box.'
+    # center_box_max
+    center_box_max = Float(10.0)
+    center_box_max_tooltip = 'The upper bound of the bounding box.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Shuffle the samples.'
+    # random_state
+    random_state = Int(1)
+    use_random_state = Bool()
+    random_state_tooltip = 'The random state seed.'
+
+
 class MakeBlobs_Model(LabelClassificationGenerator):
 
 
     calc_name = 'Make Blobs'
 
 
-    class ui(Atom):
-
-        # n_samples
-        n_samples = Int(100)
-        n_samples_tooltip = 'The total number of points equally divided among clusters.'
-        # n_features
-        n_features = Int(2)
-        n_features_tooltip = 'The number of features for each sample.'
-        # centers
-        centers = Int(5)
-        use_centers = Bool(True)
-        centers_tooltip = 'The number of centers to generate.'
-        # cluster_std
-        cluster_std = Float(1.0)
-        use_cluster_std = Bool(True)
-        cluster_std_tooltip = 'The standard deviation of the clusters.'
-        # center_box_min
-        center_box_min = Float(-10.0)
-        center_box_min_tooltip = 'The lower bound of the bounding box.'
-        # center_box_max
-        center_box_max = Float(10.0)
-        center_box_max_tooltip = 'The upper bound of the bounding box.'
-        # shuffle
-        shuffle = Bool(True)
-        shuffle_tooltip = 'Shuffle the samples.'
-        # random_state
-        random_state = Int(1)
-        use_random_state = Bool()
-        random_state_tooltip = 'The random state seed.'
-
-
     def __init__(self):
         
-        self.uiModel = MakeBlobs_Model.ui()
+        self.uiModel = MakeBlobs_UI()
         self.outputFunction = make_blobs
 
 

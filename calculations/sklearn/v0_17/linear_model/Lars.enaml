@@ -13,42 +13,42 @@ from sklearn.linear_model import Lars
 
 
 
+class Lars_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # n_nonzero_coefs
+    n_nonzero_coefs = Int(500)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    # positive
+    positive = Bool(False)
+    # verbose
+    verbose = Bool(False)
+    # normalize
+    normalize = Bool(True)
+    # precompute
+    precompute = Str('auto')
+    precompute_list = List(str, ['True', 'False', 'auto'])
+    # copy_X
+    copy_X = Bool(True)
+    # eps
+    eps = Float(2.22044604925e-16)
+    # fit_path
+    fit_path = Bool(False)
+
+
 class Lars_Model(ABCRegressionModel):
 
     calc_name = 'Lars'
     calc_desc = 'Least Angle Regression model a.k.a. LAR.'
     calc_docs = ABCRegressionModel.doc_root + 'Lars.html'
 
-    class ui(Atom):
-        
-        input_selector = Value(Atom)
-
-        # n_nonzero_coefs
-        n_nonzero_coefs = Int(500)
-        # fit_intercept
-        fit_intercept = Bool(True)
-        # positive
-        positive = Bool(False)
-        # verbose
-        verbose = Bool(False)
-        # normalize
-        normalize = Bool(True)
-        # precompute
-        precompute = Str('auto')
-        precompute_list = List(str, ['True', 'False', 'auto'])
-        # copy_X
-        copy_X = Bool(True)
-        # eps
-        eps = Float(2.22044604925e-16)
-        # fit_path
-        fit_path = Bool(False)
-
-
     def setInputs(self, dataframe):
 
         self.estimator_type = Lars
         self.set_inputs(dataframe)
-        self.uiModel = Lars_Model.ui(
+        self.uiModel = Lars_UI(
                             input_selector = self.input_selector.uiModel
                             )
 

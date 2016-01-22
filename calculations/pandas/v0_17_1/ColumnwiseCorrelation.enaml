@@ -12,33 +12,33 @@ from calculations.core.ABCs import ABCDataFrameToDataFrame
 
 
 
+class ColumnwiseCorrelation_UI(Atom):
+
+    # method
+    method = Str('pearson')
+    method_list = List(str, ['pearson', 'kendall', 'spearman'])
+    method_tooltip = ('pearson : standard correlation coefficient\n' +
+                      'kendall : Kendall Tau correlation coefficient\n' +
+                      'spearman : Spearman rank correlation')
+    # min_periods
+    min_periods = Int(1)
+    min_periods_min = Int(1)
+    min_periods_tooltip = ('Minimum number of observations required per' + 
+                           'pair of columns to have a valid result.\n' + 
+                           'Currently only available for pearson and ' + 
+                           'spearman correlation.')
+
+
 class ColumnwiseCorrelation_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Column-wise Correlation'
 
 
-    class ui(Atom):
-
-        # method
-        method = Str('pearson')
-        method_list = List(str, ['pearson', 'kendall', 'spearman'])
-        method_tooltip = ('pearson : standard correlation coefficient\n' +
-                          'kendall : Kendall Tau correlation coefficient\n' +
-                          'spearman : Spearman rank correlation')
-        # min_periods
-        min_periods = Int(1)
-        min_periods_min = Int(1)
-        min_periods_tooltip = ('Minimum number of observations required per' + 
-                               'pair of columns to have a valid result.\n' + 
-                               'Currently only available for pearson and ' + 
-                               'spearman correlation.')
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = ColumnwiseCorrelation_Model.ui()
+        self.uiModel = ColumnwiseCorrelation_UI()
 
 
     def getOutputs(self):
