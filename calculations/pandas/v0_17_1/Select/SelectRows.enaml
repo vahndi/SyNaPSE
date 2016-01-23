@@ -13,7 +13,6 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 from modules.pandas_helpers import get_row_names
 
 
-
 method_tooltips = {'string' : ('select rows whose names start with, ' +
                                 'end with, contain or do not contain ' + 
                                 'user-specified text'),
@@ -28,6 +27,7 @@ method_tooltips = {'string' : ('select rows whose names start with, ' +
                             'of the dataframe'), 
                    'tail': ('select a specified number of rows from the ' +
                             'bottom of the dataframe'), }
+
 
 
 class SelectRows_UI(Atom):
@@ -83,6 +83,7 @@ class SelectRows_UI(Atom):
     order_alphabetically = Bool(False)
     order_alphabetically_tooltip = ('Order the returned row names ' +
                                     'alphabetically.')
+
 
 
 class SelectRows_Model(ABCDataFrameToDataFrame):

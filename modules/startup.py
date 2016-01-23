@@ -34,53 +34,46 @@ copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 # containing calculations. Each calculation consists of a model and a view 
 # which are  named after the file e.g. Calc1.enaml contains class Calc1_Model
 # and enamldef Calc1_View
-def get_enaml_dirs_files(rootdir):
+
+def get_enaml_dirs_files(root_dir):
     """
     Creates a nested dictionary that represents the folder structure of rootdir
     """
     dirs_files = {}
-    rootdir = rootdir.rstrip(os.sep)
-    start = rootdir.rfind(os.sep) + 1
-    for path, dirs, files in os.walk(rootdir):
-        folders = path[start:].split(os.sep)
-        subdir = dict.fromkeys(files)
-        parent = reduce(dict.get, folders[:-1], dirs_files)
-        parent[folders[-1]] = subdir
+    sub_dirs = [d for d in os.listdir(root_dir)
+                if os.path.isdir(os.path.join(root_dir, d))
+                and not d.startswith('_')]
+    files = [f for f in os.listdir(root_dir)
+             if os.path.isfile(os.path.join(root_dir, f))
+             and f.endswith('.enaml')]
+
+    for sd in sub_dirs:
+        dirs_files[sd] = (get_enaml_dirs_files(os.path.join(root_dir, sd)))
+    
+    if len(files) > 0:
+        dirs_files['files'] = []
+        for f in files:
+            dirs_files['files'].append(f)
 
     return dirs_files
 
 
-enaml_dict = get_enaml_dirs_files('./calculations/')
-
-            
-
-pkg_sys = (('calculations.pandas.v0_17_1', 
-            './calculations/pandas/v0_17_1'),
-           ('calculations.pandas.v0_17_1.IO', 
-            './calculations/pandas/v0_17_1/IO'),
-           ('calculations.sklearn.v0_17.generate',
-            './calculations/sklearn/v0_17/generate'),
-           ('calculations.pandas.v0_17_1.Statistics', 
-            './calculations/pandas/v0_17_1/Statistics'),
-           ('calculations.pandas.v0_17_1.CumulativeStatistics', 
-            './calculations/pandas/v0_17_1/CumulativeStatistics'),
-           ('calculations.pandas.v0_17_1.ExpandingWindowStatistics', 
-            './calculations/pandas/v0_17_1/ExpandingWindowStatistics'),
-           ('calculations.pandas.v0_17_1.ExponentiallyWeightedStatistics', 
-            './calculations/pandas/v0_17_1/ExponentiallyWeightedStatistics'),
-           ('calculations.pandas.v0_17_1.RollingWindowStatistics', 
-            './calculations/pandas/v0_17_1/RollingWindowStatistics'),
-           ('calculations.sklearn.v0_17.linear_model',
-            './calculations/sklearn/v0_17/linear_model'),
-           ('calculations.sklearn.v0_17.cluster',
-            './calculations/sklearn/v0_17/cluster'),
-           ('calculations.sklearn.v0_17.ensemble',
-            './calculations/sklearn/v0_17/ensemble'),
-           ('calculations.sklearn.v0_17.decomposition',
-            './calculations/sklearn/v0_17/decomposition'))
+def dict_to_path(path_dict, init_path, path_sep, path_list):
+    # iterate through keys and values at the current level
+    for k, v in path_dict.iteritems():
+        if isinstance(v, list): # files
+            # add the current path to the list
+            path_list.append(init_path)
+        else: # folder
+            # pass pkg_sys into the next level and let it append new paths
+            path_list = dict_to_path(v,
+                                     init_path + path_sep + k,
+                                     path_sep,
+                                     path_list)          
+    return path_list
 
 
-def get_calculation_models(package_path, sys_path):
+def get_calc_models(package_path, sys_path):
     '''
     Returns a list of the calculation model classes found in the given package
     and system path.
@@ -96,14 +89,7 @@ def get_calculation_models(package_path, sys_path):
     return model_list
 
 
-# Create a list of the available calculation models
-calculation_models = []
-with enaml.imports():
-    for pkg_path, sys_path in pkg_sys:
-        calculation_models.extend(get_calculation_models(pkg_path, sys_path))  
-
-
-def _getModelsViews(package_path, sys_path):
+def get_calc_models_views(package_path, sys_path):
     
     model_list = []
     model_files = [fn for fn in os.listdir(sys_path) if fn.endswith('.enaml')]
@@ -114,10 +100,21 @@ def _getModelsViews(package_path, sys_path):
                            locate('%s.%s.%s_View' 
                                  % (package_path, model_name, model_name))))
     return model_list
-    
 
+
+# Create a list of the available calculation models
+enaml_dict = get_enaml_dirs_files('./calculations/')
+pkg_sys = zip(dict_to_path(enaml_dict, 'calculations', '.', []),
+              dict_to_path(enaml_dict, './calculations', '/', []))
+
+calculation_models = []
+with enaml.imports():
+    for pkg_path, sys_path in pkg_sys:
+        calculation_models.extend(get_calc_models(pkg_path, sys_path))  
+
+# Create a dict mapping models to views
 calculation_models_views = []            
 for pkg_path, sys_path in pkg_sys:
-    calculation_models_views.extend(_getModelsViews(pkg_path, sys_path))
+    calculation_models_views.extend(get_calc_models_views(pkg_path, sys_path))
 model_view_dict = {mv[0]: mv[1]
                    for mv in calculation_models_views}
