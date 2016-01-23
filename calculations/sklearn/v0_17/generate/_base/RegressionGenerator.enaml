@@ -1,5 +1,5 @@
 from pandas import DataFrame, Series, Index, concat
-from calculations.core.ABCs import ABCOutputsDataFrame, ABCOutputsSeries
+from calculations._core.ABCs import ABCOutputsDataFrame, ABCOutputsSeries
 
 
 

@@ -7,8 +7,8 @@ from enaml.widgets.api import (
     CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page, SpinBox)
 from custom_views.fields import FloatField, IntField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from ..shared.CoresSelector import CoresSelector_Model
-from ..shared.CoresSelector import CoresSelector_View
+from .._shared.CoresSelector import CoresSelector_Model
+from .._shared.CoresSelector import CoresSelector_View
 
 # Models
 from custom_views.DataFrame_View import getDataFrameFigure
@@ -21,7 +21,7 @@ from modules.pandas_helpers import get_confusion_matrix
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from ..sklearn_element import SKLearnElement
-from ..metrics.clustering_metrics import ClusteringMetrics as CM
+from .._metrics.clustering_metrics import ClusteringMetrics as CM
 
 
 

@@ -8,7 +8,7 @@ from custom_views.OrderedList import OrderedList_Model, OrderedList_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 # Models
-from calculations.core.ABCs import ABCDataFrameToDataFrame
+from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 
 

@@ -8,7 +8,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectC
 from custom_views.fields import FloatField, IntField
 
 # Models
-from calculations.core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
 from pandas import DataFrame, Series, concat
 from pandas.stats.moments import rolling_quantile
 

@@ -10,8 +10,8 @@ from custom_views.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from ..shared.CoresSelector import CoresSelector_Model
-from ..shared.CoresSelector import CoresSelector_View
+from .._shared.CoresSelector import CoresSelector_Model
+from .._shared.CoresSelector import CoresSelector_View
 from .subviews.Leaves import Leaves_Model, Leaves_View
 from .subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
 
@@ -22,7 +22,7 @@ from ..sklearn_element import SKLearnElement
 from sklearn.ensemble import RandomForestClassifier
 from numpy import int64, float64
 from pandas import Series, DataFrame
-from ..metrics.classification_metrics import ClassificationMetrics as CM
+from .._metrics.classification_metrics import ClassificationMetrics as CM
 
 
 

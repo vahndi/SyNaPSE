@@ -8,8 +8,8 @@ from enaml.widgets.api import (
 from enaml.core.api import Conditional
 from custom_views.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
-from ..shared.CoresSelector import CoresSelector_Model
-from ..shared.CoresSelector import CoresSelector_View
+from .._shared.CoresSelector import CoresSelector_Model
+from .._shared.CoresSelector import CoresSelector_View
 
 # Models
 from ._base.regression_model import ABCRegressionModel

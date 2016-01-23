@@ -7,8 +7,8 @@ from custom_views.fields import FloatField, IntField
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 
 # Models
-from ..shared.CoresSelector import CoresSelector_Model
-from ..shared.CoresSelector import CoresSelector_View
+from .._shared.CoresSelector import CoresSelector_Model
+from .._shared.CoresSelector import CoresSelector_View
 from ._base.classification_model import ABCClassificationModel
 from sklearn.linear_model import PassiveAggressiveClassifier
 

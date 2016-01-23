@@ -6,7 +6,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectC
 from custom_views.fields import Field
 
 # Models
-from calculations.core.ABCs import ABCDataFrameToDataFrameOrSeries
+from calculations._core.ABCs import ABCDataFrameToDataFrameOrSeries
 
 import re
 from pandas import Series, DataFrame

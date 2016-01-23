@@ -11,8 +11,8 @@ from custom_views.fields import IntField, FloatField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
-from ..shared.CoresSelector import CoresSelector_Model
-from ..shared.CoresSelector import CoresSelector_View
+from .._shared.CoresSelector import CoresSelector_Model
+from .._shared.CoresSelector import CoresSelector_View
 
 # Other
 from ._base.classification_model import ABCClassificationModel

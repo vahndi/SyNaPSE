@@ -4,6 +4,7 @@ import enaml
 
 import copy_reg
 import types
+import os, sys
 
 
 
@@ -33,6 +34,26 @@ copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 # containing calculations. Each calculation consists of a model and a view 
 # which are  named after the file e.g. Calc1.enaml contains class Calc1_Model
 # and enamldef Calc1_View
+def get_enaml_dirs_files(rootdir):
+    """
+    Creates a nested dictionary that represents the folder structure of rootdir
+    """
+    dirs_files = {}
+    rootdir = rootdir.rstrip(os.sep)
+    start = rootdir.rfind(os.sep) + 1
+    for path, dirs, files in os.walk(rootdir):
+        folders = path[start:].split(os.sep)
+        subdir = dict.fromkeys(files)
+        parent = reduce(dict.get, folders[:-1], dirs_files)
+        parent[folders[-1]] = subdir
+
+    return dirs_files
+
+
+enaml_dict = get_enaml_dirs_files('./calculations/')
+
+            
+
 pkg_sys = (('calculations.pandas.v0_17_1', 
             './calculations/pandas/v0_17_1'),
            ('calculations.pandas.v0_17_1.IO', 

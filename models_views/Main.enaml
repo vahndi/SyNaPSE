@@ -102,11 +102,8 @@ class Main_Model(Atom):
                          save_path)
         self.calc_file_path = save_path
 
-    
       
     
-
-
 enamldef Main_View(MainWindow): me:
 
 
@@ -135,5 +132,5 @@ enamldef Main_View(MainWindow): me:
     CalculationOutput_View:
         
         calc_outputs << me.model.calcOutput_Model.uiModel.calc_outputs
-        recalculateFunction = me.model.calcOutput_Model.calculate_output
+        recalculate_func = me.model.calcOutput_Model.calculate_output
         

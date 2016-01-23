@@ -7,7 +7,7 @@ from linear_model import ABCLinearModel
 # Other
 from numpy import float64, int64
 from modules.pandas_helpers import join_inputs_targets_predictions
-from ...metrics.regression_metrics import RegressionMetrics as RM
+from ..._metrics.regression_metrics import RegressionMetrics as RM
 
 
 

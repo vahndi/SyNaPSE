@@ -6,7 +6,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from calculations.core.ABCs import ABCOutputsDataFrame
+from calculations._core.ABCs import ABCOutputsDataFrame
 
 from pandas import DataFrame, Series, concat
 

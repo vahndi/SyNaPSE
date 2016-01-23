@@ -8,7 +8,7 @@ from linear_model import ABCLinearModel
 from numpy import int64
 from modules.pandas_helpers import join_inputs_targets_predictions
 from pandas import DataFrame
-from ...metrics.classification_metrics import ClassificationMetrics as CM
+from ..._metrics.classification_metrics import ClassificationMetrics as CM
 from sklearn.metrics import confusion_matrix
 
 

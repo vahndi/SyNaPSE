@@ -190,7 +190,7 @@ enamldef CalculationOutput_View(DockPane): me:
     '''
     
     attr calc_outputs
-    attr recalculateFunction
+    attr recalculate_func
 
     
     title = 'Calculation Output'
@@ -203,7 +203,7 @@ enamldef CalculationOutput_View(DockPane): me:
         PushButton:    
             text = 'Calculate Output'
             clicked::
-                recalculateFunction()
+                recalculate_func()
 
         Notebook:   
             Looper:        
