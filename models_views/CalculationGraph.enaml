@@ -51,7 +51,7 @@ class CalculationGraph_Model(object):
             self._calc_graph = nx.DiGraph()
         else:
             self._calc_graph = calc_graph
-    
+
     
     def calc_graph(self):
         
@@ -294,6 +294,11 @@ class CalculationGraph_Model(object):
                 self._parent.calcOutput_Model.refresh_output()
 
 
+    def clear_selection(self):
+        
+        self.uiModel.selected_calc_item = None
+        self.draw_graph_figure()
+
 
 enamldef CalculationGraph_View(DockPane): me:
 
@@ -325,7 +330,8 @@ enamldef CalculationGraph_View(DockPane): me:
                     main_cntnr.request_relayout()
             PushButton: btn_clear_selection:
                 text = 'Clear Selection'
-                
+                clicked ::
+                    me.model.clear_selection()
 
 
         MPLCanvas: calcs_cntnr:

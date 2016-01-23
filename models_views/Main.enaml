@@ -99,9 +99,10 @@ class Main_Model(Atom):
         
         calc_graph = nx.read_gpickle('test.gpickle')
         self._initialise(calc_graph = calc_graph)
+        # Need to call this twice to enable picking straight away
+        self.calcGraph_Model.draw_graph_figure()
         self.calcGraph_Model.draw_graph_figure()
         
-
     def save_graph(self):
         
         nx.write_gpickle(self.calcGraph_Model.calc_graph(), 
