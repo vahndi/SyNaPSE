@@ -1,5 +1,5 @@
 # Atom
-from atom.api import Atom, Dict, Value
+from atom.api import Atom, Dict, Str, Value
 # Enaml
 from enaml.widgets.api import MainWindow
 
@@ -38,10 +38,12 @@ class Main_Model(Atom):
     '''
 
     calc_models = calculation_models
+    calc_file_path = Str()
     _calc_dict = Dict()
     chooseCalc_Model = Value(ChooseCalculation_Model)
     calcGraph_Model = Value(CalculationGraph_Model)
     calcOutput_Model = Value(CalculationOutput_Model)
+    
     
 
     def __init__(self):
@@ -75,20 +77,34 @@ class Main_Model(Atom):
         self.chooseCalc_Model.update_UI_calc_types(preceding_calc_type_name)
 
 
-    def load_graph(self):
+    def load_graph(self, load_path):
         
-        calc_graph = nx.read_gpickle('test.gpickle')
-        self._initialise(calc_graph = calc_graph)
-        # Need to call this twice to enable picking straight away
-        self.calcGraph_Model.draw_graph_figure()
-        self.calcGraph_Model.draw_graph_figure()
+        if load_path:
         
-        
+            calc_graph = nx.read_gpickle(load_path)
+            self._initialise(calc_graph = calc_graph)
+            self.calc_file_path = load_path
+            # Need to call this twice to enable picking straight away
+            # TODO: find out why and fix it
+            self.calcGraph_Model.draw_graph_figure()
+            self.calcGraph_Model.draw_graph_figure()
+
+
     def save_graph(self):
         
         nx.write_gpickle(self.calcGraph_Model.calc_graph(), 
-                         'test.gpickle')
+                         self.calc_file_path)
 
+        
+    def save_graph_as(self, save_path):
+        
+        nx.write_gpickle(self.calcGraph_Model.calc_graph(), 
+                         save_path)
+        self.calc_file_path = save_path
+
+    
+      
+    
 
 
 enamldef Main_View(MainWindow): me:

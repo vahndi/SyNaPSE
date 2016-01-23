@@ -36,6 +36,8 @@ seabornDatasets = {'anscombe': sns.load_dataset('anscombe'),
                    'tips': sns.load_dataset('tips'),
                    'titanic': sns.load_dataset('titanic')}
 
+
+
 class ReadDataFrame_UI(Atom):
         
         # source_type
@@ -74,13 +76,12 @@ class ReadDataFrame_UI(Atom):
             return []
             
 
+
 class ReadDataFrame_Model(ABCOutputsDataFrame):
     
     
     calc_name = 'Read DataFrame'
     
-
-
     
     def __init__(self):
         
@@ -123,6 +124,7 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
                 dataframe = seabornDatasets[self.uiModel.seaborn_dataset]
                 
             elif self.uiModel.source_type in ('csv', 'xls'):
+                
                 if os.path.exists(self.uiModel.source_path):
                     if self.uiModel.source_type == 'csv':
                         dataframe = pd.read_csv(self.uiModel.source_path)
@@ -134,6 +136,7 @@ class ReadDataFrame_Model(ABCOutputsDataFrame):
                                                   sheet_name = sheet_name)
                 else:
                     return {'Outputs': 'Path does not exist'}
+                    
             else:
                 return {'Outputs': 'Please select a source type'}    
                 

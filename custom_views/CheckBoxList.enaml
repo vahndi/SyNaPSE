@@ -95,7 +95,6 @@ class CheckBoxList_Model(object):
         self.checked_indices = new_checked_indices
         self.uiModel.check_items = self.items
         self.uiModel.checked_indices = self.checked_indices
-
         
 
     def check_all(self):

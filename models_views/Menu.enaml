@@ -1,4 +1,4 @@
-from enaml.widgets.api import Action, Menu, MenuBar
+from enaml.widgets.api import Action, Menu, MenuBar, FileDialogEx
 
 
 
@@ -11,14 +11,26 @@ enamldef Menu_View(MenuBar):
 
         Action:
             text = '&Load Graph'
-            triggered :: 
-                model.load_graph()
-                print 'Graph Loaded'
+            triggered ::
+                load_path = FileDialogEx.get_open_file_name(
+                                             name_filters = ['*.gpickle']
+                                             )
+                if load_path:
+                    model.load_graph(load_path)
                 
         Action:
             text = '&Save Graph'
+            enabled << model.calc_file_path != ''
             triggered :: 
                 model.save_graph()
-                print 'Graph Saved'
-
+        
+        
+        Action:
+            text = '&Save Graph as...'
+            triggered :: 
+                save_path = FileDialogEx.get_save_file_name(
+                                             name_filters = ['*.gpickle']
+                                             )
+                if save_path:
+                    model.save_graph_as(save_path)
 
