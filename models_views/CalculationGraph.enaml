@@ -336,6 +336,6 @@ enamldef CalculationGraph_View(DockPane): me:
 
         MPLCanvas: calcs_cntnr:
             
-#            figure << fig
             figure << model.uiModel.graph_figure
+            maximum_size << (800, 800) if floating else (400, 400)
 
