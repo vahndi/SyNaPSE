@@ -90,13 +90,6 @@ class ABCClassificationModel(ABCLinearModel):
             attributes = self.get_attributes()
             metrics = self.get_metrics()       
 
-#            return {'Attributes': attributes,
-#                    'Metrics': metrics,
-#                    'dataframe': self.df_predictions,
-#                    'Confusion Matrix': 
-#                        {'training': self.confusion_matrix_train,
-#                         'test': self.confusion_matrix_test}
-#                    }
             
             return {'Attributes': attributes,
                     'Metrics': metrics,

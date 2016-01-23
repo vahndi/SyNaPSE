@@ -2,6 +2,32 @@ from pydoc import locate
 import os
 import enaml
 
+import copy_reg
+import types
+
+
+
+# Enable pickling of instance methods for saving graphs
+def _pickle_method(method):
+    
+    func_name = method.im_func.__name__
+    obj = method.im_self
+    cls = method.im_class
+    return _unpickle_method, (func_name, obj, cls)
+
+def _unpickle_method(func_name, obj, cls):
+    
+    for cls in cls.mro():
+        try:
+            func = cls.__dict__[func_name]
+        except KeyError:
+            pass
+        else:
+            break
+        return func.__get__(obj, cls)
+
+copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
+
 
 # A list of tuples (package_path, relative_system_path) of all the locations
 # containing calculations. Each calculation consists of a model and a view 

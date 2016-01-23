@@ -92,6 +92,7 @@ class CalculationGraph_Model(object):
             # Update the appendable calc item types
             self._parent.update_choosable_calc_types(None)
     
+    
     def item_names(self):
         
         return [node.item_name for node in self._calc_graph.nodes()]
