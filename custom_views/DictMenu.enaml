@@ -5,14 +5,18 @@ from enaml.core.api import Conditional, Include, Looper
 from functools import partial
 
 
+
 enamldef DictMenuAction(Action):
     
-    attr action_func
-    attr dictmenu_text
-    
-    text = str(dictmenu_text)
+    attr dictmenu_item
+    attr triggered_func
+    attr is_enabled_func
+
+    text = str(dictmenu_item)
     triggered :: 
-        action_func(dictmenu_text)
+        triggered_func(dictmenu_item)
+    enabled << is_enabled_func(dictmenu_item)
+
 
 
 class DictMenu_Model(Atom):
@@ -21,12 +25,15 @@ class DictMenu_Model(Atom):
     menu = Value(Menu)
 
 
-    def __init__(self, menu_dict, menu_name, action_func):
+    def __init__(self, menu_dict, menu_name, 
+                 triggered_func, is_enabled_func = lambda item: True):
     
-        self.menu = self.build_menu(menu_dict, menu_name, action_func)
+        self.menu = self.build_menu(menu_dict, menu_name, 
+                                    triggered_func, is_enabled_func)
 
     
-    def build_menu(self, menu_dict, menu_name, action_func):
+    def build_menu(self, menu_dict, menu_name, 
+                   triggered_func, is_enabled_func):
 
         # Create a new Menu and a list to add items to        
         menu = Menu(title = menu_name)
@@ -39,15 +46,18 @@ class DictMenu_Model(Atom):
                 # Append them one by one to the item list
                 for f in menu_dict[k]:
                     menu_items.append(DictMenuAction(
-                                                dictmenu_text = f,
-                                                action_func = action_func
-                                                )
-                                     )
+                                            dictmenu_item = f,
+                                            triggered_func = triggered_func,
+                                            is_enabled_func = is_enabled_func
+                                            ))
             elif type(menu_dict[k]) is dict: # If it holds a submenu
                 # Pass it through to the build menu function
-                menu_items.append(self.build_menu(menu_dict = menu_dict[k],
-                                                  menu_name = k,
-                                                  action_func = action_func))
+                menu_items.append(self.build_menu(
+                                            menu_dict = menu_dict[k],
+                                            menu_name = k,
+                                            triggered_func = triggered_func,
+                                            is_enabled_func = is_enabled_func
+                                            ))
 
         # Add children to the menu
         menu.insert_children(before = None, 

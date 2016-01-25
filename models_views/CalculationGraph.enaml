@@ -159,19 +159,20 @@ class CalculationGraph_Model(object):
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_axis_bgcolor('white')
-        min_x = min(node_x) - 2 * node_radius
-        max_x = max(node_x) + 2 * node_radius
-        min_y = min(node_y) - 2 * node_radius
-        max_y = max(node_y) + 2 * node_radius
-        width = max_x - min_x
-        height = max_y - min_y
-        max_dim = max(width, height)
-        x_center = (min_x + max_x) / 2
-        y_center = (min_y + max_y) / 2
-        ax.set_xlim([x_center - max_dim / 2, 
-                     x_center + max_dim / 2])
-        ax.set_ylim([y_center - max_dim / 2, 
-                     y_center + max_dim / 2])
+        if len(nodes) > 0:
+            min_x = min(node_x) - 2 * node_radius
+            max_x = max(node_x) + 2 * node_radius
+            min_y = min(node_y) - 2 * node_radius
+            max_y = max(node_y) + 2 * node_radius
+            width = max_x - min_x
+            height = max_y - min_y
+            max_dim = max(width, height)
+            x_center = (min_x + max_x) / 2
+            y_center = (min_y + max_y) / 2
+            ax.set_xlim([x_center - max_dim / 2, 
+                         x_center + max_dim / 2])
+            ax.set_ylim([y_center - max_dim / 2, 
+                         y_center + max_dim / 2])
         
         # Annotate nodes
         for x, y, label in zip(node_x, node_y, node_labels):
@@ -299,6 +300,7 @@ class CalculationGraph_Model(object):
         
         self.uiModel.selected_calc_item = None
         self.draw_graph_figure()
+        self._parent.calcOutput_Model.refresh_output()
 
 
 enamldef CalculationGraph_View(DockPane): me:
