@@ -33,6 +33,7 @@ copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 # which are  named after the file e.g. Calc1.enaml contains class Calc1_Model
 # and enamldef Calc1_View
 
+
 def get_enaml_dirs_files(root_dir):
     """
     Creates a nested dictionary that represents the directory and file 
@@ -131,8 +132,8 @@ def get_menus_calcs(root_dir):
     '''
     menus_calcs = {}
     sub_menus = [d for d in os.listdir(root_dir)
-                if os.path.isdir(os.path.join(root_dir, d))
-                and not d.startswith('_')]
+                 if os.path.isdir(os.path.join(root_dir, d))
+                 and not d.startswith('_')]
     files = [f for f in os.listdir(root_dir)
              if os.path.isfile(os.path.join(root_dir, f))
              and f.endswith('.enaml')]
@@ -149,8 +150,9 @@ def get_menus_calcs(root_dir):
     if len(files) > 0:
         menus_calcs['calcs'] = []
         for calc in calcs:
-            menus_calcs['calcs'].append(calc.calc_name)
+            menus_calcs['calcs'].append(calc)
 
     return menus_calcs
+
 
 menus_calcs = get_menus_calcs('./calculations/')

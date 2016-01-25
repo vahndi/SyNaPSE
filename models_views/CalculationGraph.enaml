@@ -63,6 +63,7 @@ class CalculationGraph_Model(object):
         '''
         Select a specific calc item from the graph
         '''
+        print 'select_calc_item'
         # Clear the ui model selected item and outputs
         self.uiModel.selected_calc_item = None
         self.uiModel.selected_calc_item_outputs = {}
@@ -77,11 +78,12 @@ class CalculationGraph_Model(object):
 
         
         # Update the appendable calc item types
-        self._parent.update_choosable_calc_types(calc_item.calc_type_name())
+        print 'selecting calc item of type', type(calc_item.model())
+        self._parent.update_choosable_calc_types(type(calc_item.model()))
 
 
     def refresh_selected_calc_item_outputs(self, recalculate = False):
-        
+        print 'refresh_selected_calc_item_outputs'
         calc_item = self.uiModel.selected_calc_item
         if calc_item is not None:
             self.select_calc_item(calc_item, recalculate = recalculate)
@@ -121,7 +123,6 @@ class CalculationGraph_Model(object):
         node_y = [node_coords[node][1] for node in coord_graph.nodes()]
         node_labels = [node.replace(' ', '\n') 
                        for node in coord_graph.nodes()]
-
         
         # Clear axes
         ax.clear()
@@ -186,7 +187,6 @@ class CalculationGraph_Model(object):
         self.uiModel.graph_figure = fig
         
 
-
     def plot_item_picked(self, event):
         
         if isinstance(event.artist, Circle):
@@ -210,7 +210,7 @@ class CalculationGraph_Model(object):
         self.uiModel.calc_items = [item for item in self._calc_graph.nodes()]
 
 
-    def add_calc_item(self, calc_type_name = None):
+    def add_calc_item(self, calc_type):
         
         # Get coords of selected item
         new_x = 0
@@ -221,8 +221,8 @@ class CalculationGraph_Model(object):
             new_y = selected_item.y + 20
 
         # Create new item            
-        constructor = self._calc_dict[calc_type_name]
-        new_item = CalculationItem(model = constructor(),
+#        constructor = self._calc_dict[calc_type_name]
+        new_item = CalculationItem(model = calc_type(),
                                    container = self,
                                    x = new_x, y = new_y)
 
@@ -303,11 +303,11 @@ class CalculationGraph_Model(object):
         self._parent.calcOutput_Model.refresh_output()
 
 
+
 enamldef CalculationGraph_View(DockPane): me:
 
 
     attr model
-    attr chooseCalc_Model
 
     
     title = 'Calculation Graph'
@@ -319,14 +319,9 @@ enamldef CalculationGraph_View(DockPane): me:
         
         constraints = [vbox(button_cntnr, calcs_cntnr)]
 
-
         Container: button_cntnr:
-            constraints = [hbox(btn_add, btn_delete, btn_clear_selection)]
-            PushButton: btn_add:
-                text = 'Add Calculation'
-                clicked ::
-                    ChooseCalculation_View(model = me.chooseCalc_Model,
-                                           calcGraphView_Model = model).exec_()
+            constraints = [hbox(btn_delete, btn_clear_selection)]
+
             PushButton: btn_delete:
                 text = 'Delete Calculation'
                 enabled << me.model.uiModel.selected_calc_item is not None
@@ -338,7 +333,6 @@ enamldef CalculationGraph_View(DockPane): me:
                 enabled << me.model.uiModel.selected_calc_item is not None
                 clicked ::
                     me.model.clear_selection()
-
 
         MPLCanvas: calcs_cntnr:
             

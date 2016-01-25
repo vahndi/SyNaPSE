@@ -10,7 +10,7 @@ def _get_calculation_view(calculation_item):
     
     try:
         
-        calc = calculation_item.get_model()
+        calc = calculation_item.model()
         view_constructor = model_view_dict[type(calc)]
         view = view_constructor(model = calc.uiModel)
         return view

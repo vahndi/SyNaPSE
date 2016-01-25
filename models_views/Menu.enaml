@@ -1,14 +1,15 @@
 from enaml.widgets.api import Action, ActionGroup, Menu, MenuBar, FileDialogEx
 from enaml.core.api import Conditional, Include, Looper
 from custom_views.DictMenu import DictMenu_Model, DictMenu_View
-                
+
 
 
 enamldef Menu_View(MenuBar):
-    
+
     attr model
-    
+
     Menu:
+
         title = '&File'
 
         Action:
@@ -19,14 +20,13 @@ enamldef Menu_View(MenuBar):
                                              )
                 if load_path:
                     model.load_graph(load_path)
-                
+
         Action:
             text = '&Save Graph'
             enabled << model.calc_file_path != ''
             triggered :: 
                 model.save_graph()
-        
-        
+
         Action:
             text = '&Save Graph as...'
             triggered :: 
@@ -38,9 +38,11 @@ enamldef Menu_View(MenuBar):
 
 
     Include:
-        objects = [DictMenu_Model(
-                       menu_dict = model.menu_dict,
-                       menu_name = 'Add Calculation',
-                       triggered_func = model.calcGraph_Model.add_calc_item
-                       ).menu]
+        
+        objects << [DictMenu_Model(
+             menu_dict = model.menu_dict,
+             menu_name = 'Add Calculation',
+             triggered_func = model.calcGraph_Model.add_calc_item,
+             selectable_items = model.calcTypeManager.selectable_calc_types
+             ).menu]
                 

@@ -1,6 +1,6 @@
 from inspect import getargspec
 
-from atom.api import Atom, ContainerList, List, Str
+from atom.api import Atom, ContainerList, List, Typed, Value
 from atom.api import observe
 
 
@@ -23,9 +23,13 @@ class Calculation_Model(object): # rename this to Node_Model or something
                     '__doc__': e.__doc__,
                     'message': e.message,
                     'args': str(e.args)}
-                }
+               }
+
+
     class __metaclass__(type):
+        
         def __str__(self):
+
             return self.calc_name
 
 
@@ -59,7 +63,7 @@ class CalculationItem(object):
         return self._model.calc_name
         
     
-    def get_model(self):
+    def model(self):
         '''
         Returns the encapsulated `Calculation_Model` object.        
         '''        
@@ -97,7 +101,6 @@ class CalculationItem(object):
         Gets the outputs of the model which have already been calculated. If 
         they have not yet been calculated then calculate them first
         '''
-        
         if self._model.calc_outputs:
             print 'returning existing calc outputs for %s' % self.item_name
             return self._model.calc_outputs
@@ -116,46 +119,36 @@ class CalculationItem(object):
         
 
 
-class CalculationTypeSelector(Atom):
+class CalculationTypeManager(Atom):
     '''
     Stores a list of calculation types `calc_types` and exposes a property
-    `selectable_type_names` indicating which types are selectable based on the 
+    `selectable_types` indicating which types are selectable based on the 
     type name of the currently selected type `selected_type_name`.
     '''
-
-    calc_types = List(Calculation_Model)
-    selected_type_name = Str()
-    selectable_type_names = ContainerList(str)
-    unselectable_type_names = ContainerList(str)
+    calc_types = List()
+    selected_calc_type = Value()
+    selectable_calc_types = ContainerList()
 
 
     def __init__(self, calc_types, preceding_calc_type = None):
 
         self.calc_types = calc_types
-        self.selected_type_name = ''
-        
-        self.selectable_type_names = (
-            self.following_calc_types(preceding_calc_type.calc_name)
-            if preceding_calc_type
-            else self.following_calc_types(None)
+        self.selected_calc_type = None
+        self.selectable_calc_types = (
+            self.following_calc_types(preceding_calc_type)
             )
 
-        self.unselectable_type_names = [
-                            ct.calc_name 
-                            for ct in self.calc_types
-                            if ct.calc_name not in self.selectable_type_names
-                            ]
 
+    @observe('selected_calc_type')
+    def selected_calc_type_changed(self, change):
 
-    @observe('selected_type_name')
-    def selected_type_name_changed(self, change):
-        
-        self.update_UI_calc_types(self.selected_type_name)
-                
+        self.update_selectable_calc_types(self.selected_calc_type)
+
 
     def following_calc_types(self, calc_type):
         '''
-        Returns a list of the types of calculation which can follow `calc_type`
+        Returns a list of the types of calculation which can follow 
+        `calc_type`.
         '''
         if calc_type is None:
             # return all calc types that don't have any preceding types
@@ -168,22 +161,18 @@ class CalculationTypeSelector(Atom):
                     if issubclass(calc_type, ct_preceder)]
 
 
-    def update_UI_calc_types(self, preceding_calc_type_name):
+    def update_selectable_calc_types(self, preceding_calc_type):
         '''
-        Update the list of choosable calculation types in the uiModel based on
-        the name of the preceding calculation type, `preceding_calc_type_name`
+        Update the list of choosable calculation types based on the preceding 
+        calculation type, `preceding_calc_type`.
         '''
-        if preceding_calc_type_name:
-            # Return all calcs that can follow `preceding_calc_type_name`
-            calc_type = [ct for ct in self.calc_types 
-                         if ct.calc_name == preceding_calc_type_name][0]
-            following_calc_types = self.following_calc_types(calc_type)
-            self.uiModel.calc_types = [ct.calc_name 
-                                       for ct in following_calc_types]
+        if preceding_calc_type:
+            # Return all calc types that can follow `preceding_calc_type`
+            self.selectable_calc_types = \
+                self.following_calc_types(preceding_calc_type)
         else:
             # Return all calcs that do not follow any other type
-            self.uiModel.calc_types = [ct.calc_name 
-                                       for ct in self.calc_types 
-                                       if not ct.preceding_calcs]
- 
-    
+            self.selectable_calc_types = [ct
+                                          for ct in self.calc_types 
+                                          if not ct.preceding_calcs]
+

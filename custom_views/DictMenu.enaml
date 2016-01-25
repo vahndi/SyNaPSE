@@ -1,7 +1,12 @@
-from atom.api import Atom, Callable, Value, Str
+# Atom
+from atom.api import Atom, Callable, ContainerList, Dict, Str, Value
+from atom.api import observe
 
+# Enaml
 from enaml.widgets.api import Action, Container, MainWindow, Menu, MenuBar
 from enaml.core.api import Conditional, Include, Looper
+
+# Other
 from functools import partial
 
 
@@ -10,34 +15,46 @@ enamldef DictMenuAction(Action):
     
     attr dictmenu_item
     attr triggered_func
-    attr is_enabled_func
 
     text = str(dictmenu_item)
     triggered :: 
         triggered_func(dictmenu_item)
-    enabled << is_enabled_func(dictmenu_item)
 
 
 
 class DictMenu_Model(Atom):
-    
-    
+
+
     menu = Value(Menu)
+    menu_dict = Value(Dict)
+    menu_name = Str()
+    triggered_func = Callable()
+    selectable_items = ContainerList()
 
 
     def __init__(self, menu_dict, menu_name, 
-                 triggered_func, is_enabled_func = lambda item: True):
-    
-        self.menu = self.build_menu(menu_dict, menu_name, 
-                                    triggered_func, is_enabled_func)
+                 triggered_func, selectable_items):
 
-    
-    def build_menu(self, menu_dict, menu_name, 
-                   triggered_func, is_enabled_func):
+        
+        self.menu_dict = menu_dict
+        self.menu_name = menu_name
+        self.triggered_func = triggered_func
+        self.selectable_items = selectable_items
+        
+        self.selectable_items_changed(change = None)
+        
+
+    @observe('selectable_items')
+    def selectable_items_changed(self, change):
+        print 'menu selectable_items changed'
+        self.menu = self.build_menu(self.menu_dict, self.menu_name)
+
+
+    def build_menu(self, menu_dict, menu_name):
 
         # Create a new Menu and a list to add items to        
         menu = Menu(title = menu_name)
-        menu_items = []        
+        menu_items = []
 
         # For each key in the dict
         for k in sorted(menu_dict.keys()):
@@ -46,25 +63,22 @@ class DictMenu_Model(Atom):
                 # Append them one by one to the item list
                 for f in menu_dict[k]:
                     menu_items.append(DictMenuAction(
-                                            dictmenu_item = f,
-                                            triggered_func = triggered_func,
-                                            is_enabled_func = is_enabled_func
-                                            ))
+                                          dictmenu_item = f,
+                                          triggered_func = self.triggered_func,
+                                          enabled = f in self.selectable_items
+                                          ))
             elif type(menu_dict[k]) is dict: # If it holds a submenu
                 # Pass it through to the build menu function
                 menu_items.append(self.build_menu(
-                                            menu_dict = menu_dict[k],
-                                            menu_name = k,
-                                            triggered_func = triggered_func,
-                                            is_enabled_func = is_enabled_func
-                                            ))
+                                         menu_dict = menu_dict[k],
+                                         menu_name = k
+                                         ))
 
         # Add children to the menu
         menu.insert_children(before = None, 
                              insert = menu_items)
         
         return menu
-
 
 
 
