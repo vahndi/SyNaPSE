@@ -73,7 +73,6 @@ class Main_Model(Atom):
     def update_choosable_calc_types(self, preceding_calc_type):
         
         self.calcTypeManager.selected_calc_type = preceding_calc_type
-        
 
 
     def load_graph(self, load_path):

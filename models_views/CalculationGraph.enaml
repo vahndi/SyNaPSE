@@ -78,12 +78,11 @@ class CalculationGraph_Model(object):
 
         
         # Update the appendable calc item types
-        print 'selecting calc item of type', type(calc_item.model())
         self._parent.update_choosable_calc_types(type(calc_item.model()))
 
 
     def refresh_selected_calc_item_outputs(self, recalculate = False):
-        print 'refresh_selected_calc_item_outputs'
+
         calc_item = self.uiModel.selected_calc_item
         if calc_item is not None:
             self.select_calc_item(calc_item, recalculate = recalculate)

@@ -46,7 +46,6 @@ class DictMenu_Model(Atom):
 
     @observe('selectable_items')
     def selectable_items_changed(self, change):
-        print 'menu selectable_items changed'
         self.menu = self.build_menu(self.menu_dict, self.menu_name)
 
 
