@@ -1,5 +1,6 @@
 # Atom
 from atom.api import Atom, Dict, Str, Value
+
 # Enaml
 from enaml.widgets.api import MainWindow
 
@@ -13,6 +14,7 @@ from ChooseCalculation import ChooseCalculation_Model
 # Other
 from modules.startup import calculation_models
 from modules.startup import _pickle_method, _unpickle_method
+from modules.startup import menus_calcs
 
 import networkx as nx
 
@@ -29,7 +31,7 @@ class Main_Model(Atom):
 
     Instance Attributes
     -------------------
-    _calc_dict (dict):
+    calc_dict (dict):
         A dict mapping the calculation names to their respective models.
     chooseCalc_Model (ChooseCalculation_Model):
         An instance of the model used to select a calculation to display the 
@@ -39,18 +41,17 @@ class Main_Model(Atom):
 
     calc_models = calculation_models
     calc_file_path = Str()
-    _calc_dict = Dict()
+    calc_dict = Dict()
     chooseCalc_Model = Value(ChooseCalculation_Model)
     calcGraph_Model = Value(CalculationGraph_Model)
     calcOutput_Model = Value(CalculationOutput_Model)
-    
-    
+    menu_dict = Dict()    
 
     def __init__(self):
 
-        self._calc_dict = {cm.calc_name: cm 
+        self.calc_dict = {cm.calc_name: cm 
                           for cm in Main_Model.calc_models}                     
-        
+        self.menu_dict = menus_calcs
         self._initialise()
     
     
@@ -63,7 +64,7 @@ class Main_Model(Atom):
 
         self.calcGraph_Model = CalculationGraph_Model(
                                     parent = self,
-                                    calc_dict = self._calc_dict,
+                                    calc_dict = self.calc_dict,
                                     calc_graph = calc_graph
                                     )
             

@@ -13,13 +13,8 @@ class ChooseCalculation_UI(Atom):
         selected_calc_type = Str()
 
 
+
 class ChooseCalculation_Model(object):
-    
-    
-    class ui(Atom):
-        
-        calc_types = ContainerList(str)
-        selected_calc_type = Str()
         
     
     def __init__(self, parent, calc_types, preceding_calc_type = None):
@@ -34,33 +29,38 @@ class ChooseCalculation_Model(object):
             self.uiModel = ChooseCalculation_UI(calc_types = ct_names)
 
 
+    def following_calc_types(self, calc_type):
+        '''
+        Returns a list of the types of calculation which can follow `calc_type`
+        '''
+        if calc_type is None:
+            # return all calc types that don't have any preceding types
+            return [ct for ct in self.calc_types 
+                    if not ct.preceding_calcs]
+        else:
+            # return all calc types that contain `calc_type` as a preceder
+            return [ct for ct in self.calc_types
+                    for ct_preceder in ct.preceding_calcs
+                    if issubclass(calc_type, ct_preceder)]
+
+
     def update_UI_calc_types(self, preceding_calc_type_name):
         '''
         Update the list of choosable calculation types in the uiModel based on
-        the name of the preceding calculation type.
+        the name of the preceding calculation type, `preceding_calc_type_name`
         '''
         if preceding_calc_type_name:
+            # Return all calcs that can follow `preceding_calc_type_name`
             calc_type = [ct for ct in self.calc_types 
                          if ct.calc_name == preceding_calc_type_name][0]
             following_calc_types = self.following_calc_types(calc_type)
             self.uiModel.calc_types = [ct.calc_name 
                                        for ct in following_calc_types]
         else:
-            self.uiModel.calc_types = [ct.calc_name for ct in self.calc_types 
+            # Return all calcs that do not follow any other type
+            self.uiModel.calc_types = [ct.calc_name 
+                                       for ct in self.calc_types 
                                        if not ct.preceding_calcs]
-
-
-    def following_calc_types(self, calc_type):
-        '''
-        Returns a list of the calculations which can follow calc_type
-        '''
-        if calc_type is None:
-            return [ct for ct in self.calc_types 
-                    if not ct.preceding_calcs]
-        else:
-            return [ct for ct in self.calc_types
-                    for ct_preceder in ct.preceding_calcs
-                    if issubclass(calc_type, ct_preceder)]
 
 
 
@@ -83,7 +83,8 @@ enamldef ChooseCalculation_View(Dialog): me:
             clicked :: 
                 # Add a new calc to the list and update choosable types
                 calcGraphView_Model.add_calc_item(
-                                            model.uiModel.selected_calc_type)                
+                                            model.uiModel.selected_calc_type
+                                            )                
                 # Close this window
                 me.accept()
         PushButton:

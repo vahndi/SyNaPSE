@@ -1,0 +1,74 @@
+from atom.api import Atom, Callable, Value, Str
+
+from enaml.widgets.api import Action, Container, MainWindow, Menu, MenuBar
+from enaml.core.api import Conditional, Include, Looper
+from functools import partial
+
+
+enamldef DictMenuAction(Action):
+    
+    attr action_func
+    attr dictmenu_text
+    
+    text = str(dictmenu_text)
+    triggered :: 
+        action_func(dictmenu_text)
+
+
+class DictMenu_Model(Atom):
+    
+    
+    menu = Value(Menu)
+
+
+    def __init__(self, menu_dict, menu_name, action_func):
+    
+        self.menu = self.build_menu(menu_dict, menu_name, action_func)
+
+    
+    def build_menu(self, menu_dict, menu_name, action_func):
+
+        # Create a new Menu and a list to add items to        
+        menu = Menu(title = menu_name)
+        menu_items = []        
+
+        # For each key in the dict
+        for k in sorted(menu_dict.keys()):
+            # If it holds a list of files
+            if type(menu_dict[k]) is list:
+                # Append them one by one to the item list
+                for f in menu_dict[k]:
+                    menu_items.append(DictMenuAction(
+                                                dictmenu_text = f,
+                                                action_func = action_func
+                                                )
+                                     )
+            elif type(menu_dict[k]) is dict: # If it holds a submenu
+                # Pass it through to the build menu function
+                menu_items.append(self.build_menu(menu_dict = menu_dict[k],
+                                                  menu_name = k,
+                                                  action_func = action_func))
+
+        # Add children to the menu
+        menu.insert_children(before = None, 
+                             insert = menu_items)
+        
+        return menu
+
+
+
+
+enamldef DictMenu_View(Menu): me:
+    '''
+    N.B. to include a DictMenu_View in a MenuBar or Menu use:
+
+    Include:
+        objects = [DictMenu_Model(menu_dict = dict_name,
+                                  menu_name = 'Menu Name').menu]
+    '''    
+    attr model
+    
+    Include:
+        objects = [model.menu]
+
+        
