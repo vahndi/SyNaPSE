@@ -46,6 +46,7 @@ class DictMenu_Model(Atom):
 
     @observe('selectable_items')
     def selectable_items_changed(self, change):
+        
         self.menu = self.build_menu(self.menu_dict, self.menu_name)
 
 
@@ -76,6 +77,7 @@ class DictMenu_Model(Atom):
         # Add children to the menu
         menu.insert_children(before = None, 
                              insert = menu_items)
+        menu.enabled = any([item.enabled for item in menu_items])
         
         return menu
 

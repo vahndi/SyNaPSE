@@ -1,6 +1,6 @@
 from inspect import getargspec
 
-from atom.api import Atom, ContainerList, List, Typed, Value
+from atom.api import Atom, ContainerList, List, Value
 from atom.api import observe
 
 
