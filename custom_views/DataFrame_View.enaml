@@ -17,7 +17,9 @@ from modules.dataframe_figures import (
 
 # Numerical
 from numpy import int32, int64, float64
-from pandas import melt, DatetimeIndex
+from pandas import melt, DatetimeIndex, Series
+
+from Series_View import getSeriesFigure
 
 
 def _getDataFrameRowHtml(dataframe, ix, max_cols):
@@ -132,6 +134,11 @@ def getDataFrameFigure(dataframe):
     nic = len(df_integer.columns)
     nnc = len(df_numeric.columns)
     nfc = len(df_floating.columns)
+
+    # Return a series figure if there is only one column
+    if nc == 1 and noc == 1:
+        series = Series(dataframe.ix[:, 0])
+        return getSeriesFigure(series)
 
     # Determine some boolean properties
     all_cols_int = nc == nic

@@ -54,6 +54,14 @@ def getSeriesFigure(series):
     ax = fig.add_subplot(111)
 
     if not series.index.name:
+        if series.dtype == 'object':            
+            if len(series.unique()) < len(series):
+                counts = series.value_counts()
+                sns.barplot(x = counts.index, 
+                            y = counts.values, 
+                            ax = ax)
+                return fig
+                
         return None
         
     if series.dtype == 'O':
