@@ -100,7 +100,7 @@ class Main_Model(Atom):
                          save_path)
         self.calc_file_path = save_path
 
-      
+
     
 enamldef Main_View(MainWindow): me:
 
@@ -120,7 +120,7 @@ enamldef Main_View(MainWindow): me:
 
         model << me.model.calcGraph_Model
 
- 
+
     CalculationConfig_View:
 
         model := me.model.calcGraph_Model.uiModel.selected_calc_item

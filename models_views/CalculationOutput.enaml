@@ -11,7 +11,7 @@ from custom_views.fields import Field
 
 # Numerical
 import pandas as pd
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, Index
 from numpy import ndarray
 
 # Plotting                             
@@ -53,6 +53,11 @@ template OutputTemplate(model_type: Series):
     Series_FigureView:
         model = Series_FigureModel(output_model)
     Series_TableView:
+        model = output_model
+
+template OutputTemplate(model_type: Index): 
+
+    Index_TableView:
         model = output_model
 
 
@@ -162,7 +167,7 @@ class CalculationOutput_Model(object):
   
     def refresh_output(self):
 
-        self.uiModel.calc_outputs = {'foo':'bar'} # needed to clear output view
+        self.uiModel.calc_outputs = {'foo': 'bar'} # needed to clear output view
         self.calculationGraph.refresh_selected_calc_item_outputs()
         self.uiModel.calc_outputs = \
             self.calculationGraph.uiModel.selected_calc_item_outputs

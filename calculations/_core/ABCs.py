@@ -20,9 +20,28 @@ class ABCOutputsSeries():
 
 
 
-class ABCTakesSeries():
+class ABCTakesSeries(Calculation_Model):
     
     preceding_calcs = [ABCOutputsSeries]
+
+
+
+class ABCOutputsIndex(Calculation_Model):
+    
+    pass
+
+
+
+class ABCTakesIndex(Calculation_Model):
+    
+    preceding_calcs = [ABCOutputsIndex]
+
+
+
+class ABCDataFrameToIndex(ABCTakesDataFrame,
+                          ABCOutputsIndex):
+
+    pass
 
 
 
@@ -32,6 +51,7 @@ class ABCDataFrameToDataFrame(ABCTakesDataFrame,
     pass
 
 
+
 class ABCDataFrameToDataFrameOrSeries(ABCTakesDataFrame, 
                                       ABCOutputsDataFrame,
                                       ABCOutputsSeries):
@@ -39,13 +59,17 @@ class ABCDataFrameToDataFrameOrSeries(ABCTakesDataFrame,
     pass
 
 
+
 class ABCDataFrameToSeries(ABCTakesDataFrame, 
                            ABCOutputsSeries):
     
     pass
 
+
+
 class ABCSeriesToSeries(ABCTakesSeries,
                         ABCOutputsSeries):
     
     pass
+
 

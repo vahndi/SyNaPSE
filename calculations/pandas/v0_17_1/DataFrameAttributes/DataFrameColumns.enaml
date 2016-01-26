@@ -1,0 +1,37 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToIndex
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class DataFrameColumns_Model(ABCDataFrameToIndex):
+
+
+    calc_name = 'DataFrame Columns'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe      
+
+
+    def getOutputs(self):
+
+        try:
+
+            return {'columns': public_attrs_to_dict(self._dataframe.columns)}        
+
+        except Exception as e:
+
+            return self.standard_exception(e)   
+
+
+
+enamldef DataFrameColumns_View(GroupBox): me:
+
+    Form:
+        
+        pass

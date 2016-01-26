@@ -13,7 +13,8 @@ def getPublicAttributes(obj):
     Returns a list of an object's public attributes
     '''
     return [a for a in dir(obj) 
-            if not a.startswith('_') and not callable(getattr(obj, a))]
+            if not a.startswith('_') 
+            and not callable(getattr(obj, a))]
 
 
 def labelSeries(series, name, index_name):
@@ -38,9 +39,9 @@ def getStats(dataframe):
     # N.B. Can't use mode because it may return more than one value
     df = dataframe.select_dtypes(['number'])
     df_stats = concat([df.mean(), df.mad(), df.median(), df.min(),
-                          df.max(), df.std(), df.var(), df.sem(),
-                          df.skew(), df.kurt()], 
-                         axis = 1)
+                       df.max(), df.std(), df.var(), df.sem(),
+                       df.skew(), df.kurt()], 
+                      axis = 1)
     df_stats.columns = ['Mean', 'Mean Absolute Deviation', 'Median', 
                         'Minimum', 'Maximum', 'Standard Deviation', 'Variance', 
                         'Standard Error of Mean', 'Skew', 'Kurtosis']
