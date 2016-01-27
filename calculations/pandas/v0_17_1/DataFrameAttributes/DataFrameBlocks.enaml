@@ -11,7 +11,7 @@ from modules.core_helpers import public_attrs_to_dict
 class DataFrameBlocks_Model(DataFrameAttribute_Model):
 
 
-    calc_name = 'DataFrame Blocks'
+    calc_name = 'Blocks'
 
 
     def __init__(self):

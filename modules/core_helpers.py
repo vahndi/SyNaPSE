@@ -12,9 +12,10 @@ def get_public_attr_names(obj):
             and not callable(getattr(obj, a))]
 
 
-def _iterable_to_series(name, iterable):
+def _iterable_to_series(iterable):
     
-    return Series(iterable, name = name)
+    return Series(iterable, 
+                  name = 'value')
 
     
 def _items_to_series(name, item_names, item_values):
@@ -51,7 +52,8 @@ def _group_single_values(dictionary):
             new_dict[item_type_name + 's'] = _items_to_series(
                                                  name = item_type_name,
                                                  item_names = k_list,
-                                                 item_values = v_list)
+                                                 item_values = v_list
+                                                 )
 
     # Add other types directly to the new dict
     for k, v in dictionary.items():
@@ -77,8 +79,7 @@ def _dict_repr(dictionary):
         if ((value_type in (list, Series, tuple)) or
             (value_type is np.ndarray and value.ndim == 1)):
             
-            new_dict[key] = _iterable_to_series(name = key,
-                                              iterable = value)
+            new_dict[key] = _iterable_to_series(iterable = value)
         
         elif (value_type is DataFrame or 
               (value_type is np.ndarray and value.ndim == 2)):

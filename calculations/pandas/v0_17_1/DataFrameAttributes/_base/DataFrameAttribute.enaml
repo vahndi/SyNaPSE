@@ -29,8 +29,6 @@ class DataFrameAttribute_Model(ABCTakesDataFrame):
             
             if len(attr_attrs) > 0:
                 attribute = attr_attrs
-                
-            print type(attribute)
                                              
             return {self._attribute_name: attribute}        
 

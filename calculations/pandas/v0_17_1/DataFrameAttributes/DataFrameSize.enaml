@@ -8,19 +8,19 @@ from modules.core_helpers import public_attrs_to_dict
 
 
 
-class DataFrameColumns_Model(DataFrameAttribute_Model):
+class DataFrameSize_Model(DataFrameAttribute_Model):
 
 
-    calc_name = 'Columns'
+    calc_name = 'Size'
 
 
     def __init__(self):
         
-        self._attribute_name = 'columns'
+        self._attribute_name = 'size'
 
 
 
-enamldef DataFrameColumns_View(DataFrameAttribute_View): me:
+enamldef DataFrameSize_View(DataFrameAttribute_View): me:
 
     Form:
         

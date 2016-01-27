@@ -36,52 +36,52 @@ class SelectColumns_UI(Atom):
         
     # starts_with
     starts_with = Str()
-    starts_with_tooltip = ('Select columns whose names start with this ' +
+    starts_with_tooltip = Str('Select columns whose names start with this ' +
                            'text.')
     # ends_with
     ends_with = Str()
-    ends_with_tooltip = 'Select columns whose names end with this text.'
+    ends_with_tooltip = Str('Select columns whose names end with this text.')
     # contains
     contains = Str()
-    contains_tooltip = 'Select columns whose names contain this text.'
+    contains_tooltip = Str('Select columns whose names contain this text.')
     # does_not_contain
     does_not_contain = Str()
-    does_not_contain_tooltip = ('Select columns whose names do not ' +
+    does_not_contain_tooltip = Str('Select columns whose names do not ' +
                                'contain this text.')
     # regular expression
     expression = Str()
-    expression_tooltip = ('Select columns whose names match this regular' +
+    expression_tooltip = Str('Select columns whose names match this regular' +
                           ' expression.')
     # start index
     range_start_int = Int()
     use_range_start_int = Bool()
-    range_start_int_tooltip = ('The 0-based index of the first column to' +
+    range_start_int_tooltip = Str('The 0-based index of the first column to' +
                                ' select.')
     # end index
     range_end_int = Int()
     use_range_end_int = Bool()
-    range_end_int_tooltip = ('1 plus the 0-based index of the last ' +
+    range_end_int_tooltip = Str('1 plus the 0-based index of the last ' +
                              'column to select.')
     # first and last columns
     fl_columns = List(str)
     # first column name
     first_col_name = Str()
     use_first_col_name = Bool()
-    first_col_name_tooltip = 'The name of the first column to select.'
+    first_col_name_tooltip = Str('The name of the first column to select.')
     # last column name
     last_col_name = Str()
     use_last_col_name = Bool()
-    last_col_name_tooltip = 'The name of the last column to select.'
+    last_col_name_tooltip = Str('The name of the last column to select.')
     # dtypes
     dtype_columns = Value(Atom)
-    dtype_columns_tooltip = 'The numeric types of the columns to select.'
+    dtype_columns_tooltip = Str('The numeric types of the columns to select.')
     # manual selection
     manual_columns = Value(Atom)
-    manual_columns_tooltip = 'Check column names to select.'
+    manual_columns_tooltip = Str('Check column names to select.')
     # order_alphabetically
     order_alphabetically = Bool(False)
-    order_alphabetically_tooltip = ('Order the returned column names ' +
-                                    'alphabetically.')
+    order_alphabetically_tooltip = Str('Order the returned column names ' +
+                                        'alphabetically.')
 
 
 
@@ -325,7 +325,7 @@ enamldef SelectColumns_View(GroupBox): me:
                 tool_tip = model.manual_columns_tooltip
             CheckBoxList_View:
                 model := me.model.manual_columns
-                tool_tip = model.manual_columns_tooltip
+                tool_tip = me.model.manual_columns_tooltip
 
         Label:
             text = 'Order Alphabetically'
