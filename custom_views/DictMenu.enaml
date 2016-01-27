@@ -10,6 +10,15 @@ from enaml.core.api import Conditional, Include, Looper
 from functools import partial
 
 
+def ToWords(CamelCaseString):
+
+    words = CamelCaseString[0]    
+    for i in range(1, len(CamelCaseString)):
+        if CamelCaseString[i].isupper():
+            words += ' '
+        words += CamelCaseString[i]
+    return words
+
 
 enamldef DictMenuAction(Action):
     
@@ -53,7 +62,7 @@ class DictMenu_Model(Atom):
     def build_menu(self, menu_dict, menu_name):
 
         # Create a new Menu and a list to add items to        
-        menu = Menu(title = menu_name)
+        menu = Menu(title = ToWords(menu_name))
         menu_items = []
 
         # For each key in the dict
