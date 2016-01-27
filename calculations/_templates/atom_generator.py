@@ -3,8 +3,9 @@ from helpers import spc, widget, strlist_to_liststr
 from numpy import int32, int64, float32, float64
 
 
-indent = spc(8)
+indent = spc(4)
 nums = (int, float, int32, int64, float32, float64)
+
 
 def get_Atom_Field(widget):
 
@@ -132,9 +133,9 @@ def getAtomWidgetCode(widget_row):
     return atomCode
 
 
-def getAtomCode(dataframe):
+def getAtomCode(dataframe, calc_name):
 
-    atomCode = '\n\n%sclass ui(Atom):\n\n' % spc(4)
+    atomCode = '\n\n\nclass %s_UI(Atom):\n\n' % calc_name
     
     for iRow in range(len(dataframe)):
         

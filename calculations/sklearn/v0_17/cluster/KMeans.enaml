@@ -20,7 +20,7 @@ from pandas import DataFrame, Series, concat
 from modules.pandas_helpers import get_confusion_matrix
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from ..sklearn_element import SKLearnElement
+from ..sklearn_calc import SKLearnCalc
 from .._metrics.clustering_metrics import ClusteringMetrics as CM
 
 
@@ -54,11 +54,11 @@ class KMeans_UI(Atom):
     cores_selector = Value(Atom)
 
 
-class KMeans_Model(SKLearnElement):
+class KMeans_Model(SKLearnCalc):
 
     calc_name = 'K Means'
     calc_desc = 'K-means clustering algorithm.'
-    calc_docs = SKLearnElement.doc_root + \
+    calc_docs = SKLearnCalc.doc_root + \
                            'sklearn.cluster.k_means.html'
 
     def setInputs(self, dataframe):

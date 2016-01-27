@@ -10,7 +10,7 @@ from enaml.widgets.api import (
 from sklearn.decomposition import PCA
 
 # Other
-from ..sklearn_element import SKLearnElement
+from ..sklearn_calc import SKLearnCalc
 from pandas import Series, DataFrame, concat
 
 
@@ -26,11 +26,11 @@ class PCA_UI(Atom):
     whiten = Bool(False)
 
 
-class PCA_Model(SKLearnElement):
+class PCA_Model(SKLearnCalc):
     
     calc_name = 'PCA'
     calc_desc = 'Principal component analysis.'
-    calc_docs = SKLearnElement.doc_root + \
+    calc_docs = SKLearnCalc.doc_root + \
                            'sklearn.decomposition.PCA.html'
 
     

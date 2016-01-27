@@ -1,10 +1,10 @@
-from ...sklearn_element import SKLearnElement
+from ...sklearn_calc import SKLearnCalc
 from pandas import DataFrame, Series
 from numpy import squeeze
 
 
 
-class ABCLinearModel(SKLearnElement):
+class ABCLinearModel(SKLearnCalc):
 
     
     doc_root = \

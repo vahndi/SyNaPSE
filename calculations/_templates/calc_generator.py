@@ -6,22 +6,22 @@ from copy import deepcopy
 import seaborn as sns
 
 
-def generate_element(spreadsheet_name, element_name):
+def generate_calc(spreadsheet_name, calc_name):
 
-    # TODO: add element path and filename (create one for each library)
+    # TODO: add calc path and filename (create one for each library)
     ss_name = spreadsheet_name
     if not ss_name.endswith('.xls'):
         ss_name += '.xls'
     df = pd.read_excel(ss_name, 
-                       sheetname = element_name)
+                       sheetname = calc_name)
 
     # TODO: write to a new .enaml file
-    print getImportsCode(element_name, df)
-    print getModelCode(element_name, df)
-    print getEnamlCode(element_name, df)
+    print getImportsCode(calc_name, df)
+    print getModelCode(calc_name, df)
+    print getEnamlCode(calc_name, df)
 
 
-def inspect_element_args(pickle_name, module_name = ''):
+def inspect_calc_args(pickle_name, module_name = ''):
     '''
     Find the number of occurences of each named argument in the list of models
     Sheet Columns should be ['Model', 'Args']
@@ -33,6 +33,7 @@ def inspect_element_args(pickle_name, module_name = ''):
     if module_name:
         df = df[df.module == module_name]
     print len(df)
+    
     # get all the arguments
     argCount = {}
     for loc in df.index:
@@ -46,7 +47,6 @@ def inspect_element_args(pickle_name, module_name = ''):
     
     for arg in sorted(argCount.keys()):
         print arg, argCount[arg]
-
     
     # create a new dataframe showing which arguments are in which model
     model_names = list(df['class_name'].unique())
@@ -110,8 +110,8 @@ def inspect_element_args(pickle_name, module_name = ''):
 
 if __name__ == '__main__':
 
-    generate_element(spreadsheet_name = 'pandas.DataFrame',
-                     element_name = 'SortRows')
+    generate_calc(spreadsheet_name = 'pandas.DataFrame',
+                  calc_name = 'Pivot')
 
-#    inspect_element_args(pickle_name = 'sklearn_scrape',
+#    inspect_calc_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')

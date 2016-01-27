@@ -19,7 +19,7 @@ widgets_atoms = {'Field': ['Str'],
                  'SpinBox': ['Int', 'Value']} 
 
 
-def getImportsCode(element_name, dataframe):
+def getImportsCode(calc_name, dataframe):
           
     widget_types = sorted(list(set(dataframe['Widget Type'])))
 

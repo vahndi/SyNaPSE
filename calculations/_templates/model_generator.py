@@ -65,16 +65,16 @@ def getOutputCode(widget):
     return outputCode
 
 
-def getModelCode(element_name, dataframe):
+def getModelCode(calc_name, dataframe):
     
     widgets = [widget.from_DataFrame_row(dataframe.iloc[iRow])
                for iRow in range(len(dataframe))]
     
-    modelCode = '\n\n\nclass %s_Model(Calculation_Model):\n\n' % element_name
-    modelCode += "%scalc_name = '%s'\n" % (spc(4), ToWords(element_name))
-    modelCode += '%spreceding_calcs = []\n' % spc(4)
-
-    modelCode += getAtomCode(dataframe)
+    modelCode = getAtomCode(dataframe, calc_name)    
+    
+    modelCode += '\n\n\nclass %s_Model(Calculation_Model):\n\n' % calc_name
+    modelCode += "%scalc_name = '%s'\n" % (spc(4), ToWords(calc_name))
+    
     
     # setInputs code
     modelCode += '\n\n%sdef setInputs(self, ???):\n\n' % spc(4)
@@ -90,7 +90,7 @@ def getModelCode(element_name, dataframe):
             modelCode += setInputCode_InputsTargetsSelector(widge)
             
     # Create uiModel
-    modelCode += '%sself.uiModel = %s_Model.ui(' % (spc(8), element_name)
+    modelCode += '%sself.uiModel = %s_UI(' % (spc(8), calc_name)
     uiArgs = []
     for widge in widgets:
         if widge.w_type == 'ObjectCombo':            

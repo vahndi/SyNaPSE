@@ -16,7 +16,7 @@ from ._subviews.Leaves import Leaves_Model, Leaves_View
 from ._subviews.BootstrapOOB import BootstrapOOB_Model, BootstrapOOB_View
 
 # Models
-from ..sklearn_element import SKLearnElement
+from ..sklearn_calc import SKLearnCalc
 
 # Other
 from sklearn.ensemble import RandomForestClassifier
@@ -64,11 +64,11 @@ class RandomForestClassifier_UI(Atom):
     cores_selector = Value(Atom)
 
 
-class RandomForestClassifier_Model(SKLearnElement):
+class RandomForestClassifier_Model(SKLearnCalc):
 
     calc_name = 'Random Forest Classifier'
     calc_desc = 'A random forest classifier.'
-    calc_docs = SKLearnElement.doc_root + \
+    calc_docs = SKLearnCalc.doc_root + \
                            'sklearn.ensemble.RandomForestClassifier.html'
 
 

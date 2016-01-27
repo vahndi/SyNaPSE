@@ -191,9 +191,9 @@ def getEnamlWidgetCode(widget, widget_names):
     return enamlCode
 
 
-def getEnamlCode(element_name, dataframe):
+def getEnamlCode(calc_name, dataframe):
 
-    enamlCode = '\n\n\nenamldef %s_View(GroupBox): me:\n\n' % element_name
+    enamlCode = '\n\n\nenamldef %s_View(GroupBox): me:\n\n' % calc_name
     enamlCode += '%sattr model\n\n' % spc(4) 
     if not(isinstance(dataframe.iloc[0]['Widget Page'], (str, unicode))):
         enamlCode += '%sForm:\n\n' % spc(4)

@@ -1,0 +1,112 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+    )
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+
+
+class Pivot_UI(Atom):
+
+    # index_column
+    index_column = Str()
+    index_column_list = List(str)
+    use_index_column = Bool()
+    index_column_tooltip = "Column name to use to make new frame's index. If None, uses existing index."
+    # columns
+    columns = Str()
+    columns_list = List(str)
+    columns_tooltip = "Column name to use to make new frame's columns."
+    # values
+    values = Str()
+    values_list = List(str)
+    values_tooltip = "Column name to use for populating new frame's values"
+
+
+
+class Pivot_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Pivot'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        cols = sorted(dataframe.columns)
+        self.uiModel = Pivot_UI(index_column_list = cols, 
+                                      columns_list = cols, 
+                                      values_list = cols)
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'index': (None 
+                          if not self.uiModel.use_index_column 
+                          else self.uiModel.index_column),
+                'columns': self.uiModel.columns,
+                'values': self.uiModel.values
+                }
+            
+            # Validate inputs
+            if '' in (args['columns'], args['values']):
+                return {'Outputs': 'No Outputs'}
+            
+            # Calculate outputs
+            df_pivot = self._dataframe.pivot(** args)
+            
+            return {'dataframe': df_pivot}
+            
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Pivot_View(GroupBox): me:
+
+
+    attr model
+
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.index_column_tooltip
+            text = 'Index Column'
+            checked := model.use_index_column
+        Label:
+            text = 'N/A'
+            visible << not model.use_index_column
+        ObjectCombo:
+            items = model.index_column_list
+            selected := model.index_column
+            visible << model.use_index_column
+            tool_tip = model.index_column_tooltip
+
+        Label:
+            text = 'Columns'
+            tool_tip = model.columns_tooltip
+        ObjectCombo:
+            items = model.columns_list
+            selected := model.columns
+            tool_tip = model.columns_tooltip
+
+        Label:
+            text = 'Values'
+            tool_tip = model.values_tooltip
+        ObjectCombo:
+            items = model.values_list
+            selected := model.values
+            tool_tip = model.values_tooltip
