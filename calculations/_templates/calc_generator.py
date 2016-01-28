@@ -110,8 +110,8 @@ def inspect_calc_args(pickle_name, module_name = ''):
 
 if __name__ == '__main__':
 
-    generate_calc(spreadsheet_name = 'pandas.Series.str',
-                  calc_name = 'Strip')
+    generate_calc(spreadsheet_name = 'pandas.DataFrame',
+                  calc_name = 'SelectColumn')
 
 #    inspect_calc_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')

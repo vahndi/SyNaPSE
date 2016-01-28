@@ -1,0 +1,98 @@
+# Atom
+from atom.api import Atom, Int, List, Str
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.core.api import Conditional
+from custom_views.fields import IntField
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToSeries
+
+
+
+class SelectColumn_UI(Atom):
+
+    # method
+    method = Str('name')
+    method_list = List(str, ['name', 'index'])
+    # column_name
+    column_name = Str()
+    column_name_list = List(str)
+    column_name_tooltip = 'Select the column to extract the Series from.'
+    # column_index
+    column_index = Int(0)
+    column_index_min = Int(0)
+    column_index_max = Int()
+
+
+
+class SelectColumn_Model(ABCDataFrameToSeries):
+
+
+    calc_name = 'Select Column'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        cols = sorted([col for col in dataframe.columns])
+        self.uiModel = SelectColumn_UI(
+                           column_name_list = cols,
+                           column_index_max = len(cols) - 1
+                           )
+
+
+    def getOutputs(self):
+
+        try:
+
+            if self.uiModel.method == 'name':
+            
+                selected_column = self.uiModel.column_name
+                if not selected_column:
+                    return self.not_configured()
+                series = self._dataframe[selected_column]
+                
+            else:
+                
+                series = self._dataframe.ix[:, self.uiModel.column_index]
+            
+            return {'series': series}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SelectColumn_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Method'
+        ObjectCombo:
+            items = model.method_list
+            selected := model.method
+
+        Conditional:
+            condition << model.method == 'name'
+            Label:
+                text = 'Column Name'
+                tool_tip = model.column_name_tooltip
+            ObjectCombo:
+                items = model.column_name_list
+                selected := model.column_name
+                tool_tip = me.model.column_name_tooltip
+
+        Conditional:
+            condition << model.method == 'index'
+            Label:
+                text = 'Column Index'
+            IntField:
+                value := model.column_index
+                minimum = model.column_index_min
+                maximum = model.column_index_max
