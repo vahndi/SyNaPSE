@@ -10,7 +10,7 @@ from custom_views.fields import FloatField, IntField
 from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
 
 from pandas import concat, DataFrame, expanding_quantile, Series
-
+from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
 
@@ -27,9 +27,9 @@ class ExpandingQuantile_UI(Atom):
     min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
     # freq
     freq = Str('D')
-    freq_list = List(str, ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 'BH', 'H', 'T', 'S', 'L', 'U', 'N'])
+    freq_list = List(str, pandas_freqs)
     use_freq = Bool()
-    freq_tooltip = 'Frequency to conform the data to before computing the statistic.\nB: business day frequency\nC: custom business day frequency (experimental)\nD: calendar day frequency\nW: weekly frequency\nM: month end frequency\nBM: business month end frequency\nCBM: custom business month end frequency\nMS: month start frequency\nBMS: business month start frequency\nCBMS: custom business month start frequency\nQ: quarter end frequency\nBQ: business quarter endfrequency\nQS: quarter start frequency\nBQS: business quarter start frequency\nA: year end frequency\nBA: business year end frequency\nAS: year start frequency\nBAS: business year start frequency\nBH: business hour frequency\nH: hourly frequency\nT: minutely frequency\nS: secondly frequency\nL: milliseonds\nU: microseconds\nN: nanoseconds'
+    freq_tooltip = pandas_freq_tooltip
 
 
 class ExpandingQuantile_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):

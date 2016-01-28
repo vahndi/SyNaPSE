@@ -65,7 +65,7 @@ class ARDRegression_Model(ABCRegressionModel):
             
             # Validate inputs
             if not self.input_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}  
+                return self.not_configured()
     
             # Create ARD Regression model
             self.estimator = ARDRegression(**args)

@@ -1,6 +1,13 @@
 import sys
 
 
+custom_widgets = ('CheckBoxList',
+                  'InputsTargetsSelector',
+                  'OrderedList',
+                  'RadioButtonList',
+                  'RegExFlags')
+
+
 def spc(num_spaces):
     
     return ' ' * num_spaces

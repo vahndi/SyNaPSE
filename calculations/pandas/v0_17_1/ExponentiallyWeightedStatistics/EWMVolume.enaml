@@ -42,6 +42,7 @@ class EWMVolume_UI(Atom):
     adjust_tooltip = 'Divide by decaying adjustment factor in beginning periods to account for imbalance in relative weightings (viewing EWMA as a moving average).'
 
 
+
 class EWMVolume_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 

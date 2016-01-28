@@ -123,7 +123,7 @@ class RandomForestClassifier_Model(SKLearnCalc):
     
             # Validate inputs
             if not self.selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}
+                return self.not_configured()
                 
             # Build model
             ranfor = RandomForestClassifier(

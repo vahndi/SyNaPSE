@@ -4,6 +4,37 @@ from copy import deepcopy
 import pandas as pd
 
 
+pandas_freqs = ['B', 'C', 'D', 'W', 'M', 'BM', 'CBM', 'MS', 'BMS', 
+                'CBMS', 'Q', 'BQ', 'BQS', 'A', 'BA', 'AS', 'BAS', 
+                'BH', 'H', 'T', 'S', 'L', 'U', 'N']
+
+pandas_freq_tooltip = (
+    'Frequency to conform the data to before computing the statistic.\n' + 
+    'B: business day frequency\n' + 
+    'C: custom business day frequency (experimental)\n' + 
+    'D: calendar day frequency\nW: weekly frequency\n' + 
+    'M: month end frequency\nBM: business month end frequency\n' + 
+    'CBM: custom business month end frequency\n' + 
+    'MS: month start frequency\nBMS: business month start frequency\n' + 
+    'CBMS: custom business month start frequency\n' + 
+    'Q: quarter end frequency\n' + 
+    'BQ: business quarter endfrequency\n' + 
+    'QS: quarter start frequency\n' + 
+    'BQS: business quarter start frequency\n' + 
+    'A: year end frequency\n' + 
+    'BA: business year end frequency\n' + 
+    'AS: year start frequency\n' + 
+    'BAS: business year start frequency\n' + 
+    'BH: business hour frequency\n' +
+    'H: hourly frequency\n' +
+    'T: minutely frequency\n' + 
+    'S: secondly frequency\n' +
+    'L: milliseonds\n' +
+    'U: microseconds\n' +
+    'N: nanoseconds'
+    )
+
+
 def get_columns_by_dtype(dataframe, column_type):
     '''
     column_type can be e.g. np.int64, np.float64 or an iterable of such types

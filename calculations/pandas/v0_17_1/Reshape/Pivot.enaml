@@ -60,7 +60,7 @@ class Pivot_Model(ABCDataFrameToDataFrame):
             
             # Validate inputs
             if '' in (args['columns'], args['values']):
-                return {'Outputs': 'No Outputs'}
+                return self.not_configured()
             
             # Calculate outputs
             df_pivot = self._dataframe.pivot(** args)

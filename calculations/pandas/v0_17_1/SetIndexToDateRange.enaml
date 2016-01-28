@@ -76,7 +76,7 @@ class SetIndexToDateRange_Model(ABCDataFrameToDataFrame):
         try:
             
             if self.uiModel.start == self.uiModel.end == '':
-                return {'Outputs': 'No Outputs'}
+                return self.not_configured()
 
             # Assign local variables
             args = {

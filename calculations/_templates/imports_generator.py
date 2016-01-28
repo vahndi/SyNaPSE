@@ -1,8 +1,6 @@
-custom_widgets = ('CheckBoxList',
-                  'InputsTargetsSelector',
-                  'OrderedList',
-                  'RadioButtonList')
-                  
+from helpers import custom_widgets 
+
+
 fields_widgets = ('Field',
                   'FloatField', 
                   'IntField')
@@ -16,6 +14,7 @@ widgets_atoms = {'Field': ['Str'],
                  'ObjectCombo': ['List', 'Str'],  
                  'OrderedList': ['Atom', 'Value'],               
                  'RadioButtonList': ['ContainerList', 'Int', 'Value'],
+                 'RegExFlags': ['Atom', 'Value'],
                  'SpinBox': ['Int', 'Value']} 
 
 

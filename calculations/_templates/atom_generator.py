@@ -87,7 +87,12 @@ def get_Atom_ObjectCombo(widget):
 def get_Atom_OrderedList(widget):
     
     return '%s%s = Value(Atom)\n' % (indent, widget.w_name)
+
+
+def get_Atom_RegExFlags(widget):
     
+    return '%s%s = Value(Atom)\n' % (indent, widget.w_name)
+
 
 def get_Atom_SpinBox(widget):
     
@@ -114,6 +119,7 @@ getAtomFunc = {'Field': get_Atom_Field,
                'IntField': get_Atom_IntField,
                'ObjectCombo': get_Atom_ObjectCombo,
                'OrderedList': get_Atom_OrderedList,
+               'RegExFlags': get_Atom_RegExFlags,
                'SpinBox': get_Atom_SpinBox}
 
 

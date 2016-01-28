@@ -1,5 +1,6 @@
-from helpers import spc, to_words, widget
+from helpers import custom_widgets, spc, to_words, widget
 import pandas as pd
+
 
 def get_enaml_Label(widget):
     
@@ -52,12 +53,13 @@ def get_enaml_CheckBox(widget):
                                                      widget.w_name)
 
 
-def get_enaml_CheckBoxList_View(widget):
+def get_enaml_CustomWidget_View(widget):
     
-    enamlCode = '%sCheckBoxList_View:\n' % widget.indent1()
+    enamlCode = '%s%s_View:\n' % (widget.indent1(),
+                                  widget.w_type)
     enamlCode += '%smodel:= me.model.%s\n' % (widget.indent2(), 
-                                                       widget.w_name)
-    return enamlCode
+                                              widget.w_name)
+    return enamlCode  
 
 
 def get_enaml_FloatField(widget):
@@ -97,14 +99,6 @@ def get_enaml_ObjectCombo(widget):
                                                widget.w_name)
     
     return enamlCode
-
-
-def get_enaml_OrderedList_View(widget):
-    
-    enamlCode = '%sOrderedList_View:\n' % widget.indent1()
-    enamlCode += '%smodel:= me.model.%s\n' % (widget.indent2(), 
-                                              widget.w_name)
-    return enamlCode
     
 
 def get_enaml_Spinbox(widget):
@@ -123,23 +117,11 @@ def get_enaml_Spinbox(widget):
     return enamlCode
 
 
-def get_enaml_InputsTargetsSelector(widget):
-    
-    enamlCode = '%sInputsTargetsSelector_View:\n' % widget.indent1()
-    enamlCode += '%smodel := me.model.%s\n' % (widget.indent2(), 
-                                               widget.w_name)
-    
-    return enamlCode
-
-
 getEnamlfunc = {'Field': get_enaml_Field,
                 'CheckBox': get_enaml_CheckBox,
-                'CheckBoxList': get_enaml_CheckBoxList_View,
                 'FloatField': get_enaml_FloatField,
-                'InputsTargetsSelector': get_enaml_InputsTargetsSelector,
                 'IntField': get_enaml_IntField,
                 'ObjectCombo': get_enaml_ObjectCombo,
-                'OrderedList': get_enaml_OrderedList_View,
                 'SpinBox': get_enaml_Spinbox}  
 
 
@@ -168,8 +150,13 @@ def getEnamlWidgetCode(widget, widget_names):
     else:
         enamlCode = get_enaml_Label(widget)
 
-    # Widget code        
-    enamlCode += getEnamlfunc[widget.w_type](widget)
+    # Widget code
+    print widget.w_name
+    print custom_widgets
+    if widget.w_type in custom_widgets:
+        enamlCode += get_enaml_CustomWidget_View(widget)
+    else:
+        enamlCode += getEnamlfunc[widget.w_type](widget)
     
     # Closer for optional values
     if widget.is_optional():
@@ -177,8 +164,8 @@ def getEnamlWidgetCode(widget, widget_names):
     
     # Add Tooltip
     if widget.has_tooltip():
-        enamlCode += '%stool_tip = model.%s_tooltip\n' % (widget.indent2(), 
-                                                          widget.w_name)
+        enamlCode += '%stool_tip = me.model.%s_tooltip\n' % (widget.indent2(), 
+                                                             widget.w_name)
 
     # Add Conditional code
     if isinstance(widget.v_condition, (str, unicode)):

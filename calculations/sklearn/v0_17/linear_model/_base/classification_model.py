@@ -80,7 +80,7 @@ class ABCClassificationModel(ABCLinearModel):
             
             # Validate inputs
             if not self.input_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}              
+                return self.not_configured()              
 
             # Create Logistic Regression model
             self.estimator = self.estimator_type(** args)

@@ -1,0 +1,107 @@
+# Atom
+from atom.api import Atom, Bool
+
+# Enaml
+from enaml.widgets.api import CheckBox, GroupBox
+
+import re
+
+
+
+class RegExFlags_Model(Atom):
+    
+    
+    debug_flag = Bool()
+    ignore_case_flag = Bool()
+    locale_flag = Bool()
+    multi_line_flag = Bool()
+    dot_all_flag = Bool()
+    unicode_flag = Bool()
+    verbose_flag = Bool()
+
+    
+    def get_flags(self):
+        
+        return (
+            self.debug_flag * re.DEBUG + 
+            self.ignore_case_flag * re.IGNORECASE +
+            self.locale_flag * re.LOCALE +
+            self.multi_line_flag * re.MULTILINE +
+            self.dot_all_flag * re.DOTALL +
+            self.unicode_flag * re.UNICODE +
+            self.verbose_flag * re.VERBOSE
+            )
+
+
+
+enamldef RegExFlags_View(GroupBox):
+
+
+    attr model
+
+
+    CheckBox:
+        text = 'DEBUG'
+        checked := model.debug_flag
+        tool_tip = 'Display debug information about compiled expression.'
+    
+    CheckBox:
+        text = 'IGNORECASE'
+        checked := model.ignore_case_flag
+        tool_tip = (
+            'Perform case-insensitive matching.\n' +
+            'Expressions like [A-Z] will match lowercase letters, too.\n' + 
+            'This is not affected by the current locale.'
+            )
+
+    CheckBox:
+        text = 'LOCALE'
+        checked := model.locale_flag
+        tool_tip = (
+            'Make \w, \W, \b, \B, \s and \S dependent on the current locale.'
+            )
+    
+    CheckBox:
+        text = 'MULTILINE'
+        checked := model.multi_line_flag
+        tool_tip = (
+            "When specified, the pattern character '^' matches at the \n" +
+            'beginning of the string and at the beginning of each line\n' + 
+            '(immediately following each newline); and the pattern\n' + 
+            "character '$' matches at the end of the string and at the end\n" +
+            'of each line (immediately preceding each newline).\n' +
+            "By default, '^' matches only at the beginning of the string,\n" + 
+            "and '$' only at the end of the string and immediately before\n" + 
+            'the newline (if any) at the end of the string.'
+            )
+            
+    CheckBox:
+        text = 'DOTALL'
+        checked := model.dot_all_flag
+        tool_tip = (
+            "Make the '.' special character match any character at all,\n" +
+            "including a newline; without this flag, '.' will match\n" +
+            'anything except a newline.'
+            )
+            
+    CheckBox:
+        text = 'UNICODE'
+        checked := model.unicode_flag
+        tool_tip = (
+            'Make \w, \W, \b, \B, \d, \D, \s and \S dependent on the\n' + 
+            'Unicode character properties database.'
+            )
+
+    CheckBox:
+        text = 'VERBOSE'
+        checked := model.verbose_flag
+        tool_tip = (
+            'This flag allows you to write regular expressions that look\n' +
+            'nicer and are more readable by allowing you to visually\n' + 
+            'separate logical sections of the pattern and add comments.\n' + 
+            'Whitespace within the pattern is ignored, except when in a\n' +
+            'character class or when preceded by an unescaped backslash.\n' + 
+            'When a line contains a # that is not in a character class and\n' + 
+            'is not preceded by an unescaped backslash, all characters\n' + 
+            'from the leftmost such # through the end of the line are ignored.'
+            )

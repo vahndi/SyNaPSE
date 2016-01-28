@@ -97,7 +97,7 @@ class KMeans_Model(SKLearnCalc):
     
             # Validate inputs
             if not self.inputs_targets_selector.validate_inputs():
-                return {'Outputs': 'No Outputs'}
+                return self.not_configured()
     
             # Build model
             kmeans = KMeans(n_clusters = number_of_clusters, 

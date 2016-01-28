@@ -5,7 +5,7 @@ from atom.api import observe
 
 
 
-class Calculation_Model(object): # rename this to Node_Model or something
+class Calculation_Model(object):
     '''
     The base class for all calc_models
     '''    
@@ -24,6 +24,11 @@ class Calculation_Model(object): # rename this to Node_Model or something
                     'message': e.message,
                     'args': str(e.args)}
                }
+               
+
+    def not_configured(self):
+        
+        return {'Outputs': 'Not configured correctly'}
 
 
     class __metaclass__(type):
