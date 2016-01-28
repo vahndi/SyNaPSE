@@ -1,0 +1,22 @@
+from .._base.StringMethod import StringMethod_UI
+from .._base.StringMethod import StringMethod_Model
+from .._base.StringMethod import StringMethod_View
+
+
+
+class IsDigit_Model(StringMethod_Model):
+
+
+    calc_name = 'Is Digit'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isdigit'
+        
+
+
+enamldef IsDigit_View(StringMethod_View): me:
+
+    pass
+

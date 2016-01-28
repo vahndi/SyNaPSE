@@ -1,0 +1,22 @@
+from .._base.StringMethod import StringMethod_UI
+from .._base.StringMethod import StringMethod_Model
+from .._base.StringMethod import StringMethod_View
+
+
+
+class IsWhitespace_Model(StringMethod_Model):
+
+
+    calc_name = 'Is Whitespace'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isspace'
+        
+
+
+enamldef IsWhitespace_View(StringMethod_View): me:
+
+    pass
+

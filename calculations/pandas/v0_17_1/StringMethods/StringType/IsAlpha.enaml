@@ -1,0 +1,22 @@
+from .._base.StringMethod import StringMethod_UI
+from .._base.StringMethod import StringMethod_Model
+from .._base.StringMethod import StringMethod_View
+
+
+
+class IsAlpha_Model(StringMethod_Model):
+
+
+    calc_name = 'Is Alpha'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isalpha'
+        
+
+
+enamldef IsAlpha_View(StringMethod_View): me:
+
+    pass
+
