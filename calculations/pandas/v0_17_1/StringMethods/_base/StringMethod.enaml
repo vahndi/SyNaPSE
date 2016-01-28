@@ -42,6 +42,21 @@ class StringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
         else:
 
             self.ui_args['input_type'] =  'Series'
+            
+    
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = StringMethod_UI(** self.ui_args)
+
+
+    def getArgs(self):
+        
+        return {}
 
 
     def getOutputs(self):
