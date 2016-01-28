@@ -4,19 +4,18 @@ from .._base.StringMethod import StringMethod_View
 
 
 
-class ToTitle_Model(StringMethod_Model):
+class IsUpper_Model(StringMethod_Model):
 
 
-    calc_name = 'To Title Case'
+    calc_name = 'Is Upper Case'
 
 
     def __init__(self):
         
-        self.func_name = 'title'
+        self.func_name = 'isupper'
         
 
 
-enamldef ToTitle_View(StringMethod_View): me:
+enamldef IsUpper_View(StringMethod_View): me:
 
     pass
-

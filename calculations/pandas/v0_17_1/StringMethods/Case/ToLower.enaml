@@ -7,7 +7,7 @@ from .._base.StringMethod import StringMethod_View
 class ToLower_Model(StringMethod_Model):
 
 
-    calc_name = 'To Lower'
+    calc_name = 'To Lower Case'
 
 
     def __init__(self):

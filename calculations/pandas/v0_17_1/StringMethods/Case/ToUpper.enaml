@@ -7,7 +7,7 @@ from .._base.StringMethod import StringMethod_View
 class ToUpper_Model(StringMethod_Model):
 
 
-    calc_name = 'To Upper'
+    calc_name = 'To Upper Case'
 
 
     def __init__(self):
