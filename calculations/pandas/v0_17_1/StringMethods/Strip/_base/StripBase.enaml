@@ -1,0 +1,66 @@
+# Atom
+from atom.api import Atom, Bool, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field
+
+# Models
+from ..._base.StringMethod import StringMethod_UI
+from ..._base.StringMethod import StringMethod_Model
+from ..._base.StringMethod import StringMethod_View
+
+
+
+class StripBase_UI(StringMethod_UI):
+
+    # to_strip
+    to_strip = Str()
+    use_to_strip = Bool()
+    to_strip_tooltip = (
+        'Strip whitespace (including newlines) from each string in the\n' +
+        'Series/Index from left and right sides. \nEquivalent to str.strip().'
+        )
+
+
+
+class StripBase_Model(StringMethod_Model):
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = StripBase_UI(** self.ui_args)
+
+
+    def getArgs(self):
+
+        return {
+            'to_strip': (None 
+                         if not self.uiModel.use_to_strip 
+                         else self.uiModel.to_strip)
+            }
+
+
+
+enamldef StripBase_View(StringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.to_strip_tooltip
+            text = 'String to Strip'
+            checked := model.use_to_strip
+        Label:
+            text = 'N/A'
+            visible << not model.use_to_strip
+        Field:
+            text := model.to_strip
+            visible << model.use_to_strip
+            tool_tip = me.model.to_strip_tooltip

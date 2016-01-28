@@ -1,0 +1,21 @@
+# Models
+from ._base.StripBase import StripBase_Model
+from ._base.StripBase import StripBase_View
+
+
+
+class LeftStrip_Model(StripBase_Model):
+
+
+    calc_name = 'Left Strip'
+
+
+    def __init__(self):
+        
+        self.func_name = 'lstrip'
+
+
+
+enamldef LeftStrip_View(StripBase_View): me:
+
+    pass
