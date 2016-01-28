@@ -1,0 +1,21 @@
+# Models
+from ._base.FindIndex import FindIndex_Model
+from ._base.FindIndex import FindIndex_View
+
+
+
+class LeftFind_Model(FindIndex_Model):
+
+
+    calc_name = 'Left Find'
+
+
+    def __init__(self):
+        
+        self.func_name = 'find'
+
+
+
+enamldef LeftFind_View(FindIndex_View): me:
+
+    pass

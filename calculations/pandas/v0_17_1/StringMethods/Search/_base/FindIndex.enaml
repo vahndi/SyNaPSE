@@ -1,0 +1,88 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from ..._base.StringMethod import StringMethod_UI
+from ..._base.StringMethod import StringMethod_Model
+from ..._base.StringMethod import StringMethod_View
+
+
+
+class FindIndex_UI(StringMethod_UI):
+
+    # sub
+    sub = Str()
+    sub_tooltip = 'Substring being searched.'
+    # start
+    start = Int(0)
+    start_tooltip = 'Left edge index.'
+    # end
+    end = Int()
+    use_end = Bool()
+    end_tooltip = 'Right edge index.'
+
+
+
+class FindIndex_Model(StringMethod_Model):
+
+
+    calc_name = 'Find Index'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = FindIndex_UI(** self.ui_args)
+
+
+    def getArgs(self):
+        
+        return {
+            'sub': self.uiModel.sub,
+            'start': self.uiModel.start,
+            'end': (None 
+                    if not self.uiModel.use_end 
+                    else self.uiModel.end)
+            }
+
+
+
+enamldef FindIndex_View(StringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Sub'
+            tool_tip = model.sub_tooltip
+        Field:
+            text := model.sub
+            tool_tip = me.model.sub_tooltip
+
+        Label:
+            text = 'Start'
+            tool_tip = model.start_tooltip
+        IntField:
+            value := model.start
+            tool_tip = me.model.start_tooltip
+
+        CheckBox:
+            tool_tip = model.end_tooltip
+            text = 'End'
+            checked := model.use_end
+        Label:
+            text = 'N/A'
+            visible << not model.use_end
+        IntField:
+            value := model.end
+            visible << model.use_end
+            tool_tip = me.model.end_tooltip

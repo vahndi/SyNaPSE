@@ -1,0 +1,21 @@
+# Models
+from ._base.FindIndex import FindIndex_Model
+from ._base.FindIndex import FindIndex_View
+
+
+
+class RightIndex_Model(FindIndex_Model):
+
+
+    calc_name = 'Right Index'
+
+
+    def __init__(self):
+        
+        self.func_name = 'rindex'
+
+
+
+enamldef RightIndex_View(FindIndex_View): me:
+
+    pass
