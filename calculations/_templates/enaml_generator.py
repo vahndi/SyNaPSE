@@ -151,8 +151,6 @@ def getEnamlWidgetCode(widget, widget_names):
         enamlCode = get_enaml_Label(widget)
 
     # Widget code
-    print widget.w_name
-    print custom_widgets
     if widget.w_type in custom_widgets:
         enamlCode += get_enaml_CustomWidget_View(widget)
     else:

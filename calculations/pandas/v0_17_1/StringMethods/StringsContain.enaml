@@ -1,7 +1,6 @@
 # Atom
 from atom.api import Atom, Bool, Str, Value
 
-
 # Enaml
 from enaml.core.api import Conditional
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
@@ -15,7 +14,7 @@ from ._base.StringMethod import StringMethod_View
 
 
 
-class SeriesContains_UI(StringMethod_UI):
+class StringsContain_UI(StringMethod_UI):
 
     # pat
     pat = Str()
@@ -36,7 +35,7 @@ class SeriesContains_UI(StringMethod_UI):
 
 
 
-class SeriesContains_Model(StringMethod_Model):
+class StringsContain_Model(StringMethod_Model):
 
 
     calc_name = 'Contains'
@@ -55,7 +54,7 @@ class SeriesContains_Model(StringMethod_Model):
         self.regex_flags = RegExFlags_Model()
         self.ui_args = {'flags': self.regex_flags}
         self.set_inputs()
-        self.uiModel = SeriesContains_UI(** self.ui_args)
+        self.uiModel = StringsContain_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -74,7 +73,7 @@ class SeriesContains_Model(StringMethod_Model):
 
 
 
-enamldef SeriesContains_View(StringMethod_View): me:
+enamldef StringsContain_View(StringMethod_View): me:
 
 
     attr model

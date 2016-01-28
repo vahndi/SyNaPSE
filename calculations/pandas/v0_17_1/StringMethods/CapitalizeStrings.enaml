@@ -4,15 +4,15 @@ from ._base.StringMethod import StringMethod_View
 
 
 
-class CapitalizeSeries_UI(StringMethod_UI):
+class CapitalizeStrings_UI(StringMethod_UI):
 
     pass
 
 
-class CapitalizeSeries_Model(StringMethod_Model):
+class CapitalizeStrings_Model(StringMethod_Model):
 
 
-    calc_name = 'Capitalize'
+    calc_name = 'Capitalize Strings'
 
 
     def __init__(self):
@@ -32,10 +32,10 @@ class CapitalizeSeries_Model(StringMethod_Model):
         
         self.ui_args = {}
         self.set_inputs()
-        self.uiModel = CapitalizeSeries_UI(** self.ui_args)
+        self.uiModel = CapitalizeStrings_UI(** self.ui_args)
 
 
-enamldef CapitalizeSeries_View(StringMethod_View): me:
+enamldef CapitalizeStrings_View(StringMethod_View): me:
 
     pass
 

@@ -6,13 +6,13 @@ from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field, IntField
 
 # Models
-from ._base.StringMethod import StringMethod_UI
-from ._base.StringMethod import StringMethod_Model
-from ._base.StringMethod import StringMethod_View
+from ..._base.StringMethod import StringMethod_UI
+from ..._base.StringMethod import StringMethod_Model
+from ..._base.StringMethod import StringMethod_View
 
 
 
-class CenterSeries_UI(StringMethod_UI):
+class AlignStrings_UI(StringMethod_UI):
 
     # width
     width = Int(10)
@@ -25,15 +25,7 @@ class CenterSeries_UI(StringMethod_UI):
 
 
 
-class CenterSeries_Model(StringMethod_Model):
-
-
-    calc_name = 'Center'
-
-
-    def __init__(self):
-        
-        self.func_name = 'center'
+class AlignStrings_Model(StringMethod_Model):
 
 
     def setInputs(self, dataframe = None, series = None):
@@ -43,7 +35,7 @@ class CenterSeries_Model(StringMethod_Model):
         
         self.ui_args = {}
         self.set_inputs()
-        self.uiModel = CenterSeries_UI(** self.ui_args)
+        self.uiModel = AlignStrings_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -55,7 +47,7 @@ class CenterSeries_Model(StringMethod_Model):
 
 
 
-enamldef CenterSeries_View(StringMethod_View): me:
+enamldef AlignStrings_View(StringMethod_View): me:
 
     attr model
 
