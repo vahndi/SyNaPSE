@@ -6,7 +6,6 @@ from enaml.widgets.api import (Container, DockPane, GroupBox, MPLCanvas,
                                MenuBar, Menu, ActionGroup, Action,
                                PushButton, ScrollArea)
 from custom_views.RadioButtonList import RadioButtonList_View
-from custom_views.CalcItem_GraphView import CalcItem_GraphView
 from enaml.layout.api import hbox, vbox
 from enaml.core.api import Include
 
@@ -190,10 +189,20 @@ class CalculationGraph_Model(object):
         
         if isinstance(event.artist, Circle):
             
-            selected_node = self.circles_nodes[event.artist]
-            self.uiModel.selected_calc_item = selected_node
-            self._parent.calcOutput_Model.refresh_output()
-            self.draw_graph_figure()
+            key = event.mouseevent.key
+            
+            if key is None:
+                
+                # Clear selected nodes and select this one
+                selected_node = self.circles_nodes[event.artist]
+                self.uiModel.selected_calc_item = selected_node
+                self._parent.calcOutput_Model.refresh_output()
+                self.draw_graph_figure()
+
+            elif key == 'shift':
+                
+                # Add this node to the currently selected ones
+                pass
             
         elif isinstance(event.artist, Arrow):
             
