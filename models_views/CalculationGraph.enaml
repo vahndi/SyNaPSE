@@ -256,6 +256,7 @@ class CalculationGraph_Model(object):
         if selected_item is not None:
             new_x = selected_item.x
             new_y = selected_item.y + 20
+    
 
         # Create new item            
         new_item = CalculationItem(model = calc_type(),
@@ -271,7 +272,9 @@ class CalculationGraph_Model(object):
 
         # Link outputs of selected item to new item
         if selected_item is not None: 
+            
             try:
+                
                 # Map outputs of previous calc to inputs of this calc
                 input_arg_names = new_item.model_arg_names()
                 prev_outputs = selected_item.get_outputs()
@@ -291,7 +294,9 @@ class CalculationGraph_Model(object):
                 self.uiModel.selected_calc_items = [new_item]
                 self._parent.calcOutput_Model.calculate_output()
                 self.draw_graph_figure()
+                
             except Exception as e:
+                
                 self._calc_graph.remove_node(new_item)
                 print 'Error mapping outputs of selected calc to new calc'
                 print '__class__:', str(e.__class__)
@@ -299,7 +304,9 @@ class CalculationGraph_Model(object):
                 print 'message:', e.message
                 print 'args:', str(e.args)                
                 return
+                
         else:
+            
             # Update uiModel calc items and redraw graph
             self.uiModel.calc_items = [item for item in 
                                        self._calc_graph.nodes()]

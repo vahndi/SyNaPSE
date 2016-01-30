@@ -28,7 +28,15 @@ class ABCTakesSeries(Calculation_Model):
 
 class ABCTakes2Series(Calculation_Model):
     
-    preceding_calcs = [ABCOutputsSeries, ABCOutputsSeries]
+    preceding_calcs = [ABCOutputsSeries, 
+                       ABCOutputsSeries]
+
+
+
+class ABC2SeriesToSeries(ABCTakes2Series,
+                         ABCOutputsSeries):
+    
+    pass
 
 
 

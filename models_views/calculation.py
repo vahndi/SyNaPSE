@@ -43,36 +43,33 @@ class Calculation_Model(object):
    
     
     @classmethod
-    def can_follow(cls, other_cls = None, other_clss = None):
+    def can_follow(cls, other_classes = None):
         '''
-        Returns a boolean indicating if this calc can follow `other` calc or 
-        `others` calcs.
-        Only one of `other` or `others` should be given.
-        If using `others` then the length of `others` needs to be the same as
-        the length of `self.preceding_calcs` and the types must match one for
-        one in any order
+        Returns a boolean indicating if this calc can follow a list of calcs 
+        whose types are given by `other_classes`.
+        The length of `other_classes` needs to be the same as the length of 
+        `cls.preceding_calcs` and the types must match one for one in any 
+        order.
+        To test if the calc can follow just one calc, pass a list with one 
+        item.
         '''
-        # Check only one of `other` or `others` is given
-        assert (other_cls is None) != (other_clss is None)
-        
-        if other_cls:
-            for cls_preceder in cls.preceding_calcs:
-                if issubclass(other_cls, cls_preceder):
-                    return True
-        else:
-            if len(other_clss) != len(cls.preceding_calcs):
-                return False
-            else:
-                # copy preceding calcs of this class to a new list                
-                for other_cls in other_clss:
-                    cls_preceders = [pc for pc in cls.preceding_calcs]
-                    for cls_preceder in cls_preceders:
-                        if cls.can_follow(other_cls = cls_preceder):
-                            cls_preceders.remove(cls_preceder)
-                            break
-                if len(cls_preceders) == 0:
-                    return True
-                return False                        
+        # create a temp list of calc types which precede this one
+        my_preceders = [pc for pc in cls.preceding_calcs]
+        if len(my_preceders) == 0:
+            # If there are no preceding calcs then this can't follow anything
+            return False
+
+        # iterate over the other classes                        
+        for other_class in other_classes:
+            # iterate over preceding calcs in this class
+            for my_preceder in my_preceders:
+                if issubclass(other_class, my_preceder):
+                    # match: remove my_preceder from the temp list
+                    my_preceders.remove(my_preceder)
+                    break
+        if len(my_preceders) == 0:
+            return True
+        return False                        
 
 
     class __metaclass__(type):
@@ -257,10 +254,9 @@ class CalculationTypeManager(Atom):
         '''                
         if preceding_calc_types:
             # Return all calc types that can follow `preceding_calc_types`
-            print 'preceding_calc_types', preceding_calc_types
             self.selectable_calc_types = \
                 [ct for ct in self.calc_types
-                if ct.can_follow(other_clss = preceding_calc_types)]
+                if ct.can_follow(other_classes = preceding_calc_types)]
         else:
             # Return all calcs that do not follow any other type
             self.selectable_calc_types = [ct for ct in self.calc_types 
