@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 from matplotlib.markers import MarkerStyle
 import seaborn as sns
 
+from modules.series_figures import (
+    bar_fig, bar_count_fig, confmat_fig, distribution_fig, pie_fig
+    )
+
 
 def getSeriesHtml(series):
 
@@ -58,52 +62,29 @@ def getSeriesFigure(series):
         if series.dtype == 'object':
 
             if len(series.unique()) < len(series):
-                counts = series.value_counts()
-                sns.barplot(x = counts.index, 
-                            y = counts.values, 
-                            ax = ax)
-                return fig
+                
+                return bar_count_fig(series)
 
         elif series.dtype == 'float':
-            
-            sns.distplot(series, ax = ax)
-            return fig
+
+            return distribution_fig(series)
                 
         return None
         
-    if series.dtype == 'O':
+    if series.dtype == object:
 
-        # Object Series -> confusion matrix
-        srs = series.apply(str)
-        series_name = srs.name
-        y = srs.reset_index()
-        index_name = srs.index.name
-        if not index_name:
-            index_name = 'index'
-        y['value'] = 1
-        z = y.pivot(index = index_name, 
-                    columns = series_name, 
-                    values = 'value')
-        z[z.isnull()] = 0
-        z = z.T
-        sns.heatmap(z, square = True, ax = ax)
-        return fig
+        return confmat_fig(series)
 
     else:
 
         # Numeric Series -> pie or column plot
         if round(series.sum(), 3) == 1:
             
-            series.plot(kind = 'pie', ax = ax)
-            return fig
+            return pie_fig(series)
             
         else:
             
-            sns.barplot(x = series.index, y = series.values, 
-                        ax = ax)
-            if series.name:
-                ax.set_ylabel(series.name)
-            return fig
+            return bar_fig(series)
 
     return None
 
