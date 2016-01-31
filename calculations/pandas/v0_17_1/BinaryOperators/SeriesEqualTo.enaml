@@ -6,16 +6,16 @@ from ._base.BinarySeries1 import BinarySeries1_Model, BinarySeries1_View
 
 
 
-class SeriesLessThan_Model(BinarySeries1_Model):
+class SeriesEqualTo_Model(BinarySeries1_Model):
 
 
-    calc_name = '<'
+    calc_name = '=='
 
     def __init__(self):
         
-        self.func_name = 'lt'
+        self.func_name = 'eq'
 
 
-enamldef SeriesLessThan_View(BinarySeries1_View):
+enamldef SeriesEqualTo_View(BinarySeries1_View):
 
     pass

@@ -1,0 +1,35 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from calculations._core.ABCs import ABC2SeriesToSeries
+
+
+
+class BinarySeries1_Model(ABC2SeriesToSeries):
+
+
+    def setInputs(self, series_1, series_2):
+
+        self._series_1 = series_1
+        self._series_2 = series_2
+
+
+    def getOutputs(self):
+
+        try:
+            func = getattr(self._series_1, self.func_name)
+            series = func(self._series_2)
+            return {'series': series}        
+
+        except Exception as e:
+
+            return self.standard_exception(e)   
+
+
+
+enamldef BinarySeries1_View(GroupBox):
+
+    Form:
+        
+        pass
