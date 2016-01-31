@@ -2,6 +2,7 @@ from inspect import getargspec
 
 from atom.api import Atom, ContainerList, List, Value
 from atom.api import observe
+from collections import OrderedDict
 
 
 
@@ -131,21 +132,84 @@ class CalculationItem(object):
 
 
     def model_arg_names(self):
-        
+        '''
+        Return the input argument names for the underlying model, excluding
+        `self`
+        '''
         arg_names = getargspec(self._model.setInputs).args
         arg_names.remove('self')
         return arg_names
 
 
-    def set_inputs(self, inputs_dict):
+    def get_arg_mappings(self, preceding_calc_items):
+        '''
+        Takes a list of preceding `CalculationItem`s, extracts the appropriate 
+        keyword arguments and returns a dict of dicts, one for each preceding 
+        `CalculationItem`. Output dict is of the form: 
         
+        {preceding_calc_item: 
+            {preceding_item_output_arg_name: 
+                this_item_input_arg_name}
+        }
+        '''
+        # create a list of dicts representing the outputs of the 
+        # `preceding_calc_items`
+        outs_list = [item.get_outputs() for item in preceding_calc_items]
+        # set up the keys of the output dict
+        arg_mappings = OrderedDict()
+        for calc_item in preceding_calc_items:
+            arg_mappings[calc_item] = {}
+        # iterate over model's input argument names
+        self_arg_names = self.model_arg_names()
+        while len(self_arg_names) > 0:
+            arg_name = self_arg_names[0]
+            # first look for an exact match in each dict
+            match_found = False
+            for i, prev_outputs in enumerate(outs_list):
+                if arg_name in prev_outputs.keys():
+                    match_found = True
+                    arg_mappings[preceding_calc_items[i]][arg_name] = arg_name
+                    prev_outputs.pop(arg_name)
+                    self_arg_names.remove(arg_name)
+                    break
+            if match_found:
+                continue
+            # else look for a match where the arg_name begins with the output 
+            # name e.g. `series_1` starts with `series`
+            for i, prev_outputs in enumerate(outs_list):
+                if match_found:
+                    continue
+                for key in prev_outputs.keys():
+                    if arg_name.startswith(key):
+                        match_found = True
+                        arg_mappings[preceding_calc_items[i]][key] = arg_name
+                        prev_outputs.pop(key)
+                        self_arg_names.remove(arg_name)
+                        break
+
+        # assign the outputs to the input of the model
+        return arg_mappings
+
+
+    def set_model_inputs(self, arg_mappings):
+        '''
+        '''
+        # assign the outputs to the input of the model
+        inputs_dict = {}
+        for calc_item in arg_mappings.keys():
+            calc_outputs = calc_item.get_outputs()
+            out_in_args = arg_mappings[calc_item]
+            for out_arg_name in out_in_args.keys():
+                inputs_dict[out_in_args[out_arg_name]] = \
+                    calc_outputs[out_arg_name]
+
         self._model.setInputs(** inputs_dict)
             
     
     def get_outputs(self):
         '''
         Gets the outputs of the model which have already been calculated. If 
-        they have not yet been calculated then calculate them first
+        they have not yet been calculated then calculate them first.
         '''
         if self._model.calc_outputs:
             print 'returning existing calc outputs for %s' % self.item_name

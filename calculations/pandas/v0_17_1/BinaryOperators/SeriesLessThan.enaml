@@ -21,12 +21,12 @@ class SeriesLessThan_Model(ABC2SeriesToSeries):
     def getOutputs(self):
 
         try:
-            
+
             series = self._series_1.lt(self._series_2)
             return {'series': series}        
 
         except Exception as e:
-            
+
             return self.standard_exception(e)   
 
 

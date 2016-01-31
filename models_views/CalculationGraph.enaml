@@ -89,7 +89,7 @@ class CalculationGraph_Model(object):
         # Append item to selected items if it is not already there
         if calc_item not in self.uiModel.selected_calc_items:
             self.uiModel.selected_calc_items = \
-                [calc_item] + [ci for ci in self.uiModel.selected_calc_items]
+                 [ci for ci in self.uiModel.selected_calc_items] + [calc_item]
         
         # Update the appendable calc item types
         self._parent.update_choosable_calc_types(
@@ -250,18 +250,18 @@ class CalculationGraph_Model(object):
     def add_calc_item(self, calc_type):
         
         # Get coords of selected item
-        new_x = 0
-        new_y = 0
-        selected_item = self.uiModel.selected_calc_item
-        if selected_item is not None:
-            new_x = selected_item.x
-            new_y = selected_item.y + 20
+#        new_x = 0
+#        new_y = 0
+#        selected_item = self.uiModel.selected_calc_item
+#        if selected_item is not None:
+#            new_x = selected_item.x
+#            new_y = selected_item.y + 20
+        selected_items = self.uiModel.selected_calc_items
     
 
         # Create new item            
         new_item = CalculationItem(model = calc_type(),
-                                   container = self,
-                                   x = new_x, y = new_y)
+                                   container = self)
 
         # Rename if the item name already exists
         while new_item.item_name in self.item_names():
@@ -271,22 +271,17 @@ class CalculationGraph_Model(object):
         self._calc_graph.add_node(new_item)
 
         # Link outputs of selected item to new item
-        if selected_item is not None: 
+        if selected_items: 
             
             try:
                 
                 # Map outputs of previous calc to inputs of this calc
-                input_arg_names = new_item.model_arg_names()
-                prev_outputs = selected_item.get_outputs()
-                input_args_dict = {a: prev_outputs[a] 
-                                   for a in input_arg_names
-                                   if a in prev_outputs}
-                new_item.set_inputs(input_args_dict)
-                # Add an edge with the output to input mapping
-                self._calc_graph.add_edge(selected_item, new_item,
-                                          {a: a
-                                           for a in input_arg_names
-                                           if a in prev_outputs})
+                arg_mappings = new_item.get_arg_mappings(selected_items)
+                new_item.set_model_inputs(arg_mappings)
+                # Add edges with the output to input mappings
+                for calc_item in selected_items:
+                    self._calc_graph.add_edge(calc_item, new_item,
+                                              arg_mappings[calc_item])
                 # Update uiModel calc items and redraw graph
                 self.uiModel.calc_items = [item for item in 
                                            self._calc_graph.nodes()]
