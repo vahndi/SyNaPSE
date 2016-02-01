@@ -6,7 +6,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 
 
-class IsNotNull_Model(ABCDataFrameToDataFrame):
+class DataFrameIsNotNull_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Is Not Null'
@@ -29,7 +29,7 @@ class IsNotNull_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef IsNotNull_View(GroupBox):
+enamldef DataFrameIsNotNull_View(GroupBox):
 
     Form:
         

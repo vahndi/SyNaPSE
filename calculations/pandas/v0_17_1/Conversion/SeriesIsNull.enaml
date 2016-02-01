@@ -2,26 +2,26 @@
 from enaml.widgets.api import Form, GroupBox
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame
+from calculations._core.ABCs import ABCSeriesToSeries
 
 
 
-class IsNull_Model(ABCDataFrameToDataFrame):
+class SeriesIsNull_Model(ABCSeriesToSeries):
 
 
     calc_name = 'Is Null'
 
 
-    def setInputs(self, dataframe):
+    def setInputs(self, series):
 
-        self._dataframe = dataframe      
+        self._series = series      
 
 
     def getOutputs(self):
 
         try:
             
-            return {'dataframe': self._dataframe.isnull()}        
+            return {'series': self._series.isnull()}        
 
         except Exception as e:
             
@@ -29,7 +29,7 @@ class IsNull_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef IsNull_View(GroupBox):
+enamldef SeriesIsNull_View(GroupBox):
 
     Form:
         
