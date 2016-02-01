@@ -12,6 +12,7 @@ class SeriesShape_Model(SeriesAttribute_Model):
 
 
     calc_name = 'Shape'
+    calc_desc = 'Return a tuple of the shape of the underlying data.'
 
 
     def __init__(self):

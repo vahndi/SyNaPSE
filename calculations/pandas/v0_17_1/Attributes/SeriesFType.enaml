@@ -12,6 +12,7 @@ class SeriesFType_Model(SeriesAttribute_Model):
 
 
     calc_name = 'F-Type'
+    calc_desc = 'Return if the data is sparse|dense.'
 
 
     def __init__(self):

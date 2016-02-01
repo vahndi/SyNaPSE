@@ -10,6 +10,8 @@ class SeriesSubtract_Model(SeriesArithmetic_Model):
 
 
     calc_name = '-'
+    calc_desc = 'Subtraction of series and other, element-wise.'
+
 
     def __init__(self):
         

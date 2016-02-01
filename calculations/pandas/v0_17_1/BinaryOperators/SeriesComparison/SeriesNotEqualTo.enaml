@@ -10,6 +10,9 @@ class SeriesNotEqualTo_Model(SeriesComparison_Model):
 
 
     calc_name = '!='
+    calc_desc = (
+        'Return whether corresponding elements of each series are not equal'
+        )
 
     def __init__(self):
         

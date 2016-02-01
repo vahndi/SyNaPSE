@@ -12,6 +12,7 @@ class SeriesDType_Model(SeriesAttribute_Model):
 
 
     calc_name = 'D-Type'
+    calc_desc = 'Return the dtype object of the underlying data.'
 
 
     def __init__(self):

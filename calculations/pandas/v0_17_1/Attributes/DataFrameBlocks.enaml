@@ -12,6 +12,10 @@ class DataFrameBlocks_Model(DataFrameAttribute_Model):
 
 
     calc_name = 'Blocks'
+    calc_desc = (
+        'Convert the frame to a dict of dtype -> Constructor Types that \n' +
+        'each has a homogeneous dtype.'
+        )
 
 
     def __init__(self):

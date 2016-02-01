@@ -12,6 +12,7 @@ class SeriesStrides_Model(SeriesAttribute_Model):
 
 
     calc_name = 'Strides'
+    calc_desc = 'Return the strides of the underlying data'
 
 
     def __init__(self):

@@ -12,7 +12,10 @@ class SeriesItemSize_Model(SeriesAttribute_Model):
 
 
     calc_name = 'Item Size'
-
+    calc_desc = (
+        'Return the size of the dtype of the item of the underlying data.'
+        )
+    
 
     def __init__(self):
         

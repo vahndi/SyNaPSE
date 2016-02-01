@@ -10,6 +10,8 @@ class SeriesAdd_Model(SeriesArithmetic_Model):
 
 
     calc_name = '+'
+    calc_desc = 'Addition of series and other, element-wise.'
+    
 
     def __init__(self):
         

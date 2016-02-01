@@ -1,6 +1,6 @@
 from inspect import getargspec
 
-from atom.api import Atom, ContainerList, List, Value
+from atom.api import Atom, ContainerList, List
 from atom.api import observe
 from collections import OrderedDict
 
@@ -11,8 +11,8 @@ class Calculation_Model(object):
     The base class for all calc_models
     '''    
     calc_name = ''
-    calc_description = ''
-    calc_documentation = ''
+    calc_desc = 'No Description'
+    calc_docs = ''
     preceding_calcs = []
     calc_outputs = None
 

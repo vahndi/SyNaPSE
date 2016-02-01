@@ -21,14 +21,19 @@ def ToWords(CamelCaseString):
     return words
 
 
+
 enamldef DictMenuAction(Action):
     
     attr dictmenu_item
     attr triggered_func
+    attr tooltip_attribute
 
     text = str(dictmenu_item)
     triggered :: 
         triggered_func(dictmenu_item)
+    tool_tip =  (getattr(dictmenu_item.tooltip_attribute)
+                if tooltip_attribute
+                else '')
 
 
 
@@ -40,24 +45,26 @@ class DictMenu_Model(Atom):
     menu_name = Str()
     triggered_func = Callable()
     selectable_items = ContainerList()
+    tooltip_attribute = Str()
 
 
     def __init__(self, menu_dict, menu_name, 
-                 triggered_func, selectable_items):
-
+                 triggered_func, selectable_items,
+                 tooltip_attribute = None):
         
         self.menu_dict = menu_dict
         self.menu_name = menu_name
         self.triggered_func = triggered_func
         self.selectable_items = selectable_items
-        
         self.selectable_items_changed(change = None)
+        self.tooltip_attribute = tooltip_attribute
         
 
     @observe('selectable_items')
     def selectable_items_changed(self, change):
         
-        self.menu = self.build_menu(self.menu_dict, self.menu_name)
+        self.menu = self.build_menu(self.menu_dict, 
+                                    self.menu_name)
 
 
     def build_menu(self, menu_dict, menu_name):
@@ -72,17 +79,21 @@ class DictMenu_Model(Atom):
             if type(menu_dict[k]) is list:
                 # Append them one by one to the item list
                 for f in menu_dict[k]:
-                    menu_items.append(DictMenuAction(
-                                          dictmenu_item = f,
-                                          triggered_func = self.triggered_func,
-                                          visible = f in self.selectable_items
-                                          ))
+                    menu_items.append(
+                        DictMenuAction(
+                            dictmenu_item = f,
+                            triggered_func = self.triggered_func,
+                            visible = f in self.selectable_items,
+                            tooltip_attribute = self.tooltip_attribute
+                            )
+                        )
             elif type(menu_dict[k]) is dict: # If it holds a submenu
                 # Pass it through to the build menu function
                 menu_items.append(self.build_menu(
                                          menu_dict = menu_dict[k],
                                          menu_name = k
-                                         ))
+                                         )
+                                 )
 
         # Add children to the menu
         menu.insert_children(before = None, 

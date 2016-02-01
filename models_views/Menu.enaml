@@ -43,6 +43,7 @@ enamldef Menu_View(MenuBar):
              menu_dict = model.menu_dict,
              menu_name = 'Add Calculation',
              triggered_func = model.calcGraph_Model.add_calc_item,
-             selectable_items = model.calcTypeManager.selectable_calc_types
+             selectable_items = model.calcTypeManager.selectable_calc_types,
+             tooltip_attribute = 'calc_desc'
              ).menu]
                 

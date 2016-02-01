@@ -10,6 +10,10 @@ class SeriesGreaterThanOrEqualTo_Model(SeriesComparison_Model):
 
 
     calc_name = '>='
+    calc_desc = (
+        'Return if the elements of the first series are greater than or\n' +
+        'equal to the corresponding elements of the second series.'
+        )
 
     def __init__(self):
         

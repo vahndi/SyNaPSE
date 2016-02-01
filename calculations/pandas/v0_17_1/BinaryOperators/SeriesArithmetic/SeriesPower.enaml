@@ -10,6 +10,7 @@ class SeriesPower_Model(SeriesArithmetic_Model):
 
 
     calc_name = '**'
+    calc_desc = 'Exponential power of series and other, element-wise.'
 
     def __init__(self):
         

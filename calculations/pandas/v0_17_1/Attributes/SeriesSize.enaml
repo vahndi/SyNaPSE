@@ -12,6 +12,7 @@ class SeriesSize_Model(SeriesAttribute_Model):
 
 
     calc_name = 'Size'
+    calc_desc = 'Return the number of elements in the underlying data.'
 
 
     def __init__(self):

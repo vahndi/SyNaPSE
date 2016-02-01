@@ -12,6 +12,7 @@ class SeriesNBytes_Model(SeriesAttribute_Model):
 
 
     calc_name = '# Bytes'
+    calc_desc = 'Return the number of bytes in the underlying data.'
 
 
     def __init__(self):

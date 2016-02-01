@@ -13,6 +13,7 @@ class AbsoluteValues_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Absolute Values'
+    calc_desc = 'Return an object with absolute value taken.'
 
 
     def setInputs(self, dataframe):

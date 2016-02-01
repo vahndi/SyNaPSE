@@ -10,6 +10,9 @@ class SeriesIsNotNull_Model(ABCSeriesToSeries):
 
 
     calc_name = 'Is Not Null'
+    calc_desc = (
+        'Return a boolean series indicating if the values are not null.'
+        )
 
 
     def setInputs(self, series):

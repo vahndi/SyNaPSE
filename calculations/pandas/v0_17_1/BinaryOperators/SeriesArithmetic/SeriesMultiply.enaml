@@ -10,6 +10,7 @@ class SeriesMultiply_Model(SeriesArithmetic_Model):
 
 
     calc_name = '*'
+    calc_desc = 'Multiplication of series and other, element-wise.'
 
     def __init__(self):
         
