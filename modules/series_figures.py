@@ -1,6 +1,6 @@
 import seaborn as sns
 from matplotlib.figure import Figure
-
+import numpy as np
 
 
 def bar_fig(series):
@@ -87,6 +87,7 @@ def distribution_fig(series):
     fig = Figure()
     ax = fig.add_subplot(111)
     
+    series = series.replace([np.inf, -np.inf], np.nan).dropna()
     sns.distplot(series, ax = ax)
     
     return fig
