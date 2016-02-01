@@ -10,9 +10,6 @@ from modules.core_helpers import public_attrs_to_dict
 class DataFrameAttribute_Model(ABCTakesDataFrame):
 
 
-    calc_name = 'DataFrame Columns'
-
-
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe      

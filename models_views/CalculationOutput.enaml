@@ -12,7 +12,7 @@ from custom_views.fields import Field
 # Numerical
 import pandas as pd
 from pandas import DataFrame, Series, Index
-from numpy import ndarray
+from numpy import ndarray, dtype
 
 # Plotting                             
 from matplotlib.figure import Figure
@@ -76,6 +76,12 @@ template OutputTemplate(model_type: ndarray):
         MultilineField:
             read_only = True
             text = str(output_model)
+
+template OutputTemplate(model_type: dtype):
+    
+    Field:
+        read_only = True
+        text = str(output_model)
 
 
 # Primitives templates

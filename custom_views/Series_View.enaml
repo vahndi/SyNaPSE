@@ -66,25 +66,29 @@ def getSeriesFigure(series):
                 return bar_count_fig(series)
 
         elif series.dtype == 'float':
-
-            return distribution_fig(series)
+            
+            if series.index.dtype == 'int':
+                
+                return distribution_fig(series)
                 
         return None
-        
-    if series.dtype == object:
-
-        return confmat_fig(series)
-
+    
     else:
-
-        # Numeric Series -> pie or column plot
-        if round(series.sum(), 3) == 1:
-            
-            return pie_fig(series)
-            
+        
+        if series.dtype == object:
+    
+            return confmat_fig(series)
+    
         else:
-            
-            return bar_fig(series)
+    
+            # Numeric Series -> pie or column plot
+            if round(series.sum(), 3) == 1:
+                
+                return pie_fig(series)
+                
+            else:
+                
+                return bar_fig(series)
 
     return None
 

@@ -1,0 +1,27 @@
+# Enaml
+from enaml.widgets.api import Form
+
+# Models
+from ._base.SeriesAttribute import SeriesAttribute_Model
+from ._base.SeriesAttribute import SeriesAttribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class SeriesShape_Model(SeriesAttribute_Model):
+
+
+    calc_name = 'Shape'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'shape'
+
+
+
+enamldef SeriesShape_View(SeriesAttribute_View): me:
+
+    Form:
+        
+        pass

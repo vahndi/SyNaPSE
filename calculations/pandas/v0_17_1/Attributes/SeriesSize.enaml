@@ -1,0 +1,27 @@
+# Enaml
+from enaml.widgets.api import Form
+
+# Models
+from ._base.SeriesAttribute import SeriesAttribute_Model
+from ._base.SeriesAttribute import SeriesAttribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class SeriesSize_Model(SeriesAttribute_Model):
+
+
+    calc_name = 'Size'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'size'
+
+
+
+enamldef SeriesSize_View(SeriesAttribute_View): me:
+
+    Form:
+        
+        pass
