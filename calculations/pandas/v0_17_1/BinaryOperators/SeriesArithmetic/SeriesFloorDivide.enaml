@@ -1,0 +1,22 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.SeriesArithmetic import SeriesArithmetic_Model, SeriesArithmetic_View
+
+
+
+class SeriesFloorDivide_Model(SeriesArithmetic_Model):
+
+
+    calc_name = '//'
+
+    def __init__(self):
+        
+        self.func_name = 'floordiv'
+
+
+
+enamldef SeriesFloorDivide_View(SeriesArithmetic_View):
+
+    pass

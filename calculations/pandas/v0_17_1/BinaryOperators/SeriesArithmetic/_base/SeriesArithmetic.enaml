@@ -1,0 +1,145 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+    )
+from custom_views.fields import Field, IntField
+
+# Models
+from calculations._core.ABCs import ABC2SeriesToSeries
+
+
+
+class SeriesArithmetic_UI(Atom):
+
+    # nlevels
+    nlevels = Int()
+    # fill_value
+    fill_value = Str()
+    use_fill_value = Bool()
+    fill_value_tooltip = (
+        'Fill missing (NaN) values with this value.\n' + 
+        'If both Series are missing, the result will be missing.'
+        )
+    # level_type
+    level_type = Str()
+    level_type_list = List(str)
+    use_level_type = Bool()
+    level_type_tooltip = 'Select the level by index or by name'
+    # level_int
+    level_int = Int()
+    level_int_tooltip = (
+        'Broadcast across a level, matching Index values on the passed\n' +
+        'MultiIndex level.'
+        )
+    # level_name
+    level_name = Str()
+    level_name_list = List(str)
+
+
+
+class SeriesArithmetic_Model(ABC2SeriesToSeries):
+
+
+    def setInputs(self, series_1, series_2):
+
+        self._series_1 = series_1
+        self._series_2 = series_2
+        index_level_names = ([n for n in series_1.index.names]
+                             if None not in series_1.index.names
+                             else [])
+        self.uiModel = SeriesArithmetic_UI(
+                           nlevels = series_1.index.nlevels,
+                           level_name_list = index_level_names,
+                           level_type_list = (['index', 'name']
+                                              if index_level_names
+                                              else ['index'])
+                           )
+
+
+    def getArgs(self):
+        
+        return {'fill_value': (None 
+                               if not self.uiModel.use_fill_value 
+                               else self.uiModel.fill_value),
+                'level': (self.uiModel.level_int
+                          if (self.uiModel.nlevels > 1 and 
+                              self.uiModel.level_type == 'index')
+                          else self.uiModel.level_name
+                          if (self.uiModel.nlevels > 1 and 
+                              self.uiModel.level_type == 'name')
+                          else None),
+                'other': self._series_2}
+
+
+    def getOutputs(self):
+
+        try:
+            
+            func = getattr(self._series_1, self.func_name)
+            args = self.getArgs()
+            series = func(** args)
+            return {'series': series}        
+
+        except Exception as e:
+
+            return self.standard_exception(e)   
+
+
+
+enamldef SeriesArithmetic_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.fill_value_tooltip
+            text = 'Fill Value'
+            checked := model.use_fill_value
+        Label:
+            text = 'N/A'
+            visible << not model.use_fill_value
+        Field:
+            text := model.fill_value
+            visible << model.use_fill_value
+            tool_tip = me.model.fill_value_tooltip
+
+        Conditional:
+            condition << model.nlevels > 1
+            CheckBox:
+                tool_tip = model.level_type_tooltip
+                text = 'Level Type'
+                checked := model.use_level_type
+            Label:
+                text = 'N/A'
+                visible << not model.use_level_type
+            ObjectCombo:
+                items = model.level_type_list
+                selected := model.level_type
+                visible << model.use_level_type
+                tool_tip = me.model.level_type_tooltip
+    
+
+            Conditional:
+                condition << model.level_type == 'index'
+                Label:
+                    text = 'Level Int'
+                    tool_tip = model.level_int_tooltip
+                IntField:
+                    value := model.level_int
+                    tool_tip = me.model.level_int_tooltip
+                    minimum = 0
+                    maximum = model.nlevels - 1
+        
+    
+            Conditional:
+                condition << model.level_type ==  'name'
+                Label:
+                    text = 'Level Name'
+                ObjectCombo:
+                    items = model.level_name_list
+                    selected := model.level_name

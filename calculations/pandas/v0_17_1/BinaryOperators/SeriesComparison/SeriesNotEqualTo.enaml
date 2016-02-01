@@ -1,0 +1,21 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.SeriesComparison import SeriesComparison_Model, SeriesComparison_View
+
+
+
+class SeriesNotEqualTo_Model(SeriesComparison_Model):
+
+
+    calc_name = '!='
+
+    def __init__(self):
+        
+        self.func_name = 'ne'
+
+
+enamldef SeriesNotEqualTo_View(SeriesComparison_View):
+
+    pass

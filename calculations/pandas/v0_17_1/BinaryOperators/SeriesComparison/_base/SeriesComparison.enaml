@@ -6,7 +6,7 @@ from calculations._core.ABCs import ABC2SeriesToSeries
 
 
 
-class BinarySeries1_Model(ABC2SeriesToSeries):
+class SeriesComparison_Model(ABC2SeriesToSeries):
 
 
     def setInputs(self, series_1, series_2):
@@ -28,7 +28,7 @@ class BinarySeries1_Model(ABC2SeriesToSeries):
 
 
 
-enamldef BinarySeries1_View(GroupBox):
+enamldef SeriesComparison_View(GroupBox):
 
     Form:
         
