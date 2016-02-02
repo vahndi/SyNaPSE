@@ -3,17 +3,13 @@ from atom.api import Atom, Bool, Float, Int, List, Str
 
 # Enaml
 from enaml.core.api import Conditional
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 from custom_views.fields import FloatField, IntField
-
-# Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
-from pandas import DataFrame, Series, concat
-from pandas.stats.moments import ewmstd
+from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
 
-class EWMStandardDeviation_UI(Atom):
+class EWMStDev_UI(Atom):
 
     # decay_method
     decay_method = Str('center of mass')
@@ -42,64 +38,34 @@ class EWMStandardDeviation_UI(Atom):
     adjust_tooltip = 'Divide by decaying adjustment factor in beginning periods to account for imbalance in relative weightings (viewing EWMA as a moving average).'
 
 
-class EWMStandardDeviation_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+
+class EWMStDev_Model(object):
 
 
     calc_name = 'Exponentially Weighted Moving Standard Deviation'
 
 
-    def setInputs(self, dataframe = None, series = None):
+    def getArgs(self):
 
-        self._dataframe = dataframe
-        self._series = series
-        self.uiModel = EWMStandardDeviation_UI()
-
-
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'com': (self.uiModel.com
-                        if self.uiModel.decay_method == 'center of mass' 
-                        else None),
-                'span': (self.uiModel.span
-                         if self.uiModel.decay_method == 'span' 
+        return {
+            'com': (self.uiModel.com
+                    if self.uiModel.decay_method == 'center of mass' 
+                    else None),
+            'span': (self.uiModel.span
+                     if self.uiModel.decay_method == 'span' 
+                     else None),
+            'halflife': (self.uiModel.halflife
+                         if self.uiModel.decay_method == 'halflife' 
                          else None),
-                'halflife': (self.uiModel.halflife
-                             if self.uiModel.decay_method == 'halflife' 
-                             else None),
-                'min_periods': self.uiModel.min_periods,
-                'bias': self.uiModel.bias,
-                'ignore_na': self.uiModel.ignore_na,
-                'adjust': self.uiModel.adjust
-                }
-            
-            if self._dataframe is not None:
-                df_numeric = self._dataframe.select_dtypes(['number'])
-                df_object = self._dataframe.select_dtypes(['object'])
-                args['arg'] = df_numeric
-            else:
-                args['arg'] = self._series
-
-            # apply function
-            ewm_stat = ewmstd(** args)
-            
-            if self._dataframe is not None:
-                df_joined = concat([df_object, ewm_stat], axis = 1)
-                df_joined = df_joined[[col for col in self._dataframe.columns]]
-                return {'dataframe': df_joined}                
-            else:
-                return {'series': ewm_stat}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+            'min_periods': self.uiModel.min_periods,
+            'bias': self.uiModel.bias,
+            'ignore_na': self.uiModel.ignore_na,
+            'adjust': self.uiModel.adjust
+            }
 
 
 
-enamldef EWMStandardDeviation_View(GroupBox): me:
+enamldef EWMStDev_View(GroupBox): me:
 
     attr model
 

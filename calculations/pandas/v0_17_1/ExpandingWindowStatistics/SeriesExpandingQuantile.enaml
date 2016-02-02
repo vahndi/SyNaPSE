@@ -23,7 +23,10 @@ class SeriesExpandingQuantile_UI(Atom):
     min_periods = Int(1)
     min_periods_min = Int(1)
     use_min_periods = Bool(True)
-    min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+    min_periods_tooltip = (
+        'Minimum number of observations in window required to have a value\n' + 
+        '(otherwise result is NA).'
+        )
     # freq
     freq = Str('D')
     freq_list = List(str, pandas_freqs)
