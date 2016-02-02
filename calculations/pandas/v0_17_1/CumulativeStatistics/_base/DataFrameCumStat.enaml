@@ -11,7 +11,7 @@ from pandas import concat
 
 
 
-class CumulativeStatistic_UI(Atom):
+class DataFrameCumStat_UI(Atom):
 
     # axis
     axis = Str('index')
@@ -23,13 +23,13 @@ class CumulativeStatistic_UI(Atom):
                       'is NA, the result will be NA')
 
 
-class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
+class DataFrameCumStat_Model(ABCDataFrameToDataFrame):
 
 
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = CumulativeStatistic_UI()
+        self.uiModel = DataFrameCumStat_UI()
         
 
     def getOutputs(self):
@@ -57,7 +57,7 @@ class CumulativeStatistic_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef CumulativeStatistic_View(GroupBox):
+enamldef DataFrameCumStat_View(GroupBox):
 
     attr model
 

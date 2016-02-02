@@ -1,0 +1,20 @@
+from ._base.SeriesCumStat import SeriesCumStat_Model
+from ._base.SeriesCumStat import SeriesCumStat_View
+
+
+
+class SeriesCumMax_Model(SeriesCumStat_Model):
+    
+    
+    calc_name = 'Cumulative Maximum'
+
+    
+    def __init__(self):
+        
+        self.output_func = 'cummax'
+
+
+
+enamldef SeriesCumMax_View(SeriesCumStat_View):
+    
+    pass
