@@ -16,6 +16,7 @@ from modules.numpy_helpers import aggregate_funcs
 from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
+
 class RollingWindow_UI(Atom):
 
     # window
@@ -61,6 +62,7 @@ class RollingWindow_UI(Atom):
     how = Str('mean')
     how_list = List(str, aggregate_funcs)
     how_tooltip = 'Method for down- or re-sampling.'
+
 
 
 class RollingWindow_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
