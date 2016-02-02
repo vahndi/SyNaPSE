@@ -1,0 +1,20 @@
+from ._base.DataFrameExpandingStat import DataFrameExpandingStat_Model
+from ._base.DataFrameExpandingStat import DataFrameExpandingStat_View
+
+
+
+class DataFrameExpandingStDev_Model(DataFrameExpandingStat_Model):
+    
+    
+    calc_name = 'Expanding Standard Deviation'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_std'
+
+
+
+enamldef DataFrameExpandingStDev_View(DataFrameExpandingStat_View):
+    
+    pass

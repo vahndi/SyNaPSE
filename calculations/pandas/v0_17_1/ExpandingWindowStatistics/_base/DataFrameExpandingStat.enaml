@@ -1,22 +1,21 @@
 # Atom
 from atom.api import Atom, Bool, Int, List, Str
 
-
 # Enaml
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 from custom_views.fields import IntField
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 # Pandas
 import pandas as pd
-from pandas import DataFrame, Series, concat
+from pandas import DataFrame, concat
 from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
 
-class ExpandingStatistic_UI(Atom):
+class DataFrameExpandingStat_UI(Atom):
 
     # min_periods
     min_periods = Int(1)
@@ -29,21 +28,20 @@ class ExpandingStatistic_UI(Atom):
 
 
 
-class ExpandingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class DataFrameExpandingStat_Model(ABCDataFrameToDataFrame):
 
 
-    def setInputs(self, dataframe = None, series = None):
+    def setInputs(self, dataframe = None):
 
         self._dataframe = dataframe
-        self._series = series
-        self.uiModel = ExpandingStatistic_UI()
+        self.uiModel = DataFrameExpandingStat_UI()
 
 
     def getOutputs(self):
 
         try:
 
-            # Assign local variables
+            # assign local variables
             args = {
                 'min_periods': self.uiModel.min_periods,
                 'freq': (None 
@@ -51,23 +49,20 @@ class ExpandingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
                          else self.uiModel.freq)
                 }
 
-            if self._dataframe is not None:
-                df_numeric = self._dataframe.select_dtypes(['number'])
-                df_object = self._dataframe.select_dtypes(['object'])
-                args['arg'] = df_numeric
-            else:
-                args['arg'] = self._series
+            # split dataframe
+            df_numeric = self._dataframe.select_dtypes(['number'])
+            df_object = self._dataframe.select_dtypes(['object'])
+            args['arg'] = df_numeric
 
             # apply function
             func = getattr(pd, self.outputFunction)
             expanding_stat = func(** args)
             
-            if self._dataframe is not None:
-                df_joined = concat([df_object, expanding_stat], axis = 1)
-                df_joined = df_joined[[col for col in self._dataframe.columns]]
-                return {'dataframe': df_joined}                
-            else:
-                return {'series': expanding_stat}
+            # join dataframe
+            df_joined = concat([df_object, expanding_stat], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            
+            return {'dataframe': df_joined}
 
         except Exception as e:
 
@@ -75,7 +70,7 @@ class ExpandingStatistic_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
 
-enamldef ExpandingStatistic_View(GroupBox): me:
+enamldef DataFrameExpandingStat_View(GroupBox): me:
 
     attr model
 

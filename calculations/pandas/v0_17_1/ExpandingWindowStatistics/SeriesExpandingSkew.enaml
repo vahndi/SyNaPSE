@@ -1,0 +1,20 @@
+from ._base.SeriesExpandingStat import SeriesExpandingStat_Model
+from ._base.SeriesExpandingStat import SeriesExpandingStat_View
+
+
+
+class SeriesExpandingSkew_Model(SeriesExpandingStat_Model):
+    
+    
+    calc_name = 'Expanding Skew'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_skew'
+
+
+
+enamldef SeriesExpandingSkew_View(SeriesExpandingStat_View):
+    
+    pass

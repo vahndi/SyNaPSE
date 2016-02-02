@@ -1,0 +1,20 @@
+from ._base.SeriesExpandingStat import SeriesExpandingStat_Model
+from ._base.SeriesExpandingStat import SeriesExpandingStat_View
+
+
+
+class SeriesExpandingMaximum_Model(SeriesExpandingStat_Model):
+    
+    
+    calc_name = 'Expanding Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_max'
+
+
+
+enamldef SeriesExpandingMaximum_View(SeriesExpandingStat_View):
+    
+    pass
