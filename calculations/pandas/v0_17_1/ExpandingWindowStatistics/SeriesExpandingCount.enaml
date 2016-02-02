@@ -5,14 +5,14 @@ from atom.api import Atom, Bool, List, Str
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame
+from calculations._core.ABCs import ABCSeriesToSeries
 
-from pandas import concat, expanding_count
+from pandas import expanding_count
 from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
 
-class DataFrameExpandingCount_UI(Atom):
+class SeriesExpandingCount_UI(Atom):
 
     # freq
     freq = Str('D')
@@ -22,16 +22,16 @@ class DataFrameExpandingCount_UI(Atom):
 
 
 
-class DataFrameExpandingCount_Model(ABCDataFrameToDataFrame):
+class SeriesExpandingCount_Model(ABCSeriesToSeries):
 
 
     calc_name = 'Expanding Count'
 
 
-    def setInputs(self, dataframe):
+    def setInputs(self, series):
 
-        self._dataframe = dataframe
-        self.uiModel = DataFrameExpandingCount_UI()
+        self._series = series
+        self.uiModel = SeriesExpandingCount_UI()
 
 
     def getOutputs(self):
@@ -40,22 +40,17 @@ class DataFrameExpandingCount_Model(ABCDataFrameToDataFrame):
 
             # Assign local variables
             args = {
+                'arg': self._series,
                 'freq': (None 
                          if not self.uiModel.use_freq 
                          else self.uiModel.freq)
                 }
 
-            df_numeric = self._dataframe.select_dtypes(['number'])
-            df_object = self._dataframe.select_dtypes(['object'])
-            args['arg'] = df_numeric
 
             # apply function
             statistic = expanding_count(** args)
             
-            df_joined = concat([df_object, statistic], axis = 1)
-            df_joined = df_joined[[col for col in self._dataframe.columns]]
-            
-            return {'dataframe': df_joined}                
+            return {'series': statistic}
 
         except Exception as e:
 
@@ -63,7 +58,7 @@ class DataFrameExpandingCount_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef DataFrameExpandingCount_View(GroupBox):
+enamldef SeriesExpandingCount_View(GroupBox):
 
     attr model
 

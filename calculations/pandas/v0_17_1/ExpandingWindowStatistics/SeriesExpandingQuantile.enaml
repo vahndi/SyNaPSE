@@ -1,20 +1,19 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int, List, Str
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 from custom_views.fields import FloatField, IntField
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame
+from calculations._core.ABCs import ABCSeriesToSeries
 
-from pandas import concat, expanding_quantile
+from pandas import expanding_quantile
 from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
 
 
 
-class DataFrameExpandingQuantile_UI(Atom):
+class SeriesExpandingQuantile_UI(Atom):
 
     # quantile
     quantile = Float(0.5)
@@ -32,16 +31,17 @@ class DataFrameExpandingQuantile_UI(Atom):
     freq_tooltip = pandas_freq_tooltip
 
 
-class DataFrameExpandingQuantile_Model(ABCDataFrameToDataFrame):
+
+class SeriesExpandingQuantile_Model(ABCSeriesToSeries):
 
 
     calc_name = 'Expanding Quantile'
 
 
-    def setInputs(self, dataframe):
+    def setInputs(self, series = None):
 
-        self._dataframe = dataframe
-        self.uiModel = DataFrameExpandingQuantile_UI()
+        self._series = series
+        self.uiModel = SeriesExpandingQuantile_UI()
 
 
     def getOutputs(self):
@@ -50,6 +50,7 @@ class DataFrameExpandingQuantile_Model(ABCDataFrameToDataFrame):
 
             # Assign local variables
             args = {
+                'arg': self._series,
                 'quantile': self.uiModel.quantile,
                 'min_periods': (None 
                                 if not self.uiModel.use_min_periods 
@@ -59,17 +60,10 @@ class DataFrameExpandingQuantile_Model(ABCDataFrameToDataFrame):
                          else self.uiModel.freq)
                 }
 
-
-            df_numeric = self._dataframe.select_dtypes(['number'])
-            df_object = self._dataframe.select_dtypes(['object'])
-            args['arg'] = df_numeric
-
             # apply function
             statistic = expanding_quantile(** args)
             
-            df_joined = concat([df_object, statistic], axis = 1)
-            df_joined = df_joined[[col for col in self._dataframe.columns]]
-            return {'dataframe': df_joined}                
+            return {'series': statistic}
 
         except Exception as e:
 
@@ -77,7 +71,7 @@ class DataFrameExpandingQuantile_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef DataFrameExpandingQuantile_View(GroupBox): me:
+enamldef SeriesExpandingQuantile_View(GroupBox): me:
 
     attr model
 
