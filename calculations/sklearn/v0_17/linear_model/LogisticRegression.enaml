@@ -61,6 +61,7 @@ class LogisticRegression_UI(Atom):
     cores_selector = Value(Atom)
         
 
+
 class LogisticRegression_Model(ABCClassificationModel):
 
 

@@ -1,0 +1,63 @@
+# Atom
+from atom.api import Atom, Float
+
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField
+
+# Models
+from models_views.calculation import Calculation_Model
+
+
+
+class Binarizer_UI(Atom):
+
+    # threshold
+    threshold = Float(0)
+    threshold_tooltip = (
+        'Feature values below or equal to this are replaced by 0, above it by 1.\n' + 
+        'Threshold may not be less than 0 for operations on sparse matrices.'
+        )
+
+
+
+class Binarizer_Model(Calculation_Model):
+
+
+    calc_name = 'Binarizer'
+
+
+    def setInputs(self, ???):
+
+        self._??? = ???
+        self.uiModel = Binarizer_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'threshold': self.uiModel.threshold
+                }
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Binarizer_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Threshold'
+            tool_tip = model.threshold_tooltip
+        FloatField:
+            value := model.threshold
+            tool_tip = me.model.threshold_tooltip

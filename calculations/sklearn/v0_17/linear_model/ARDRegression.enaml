@@ -14,19 +14,45 @@ from sklearn.linear_model import ARDRegression
 
 class ARDRegression_UI(Atom):
 
+    # input_selector
     input_selector = Value(Atom)
+    # n_iter
     n_iter = Int(300)
+    n_iter_tooltip = 'Maximum number of iterations. Default is 300.'
+    # tol
     tol = Float(0.001)
+    tol_tooltip = 'Stop the algorithm if w has converged. Default is 1.e-3.'
+    # alpha_1
     alpha_1 = Float(1e-06)
+    alpha_1_tooltip = 'Hyper-parameter : shape parameter for the Gamma distribution prior over the alpha parameter. Default is 1.e-6.'
+    # alpha_2
     alpha_2 = Float(1e-06)
+    alpha_2_tooltip = 'Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the alpha parameter. Default is 1.e-6.'
+    # lambda_1
     lambda_1 = Float(1e-06)
+    lambda_1_tooltip = 'Hyper-parameter : shape parameter for the Gamma distribution prior over the lambda parameter. Default is 1.e-6.'
+    # lambda_2
     lambda_2 = Float(1e-06)
+    lambda_2_tooltip = 'Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the lambda parameter. Default is 1.e-6.'
+    # compute_score
     compute_score = Bool(False)
+    compute_score_tooltip = 'If True, compute the objective function at each step of the model. Default is False.'
+    # threshold_lambda
     threshold_lambda = Float(10000.0)
+    threshold_lambda_tooltip = 'Threshold for removing (pruning) weights with high precision from the computation. Default is 1.e+4.'
+    # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = 'Whether to calculate the intercept for this model. If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered). Default is True.'
+    # normalize
     normalize = Bool(False)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
+    # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
+    # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'Verbose mode when fitting the model.'
+
 
 
 class ARDRegression_Model(ABCRegressionModel):
@@ -39,51 +65,28 @@ class ARDRegression_Model(ABCRegressionModel):
 
     def setInputs(self, dataframe):
         
+        self.estimator_type = ARDRegression
         self.set_inputs(dataframe)
         self.uiModel = ARDRegression_UI(
                             input_selector = self.input_selector.uiModel
                             )
 
 
-    def getOutputs(self):
+    def getArgs(self):
 
-        try:
+        return {'n_iter': self.uiModel.n_iter,
+                'tol': self.uiModel.tol,
+                'alpha_1': self.uiModel.alpha_1,
+                'alpha_2': self.uiModel.alpha_2,
+                'lambda_1': self.uiModel.lambda_1,
+                'lambda_2': self.uiModel.lambda_2,
+                'compute_score': self.uiModel.compute_score,
+                'threshold_lambda': self.uiModel.threshold_lambda,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'normalize': self.uiModel.normalize,
+                'copy_X': self.uiModel.copy_X,
+                'verbose': self.uiModel.verbose}
             
-            # Assign local variables
-            args = {'n_iter': self.uiModel.n_iter,
-                    'tol': self.uiModel.tol,
-                    'alpha_1': self.uiModel.alpha_1,
-                    'alpha_2': self.uiModel.alpha_2,
-                    'lambda_1': self.uiModel.lambda_1,
-                    'lambda_2': self.uiModel.lambda_2,
-                    'compute_score': self.uiModel.compute_score,
-                    'threshold_lambda': self.uiModel.threshold_lambda,
-                    'fit_intercept': self.uiModel.fit_intercept,
-                    'normalize': self.uiModel.normalize,
-                    'copy_X': self.uiModel.copy_X,
-                    'verbose': self.uiModel.verbose}
-            
-            # Validate inputs
-            if not self.input_selector.validate_inputs():
-                return self.not_configured()
-    
-            # Create ARD Regression model
-            self.estimator = ARDRegression(**args)
-            self.train_test_model()
-
-            # Return outputs
-            attributes = self.get_attributes()
-            metrics = self.get_metrics()
-            
-            return {'Attributes': attributes,
-                    'Metrics': metrics,
-                    'dataframe': self.df_predictions,
-                    'Target vs. Predicted': self.df_targets_predictions}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
-
         
 
 enamldef ARDRegression_View(GroupBox): me:
@@ -97,8 +100,12 @@ enamldef ARDRegression_View(GroupBox): me:
             title = 'Inputs'
             closable = False
 
-            InputsTargetsSelector_View:
-                model := me.model.input_selector
+            Form:
+
+                Label:
+                    text = 'Input Selector'
+                InputsTargetsSelector_View:
+                    model:= me.model.input_selector
 
         Page:
 
@@ -108,61 +115,85 @@ enamldef ARDRegression_View(GroupBox): me:
             Form:
 
                 Label:
-                    text = 'Max Iterations'
+                    text = 'N Iter'
+                    tool_tip = model.n_iter_tooltip
                 IntField:
                     value := model.n_iter
+                    tool_tip = me.model.n_iter_tooltip
 
                 Label:
-                    text = 'Stopping Tolerance'
+                    text = 'Tol'
+                    tool_tip = model.tol_tooltip
                 FloatField:
                     value := model.tol
+                    tool_tip = me.model.tol_tooltip
 
                 Label:
                     text = 'Alpha 1'
+                    tool_tip = model.alpha_1_tooltip
                 FloatField:
                     value := model.alpha_1
+                    tool_tip = me.model.alpha_1_tooltip
 
                 Label:
                     text = 'Alpha 2'
+                    tool_tip = model.alpha_2_tooltip
                 FloatField:
                     value := model.alpha_2
+                    tool_tip = me.model.alpha_2_tooltip
 
                 Label:
                     text = 'Lambda 1'
+                    tool_tip = model.lambda_1_tooltip
                 FloatField:
                     value := model.lambda_1
+                    tool_tip = me.model.lambda_1_tooltip
 
                 Label:
                     text = 'Lambda 2'
+                    tool_tip = model.lambda_2_tooltip
                 FloatField:
                     value := model.lambda_2
+                    tool_tip = me.model.lambda_2_tooltip
 
                 Label:
                     text = 'Compute Score'
+                    tool_tip = model.compute_score_tooltip
                 CheckBox:
                     checked := model.compute_score
-                    
+                    tool_tip = me.model.compute_score_tooltip
+
                 Label:
                     text = 'Threshold Lambda'
+                    tool_tip = model.threshold_lambda_tooltip
                 FloatField:
                     value := model.threshold_lambda
+                    tool_tip = me.model.threshold_lambda_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
                 CheckBox:
                     checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip

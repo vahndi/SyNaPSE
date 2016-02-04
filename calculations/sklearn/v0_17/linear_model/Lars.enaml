@@ -44,6 +44,7 @@ class Lars_Model(ABCRegressionModel):
     calc_desc = 'Least Angle Regression model a.k.a. LAR.'
     calc_docs = ABCRegressionModel.doc_root + 'Lars.html'
 
+
     def setInputs(self, dataframe):
 
         self.estimator_type = Lars

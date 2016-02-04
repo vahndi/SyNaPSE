@@ -28,6 +28,7 @@ class BayesianRidge_UI(Atom):
     verbose = Bool(False)
 
 
+
 class BayesianRidge_Model(ABCRegressionModel):
 
 
