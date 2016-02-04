@@ -1,0 +1,22 @@
+from ._base.DataFrameRollingStat import DataFrameRollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class DataFrameRollingMinimum_Model(DataFrameRollingStat_Model):
+    
+    
+    calc_name = 'Rolling Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_min'
+        self.window_min = 1
+        self.how = 'min'
+
+
+
+enamldef DataFrameRollingMinimum_View(RollingStat_View):
+    
+    pass

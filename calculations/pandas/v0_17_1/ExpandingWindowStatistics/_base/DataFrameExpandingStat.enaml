@@ -1,30 +1,14 @@
 # Atom
 from atom.api import Atom, Bool, Int, List, Str
 
-# Enaml
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
-from custom_views.fields import IntField
-
 # Models
 from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 # Pandas
 import pandas as pd
 from pandas import DataFrame, concat
-from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
+from ExpandingStat import ExpandingStat_UI, ExpandingStat_View
 
-
-
-class DataFrameExpandingStat_UI(Atom):
-
-    # min_periods
-    min_periods = Int(1)
-    min_periods_min = Int(1)
-    # freq
-    freq = Str('D')
-    freq_list = List(str, pandas_freqs)
-    use_freq = Bool()
-    freq_tooltip = pandas_freq_tooltip
 
 
 
@@ -34,7 +18,7 @@ class DataFrameExpandingStat_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataframe = None):
 
         self._dataframe = dataframe
-        self.uiModel = DataFrameExpandingStat_UI()
+        self.uiModel = ExpandingStat_UI()
 
 
     def getOutputs(self):
@@ -70,27 +54,6 @@ class DataFrameExpandingStat_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef DataFrameExpandingStat_View(GroupBox): me:
+enamldef DataFrameExpandingStat_View(ExpandingStat_View): me:
 
-    attr model
-
-    Form:
-
-        Label:
-            text = 'Min Periods'
-        IntField:
-            value := model.min_periods
-            minimum = model.min_periods_min
-
-        CheckBox:
-            tool_tip = model.freq_tooltip
-            text = 'Freq'
-            checked := model.use_freq
-        Label:
-            text = 'N/A'
-            visible << not model.use_freq
-        ObjectCombo:
-            items = model.freq_list
-            selected := model.freq
-            visible << model.use_freq
-            tool_tip = model.freq_tooltip
+    pass

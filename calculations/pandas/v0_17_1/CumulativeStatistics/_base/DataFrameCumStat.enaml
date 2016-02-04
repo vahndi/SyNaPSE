@@ -2,7 +2,7 @@
 from atom.api import Atom, Bool, List, Str
 
 # Enaml
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 
 # Models
 from calculations._core.ABCs import ABCDataFrameToDataFrame

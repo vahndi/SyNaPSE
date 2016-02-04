@@ -1,0 +1,23 @@
+from calculations._core.ABCs import ABCSeriesToSeries
+from ._base.SeriesRollingStat import SeriesRollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class SeriesRollingMinimum_Model(SeriesRollingStat_Model):
+    
+    
+    calc_name = 'Rolling Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_min'
+        self.window_min = 1
+        self.how = 'min'
+
+
+
+enamldef SeriesRollingMinimum_View(RollingStat_View):
+    
+    pass

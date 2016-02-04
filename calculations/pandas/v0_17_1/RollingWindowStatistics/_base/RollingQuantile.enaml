@@ -1,10 +1,9 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int, List, Str
 
-
 # Enaml
 from enaml.core.api import Conditional
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 from custom_views.fields import FloatField, IntField
 
 # Models
@@ -31,7 +30,10 @@ class RollingQuantile_UI(Atom):
     min_periods = Int(1)
     min_periods_min = Int(1)
     use_min_periods = Bool()
-    min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+    min_periods_tooltip = (
+        'Minimum number of observations in window required to have a\n' + 
+        'value (otherwise result is NA).'
+        )
     # freq
     freq = Str('D')
     freq_list = List(str, pandas_freqs)
@@ -39,59 +41,31 @@ class RollingQuantile_UI(Atom):
     freq_tooltip = pandas_freq_tooltip
     # center
     center = Bool()
-    center_tooltip = 'Whether the label should correspond with center of window.'
+    center_tooltip = (
+        'Whether the label should correspond with center of window.'
+        )
 
 
 
-class RollingQuantile_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class RollingQuantile_Model(object):
 
 
     calc_name = 'Rolling Quantile'
 
 
-    def setInputs(self, dataframe = None, series = None):
+    def getArgs(self):
 
-        self._dataframe = dataframe
-        self._series = series
-        self.uiModel = RollingQuantile_UI()
-
-
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'quantile': self.uiModel.quantile,
-                'window': self.uiModel.window,
-                'min_periods': (None 
-                                if not self.uiModel.use_min_periods 
-                                else self.uiModel.min_periods),
-                'freq': (None 
-                         if not self.uiModel.use_freq 
-                         else self.uiModel.freq),
-                'center': self.uiModel.center,
-                }
-            if self._dataframe is not None:
-                df_numeric = self._dataframe.select_dtypes(['number'])
-                df_object = self._dataframe.select_dtypes(['object'])
-                args['arg'] = df_numeric
-            else:
-                args['arg'] = self._series
-
-            # apply function
-            statistic = rolling_quantile(** args)
-            
-            if self._dataframe is not None:
-                df_joined = concat([df_object, statistic], axis = 1)
-                df_joined = df_joined[[col for col in self._dataframe.columns]]
-                return {'dataframe': df_joined}                
-            else:
-                return {'series': statistic}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+        return {
+            'quantile': self.uiModel.quantile,
+            'window': self.uiModel.window,
+            'min_periods': (None 
+                            if not self.uiModel.use_min_periods 
+                            else self.uiModel.min_periods),
+            'freq': (None 
+                     if not self.uiModel.use_freq 
+                     else self.uiModel.freq),
+            'center': self.uiModel.center,
+            }
 
 
 

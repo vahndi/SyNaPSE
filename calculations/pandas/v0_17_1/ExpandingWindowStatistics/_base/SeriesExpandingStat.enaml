@@ -10,20 +10,7 @@ from calculations._core.ABCs import ABCSeriesToSeries
 
 # Pandas
 import pandas as pd
-from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
-
-
-
-class SeriesExpandingStat_UI(Atom):
-
-    # min_periods
-    min_periods = Int(1)
-    min_periods_min = Int(1)
-    # freq
-    freq = Str('D')
-    freq_list = List(str, pandas_freqs)
-    use_freq = Bool()
-    freq_tooltip = pandas_freq_tooltip
+from ExpandingStat import ExpandingStat_UI, ExpandingStat_View
 
 
 
@@ -33,7 +20,7 @@ class SeriesExpandingStat_Model(ABCSeriesToSeries):
     def setInputs(self, series):
 
         self._series = series
-        self.uiModel = SeriesExpandingStat_UI()
+        self.uiModel = ExpandingStat_UI()
 
 
     def getOutputs(self):
@@ -61,27 +48,6 @@ class SeriesExpandingStat_Model(ABCSeriesToSeries):
 
 
 
-enamldef SeriesExpandingStat_View(GroupBox): me:
-
-    attr model
-
-    Form:
-
-        Label:
-            text = 'Min Periods'
-        IntField:
-            value := model.min_periods
-            minimum = model.min_periods_min
-
-        CheckBox:
-            tool_tip = model.freq_tooltip
-            text = 'Freq'
-            checked := model.use_freq
-        Label:
-            text = 'N/A'
-            visible << not model.use_freq
-        ObjectCombo:
-            items = model.freq_list
-            selected := model.freq
-            visible << model.use_freq
-            tool_tip = model.freq_tooltip
+enamldef SeriesExpandingStat_View(ExpandingStat_View):
+    
+    pass

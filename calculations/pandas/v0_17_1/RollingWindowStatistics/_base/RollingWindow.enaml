@@ -42,7 +42,10 @@ class RollingWindow_UI(Atom):
     min_periods = Int(1)
     min_periods_min = Int(1)
     use_min_periods = Bool()
-    min_periods_tooltip = 'Minimum number of observations in window required to have a value (otherwise result is NA).'
+    min_periods_tooltip = (
+        'Minimum number of observations in window required to have a value\n' + 
+        '(otherwise result is NA).'
+        )
     # freq
     freq = Str('D')
     freq_list = List(str, pandas_freqs)
@@ -50,7 +53,9 @@ class RollingWindow_UI(Atom):
     freq_tooltip = pandas_freq_tooltip
     # center
     center = Bool()
-    center_tooltip = 'Whether the label should correspond with center of window.'
+    center_tooltip = (
+        'Whether the label should correspond with center of window.'
+        )
     # mean
     mean = Bool(True)
     mean_tooltip = 'If True computes weighted mean, else weighted sum.'
@@ -65,73 +70,43 @@ class RollingWindow_UI(Atom):
 
 
 
-class RollingWindow_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class RollingWindow_Model(object):
 
 
     calc_name = 'Rolling Window'
+    
 
+    def getArgs(self):
 
-    def setInputs(self, dataframe = None, series = None):
-
-        self._dataframe = dataframe
-        self._series = series
-        self.uiModel = RollingWindow_UI(show_axis = series is None)
-
-
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'window': self.uiModel.window,
-                'win_type': self.uiModel.win_type,
-                'beta': (self.uiModel.beta
-                         if self.uiModel.win_type == 'kaiser' 
-                         else None),
-                'std': (self.uiModel.std
-                        if self.uiModel.win_type == 'gaussian' 
-                        else None),
-                'power': (self.uiModel.power
-                          if self.uiModel.win_type == 'general gaussian' 
-                          else None),
-                'width': (self.uiModel.width
-                          if self.uiModel.win_type in ('general gaussian', 
-                                                       'slepian') 
-                          else None),
-                'min_periods': (None 
-                                if not self.uiModel.use_min_periods 
-                                else self.uiModel.min_periods),
-                'freq': (None 
-                         if not self.uiModel.use_freq 
-                         else self.uiModel.freq),
-                'center': self.uiModel.center,
-                'mean': self.uiModel.mean,
-                'axis': ({'index': 0, 'columns': 1 }[self.uiModel.axis]
-                         if self.uiModel.show_axis
-                         else 0),
-                'how': self.uiModel.how
-                }
-            if self._dataframe is not None:
-                df_numeric = self._dataframe.select_dtypes(['number'])
-                df_object = self._dataframe.select_dtypes(['object'])
-                args['arg'] = df_numeric
-            else:
-                args['arg'] = self._series
-
-            # apply function
-            statistic = rolling_window(** args)
-            
-            if self._dataframe is not None:
-                df_joined = concat([df_object, statistic], axis = 1)
-                df_joined = df_joined[[col for col in self._dataframe.columns]]
-                return {'dataframe': df_joined}                
-            else:
-                return {'series': statistic}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+        return {
+            'window': self.uiModel.window,
+            'win_type': self.uiModel.win_type,
+            'beta': (self.uiModel.beta
+                     if self.uiModel.win_type == 'kaiser' 
+                     else None),
+            'std': (self.uiModel.std
+                    if self.uiModel.win_type == 'gaussian' 
+                    else None),
+            'power': (self.uiModel.power
+                      if self.uiModel.win_type == 'general gaussian' 
+                      else None),
+            'width': (self.uiModel.width
+                      if self.uiModel.win_type in ('general gaussian', 
+                                                   'slepian') 
+                      else None),
+            'min_periods': (None 
+                            if not self.uiModel.use_min_periods 
+                            else self.uiModel.min_periods),
+            'freq': (None 
+                     if not self.uiModel.use_freq 
+                     else self.uiModel.freq),
+            'center': self.uiModel.center,
+            'mean': self.uiModel.mean,
+            'axis': ({'index': 0, 'columns': 1 }[self.uiModel.axis]
+                     if self.uiModel.show_axis
+                     else 0),
+            'how': self.uiModel.how
+            }
 
 
 
@@ -241,3 +216,4 @@ enamldef RollingWindow_View(GroupBox): me:
             items = model.how_list
             selected := model.how
             tool_tip = model.how_tooltip
+

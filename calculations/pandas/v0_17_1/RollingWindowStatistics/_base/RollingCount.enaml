@@ -1,10 +1,9 @@
 # Atom
 from atom.api import Atom, Bool, Int, List, Str
 
-
 # Enaml
 from enaml.core.api import Conditional
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
 from custom_views.fields import IntField
 
 # Models
@@ -26,13 +25,22 @@ class RollingCount_UI(Atom):
     # window
     window = Int(1)
     window_min = Int(1)
-    window_tooltip = 'Size of the moving window. This is the number of observations used for calculating the statistic.'
+    window_tooltip = (
+        'Size of the moving window. This is the number of observations\n' +
+        'used for calculating the statistic.'
+        )
     # center
     center = Bool()
-    center_tooltip = 'Set the labels at the center of the window.\n(By default, the result is set to the right edge of the window).'
+    center_tooltip = (
+        'Set the labels at the center of the window.\n' +
+        '(By default, the result is set to the right edge of the window).'
+        )
     # resample
     resample = Bool()
-    resample_tooltip = 'Resample the data to a user-specified frequency before computing the statistic.'
+    resample_tooltip = (
+        'Resample the data to a user-specified frequency before computing\n' + 
+        'the statistic.'
+        )
     # freq
     freq = Str('D')
     freq_list = List(str, pandas_freqs)
@@ -44,55 +52,21 @@ class RollingCount_UI(Atom):
 
 
 
-class RollingCount_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class RollingCount_Model(object):
 
 
-    calc_name = 'Rolling Count'
-    
-
-    def setInputs(self, dataframe = None, series = None):
-
-        self._dataframe = dataframe
-        self._series = series
-        self.uiModel = RollingCount_UI()
-
-
-    def getOutputs(self):
-
-        try:
-
-            # Assign local variables
-            args = {
-                'window': self.uiModel.window,
-                'center': self.uiModel.center,
-                'freq': (self.uiModel.freq
-                         if self.uiModel.resample == True 
-                         else None),
-                'how': (self.uiModel.how
-                        if self.uiModel.resample == True 
-                        else None)
-                }
-                
-            if self._dataframe is not None:
-                df_numeric = self._dataframe.select_dtypes(['number'])
-                df_object = self._dataframe.select_dtypes(['object'])
-                args['arg'] = df_numeric
-            else:
-                args['arg'] = self._series
-                
-            # apply function
-            rolling_stat = rolling_count(** args)
-            
-            if self._dataframe is not None:
-                df_joined = concat([df_object, rolling_stat], axis = 1)
-                df_joined = df_joined[[col for col in self._dataframe.columns]]
-                return {'dataframe': df_joined}                
-            else:
-                return {'series': rolling_stat}
-
-        except Exception as e:
-
-            return self.standard_exception(e)
+    def getArgs(self):
+        
+        return {
+            'window': self.uiModel.window,
+            'center': self.uiModel.center,
+            'freq': (self.uiModel.freq
+                     if self.uiModel.resample == True 
+                     else None),
+            'how': (self.uiModel.how
+                    if self.uiModel.resample == True 
+                    else None)
+            }
 
 
 
@@ -128,7 +102,7 @@ enamldef RollingCount_View(GroupBox): me:
             condition << model.resample == True
             
             Label:
-                text = 'Freq'
+                text = 'Frequency'
                 tool_tip = model.freq_tooltip
             ObjectCombo:
                 items = model.freq_list

@@ -3,6 +3,7 @@ import os
 import enaml
 import copy_reg
 import types
+import sys
 
 
 
@@ -141,8 +142,12 @@ def get_menus_calcs(root_dir):
     calcs = []
     for fname in files:
         for calc_model in calculation_models:
-            if calc_model.__name__[: -6] == fname[: -6]:
-                calcs.append(calc_model)
+            try:
+                if calc_model.__name__[: -6] == fname[: -6]:
+                    calcs.append(calc_model)
+            except:
+                
+                sys.exit()
 
     for sd in sub_menus:
         menus_calcs[sd] = (get_menus_calcs(os.path.join(root_dir, sd)))

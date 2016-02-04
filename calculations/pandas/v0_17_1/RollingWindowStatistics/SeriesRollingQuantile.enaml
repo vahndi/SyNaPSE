@@ -1,0 +1,46 @@
+# Models
+from calculations._core.ABCs import ABCSeriesToSeries
+from _base.RollingQuantile import RollingQuantile_UI
+from _base.RollingQuantile import RollingQuantile_Model, RollingQuantile_View
+
+# Pandas
+import pandas as pd
+from pandas import DataFrame, Series, concat
+from pandas.stats.moments import rolling_quantile
+
+
+
+class SeriesRollingQuantile_Model(ABCSeriesToSeries, RollingQuantile_Model):
+    
+    
+    calc_name = 'Rolling Quantile'
+    
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = RollingQuantile_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            args['arg'] = series
+                
+            # apply function
+            rolling_stat = rolling_quantile(** args)
+
+            return {'series': series}                
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesRollingQuantile_View(RollingQuantile_View):
+
+    pass
