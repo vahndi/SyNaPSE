@@ -19,26 +19,46 @@ class PassiveAggressiveRegressor_UI(Atom):
 
     # C
     C = Float(1)
+    C_tooltip = 'Maximum step size (regularization). Defaults to 1.0.'
     # epsilon
     epsilon = Float(0.1)
     epsilon_min = Float(0)
+    epsilon_tooltip = 'If the difference between the current prediction and the correct label is below this threshold, the model is not updated.'
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether the intercept should be estimated or not. \n'
+        'If False, the data is assumed to be already centered. \n'
+        'Defaults to True.\n'
+        )
     # n_iter
     n_iter = Int(5)
     n_iter_min = Int(1)
+    n_iter_tooltip = 'The number of passes over the training data (aka epochs). Defaults to 5.'
     # shuffle
     shuffle = Bool(True)
+    shuffle_tooltip = 'Whether or not the training data should be shuffled after each epoch.'
     # random_state
     random_state = Int(1)
+    random_state_tooltip = 'The seed of the pseudo random number generator to use when shuffling the data.'
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'The verbosity level.'
     # loss
     loss = Str('epsilon_insensitive')
     loss_list = List(str, ['epsilon_insensitive', 
                            'squared_epsilon_insensitive'])
+    loss_tooltip = (
+        'The loss function to be used: \n'
+        'epsilon_insensitive: equivalent to PA-I in the reference paper. \n'
+        'squared_epsilon_insensitive: equivalent to PA-II in the reference paper.\n'
+        )
     # warm_start
     warm_start = Bool(False)
+    warm_start_tooltip = (
+        'When set to True, reuse the solution of the previous call to fit as initialization.\n'
+        'Otherwise, just erase the previous solution.\n'
+        )
 
 
 class PassiveAggressiveRegressor_Model(ABCRegressionModel):
@@ -95,48 +115,66 @@ enamldef PassiveAggressiveRegressor_View(GroupBox): me:
 
                 Label:
                     text = 'C'
+                    tool_tip = model.C_tooltip
                 FloatField:
                     value := model.C
+                    tool_tip = me.model.C_tooltip
 
                 Label:
                     text = 'Epsilon'
+                    tool_tip = model.epsilon_tooltip
                 FloatField:
                     value := model.epsilon
                     minimum = model.epsilon_min
+                    tool_tip = me.model.epsilon_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'N Iter'
+                    tool_tip = model.n_iter_tooltip
                 IntField:
                     value := model.n_iter
                     minimum = model.n_iter_min
+                    tool_tip = me.model.n_iter_tooltip
 
                 Label:
                     text = 'Shuffle'
+                    tool_tip = model.shuffle_tooltip
                 CheckBox:
                     checked := model.shuffle
+                    tool_tip = me.model.shuffle_tooltip
 
                 Label:
                     text = 'Random State'
+                    tool_tip = model.random_state_tooltip
                 IntField:
                     value := model.random_state
+                    tool_tip = me.model.random_state_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Label:
                     text = 'Loss'
+                    tool_tip = model.loss_tooltip
                 ObjectCombo:
                     items = model.loss_list
                     selected := model.loss
+                    tool_tip = me.model.loss_tooltip
 
                 Label:
                     text = 'Warm Start'
+                    tool_tip = model.warm_start_tooltip
                 CheckBox:
                     checked := model.warm_start
+                    tool_tip = me.model.warm_start_tooltip

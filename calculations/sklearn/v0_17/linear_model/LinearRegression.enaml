@@ -15,6 +15,24 @@ from sklearn.linear_model import LinearRegression
 class LinearRegression_UI(Atom):
 
     input_selector = Value(Atom)
+    # fit_intercept
+    fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
+    # normalize
+    normalize = Bool()
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
+    # copy_X
+    copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
+    # number_of_cores_type
+    number_of_cores_type = Str('one')
+    number_of_cores_type_list = List(str, ['one', 'all', 'int'])
+    # number_of_cores
+    number_of_cores = Int(1)
+    
     
     
 class LinearRegression_Model(ABCRegressionModel):
@@ -23,6 +41,7 @@ class LinearRegression_Model(ABCRegressionModel):
     calc_name = 'Linear Regression'
     calc_desc = 'Ordinary least squares Linear Regression.'
     calc_docs = ABCRegressionModel.doc_root + 'LinearRegression.html'
+   
    
     def setInputs(self, dataframe):
         
@@ -35,7 +54,15 @@ class LinearRegression_Model(ABCRegressionModel):
 
     def getArgs(self):
         
-        return {}
+        return {
+            'fit_intercept': self.uiModel.fit_intercept,
+            'normalize': self.uiModel.normalize,
+            'copy_X': self.uiModel.copy_X,
+            'number_of_cores_type': self.uiModel.number_of_cores_type,
+            'number_of_cores': (self.uiModel.number_of_cores
+                                if self.uiModel.number_of_cores_type == 'int' 
+                                else None)
+            }
 
 
 
@@ -43,6 +70,53 @@ enamldef LinearRegression_View(GroupBox): me:
 
     attr model
 
-    InputsTargetsSelector_View:
-        model = me.model.input_selector
+    Notebook:
+        
+        Page:
 
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
+                CheckBox:
+                    checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
+
+                Label:
+                    text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
+                CheckBox:
+                    checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
+
+                Label:
+                    text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
+                CheckBox:
+                    checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
+
+                Label:
+                    text = 'Number of Cores Type'
+                ObjectCombo:
+                    items = model.number_of_cores_type_list
+                    selected := model.number_of_cores_type
+
+                Conditional:
+                    condition << model.number_of_cores_type == 'int'
+                    Label:
+                        text = 'Number of Cores'
+                    IntField:
+                        value := model.number_of_cores

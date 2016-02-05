@@ -23,25 +23,43 @@ class TheilSenRegressor_UI(Atom):
 
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = 'Whether to calculate the intercept for this model. If set to false, no intercept will be used in calculations.'
     # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
     # max_subpopulation
     max_subpopulation = Int(10000)
+    max_subpopulation_tooltip = (
+        'Instead of computing with a set of cardinality 'n choose k', \n'
+        'where n is the number of samples and k is the number of subsamples (at least number of features), \n'
+        'consider only a stochastic subpopulation of a given maximal size if 'n choose k' is larger than max_subpopulation. \n'
+        'For other than small problem sizes this parameter will determine memory usage and runtime if n_subsamples is not changed.\n'
+        )
     # n_subsamples_type
     n_subsamples_type = Str('None')
     n_subsamples_type_list = List(str, ['None', 'int'])
     # n_subsamples_int
     n_subsamples_int = Int()
+    n_subsamples_int_tooltip = (
+        'Number of samples to calculate the parameters. \n'
+        'This is at least the number of features (plus 1 if fit_intercept=True) and the number of samples as a maximum. \n'
+        'A lower number leads to a higher breakdown point and a low efficiency while a high number leads to a low breakdown point and a high efficiency. \n'
+        'If None, take the minimum number of subsamples leading to maximal robustness. \n'
+        'If n_subsamples is set to n_samples, Theil-Sen is identical to least squares.\n'
+        )
     # max_iter
     max_iter = Int(300)
+    max_iter_tooltip = 'Maximum number of iterations for the calculation of spatial median.'
     # tol
     tol = Float(0.001)
+    tol_tooltip = 'Tolerance when calculating spatial median.'
     # random_state
     random_state = Int(1)
+    random_state_tooltip = 'A random number generator instance to define the state of the random permutations generator.'
     # verbose
     verbose = Bool(False)
-    # cores_selector
-    cores_selector = Value(Atom)
+    verbose_tooltip = 'Verbose mode when fitting the model.'
+    
         
 
 class TheilSenRegressor_Model(ABCRegressionModel):
@@ -104,49 +122,65 @@ enamldef TheilSenRegressor_View(GroupBox): me:
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
                     text = 'Max Subpopulation'
+                    tool_tip = model.max_subpopulation_tooltip
                 IntField:
                     value := model.max_subpopulation
+                    tool_tip = me.model.max_subpopulation_tooltip
 
                 Label:
-                    text = '# Subsamples Type'
+                    text = 'N Subsamples Type'
                 ObjectCombo:
                     items = model.n_subsamples_type_list
                     selected := model.n_subsamples_type
 
                 Label:
-                    text = '# Subsamples'
+                    text = 'N Subsamples Int'
+                    tool_tip = model.n_subsamples_int_tooltip
                 IntField:
                     value := model.n_subsamples_int
+                    tool_tip = me.model.n_subsamples_int_tooltip
 
                 Label:
-                    text = 'Max Iterations'
+                    text = 'Max Iter'
+                    tool_tip = model.max_iter_tooltip
                 IntField:
                     value := model.max_iter
+                    tool_tip = me.model.max_iter_tooltip
 
                 Label:
-                    text = 'Tolerance'
+                    text = 'Tol'
+                    tool_tip = model.tol_tooltip
                 FloatField:
                     value := model.tol
+                    tool_tip = me.model.tol_tooltip
 
                 Label:
                     text = 'Random State'
+                    tool_tip = model.random_state_tooltip
                 IntField:
                     value := model.random_state
+                    tool_tip = me.model.random_state_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
                     
                 CoresSelector_View:
                     model = me.model.cores_selector

@@ -20,23 +20,49 @@ class LassoLarsIC_UI(Atom):
     # criterion
     criterion = Str('aic')
     criterion_list = List(str, ['aic', 'bic'])
+    criterion_tooltip = 'The type of criterion to use.'
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'Sets the verbosity amount.'
     # normalize
     normalize = Bool(True)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
     # precompute
     precompute = Str('auto')
     precompute_list = List(str, ['True', 'False', 'auto'])
+    precompute_tooltip = (
+        'Whether to use a precomputed Gram matrix to speed up calculations. \n'
+        'If set to 'auto' let us decide. The Gram matrix can also be passed as argument.\n'
+        )
     # max_iter
     max_iter = Int(500)
+    max_iter_tooltip = 'Maximum number of iterations to perform. Can be used for early stopping.'
     # eps
     eps = Float(2.22044604925e-16)
+    eps_tooltip = (
+        'The machine-precision regularization in the computation of the Cholesky diagonal factors. \n'
+        'Increase this for very ill-conditioned systems. \n'
+        'Unlike the tol parameter in some iterative optimization-based algorithms, \n'
+        'this parameter does not control the tolerance of the optimization.\n'
+        )
     # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
     # positive
     positive = Bool(False)
+    positive_tooltip = (
+        'Restrict coefficients to be >= 0. Be aware that you might want to remove fit_intercept which is set True by default. \n'
+        'Under the positive restriction the model coefficients do not converge to the ordinary-least-squares solution for small values of alpha. \n'
+        'Only coeffiencts up to the smallest alpha value (alphas_[alphas_ > 0.].min() when fit_path=True) reached by the stepwise Lars-Lasso algorithm are typically in congruence with the solution of the coordinate descent Lasso estimator. \n'
+        'As a consequence using LassoLarsIC only makes sense for problems where a sparse solution is expected and/or reached.\n'
+        )
+        
 
 
 class LassoLarsIC_Model(ABCRegressionModel):
@@ -59,17 +85,19 @@ class LassoLarsIC_Model(ABCRegressionModel):
     
     def getArgs(self):
         
-        return {'criterion': self.uiModel.criterion,
-                'fit_intercept': self.uiModel.fit_intercept,
-                'verbose': self.uiModel.verbose,
-                'normalize': self.uiModel.normalize,
-                'precompute': (self.uiModel.precompute 
-                               if self.uiModel.precompute == 'auto'
-                               else bool(self.uiModel.precompute)),
-                'max_iter': self.uiModel.max_iter,
-                'eps': self.uiModel.eps,
-                'copy_X': self.uiModel.copy_X,
-                'positive': self.uiModel.positive}
+        return {
+            'criterion': self.uiModel.criterion,
+            'fit_intercept': self.uiModel.fit_intercept,
+            'verbose': self.uiModel.verbose,
+            'normalize': self.uiModel.normalize,
+            'precompute': (self.uiModel.precompute 
+                           if self.uiModel.precompute == 'auto'
+                           else bool(self.uiModel.precompute)),
+            'max_iter': self.uiModel.max_iter,
+            'eps': self.uiModel.eps,
+            'copy_X': self.uiModel.copy_X,
+            'positive': self.uiModel.positive
+            }
  
  
  
@@ -96,47 +124,65 @@ enamldef LassoLarsIC_View(GroupBox): me:
 
                 Label:
                     text = 'Criterion'
+                    tool_tip = model.criterion_tooltip
                 ObjectCombo:
                     items = model.criterion_list
                     selected := model.criterion
+                    tool_tip = me.model.criterion_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Label:
                     text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
                 CheckBox:
                     checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
 
                 Label:
                     text = 'Precompute'
+                    tool_tip = model.precompute_tooltip
                 ObjectCombo:
                     items = model.precompute_list
                     selected := model.precompute
+                    tool_tip = me.model.precompute_tooltip
 
                 Label:
-                    text = 'Max Iterations'
+                    text = 'Max Iter'
+                    tool_tip = model.max_iter_tooltip
                 IntField:
                     value := model.max_iter
+                    tool_tip = me.model.max_iter_tooltip
 
                 Label:
-                    text = 'eps'
+                    text = 'Eps'
+                    tool_tip = model.eps_tooltip
                 FloatField:
                     value := model.eps
+                    tool_tip = me.model.eps_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
                     text = 'Positive'
+                    tool_tip = model.positive_tooltip
                 CheckBox:
                     checked := model.positive
+                    tool_tip = me.model.positive_tooltip

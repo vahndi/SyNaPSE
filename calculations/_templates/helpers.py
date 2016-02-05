@@ -158,11 +158,21 @@ class widget(object):
     def has_tooltip(self):
         
         return isinstance(self.w_tooltip, (str, unicode))
-        
+
+
     def get_tooltip(self):
         
         try:
-            return str(self.w_tooltip).encode('string-escape')
+            tt = str(self.w_tooltip).encode('string-escape')
+            if not '\\n' in tt:
+                return "'" + tt + "'"
+            else:
+                tt_lines = self.w_tooltip.split('\n')
+                tt_lines = [l.strip("'") for l in tt_lines]
+                tt_lines = ["\t'" + l + "\\n'" for l in tt_lines]
+                tt_lines.insert(0, '(')
+                tt_lines.append('\t)')
+                return '\n'.join(tt_lines)
         except:
             print self.w_tooltip
             sys.exit()

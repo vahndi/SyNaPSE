@@ -20,26 +20,60 @@ class LassoLars_UI(Atom):
     # alpha
     alpha = Float(1)
     alpha_min = Float(0)
+    alpha_tooltip = (
+        'Constant that multiplies the penalty term. Defaults to 1.0. \n'
+        'alpha = 0 is equivalent to an ordinary least square, solved by LinearRegression. \n'
+        'For numerical reasons, using alpha = 0 with the LassoLars object is not advised and you should prefer the LinearRegression object.\n'
+        )
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
     # positive
     positive = Bool(False)
+    positive_tooltip = (
+        'Restrict coefficients to be >= 0. Be aware that you might want to remove fit_intercept which is set True by default. \n'
+        'Under the positive restriction the model coefficients will not converge to the ordinary-least-squares solution for small values of alpha. \n'
+        'Only coefficiets up to the smallest alpha value (alphas_[alphas_ > 0.].min() when fit_path=True) reached by the stepwise Lars-Lasso algorithm are typically in congruence with the solution of the coordinate descent Lasso estimator.\n'
+        )
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'Sets the verbosity amount.'
     # normalize
     normalize = Bool(False)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
     # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
     # precompute
     precompute = Str('auto')
     precompute_list = List(str, ['True', 'False', 'auto'])
+    precompute_tooltip = (
+        'Whether to use a precomputed Gram matrix to speed up calculations. \n'
+        'If set to 'auto' let us decide. The Gram matrix can also be passed as argument.\n'
+        )
     # max_iter
     max_iter = Int(500)
     max_iter_min = Int(1)
+    max_iter_tooltip = 'Maximum number of iterations to perform.'
     # eps
     eps = Float(2.22044604925e-16)
+    eps_tooltip = (
+        'The machine-precision regularization in the computation of the Cholesky diagonal factors. \n'
+        'Increase this for very ill-conditioned systems. \n'
+        'Unlike the tol parameter in some iterative optimization-based algorithms, \n'
+        'this parameter does not control the tolerance of the optimization.\n'
+        )
     # fit_path
     fit_path = Bool(True)
+    fit_path_tooltip = (
+        'If True the full path is stored in the coef_path_ attribute. \n'
+        'If you compute the solution for a large problem or many targets, \n'
+        'setting fit_path to False will lead to a speedup, especially with a small alpha.\n'
+        )
+        
 
 
 class LassoLars_Model(ABCRegressionModel):
@@ -98,53 +132,73 @@ enamldef LassoLars_View(GroupBox): me:
 
                 Label:
                     text = 'Alpha'
+                    tool_tip = model.alpha_tooltip
                 FloatField:
                     value := model.alpha
                     minimum = model.alpha_min
+                    tool_tip = me.model.alpha_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Positive'
+                    tool_tip = model.positive_tooltip
                 CheckBox:
                     checked := model.positive
+                    tool_tip = me.model.positive_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Label:
                     text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
                 CheckBox:
                     checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
                     text = 'Precompute'
+                    tool_tip = model.precompute_tooltip
                 ObjectCombo:
                     items = model.precompute_list
                     selected := model.precompute
+                    tool_tip = me.model.precompute_tooltip
 
                 Label:
-                    text = 'Max Iterations'
+                    text = 'Max Iter'
+                    tool_tip = model.max_iter_tooltip
                 IntField:
                     value := model.max_iter
                     minimum = model.max_iter_min
+                    tool_tip = me.model.max_iter_tooltip
 
                 Label:
-                    text = 'eps'
+                    text = 'Eps'
+                    tool_tip = model.eps_tooltip
                 FloatField:
                     value := model.eps
+                    tool_tip = me.model.eps_tooltip
 
                 Label:
                     text = 'Fit Path'
+                    tool_tip = model.fit_path_tooltip
                 CheckBox:
                     checked := model.fit_path
+                    tool_tip = me.model.fit_path_tooltip

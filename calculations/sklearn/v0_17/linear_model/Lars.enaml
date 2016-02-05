@@ -10,7 +10,7 @@ from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
 # Models
 from ._base.regression_model import ABCRegressionModel
 from sklearn.linear_model import Lars
-
+from numpy import inf
 
 
 class Lars_UI(Atom):
@@ -19,23 +19,52 @@ class Lars_UI(Atom):
 
     # n_nonzero_coefs
     n_nonzero_coefs = Int(500)
+    use_n_nonzero_coefs = Bool()
+    n_nonzero_coefs_tooltip = 'Target number of non-zero coefficients. Deselect for no limit.'
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
     # positive
     positive = Bool(False)
+    positive_tooltip = (
+        'Restrict coefficients to be >= 0. \n'
+        'Be aware that you might want to remove fit_intercept which is set True by default.\n'
+        )
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'Sets the verbosity amount.'
     # normalize
     normalize = Bool(True)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
     # precompute
     precompute = Str('auto')
     precompute_list = List(str, ['True', 'False', 'auto'])
+    precompute_tooltip = (
+        'Whether to use a precomputed Gram matrix to speed up calculations. \n'
+        'If set to 'auto' let us decide. The Gram matrix can also be passed as argument.\n'
+        )
     # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
     # eps
     eps = Float(2.22044604925e-16)
+    eps_tooltip = (
+        'The machine-precision regularization in the computation of the Cholesky diagonal factors. \n'
+        'Increase this for very ill-conditioned systems. \n'
+        'Unlike the tol parameter in some iterative optimization-based algorithms, \n'
+        'this parameter does not control the tolerance of the optimization.\n'
+        )
     # fit_path
     fit_path = Bool(False)
+    fit_path_tooltip = (
+        'If True the full path is stored in the coef_path_ attribute. \n'
+        'If you compute the solution for a large problem or many targets,\n'
+        'setting fit_path to False will lead to a speedup, especially with a small alpha.\n'
+        )
+
 
 
 class Lars_Model(ABCRegressionModel):
@@ -56,17 +85,19 @@ class Lars_Model(ABCRegressionModel):
 
     def getArgs(self):
         
-        return {'n_nonzero_coefs': self.uiModel.n_nonzero_coefs,
-                'fit_intercept': self.uiModel.fit_intercept,
-                'positive': self.uiModel.positive,
-                'verbose': self.uiModel.verbose,
-                'normalize': self.uiModel.normalize,
-                'precompute': (self.uiModel.precompute 
-                               if self.uiModel.precompute == 'auto'
-                               else bool(self.uiModel.precompute)),
-                'copy_X': self.uiModel.copy_X,
-                'eps': self.uiModel.eps,
-                'fit_path': self.uiModel.fit_path}
+        return {
+            'n_nonzero_coefs': (inf 
+                                if not self.uiModel.use_n_nonzero_coefs 
+                                else self.uiModel.n_nonzero_coefs),
+            'fit_intercept': self.uiModel.fit_intercept,
+            'positive': self.uiModel.positive,
+            'verbose': self.uiModel.verbose,
+            'normalize': self.uiModel.normalize,
+            'precompute': self.uiModel.precompute,
+            'copy_X': self.uiModel.copy_X,
+            'eps': self.uiModel.eps,
+            'fit_path': self.uiModel.fit_path
+            }
 
 
 
@@ -91,48 +122,71 @@ enamldef Lars_View(GroupBox): me:
 
             Form:
 
+                CheckBox:
+                    tool_tip = model.n_nonzero_coefs_tooltip
+                    text = 'N Nonzero Coefs'
+                    checked := model.use_n_nonzero_coefs
                 Label:
-                    text = '# Non-zero Coefficients'
+                    text = 'N/A'
+                    visible << not model.use_n_nonzero_coefs
                 IntField:
                     value := model.n_nonzero_coefs
+                    visible << model.use_n_nonzero_coefs
+                    tool_tip = me.model.n_nonzero_coefs_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Positive'
+                    tool_tip = model.positive_tooltip
                 CheckBox:
                     checked := model.positive
+                    tool_tip = me.model.positive_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Label:
                     text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
                 CheckBox:
                     checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
 
                 Label:
                     text = 'Precompute'
+                    tool_tip = model.precompute_tooltip
                 ObjectCombo:
                     items = model.precompute_list
                     selected := model.precompute
+                    tool_tip = me.model.precompute_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
-                    text = 'eps'
+                    text = 'Eps'
+                    tool_tip = model.eps_tooltip
                 FloatField:
                     value := model.eps
+                    tool_tip = me.model.eps_tooltip
 
                 Label:
                     text = 'Fit Path'
+                    tool_tip = model.fit_path_tooltip
                 CheckBox:
                     checked := model.fit_path
+                    tool_tip = me.model.fit_path_tooltip

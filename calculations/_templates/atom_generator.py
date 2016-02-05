@@ -135,7 +135,7 @@ def getAtomWidgetCode(widget_row):
         atomCode += '%suse_%s = Bool(%s)\n' % (indent, widge.w_name, true_str)
             
     if widge.has_tooltip():
-        atomCode += "%s%s_tooltip = '%s'\n" % (indent, widge.w_name, 
+        atomCode += "%s%s_tooltip = %s\n" % (indent, widge.w_name, 
                                                widge.get_tooltip())
     return atomCode
 

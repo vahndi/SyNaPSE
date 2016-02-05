@@ -23,44 +23,100 @@ class SGDRegressor_UI(Atom):
 
     # loss
     loss = Str('squared_loss')
-    loss_list = List(str, ['squared_loss', 'huber', 'epsilon_insensitive', 
-                           'squared_epsilon_insensitive'])
+    loss_list = List(str, ['squared_loss', 'huber', 'epsilon_insensitive', 'squared_epsilon_insensitive'])
+    loss_tooltip = (
+        'The loss function to be used. Defaults to 'squared_loss' which refers to the ordinary least squares fit. \n'
+        'huber' modifies 'squared_loss' to focus less on getting outliers correct by switching from squared to linear loss past a distance of epsilon. \n'
+        'epsilon_insensitive' ignores errors less than epsilon and is linear past that; this is the loss function used in SVR. \n'
+        'squared_epsilon_insensitive' is the same but becomes squared loss past a tolerance of epsilon.\n'
+        )
     # penalty
     penalty = Str('l2')
     penalty_list = List(str, ['none', 'l1', 'l2', 'elasticnet'])
+    penalty_tooltip = (
+        'The penalty (aka regularization term) to be used. \n'
+        'Defaults to 'l2' which is the standard regularizer for linear SVM models. \n'
+        'l1' and 'elasticnet' might bring sparsity to the model (feature selection) not achievable with 'l2'.\n'
+        )
     # alpha
     alpha = Float(0.0001)
+    alpha_tooltip = (
+        'Constant that multiplies the regularization term. Defaults to 0.0001 \n'
+        'Also used to compute learning_rate when set to 'optimal'.\n'
+        )
     # l1_ratio
     l1_ratio = Float(0.15)
     l1_ratio_min = Float(0)
     l1_ratio_max = Float(1)
+    l1_ratio_tooltip = (
+        'The Elastic Net mixing parameter, with 0 <= l1_ratio <= 1. \n'
+        'l1_ratio=0 corresponds to L2 penalty, l1_ratio=1 to L1. \n'
+        'Defaults to 0.15.\n'
+        )
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether the intercept should be estimated or not. \n'
+        'If False, the data is assumed to be already centered. \n'
+        'Defaults to True.\n'
+        )
     # n_iter
     n_iter = Int(5)
+    n_iter_tooltip = (
+        'The number of passes over the training data (aka epochs). \n'
+        'The number of iterations is set to 1 if using partial_fit. Defaults to 5.\n'
+        )
     # shuffle
     shuffle = Bool(True)
+    shuffle_tooltip = 'Whether or not the training data should be shuffled after each epoch. Defaults to True.'
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'The verbosity level.'
     # epsilon
     epsilon = Float(0.1)
+    epsilon_tooltip = (
+        'Epsilon in the epsilon-insensitive loss functions; only if loss is 'huber', 'epsilon_insensitive', or 'squared_epsilon_insensitive'. \n'
+        'For 'huber', determines the threshold at which it becomes less important to get the prediction exactly right. \n'
+        'For epsilon-insensitive, any differences between the current prediction and the correct label are ignored if they are less than this threshold.\n'
+        )
     # random_state
     random_state = Int(1)
+    random_state_tooltip = 'The seed of the pseudo random number generator to use when shuffling the data.'
     # learning_rate
     learning_rate = Str('invscaling')
     learning_rate_list = List(str, ['constant', 'invscaling', 'optimal'])
+    learning_rate_tooltip = (
+        'The learning rate: \n'
+        'constant: eta = eta0\n'
+        'optimal: eta = 1.0/(alpha * t) \n'
+        'invscaling: eta = eta0 / pow(t, power_t) [default]\n'
+        )
     # eta0
     eta0 = Float(0.01)
+    eta0_tooltip = 'The initial learning rate [default 0.01].'
     # power_t
     power_t = Float(0.25)
+    power_t_tooltip = 'The exponent for inverse scaling learning rate [default 0.25].'
     # warm_start
     warm_start = Bool(False)
-    # average
+    warm_start_tooltip = (
+        'When set to True, reuse the solution of the previous call to fit as initialization. \n'
+        'Otherwise, just erase the previous solution.\n'
+        )
+    # average_type
     average_type = Str('bool')
     average_type_list = List(str, ['bool', 'int'])
+    # average_bool
     average_bool = Bool(False)
+    average_bool_tooltip = 'When set to True, computes the averaged SGD weights and stores the result in the coef_ attribute. '
+    # average_int
     average_int = Int(10)
     average_int_min = Int(2)
+    average_int_tooltip = (
+        'If set to an int greater than 1, averaging will begin once the total number of samples seen reaches average. \n'
+        'So average=10 will begin averaging after seeing 10 samples.\n'
+        )
+        
         
 
 class SGDRegressor_Model(ABCRegressionModel):
@@ -131,82 +187,110 @@ enamldef SGDRegressor_View(GroupBox): me:
 
                 Label:
                     text = 'Loss'
+                    tool_tip = model.loss_tooltip
                 ObjectCombo:
                     items = model.loss_list
                     selected := model.loss
+                    tool_tip = me.model.loss_tooltip
 
                 Label:
                     text = 'Penalty'
+                    tool_tip = model.penalty_tooltip
                 ObjectCombo:
                     items = model.penalty_list
                     selected := model.penalty
+                    tool_tip = me.model.penalty_tooltip
 
                 Label:
                     text = 'Alpha'
+                    tool_tip = model.alpha_tooltip
                 FloatField:
                     value := model.alpha
+                    tool_tip = me.model.alpha_tooltip
 
                 Label:
                     text = 'L1 Ratio'
+                    tool_tip = model.l1_ratio_tooltip
                 FloatField:
                     value := model.l1_ratio
                     minimum = model.l1_ratio_min
                     maximum = model.l1_ratio_max
+                    tool_tip = me.model.l1_ratio_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'N Iter'
+                    tool_tip = model.n_iter_tooltip
                 IntField:
                     value := model.n_iter
+                    tool_tip = me.model.n_iter_tooltip
 
                 Label:
                     text = 'Shuffle'
+                    tool_tip = model.shuffle_tooltip
                 CheckBox:
                     checked := model.shuffle
+                    tool_tip = me.model.shuffle_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Conditional:
                     condition << model.loss in ('huber', 'epsilon_insensitive', 
                                                 'squared_epsilon_insensitive')
                     Label:
                         text = 'Epsilon'
+                        tool_tip = model.epsilon_tooltip
                     FloatField:
                         value := model.epsilon
+                        tool_tip = me.model.epsilon_tooltip
     
 
                 Label:
                     text = 'Random State'
+                    tool_tip = model.random_state_tooltip
                 IntField:
                     value := model.random_state
+                    tool_tip = me.model.random_state_tooltip
 
                 Label:
                     text = 'Learning Rate'
+                    tool_tip = model.learning_rate_tooltip
                 ObjectCombo:
                     items = model.learning_rate_list
                     selected := model.learning_rate
+                    tool_tip = me.model.learning_rate_tooltip
 
                 Label:
                     text = 'Eta0'
+                    tool_tip = model.eta0_tooltip
                 FloatField:
                     value := model.eta0
+                    tool_tip = me.model.eta0_tooltip
 
                 Label:
                     text = 'Power T'
+                    tool_tip = model.power_t_tooltip
                 FloatField:
                     value := model.power_t
+                    tool_tip = me.model.power_t_tooltip
 
                 Label:
                     text = 'Warm Start'
+                    tool_tip = model.warm_start_tooltip
                 CheckBox:
                     checked := model.warm_start
+                    tool_tip = me.model.warm_start_tooltip
 
                 Label:
                     text = 'Average Type'
@@ -218,14 +302,18 @@ enamldef SGDRegressor_View(GroupBox): me:
                     condition << model.average_type == 'bool'
                     Label:
                         text = 'Average Bool'
+                        tool_tip = model.average_bool_tooltip
                     CheckBox:
                         checked := model.average_bool
+                        tool_tip = me.model.average_bool_tooltip
     
 
                 Conditional:
                     condition << model.average_type == 'int'
                     Label:
                         text = 'Average Int'
+                        tool_tip = model.average_int_tooltip
                     IntField:
                         value := model.average_int
                         minimum = model.average_int_min
+                        tool_tip = me.model.average_int_tooltip

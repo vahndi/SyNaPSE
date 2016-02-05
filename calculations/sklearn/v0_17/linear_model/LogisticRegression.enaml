@@ -28,35 +28,81 @@ class LogisticRegression_UI(Atom):
     input_selector = Value(Atom)
         
     # solver
-    solver = Unicode('liblinear')
+    solver = Str('liblinear')
     solver_list = List(str, ['newton-cg', 'lbfgs', 'liblinear', 'sag'])
     # penalty
-    penalty = Unicode('l2')
+    penalty = Str('l2')
     penalty_list = List(str, ['l1', 'l2'])
+    penalty_tooltip = (
+        'Used to specify the norm used in the penalization. \n'
+        'The newton-cg and lbfgs solvers support only l2 penalties.\n'
+        )
     # dual
     dual = Bool(False)
+    dual_tooltip = (
+        'Dual or primal formulation. \n'
+        'Dual formulation is only implemented for l2 penalty with liblinear solver. \n'
+        'Prefer dual=False when n_samples > n_features.\n'
+        )
     # tolerance
     tolerance = Float(0.0001)
+    tolerance_tooltip = 'Tolerance for stopping criteria.'
     # C
-    C = Float(True)
+    C = Float(1)
+    C_min = Float(0)
+    C_tooltip = (
+        'Inverse of regularization strength; must be a positive float. \n'
+        'Like in support vector machines, smaller values specify stronger regularization.\n'
+        )
     # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = 'Specifies if a constant (a.k.a. bias or intercept) should be added to the decision function.'
     # intercept_scaling
-    intercept_scaling = Float(True)
+    intercept_scaling = Float(1)
+    intercept_scaling_tooltip = (
+        'Useful only if solver is liblinear. \n'
+        'When self.fit_intercept is True, instance vector x becomes [x, self.intercept_scaling], i.e. a "synthetic" feature with constant value equals to intercept_scaling is appended to the instance vector. \n'
+        'The intercept becomes intercept_scaling * synthetic feature weight \n'
+        'Note! the synthetic feature weight is subject to l1/l2 regularization as all other features. \n'
+        'To lessen the effect of regularization on synthetic feature weight (and therefore on the intercept) intercept_scaling has to be increased.\n'
+        )
     # class_weight_type
-    class_weight_type = Unicode('equal')
+    class_weight_type = Str('equal')
     class_weight_type_list = List(str, ['equal', 'balanced'])
+    class_weight_type_tooltip = (
+        'Weights associated with classes in the form {class_label: weight}. \n'
+        'If not given, all classes are supposed to have weight one.\n'
+        'The "balanced" mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))\n'
+        'Note that these weights will be multiplied with sample_weight (passed through the fit method) if sample_weight is specified.\n'
+        'New in version 0.17: class_weight='balanced' instead of deprecated class_weight='auto'.\n'
+        )
     # max_iterations
     max_iterations = Int(100)
+    max_iterations_tooltip = (
+        'Useful only for the newton-cg, sag and lbfgs solvers. \n'
+        'Maximum number of iterations taken for the solvers to converge.\n'
+        )
     # multi_class
-    multi_class = Unicode('ovr')
+    multi_class = Str('ovr')
     multi_class_list = List(str, ['ovr', 'multinomial'])
+    multi_class_tooltip = (
+        'Multiclass option can be either 'ovr' or 'multinomial'. \n'
+        'If the option chosen is 'ovr', then a binary problem is fit for each label. \n'
+        'Else the loss minimised is the multinomial loss fit across the entire probability distribution. \n'
+        'Works only for the 'lbfgs' solver.\n'
+        )
     # random_state_seed
     random_state_seed = Int(1)
+    random_state_seed_tooltip = 'The seed of the pseudo random number generator to use when shuffling the data.'
     # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.'
     # warm_start
     warm_start = Bool(False)
+    warm_start_tooltip = (
+        'When set to True, reuse the solution of the previous call to fit as initialization, otherwise, just erase the previous solution. \n'
+        'Useless for liblinear solver.\n'
+        )
     # cores_selector
     cores_selector = Value(Atom)
         
@@ -146,74 +192,104 @@ enamldef LogisticRegression_View(GroupBox): me:
                     condition << model.solver == 'liblinear'
                     Label:
                         text = 'Penalty'
+                        tool_tip = model.penalty_tooltip
                     ObjectCombo:
                         items = model.penalty_list
                         selected := model.penalty
+                        tool_tip = me.model.penalty_tooltip
+    
 
                 Conditional:
                     condition << model.penalty == 'l2' and model.solver == 'liblinear'
                     Label:
                         text = 'Dual'
+                        tool_tip = model.dual_tooltip
                     CheckBox:
                         checked := model.dual
+                        tool_tip = me.model.dual_tooltip
+    
 
                 Label:
                     text = 'Tolerance'
+                    tool_tip = model.tolerance_tooltip
                 FloatField:
                     value := model.tolerance
+                    tool_tip = me.model.tolerance_tooltip
 
                 Label:
                     text = 'C'
+                    tool_tip = model.C_tooltip
                 FloatField:
                     value := model.C
+                    minimum = model.C_min
+                    tool_tip = me.model.C_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Conditional:
                     condition << model.fit_intercept == True and model.solver == 'liblinear'
                     Label:
                         text = 'Intercept Scaling'
+                        tool_tip = model.intercept_scaling_tooltip
                     FloatField:
                         value := model.intercept_scaling
+                        tool_tip = me.model.intercept_scaling_tooltip
+    
 
                 Label:
                     text = 'Class Weight Type'
+                    tool_tip = model.class_weight_type_tooltip
                 ObjectCombo:
                     items = model.class_weight_type_list
                     selected := model.class_weight_type
+                    tool_tip = me.model.class_weight_type_tooltip
 
                 Conditional:
                     condition << model.solver in ('newton-cg', 'sag', 'lbfgs')
                     Label:
                         text = 'Max Iterations'
+                        tool_tip = model.max_iterations_tooltip
                     IntField:
                         value := model.max_iterations
+                        tool_tip = me.model.max_iterations_tooltip
+    
 
                 Conditional:
                     condition << model.solver == 'lbfgs'
                     Label:
                         text = 'Multi Class'
+                        tool_tip = model.multi_class_tooltip
                     ObjectCombo:
                         items = model.multi_class_list
                         selected := model.multi_class
+                        tool_tip = me.model.multi_class_tooltip
     
+
                 Label:
                     text = 'Random State Seed'
+                    tool_tip = model.random_state_seed_tooltip
                 IntField:
                     value := model.random_state_seed
+                    tool_tip = me.model.random_state_seed_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
 
                 Label:
                     text = 'Warm Start'
+                    tool_tip = model.warm_start_tooltip
                 CheckBox:
                     checked := model.warm_start
+                    tool_tip = me.model.warm_start_tooltip
 
                 CoresSelector_View:
                     model = me.model.cores_selector

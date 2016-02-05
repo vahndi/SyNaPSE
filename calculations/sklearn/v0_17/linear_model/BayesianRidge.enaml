@@ -15,17 +15,39 @@ from sklearn.linear_model import BayesianRidge
 class BayesianRidge_UI(Atom):
 
     input_selector = Value(Atom)
+    # n_iter
     n_iter = Int(300)
+    n_iter_tooltip = 'Maximum number of iterations.'
+    # tol
     tol = Float(0.001)
+    tol_tooltip = 'Stop the algorithm if w has converged.'
+    # alpha_1
     alpha_1 = Float(1e-06)
+    alpha_1_tooltip = 'Hyper-parameter : shape parameter for the Gamma distribution prior over the alpha parameter.'
+    # alpha_2
     alpha_2 = Float(1e-06)
+    alpha_2_tooltip = 'Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the alpha parameter.'
+    # lambda_1
     lambda_1 = Float(1e-06)
+    lambda_1_tooltip = 'Hyper-parameter : shape parameter for the Gamma distribution prior over the lambda parameter.'
+    # lambda_2
     lambda_2 = Float(1e-06)
+    lambda_2_tooltip = 'Hyper-parameter : inverse scale parameter (rate parameter) for the Gamma distribution prior over the lambda parameter.'
+    # compute_score
     compute_score = Bool(False)
+    compute_score_tooltip = 'If True, compute the objective function at each step of the model.'
+    # fit_intercept
     fit_intercept = Bool(True)
+    fit_intercept_tooltip = 'Whether to calculate the intercept for this model.\nIf set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).'
+    # normalize
     normalize = Bool(False)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
+    # copy_X
     copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
+    # verbose
     verbose = Bool(False)
+    verbose_tooltip = 'Verbose mode when fitting the model.'
 
 
 
@@ -84,56 +106,78 @@ enamldef BayesianRidge_View(GroupBox): me:
             Form:
 
                 Label:
-                    text = 'Max Iterations'
+                    text = 'N Iter'
+                    tool_tip = model.n_iter_tooltip
                 IntField:
                     value := model.n_iter
+                    tool_tip = me.model.n_iter_tooltip
 
                 Label:
-                    text = 'Stopping Tolerance'
+                    text = 'Tol'
+                    tool_tip = model.tol_tooltip
                 FloatField:
                     value := model.tol
+                    tool_tip = me.model.tol_tooltip
 
                 Label:
                     text = 'Alpha 1'
+                    tool_tip = model.alpha_1_tooltip
                 FloatField:
                     value := model.alpha_1
+                    tool_tip = me.model.alpha_1_tooltip
 
                 Label:
                     text = 'Alpha 2'
+                    tool_tip = model.alpha_2_tooltip
                 FloatField:
                     value := model.alpha_2
+                    tool_tip = me.model.alpha_2_tooltip
 
                 Label:
                     text = 'Lambda 1'
+                    tool_tip = model.lambda_1_tooltip
                 FloatField:
                     value := model.lambda_1
+                    tool_tip = me.model.lambda_1_tooltip
 
                 Label:
                     text = 'Lambda 2'
+                    tool_tip = model.lambda_2_tooltip
                 FloatField:
                     value := model.lambda_2
+                    tool_tip = me.model.lambda_2_tooltip
 
                 Label:
                     text = 'Compute Score'
+                    tool_tip = model.compute_score_tooltip
                 CheckBox:
                     checked := model.compute_score
+                    tool_tip = me.model.compute_score_tooltip
 
                 Label:
                     text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
                 CheckBox:
                     checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
 
                 Label:
                     text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
                 CheckBox:
                     checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
 
                 Label:
                     text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
                 CheckBox:
                     checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
 
                 Label:
                     text = 'Verbose'
+                    tool_tip = model.verbose_tooltip
                 CheckBox:
                     checked := model.verbose
+                    tool_tip = me.model.verbose_tooltip
