@@ -6,7 +6,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectC
 from custom_views.fields import Field
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrameOrSeries
+from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 import re
 from pandas import Series, DataFrame
@@ -20,16 +20,16 @@ class DataFrameQuantiles_UI(Atom):
     axis_list = List(str, ['index', 'columns'])
     axis_tooltip = 'The axis over which the calculation should be applied.'
     # quantiles
-    quantiles = Str('0.5')
+    quantiles = Str('0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9')
     quantiles_tooltip = ('The quantiles to calculate.\n' +
-                         'Enter either a single value or a list of ' +
-                         'values, separated by commas. Values should be ' +
-                         'between 0 and 1.')
+                         'Enter a list of values, separated by commas.\n' + 
+                         'Values should be between 0 and 1.')
     # numeric_only
     numeric_only = Bool(True)
         
 
-class DataFrameQuantiles_Model(ABCDataFrameToDataFrameOrSeries):
+
+class DataFrameQuantiles_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Quantiles'
@@ -47,10 +47,8 @@ class DataFrameQuantiles_Model(ABCDataFrameToDataFrameOrSeries):
             try:
                 quantiles = [float(q) for q in re.split('\s*,\s*', 
                                                         str_quantiles)]
-                if len(quantiles) == 1:
-                    quantiles = quantiles[0]
             except:
-                quantiles = 0.5
+                quantiles = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
             return quantiles
 
         try:
@@ -63,19 +61,9 @@ class DataFrameQuantiles_Model(ABCDataFrameToDataFrameOrSeries):
                 }
             
             quantiles = self._dataframe.quantile(** args)
-            
-            if type(quantiles) is DataFrame:
-                
-                quantiles.index.name = 'quantile'
-                return {'dataframe': quantiles}
-            
-            else:
-                
-                quantiles.index.name = ('column'
-                                        if self.uiModel.axis == 'index'
-                                        else 'index')
-                quantiles.name = 'quantile'
-                return {'series': quantiles}
+            quantiles.index.name = 'quantile'
+            return {'dataframe': quantiles}
+
 
         except Exception as e:
 

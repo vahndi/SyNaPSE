@@ -1,0 +1,20 @@
+from ._base.SeriesStatistic2 import SeriesStatistic2_Model
+from ._base.SeriesStatistic2 import SeriesStatistic2_View
+
+
+
+class SeriesVariance_Model(SeriesStatistic2_Model):
+    
+    
+    calc_name = 'Variance'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'var'
+
+
+
+enamldef SeriesVariance_View(SeriesStatistic2_View):
+    
+    pass

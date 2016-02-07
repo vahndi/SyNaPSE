@@ -1,0 +1,63 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from calculations._core.ABCs import ABCSeriesToInt
+
+
+
+class SeriesCountNonNull_UI(Atom):
+
+    # numeric_only
+    numeric_only = Bool()
+    numeric_only_tooltip = 'Include only float, int, boolean data.'
+
+
+
+class SeriesCountNonNull_Model(ABCSeriesToInt):
+
+
+    calc_name = 'Count Non-Null'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = SeriesCountNonNull_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'numeric_only': self.uiModel.numeric_only
+                }
+                
+            integer = self._series.count(**args)
+            
+            return {'int': integer}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesCountNonNull_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Numeric Only'
+            tool_tip = model.numeric_only_tooltip
+        CheckBox:
+            checked := model.numeric_only
+            tool_tip = model.numeric_only_tooltip

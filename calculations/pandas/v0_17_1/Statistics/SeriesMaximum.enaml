@@ -1,0 +1,20 @@
+from ._base.SeriesStatistic1 import SeriesStatistic1_Model
+from ._base.SeriesStatistic1 import SeriesStatistic1_View
+
+
+
+class SeriesMaximum_Model(SeriesStatistic1_Model):
+    
+    
+    calc_name = 'Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'max'
+
+
+
+enamldef SeriesMaximum_View(SeriesStatistic1_View):
+    
+    pass

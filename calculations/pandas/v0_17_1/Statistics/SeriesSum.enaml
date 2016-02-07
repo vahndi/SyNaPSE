@@ -1,0 +1,20 @@
+from ._base.SeriesStatistic1 import SeriesStatistic1_Model
+from ._base.SeriesStatistic1 import SeriesStatistic1_View
+
+
+
+class SeriesSum_Model(SeriesStatistic1_Model):
+    
+    
+    calc_name = 'Sum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'sum'
+
+
+
+enamldef SeriesSum_View(SeriesStatistic1_View):
+    
+    pass

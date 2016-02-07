@@ -38,9 +38,9 @@ class Lasso_UI(Atom):
     precompute_list = List(str, ['True', 'False', 'auto'])
     precompute_tooltip = (
         'Whether to use a precomputed Gram matrix to speed up calculations. \n'
-        'If set to 'auto' let us decide. The Gram matrix can also be passed as argument. \n'
+        'If set to \'auto\' let us decide. The Gram matrix can also be passed as argument. \n'
         'For sparse input this option is always True to preserve sparsity. \n'
-        'WARNING : The 'auto' option is deprecated and will be removed in 0.18.\n'
+        'WARNING : The \'auto\' option is deprecated and will be removed in 0.18.\n'
         )
     # copy_X
     copy_X = Bool(True)
@@ -68,14 +68,14 @@ class Lasso_UI(Atom):
     random_state = Int(1)
     random_state_tooltip = (
         'The seed of the pseudo random number generator that selects a random feature to update. \n'
-        'Useful only when selection is set to 'random'.\n'
+        'Useful only when selection is set to \'random\'.\n'
         )
     # selection
     selection = Str('cyclic')
     selection_list = List(str, ['cyclic', 'random'])
     selection_tooltip = (
-        'If set to 'random', a random coefficient is updated every iteration rather than looping over features sequentially by default. \n'
-        'This (setting to 'random') often leads to significantly faster convergence especially when tol is higher than 1e-4.\n'
+        'If set to \'random\', a random coefficient is updated every iteration rather than looping over features sequentially by default. \n'
+        'This (setting to \'random\') often leads to significantly faster convergence especially when tol is higher than 1e-4.\n'
         )
 
 

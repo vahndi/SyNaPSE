@@ -1,5 +1,5 @@
 # Atom
-from atom.api import Atom, Bool, Float, Int, List, Unicode, Value
+from atom.api import Atom, Bool, Float, Int, List, Str, Unicode, Value
 
 # Enaml
 from enaml.core.api import Conditional
@@ -74,7 +74,7 @@ class LogisticRegression_UI(Atom):
         'If not given, all classes are supposed to have weight one.\n'
         'The "balanced" mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))\n'
         'Note that these weights will be multiplied with sample_weight (passed through the fit method) if sample_weight is specified.\n'
-        'New in version 0.17: class_weight='balanced' instead of deprecated class_weight='auto'.\n'
+        'New in version 0.17: class_weight=\'balanced\' instead of deprecated class_weight=\'auto\'.\n'
         )
     # max_iterations
     max_iterations = Int(100)
@@ -86,10 +86,10 @@ class LogisticRegression_UI(Atom):
     multi_class = Str('ovr')
     multi_class_list = List(str, ['ovr', 'multinomial'])
     multi_class_tooltip = (
-        'Multiclass option can be either 'ovr' or 'multinomial'. \n'
-        'If the option chosen is 'ovr', then a binary problem is fit for each label. \n'
+        'Multiclass option can be either \'ovr\' or \'multinomial\'. \n'
+        'If the option chosen is \'ovr\', then a binary problem is fit for each label. \n'
         'Else the loss minimised is the multinomial loss fit across the entire probability distribution. \n'
-        'Works only for the 'lbfgs' solver.\n'
+        'Works only for the \'lbfgs\' solver.\n'
         )
     # random_state_seed
     random_state_seed = Int(1)

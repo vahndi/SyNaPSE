@@ -1,0 +1,97 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
+
+# Models
+from calculations._core.ABCs import ABCSeriesToSeries
+
+
+
+class SeriesPercentageChange_UI(Atom):
+
+    # periods
+    periods = Int(1)
+    periods_min = Int(1)
+    periods_tooltip = 'Periods to shift for forming percent change.'
+    # fill_method
+    fill_method = Str('pad')
+    fill_method_list = List(str, ['pad', 'bfill'])
+    fill_method_tooltip = 'How to handle NAs before computing percent changes.'
+    # limit
+    limit = Int()
+    use_limit = Bool()
+    limit_tooltip = 'The number of consecutive NAs to fill before stopping.'
+
+
+
+class SeriesPercentageChange_Model(ABCSeriesToSeries):
+
+
+    calc_name = 'Percentage Change'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = SeriesPercentageChange_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'periods': self.uiModel.periods,
+                'fill_method': self.uiModel.fill_method,
+                'limit': (None 
+                          if not self.uiModel.use_limit 
+                          else self.uiModel.limit)
+                }
+            
+            ser_pctchange = self._series.pct_change(** args)
+            return {'series': ser_pctchange}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesPercentageChange_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Periods'
+            tool_tip = model.periods_tooltip
+        IntField:
+            value := model.periods
+            minimum = model.periods_min
+            tool_tip = model.periods_tooltip
+
+        Label:
+            text = 'Fill Method'
+            tool_tip = model.fill_method_tooltip
+        ObjectCombo:
+            items = model.fill_method_list
+            selected := model.fill_method
+            tool_tip = model.fill_method_tooltip
+
+        CheckBox:
+            tool_tip = model.limit_tooltip
+            text = 'Limit'
+            checked := model.use_limit
+        Label:
+            text = 'N/A'
+            visible << not model.use_limit
+        IntField:
+            value := model.limit
+            visible << model.use_limit
+            tool_tip = model.limit_tooltip

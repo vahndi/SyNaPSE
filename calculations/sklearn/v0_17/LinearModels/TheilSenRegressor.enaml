@@ -30,9 +30,9 @@ class TheilSenRegressor_UI(Atom):
     # max_subpopulation
     max_subpopulation = Int(10000)
     max_subpopulation_tooltip = (
-        'Instead of computing with a set of cardinality 'n choose k', \n'
+        'Instead of computing with a set of cardinality \'n choose k\', \n'
         'where n is the number of samples and k is the number of subsamples (at least number of features), \n'
-        'consider only a stochastic subpopulation of a given maximal size if 'n choose k' is larger than max_subpopulation. \n'
+        'consider only a stochastic subpopulation of a given maximal size if \'n choose k\' is larger than max_subpopulation. \n'
         'For other than small problem sizes this parameter will determine memory usage and runtime if n_subsamples is not changed.\n'
         )
     # n_subsamples_type

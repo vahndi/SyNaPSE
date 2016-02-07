@@ -3,7 +3,7 @@ from ._base.DataFrameStatistic2 import DataFrameStatistic2_View
 
 
 
-class DataFrameStDev_Model(DataFrameStatistic2_Model):
+class DataFrameStdDev_Model(DataFrameStatistic2_Model):
     
     
     calc_name = 'Standard Deviation'

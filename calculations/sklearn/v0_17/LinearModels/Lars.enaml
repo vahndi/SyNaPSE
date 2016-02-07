@@ -44,7 +44,7 @@ class Lars_UI(Atom):
     precompute_list = List(str, ['True', 'False', 'auto'])
     precompute_tooltip = (
         'Whether to use a precomputed Gram matrix to speed up calculations. \n'
-        'If set to 'auto' let us decide. The Gram matrix can also be passed as argument.\n'
+        'If set to \'auto\' let us decide. The Gram matrix can also be passed as argument.\n'
         )
     # copy_X
     copy_X = Bool(True)

@@ -61,7 +61,7 @@ class Ridge_UI(Atom):
         '\'sparse_cg\' uses the conjugate gradient solver as found in scipy.sparse.linalg.cg. As an iterative algorithm, this solver is more appropriate than \'cholesky\' for large-scale data (possibility to set tol and max_iter).\n'
         '\'lsqr\' uses the dedicated regularized least-squares routine scipy.sparse.linalg.lsqr. It is the fatest but may not be available in old scipy versions. It also uses an iterative procedure.\n'
         '\'sag\' uses a Stochastic Average Gradient descent. It also uses an iterative procedure, and is often faster than other solvers when both n_samples and n_features are large. Note that \'sag\' fast convergence is only guaranteed on features with approximately the same scale. You can preprocess the data with a scaler from sklearn.preprocessing.\n'
-        'All last four solvers support both dense and sparse data. However, only 'sag' supports sparse input when fit_intercept is True.\n'
+        'All last four solvers support both dense and sparse data. However, only \'sag\' supports sparse input when fit_intercept is True.\n'
         )
     # random_state
     random_state = Int(1)

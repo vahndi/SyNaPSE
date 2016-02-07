@@ -25,24 +25,24 @@ class SGDRegressor_UI(Atom):
     loss = Str('squared_loss')
     loss_list = List(str, ['squared_loss', 'huber', 'epsilon_insensitive', 'squared_epsilon_insensitive'])
     loss_tooltip = (
-        'The loss function to be used. Defaults to 'squared_loss' which refers to the ordinary least squares fit. \n'
-        'huber' modifies 'squared_loss' to focus less on getting outliers correct by switching from squared to linear loss past a distance of epsilon. \n'
-        'epsilon_insensitive' ignores errors less than epsilon and is linear past that; this is the loss function used in SVR. \n'
-        'squared_epsilon_insensitive' is the same but becomes squared loss past a tolerance of epsilon.\n'
+        'The loss function to be used. Defaults to \'squared_loss\' which refers to the ordinary least squares fit. \n'
+        '\'huber\' modifies \'squared_loss\' to focus less on getting outliers correct by switching from squared to linear loss past a distance of epsilon. \n'
+        'epsilon_insensitive\' ignores errors less than epsilon and is linear past that; this is the loss function used in SVR. \n'
+        '\'squared_epsilon_insensitive\' is the same but becomes squared loss past a tolerance of epsilon.\n'
         )
     # penalty
     penalty = Str('l2')
     penalty_list = List(str, ['none', 'l1', 'l2', 'elasticnet'])
     penalty_tooltip = (
         'The penalty (aka regularization term) to be used. \n'
-        'Defaults to 'l2' which is the standard regularizer for linear SVM models. \n'
-        'l1' and 'elasticnet' might bring sparsity to the model (feature selection) not achievable with 'l2'.\n'
+        'Defaults to \'l2\' which is the standard regularizer for linear SVM models. \n'
+        '\'l1\' and \'elasticnet\' might bring sparsity to the model (feature selection) not achievable with \'l2\'.\n'
         )
     # alpha
     alpha = Float(0.0001)
     alpha_tooltip = (
         'Constant that multiplies the regularization term. Defaults to 0.0001 \n'
-        'Also used to compute learning_rate when set to 'optimal'.\n'
+        'Also used to compute learning_rate when set to \'optimal\'.\n'
         )
     # l1_ratio
     l1_ratio = Float(0.15)
@@ -75,8 +75,8 @@ class SGDRegressor_UI(Atom):
     # epsilon
     epsilon = Float(0.1)
     epsilon_tooltip = (
-        'Epsilon in the epsilon-insensitive loss functions; only if loss is 'huber', 'epsilon_insensitive', or 'squared_epsilon_insensitive'. \n'
-        'For 'huber', determines the threshold at which it becomes less important to get the prediction exactly right. \n'
+        'Epsilon in the epsilon-insensitive loss functions; only if loss is \'huber\', \'epsilon_insensitive\', or \'squared_epsilon_insensitive\'. \n'
+        'For \'huber\', determines the threshold at which it becomes less important to get the prediction exactly right. \n'
         'For epsilon-insensitive, any differences between the current prediction and the correct label are ignored if they are less than this threshold.\n'
         )
     # random_state
