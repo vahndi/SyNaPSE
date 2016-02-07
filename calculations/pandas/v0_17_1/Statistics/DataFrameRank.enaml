@@ -10,7 +10,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 
 
-class Rank_UI(Atom):
+class DataFrameRank_UI(Atom):
 
     # axis
     axis = Str('index')
@@ -43,7 +43,7 @@ class Rank_UI(Atom):
     pct_tooltip = 'Computes percentage rank of data'
 
 
-class Rank_Model(ABCDataFrameToDataFrame):
+class DataFrameRank_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Rank'
@@ -52,7 +52,7 @@ class Rank_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Rank_UI()
+        self.uiModel = DataFrameRank_UI()
 
 
     def getOutputs(self):
@@ -77,7 +77,7 @@ class Rank_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef Rank_View(GroupBox): me:
+enamldef DataFrameRank_View(GroupBox): me:
 
     attr model
 

@@ -13,7 +13,7 @@ from pandas import concat
 
 
 
-class Round_UI(Atom):
+class DataFrameRound_UI(Atom):
 
     # decimals
     decimals = Int()
@@ -21,7 +21,7 @@ class Round_UI(Atom):
     decimals_tooltip = 'Number of decimal places to round each column to.'
 
 
-class Round_Model(ABCDataFrameToDataFrame):
+class DataFrameRound_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Round'
@@ -30,7 +30,7 @@ class Round_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Round_UI()
+        self.uiModel = DataFrameRound_UI()
 
 
     def getOutputs(self):
@@ -56,7 +56,7 @@ class Round_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef Round_View(GroupBox):
+enamldef DataFrameRound_View(GroupBox):
 
     attr model
 

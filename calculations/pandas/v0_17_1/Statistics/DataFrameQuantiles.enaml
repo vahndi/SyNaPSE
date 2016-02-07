@@ -13,7 +13,7 @@ from pandas import Series, DataFrame
 
 
 
-class Quantiles_UI(Atom):
+class DataFrameQuantiles_UI(Atom):
 
     # axis
     axis = Str('index')
@@ -29,7 +29,7 @@ class Quantiles_UI(Atom):
     numeric_only = Bool(True)
         
 
-class Quantiles_Model(ABCDataFrameToDataFrameOrSeries):
+class DataFrameQuantiles_Model(ABCDataFrameToDataFrameOrSeries):
 
 
     calc_name = 'Quantiles'
@@ -38,7 +38,7 @@ class Quantiles_Model(ABCDataFrameToDataFrameOrSeries):
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Quantiles_UI()
+        self.uiModel = DataFrameQuantiles_UI()
 
 
     def getOutputs(self):
@@ -83,7 +83,7 @@ class Quantiles_Model(ABCDataFrameToDataFrameOrSeries):
 
 
 
-enamldef Quantiles_View(GroupBox):
+enamldef DataFrameQuantiles_View(GroupBox):
 
     attr model
 

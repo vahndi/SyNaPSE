@@ -1,15 +1,16 @@
 # Atom
-from atom.api import Atom, Bool, List, Str
+from atom.api import Atom, Bool, Int, List, Str
 
 # Enaml
-from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
 
 # Models
 from calculations._core.ABCs import ABCDataFrameToSeries
 
 
 
-class Statistic1_UI(Atom):
+class DataFrameStatistic2_UI(Atom):
 
     # axis
     axis = Str('index')
@@ -18,31 +19,39 @@ class Statistic1_UI(Atom):
     # skipna
     skipna = Bool(False)
     skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
-                      'is NA, the result will be NA')
+                      'is NA, the result will be NA.')
+    # ddof
+    ddof = Int(1)
+    ddof_min = Int(1)
+    ddof_tooltip = 'Degrees of Freedom'
     # numeric_only
     numeric_only = Bool(True)
     numeric_only_tooltip = ('Include only float, int, boolean data.\n' +
                             'If False, will attempt to use everything, ' +
                             'then use only numeric data.')
-        
 
-class Statistic1_Model(ABCDataFrameToSeries):
+
+class DataFrameStatistic2_Model(ABCDataFrameToSeries):
 
 
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Statistic1_UI()
-        
+        self.uiModel = Statistic2_UI()
+
 
     def getOutputs(self):
-        
-        try:
-            
-            args = {'axis': self.uiModel.axis,
-                    'skipna': self.uiModel.skipna,
-                    'numeric_only': self.uiModel.numeric_only}
 
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'skipna': self.uiModel.skipna,
+                'ddof': self.uiModel.ddof,
+                'numeric_only': self.uiModel.numeric_only
+                }
+            
             # apply function
             func = getattr(self._dataframe, self.outputFunction)
             series = func(** args)
@@ -52,12 +61,12 @@ class Statistic1_Model(ABCDataFrameToSeries):
             return {'series': series}    
 
         except Exception as e:
-            
+
             return self.standard_exception(e)
 
 
 
-enamldef Statistic1_View(GroupBox):
+enamldef DataFrameStatistic2_View(GroupBox): me:
 
     attr model
 
@@ -70,7 +79,7 @@ enamldef Statistic1_View(GroupBox):
             items = model.axis_list
             selected := model.axis
             tool_tip = model.axis_tooltip
-            
+
         Label:
             text = 'Skip NA / Null Values'
             tool_tip = model.skipna_tooltip
@@ -79,9 +88,18 @@ enamldef Statistic1_View(GroupBox):
             tool_tip = model.skipna_tooltip
 
         Label:
+            text = 'Degrees of Freedom'
+            tool_tip = model.ddof_tooltip
+        IntField:
+            value := model.ddof
+            minimum = model.ddof_min
+            tool_tip = model.ddof_tooltip
+
+        Label:
             text = 'Numeric Only'
             tool_tip = model.numeric_only_tooltip
         CheckBox:
             checked := model.numeric_only
             tool_tip = model.numeric_only_tooltip
-            
+
+

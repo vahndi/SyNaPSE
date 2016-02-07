@@ -1,0 +1,20 @@
+from ._base.DataFrameStatistic1 import DataFrameStatistic1_Model
+from ._base.DataFrameStatistic1 import DataFrameStatistic1_View
+
+
+
+class DataFrameKurtosis_Model(DataFrameStatistic1_Model):
+    
+    
+    calc_name = 'Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'kurtosis'
+
+
+
+enamldef DataFrameKurtosis_View(DataFrameStatistic1_View):
+    
+    pass

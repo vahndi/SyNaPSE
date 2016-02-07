@@ -1,0 +1,20 @@
+from ._base.DataFrameStatistic2 import DataFrameStatistic2_Model
+from ._base.DataFrameStatistic2 import DataFrameStatistic2_View
+
+
+
+class DataFrameVariance_Model(DataFrameStatistic2_Model):
+    
+    
+    calc_name = 'Variance'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'var'
+
+
+
+enamldef DataFrameVariance_View(DataFrameStatistic2_View):
+    
+    pass

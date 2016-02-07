@@ -1,0 +1,20 @@
+from ._base.DataFrameStatistic2 import DataFrameStatistic2_Model
+from ._base.DataFrameStatistic2 import DataFrameStatistic2_View
+
+
+
+class DataFrameStandardError_Model(DataFrameStatistic2_Model):
+    
+    
+    calc_name = 'Standard Error of Mean'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'sem'
+
+
+
+enamldef DataFrameStandardError_View(DataFrameStatistic2_View):
+    
+    pass

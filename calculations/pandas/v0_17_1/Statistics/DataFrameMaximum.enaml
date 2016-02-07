@@ -1,0 +1,20 @@
+from ._base.DataFrameStatistic1 import DataFrameStatistic1_Model
+from ._base.DataFrameStatistic1 import DataFrameStatistic1_View
+
+
+
+class DataFrameMaximum_Model(DataFrameStatistic1_Model):
+    
+    
+    calc_name = 'Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'max'
+
+
+
+enamldef DataFrameMaximum_View(DataFrameStatistic1_View):
+    
+    pass

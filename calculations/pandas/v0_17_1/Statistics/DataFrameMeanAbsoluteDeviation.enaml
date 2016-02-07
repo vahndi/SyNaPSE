@@ -1,36 +1,35 @@
 # Atom
 from atom.api import Atom, Bool, List, Str
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame
+from calculations._core.ABCs import ABCDataFrameToSeries
 
 
 
-class Mode_UI(Atom):
+class DataFrameMeanAbsoluteDeviation_UI(Atom):
 
     # axis
     axis = Str('index')
     axis_list = List(str, ['index', 'columns'])
     axis_tooltip = 'The axis over which the calculation should be applied.'
-    # numeric_only
-    numeric_only = Bool()
-    numeric_only_tooltip = 'If True, only apply to numeric columns.'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = 'Exclude NA / null values. If an entire row / column is NA, the result will be NA.'
 
 
-class Mode_Model(ABCDataFrameToDataFrame):
+class DataFrameMeanAbsoluteDeviation_Model(ABCDataFrameToSeries):
 
 
-    calc_name = 'Mode'
+    calc_name = 'Mean Absolute Deviation'
 
 
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = Mode_UI()
+        self.uiModel = DataFrameMeanAbsoluteDeviation_UI()
 
 
     def getOutputs(self):
@@ -40,20 +39,22 @@ class Mode_Model(ABCDataFrameToDataFrame):
             # Assign local variables
             args = {
                 'axis': self.uiModel.axis,
-                'numeric_only': self.uiModel.numeric_only
+                'skipna': self.uiModel.skipna
                 }
+                
+            series = self._dataframe.mad(**args)
+            series.index.name = self.uiModel.axis
+            series.name = 'mean absolute deviation'
             
-            dataframe = self._dataframe.mode(**args)
+            return {'series': series}
             
-            return {'dataframe': dataframe}
-
         except Exception as e:
 
             return self.standard_exception(e)
 
 
 
-enamldef Mode_View(GroupBox): me:
+enamldef DataFrameMeanAbsoluteDeviation_View(GroupBox): me:
 
     attr model
 
@@ -68,8 +69,8 @@ enamldef Mode_View(GroupBox): me:
             tool_tip = model.axis_tooltip
 
         Label:
-            text = 'Numeric Only'
-            tool_tip = model.numeric_only_tooltip
+            text = 'Skipna'
+            tool_tip = model.skipna_tooltip
         CheckBox:
-            checked := model.numeric_only
-            tool_tip = model.numeric_only_tooltip
+            checked := model.skipna
+            tool_tip = model.skipna_tooltip

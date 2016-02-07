@@ -11,7 +11,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 
 
-class PercentageChange_UI(Atom):
+class DataFramePercentageChange_UI(Atom):
 
     # axis
     axis = Str('index')
@@ -31,7 +31,7 @@ class PercentageChange_UI(Atom):
     limit_tooltip = 'The number of consecutive NAs to fill before stopping.'
 
 
-class PercentageChange_Model(ABCDataFrameToDataFrame):
+class DataFramePercentageChange_Model(ABCDataFrameToDataFrame):
 
 
     calc_name = 'Percentage Change'
@@ -40,7 +40,7 @@ class PercentageChange_Model(ABCDataFrameToDataFrame):
     def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self.uiModel = PercentageChange_UI()
+        self.uiModel = DataFramePercentageChange_UI()
 
 
     def getOutputs(self):
@@ -67,7 +67,7 @@ class PercentageChange_Model(ABCDataFrameToDataFrame):
 
 
 
-enamldef PercentageChange_View(GroupBox): me:
+enamldef DataFramePercentageChange_View(GroupBox): me:
 
     attr model
 
