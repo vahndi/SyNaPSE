@@ -1,0 +1,187 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from ._base.regression_model import ABCRegressionModel
+from sklearn.linear_model import MultiTaskLasso
+
+
+
+class MultiTaskLasso_UI(Atom):
+        
+    input_selector = Value(Atom)
+
+    # alpha
+    alpha = Float(1)
+    alpha_min = Float(0)
+    alpha_tooltip = (
+        'Constant that multiplies the L1 term. Defaults to 1.0. \n'
+        'alpha = 0 is equivalent to an ordinary least square, solved by the LinearRegression object. \n'
+        'For numerical reasons, using alpha = 0 is with the Lasso object is not advised and you should prefer the LinearRegression object.\n'
+        )
+    # fit_intercept
+    fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
+    # normalize
+    normalize = Bool(False)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
+    # copy_X
+    copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
+    # max_iter
+    max_iter = Int(1000)
+    max_iter_min = Int(1)
+    max_iter_tooltip = 'The maximum number of iterations.'
+    # tol
+    tol = Float(0.0001)
+    tol_tooltip = (
+        'The tolerance for the optimization: if the updates are smaller than tol, \n'
+        'the optimization code checks the dual gap for optimality and continues until it is smaller than tol.\n'
+        )
+    # warm_start
+    warm_start = Bool(False)
+    warm_start_tooltip = (
+        'When set to True, reuse the solution of the previous call to fit as initialization, \n'
+        'otherwise, just erase the previous solution.\n'
+        )
+    # random_state
+    random_state = Int(1)
+    random_state_tooltip = (
+        'The seed of the pseudo random number generator that selects a random feature to update. \n'
+        'Useful only when selection is set to \'random\'.\n'
+        )
+    # selection
+    selection = Str('cyclic')
+    selection_list = List(str, ['cyclic', 'random'])
+    selection_tooltip = (
+        'If set to \'random\', a random coefficient is updated every iteration rather than looping over features sequentially by default. \n'
+        'This (setting to \'random\') often leads to significantly faster convergence especially when tol is higher than 1e-4.\n'
+        )
+
+
+class MultiTaskLasso_Model(ABCRegressionModel):
+
+
+    calc_name = 'MultiTask Lasso'
+    calc_desc = \
+        'Multi-task Lasso model trained with L1/L2 mixed-norm as regularizer.'
+    calc_docs = ABCRegressionModel.doc_root + 'MultiTaskLasso.html'
+
+
+    def setInputs(self, dataframe):
+
+        self.estimator_type = MultiTaskLasso
+        self.set_inputs(dataframe)
+        self.uiModel = MultiTaskLasso_UI(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getArgs(self):
+        
+        return {'alpha': self.uiModel.alpha,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'normalize': self.uiModel.normalize,
+                'copy_X': self.uiModel.copy_X,
+                'max_iter': self.uiModel.max_iter,
+                'tol': self.uiModel.tol,
+                'warm_start': self.uiModel.warm_start,
+                'random_state': self.uiModel.random_state,
+                'selection': self.uiModel.selection}
+
+
+
+enamldef MultiTaskLasso_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Alpha'
+                    tool_tip = model.alpha_tooltip
+                FloatField:
+                    value := model.alpha
+                    minimum = model.alpha_min
+                    tool_tip = me.model.alpha_tooltip
+
+                Label:
+                    text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
+                CheckBox:
+                    checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
+
+                Label:
+                    text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
+                CheckBox:
+                    checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
+
+                Label:
+                    text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
+                CheckBox:
+                    checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
+
+                Label:
+                    text = 'Max Iter'
+                    tool_tip = model.max_iter_tooltip
+                IntField:
+                    value := model.max_iter
+                    minimum = model.max_iter_min
+                    tool_tip = me.model.max_iter_tooltip
+
+                Label:
+                    text = 'Tol'
+                    tool_tip = model.tol_tooltip
+                FloatField:
+                    value := model.tol
+                    tool_tip = me.model.tol_tooltip
+
+                Label:
+                    text = 'Warm Start'
+                    tool_tip = model.warm_start_tooltip
+                CheckBox:
+                    checked := model.warm_start
+                    tool_tip = me.model.warm_start_tooltip
+
+                Label:
+                    text = 'Random State'
+                    tool_tip = model.random_state_tooltip
+                IntField:
+                    value := model.random_state
+                    tool_tip = me.model.random_state_tooltip
+
+                Label:
+                    text = 'Selection'
+                    tool_tip = model.selection_tooltip
+                ObjectCombo:
+                    items = model.selection_list
+                    selected := model.selection
+                    tool_tip = me.model.selection_tooltip

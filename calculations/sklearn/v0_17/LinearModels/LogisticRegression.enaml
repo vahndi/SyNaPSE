@@ -239,7 +239,6 @@ enamldef LogisticRegression_View(GroupBox): me:
                     FloatField:
                         value := model.intercept_scaling
                         tool_tip = me.model.intercept_scaling_tooltip
-    
 
                 Label:
                     text = 'Class Weight Type'
@@ -257,7 +256,6 @@ enamldef LogisticRegression_View(GroupBox): me:
                     IntField:
                         value := model.max_iterations
                         tool_tip = me.model.max_iterations_tooltip
-    
 
                 Conditional:
                     condition << model.solver == 'lbfgs'
@@ -268,7 +266,6 @@ enamldef LogisticRegression_View(GroupBox): me:
                         items = model.multi_class_list
                         selected := model.multi_class
                         tool_tip = me.model.multi_class_tooltip
-    
 
                 Label:
                     text = 'Random State Seed'

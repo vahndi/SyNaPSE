@@ -142,11 +142,11 @@ def get_menus_calcs(root_dir):
     calcs = []
     for fname in files:
         for calc_model in calculation_models:
+#            print calc_model
             try:
                 if calc_model.__name__[: -6] == fname[: -6]:
                     calcs.append(calc_model)
             except:
-                
                 sys.exit()
 
     for sd in sub_menus:

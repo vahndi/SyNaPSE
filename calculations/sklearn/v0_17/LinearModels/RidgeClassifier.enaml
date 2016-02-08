@@ -1,0 +1,215 @@
+# Atom
+from atom.api import Atom, Bool, Float, Int, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from enaml.core.api import Conditional
+from custom_views.fields import FloatField, IntField
+from custom_views.InputsTargetsSelector import InputsTargetsSelector_View
+
+# Models
+from ._base.classification_model import ABCClassificationModel
+from sklearn.linear_model import RidgeClassifier
+
+
+
+class RidgeClassifier_UI(Atom):
+
+    input_selector = Value(Atom)
+
+    # alpha
+    alpha = Float(1)
+    alpha_tooltip = (
+        'Small positive values of alpha improve the conditioning of the problem and reduce the variance of the estimates. \n'
+        'Alpha corresponds to C^-1 in other linear models such as LogisticRegression or LinearSVC. \n'
+        'If an array is passed, penalties are assumed to be specific to the targets. Hence they must correspond in number.\n'
+        )
+    # fit_intercept
+    fit_intercept = Bool(True)
+    fit_intercept_tooltip = (
+        'Whether to calculate the intercept for this model. \n'
+        'If set to false, no intercept will be used in calculations (e.g. data is expected to be already centered).\n'
+        )
+    # normalize
+    normalize = Bool(False)
+    normalize_tooltip = 'If True, the regressors X will be normalized before regression.'
+    # copy_X
+    copy_X = Bool(True)
+    copy_X_tooltip = 'If True, X will be copied; else, it may be overwritten.'
+    # max_iter_type
+    max_iter_type = Str('auto, int')
+    max_iter_type_list = List(str)
+    # max_iter_int
+    max_iter_int = Int(1000)
+    max_iter_int_min = Int(1)
+    max_iter_int_tooltip = (
+        'Maximum number of iterations for conjugate gradient solver. \n'
+        'For \'sparse_cg\' and \'lsqr\' solvers, the default value is determined by scipy.sparse.linalg. \n'
+        'For \'sag\' solver, the default value is 1000.\n'
+        )
+    # tol
+    tol = Float(0.001)
+    tol_tooltip = 'Precision of the solution.'
+    # class_weight_type
+    class_weight_type = Str('equal')
+    class_weight_type_list = List(str, ['equal', 'balanced'])
+    class_weight_type_tooltip = (
+        'Weights associated with classes in the form {class_label: weight}. \n'
+        'If not given, all classes are supposed to have weight one.\n'
+        'The "balanced" mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))\n'
+        'Note that these weights will be multiplied with sample_weight (passed through the fit method) if sample_weight is specified.\n'
+        'New in version 0.17: class_weight=\'balanced\' instead of deprecated class_weight=\'auto\'.\n'
+        )
+    # solver
+    solver = Str('auto')
+    solver_list = List(str, ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag'])
+    solver_tooltip = (
+        'Solver to use in the computational routines:\n'
+        '\'auto\' chooses the solver automatically based on the type of data.\n'
+        '\'svd\' uses a Singular Value Decomposition of X to compute the Ridge coefficients. More stable for singular matrices than \'cholesky\'.\n'
+        '\'cholesky\' uses the standard scipy.linalg.solve function to obtain a closed-form solution.\n'
+        '\'sparse_cg\' uses the conjugate gradient solver as found in scipy.sparse.linalg.cg. As an iterative algorithm, this solver is more appropriate than \'cholesky\' for large-scale data (possibility to set tol and max_iter).\n'
+        '\'lsqr\' uses the dedicated regularized least-squares routine scipy.sparse.linalg.lsqr. It is the fatest but may not be available in old scipy versions. It also uses an iterative procedure.\n'
+        '\'sag\' uses a Stochastic Average Gradient descent. It also uses an iterative procedure, and is often faster than other solvers when both n_samples and n_features are large. Note that \'sag\' fast convergence is only guaranteed on features with approximately the same scale. You can preprocess the data with a scaler from sklearn.preprocessing.\n'
+        'All last four solvers support both dense and sparse data. However, only \'sag\' supports sparse input when fit_intercept is True.\n'
+        )
+    # random_state
+    random_state = Int(1)
+    random_state_tooltip = (
+        'The seed of the pseudo random number generator to use when shuffling the data. \n'
+        'Used in \'sag\' solver.\n'
+        )
+
+
+
+class RidgeClassifier_Model(ABCClassificationModel):
+
+
+    calc_name = 'Ridge Classifier'
+    calc_desc = 'Classifier using Ridge regression.'
+    calc_docs = ABCClassificationModel.doc_root + 'RidgeClassifier.html'
+
+
+    def setInputs(self, dataframe):
+        
+        self.estimator_type = RidgeClassifier
+        self.set_inputs(dataframe)
+        self.uiModel = RidgeClassifier_UI(
+                            input_selector = self.input_selector.uiModel
+                            )
+
+
+    def getArgs(self):
+        
+        return {'alpha': self.uiModel.alpha,
+                'fit_intercept': self.uiModel.fit_intercept,
+                'normalize': self.uiModel.normalize,
+                'copy_X': self.uiModel.copy_X,
+                'max_iter': (self.uiModel.max_iter_int 
+                             if self.uiModel.max_iter_type == 'int'
+                             else None),
+                'tol': self.uiModel.tol,
+                'class_weight': ('balanced'
+                                 if self.uiModel.class_weight_type == 'balanced'
+                                 else None),
+                'solver': self.uiModel.solver,
+                'random_state': self.uiModel.random_state}
+
+
+
+enamldef RidgeClassifier_View(GroupBox): me:
+
+    attr model
+
+    Notebook:
+        
+        Page:
+
+            title = 'Inputs'
+            closable = False
+
+            InputsTargetsSelector_View:
+                model := me.model.input_selector
+
+        Page:
+
+            title = 'Model'
+            closable = False
+
+            Form:
+
+                Label:
+                    text = 'Alpha'
+                    tool_tip = model.alpha_tooltip
+                FloatField:
+                    value := model.alpha
+                    tool_tip = me.model.alpha_tooltip
+
+                Label:
+                    text = 'Fit Intercept'
+                    tool_tip = model.fit_intercept_tooltip
+                CheckBox:
+                    checked := model.fit_intercept
+                    tool_tip = me.model.fit_intercept_tooltip
+
+                Label:
+                    text = 'Normalize'
+                    tool_tip = model.normalize_tooltip
+                CheckBox:
+                    checked := model.normalize
+                    tool_tip = me.model.normalize_tooltip
+
+                Label:
+                    text = 'Copy X'
+                    tool_tip = model.copy_X_tooltip
+                CheckBox:
+                    checked := model.copy_X
+                    tool_tip = me.model.copy_X_tooltip
+
+                Label:
+                    text = 'Max Iter Type'
+                ObjectCombo:
+                    items = model.max_iter_type_list
+                    selected := model.max_iter_type
+
+                Conditional:
+                    condition << model.max_iter_type == 'int'
+                    Label:
+                        text = 'Max Iter Int'
+                        tool_tip = model.max_iter_int_tooltip
+                    IntField:
+                        value := model.max_iter_int
+                        minimum = model.max_iter_int_min
+                        tool_tip = me.model.max_iter_int_tooltip
+
+                Label:
+                    text = 'Tol'
+                    tool_tip = model.tol_tooltip
+                FloatField:
+                    value := model.tol
+                    tool_tip = me.model.tol_tooltip
+
+                Label:
+                    text = 'Class Weight Type'
+                    tool_tip = model.class_weight_type_tooltip
+                ObjectCombo:
+                    items = model.class_weight_type_list
+                    selected := model.class_weight_type
+                    tool_tip = me.model.class_weight_type_tooltip
+
+                Label:
+                    text = 'Solver'
+                    tool_tip = model.solver_tooltip
+                ObjectCombo:
+                    items = model.solver_list
+                    selected := model.solver
+                    tool_tip = me.model.solver_tooltip
+
+                Conditional:
+                    condition << model.solver == 'sag'
+                    Label:
+                        text = 'Random State'
+                        tool_tip = model.random_state_tooltip
+                    IntField:
+                        value := model.random_state
+                        tool_tip = me.model.random_state_tooltip
