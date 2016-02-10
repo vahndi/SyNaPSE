@@ -111,7 +111,7 @@ def inspect_calc_args(pickle_name, module_name = ''):
 if __name__ == '__main__':
 
     generate_calc(spreadsheet_name = 'sklearn.linear_model',
-                  calc_name = 'MultiTaskLasso')
+                  calc_name = 'Perceptron')
 
 #    inspect_calc_args(pickle_name = 'sklearn_scrape',
 #                         module_name = 'sklearn.linear_model')
