@@ -1,0 +1,80 @@
+# Atom
+from atom.api import Atom, Bool, Float, List, Str
+
+# Enaml
+from enaml.core.api import Looper
+from enaml.widgets.api import CheckBox, Container, Form, GroupBox, ScrollArea
+from custom_views.fields import FloatField
+
+
+
+class CheckBoxFloatField_Model(Atom):
+    
+    item_name = Str()
+    item_is_checked = Bool()
+    item_value = Float()
+
+
+
+class CheckBoxFloatFieldList_Model(Atom):
+
+
+    cbff_items = List(CheckBoxFloatField_Model)
+
+
+    def __init__(self, item_names, items_checked = None, item_values = None):
+
+        names = [n for n in item_names]
+
+        if not items_checked:
+            checked_list = [False for i in item_names]
+        if type(items_checked) is bool:
+            checked_list = [items_checked for item in item_names]
+        elif type(items_checked) is list:
+            checked_list = [c for c in items_checked]
+        
+        if not item_values:
+            value_list = [0.0 for item in item_names]
+        elif type(item_values) is float:
+            value_list = [item_values for item in item_names]
+        elif type(item_values) is list:
+            value_list = item_values
+
+        cbff_list = [CheckBoxFloatField_Model(
+                         item_name = n, item_is_checked = c, item_value = v
+                         )
+                     for n, c, v in zip(names, checked_list, value_list)]
+        
+        self.cbff_items = cbff_list
+
+
+    def checked_item_values(self):
+        
+        return {i.item_name: i.item_value
+                for i in self.cbff_items
+                if i.item_is_checked}
+
+
+
+enamldef CheckBoxFloatFieldList_View(GroupBox):
+
+
+    attr model
+
+    
+    Container:
+        ScrollArea:
+            Form:
+                Looper:
+                
+                    iterable << [obj for obj in model.cbff_items]
+                    
+                    CheckBox:
+                        text = loop_item.item_name
+                        checked := loop_item.item_is_checked
+                    FloatField:
+                        enabled << loop_item.item_is_checked
+                        value := loop_item.item_value
+
+
+                        

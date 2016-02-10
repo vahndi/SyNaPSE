@@ -1,0 +1,73 @@
+# Atom
+from atom.api import Atom, Float, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField
+from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_Model
+from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_View
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from sklearn.preprocessing import Binarizer
+
+
+class DataFrameBinarizer_UI(Atom):
+
+#    # threshold
+#    threshold = Float(0)
+#    threshold_tooltip = (
+#        'Feature values below or equal to this are replaced by 0,' +
+#        ' above it by 1.\n' + 
+#        'Threshold may not be less than 0 for operations on sparse matrices.'
+#        )
+        
+    # thresholds
+    thresholds = Value(Atom)
+
+
+
+class DataFrameBinarizer_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Binarizer'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        numeric_cols = dataframe.select_dtypes(['number']).columns
+        self.cbff = CheckBoxFloatFieldList_Model(item_names = numeric_cols)
+        self.uiModel = DataFrameBinarizer_UI(thresholds = self.cbff)
+
+
+    def getOutputs(self):
+
+        try:
+            
+            df = self._dataframe
+            names_values = self.cbff.checked_item_values()
+            for name in names_values.keys():
+                b = Binarizer(names_values[name])                
+                df[name + '_binarized'] = b.fit_transform(
+                                              df[name].reshape(-1, 1)
+                                              )
+                
+            return {'dataframe': df}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameBinarizer_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+
+        CheckBoxFloatFieldList_View:
+            
+            model = me.model.thresholds
