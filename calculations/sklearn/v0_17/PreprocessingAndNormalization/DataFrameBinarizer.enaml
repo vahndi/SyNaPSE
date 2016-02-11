@@ -14,6 +14,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 from sklearn.preprocessing import Binarizer
 
 
+
 class DataFrameBinarizer_UI(Atom):
 
     # threshold_type
@@ -107,14 +108,12 @@ enamldef DataFrameBinarizer_View(GroupBox): me:
 
         Conditional:
             condition << model.threshold_type == 'global'
+            
             Label:
                 text = 'Columns'
             CheckBoxList_View:
                 model:= me.model.columns
-    
 
-        Conditional:
-            condition << model.threshold_type == 'global'
             Label:
                 text = 'Threshold'
                 tool_tip = model.threshold_tooltip
