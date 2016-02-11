@@ -58,18 +58,21 @@ def getSeriesFigure(series):
     ax = fig.add_subplot(111)
 
     if not series.index.name:
-        
+
         if series.dtype == 'object':
 
             if len(series.unique()) < len(series):
                 
                 return bar_count_fig(series)
 
-        elif series.dtype == 'float':
+        elif series.dtype in ('float', 'float32', 'float64'):
             
-            if series.index.dtype == 'int':
+            if series.index.dtype in ('int', 'int32', 'int64'):
                 
-                return distribution_fig(series)
+                if len(series.unique()) > 10:
+                    return distribution_fig(series)
+                else:
+                    return bar_count_fig(series)
                 
         return None
     

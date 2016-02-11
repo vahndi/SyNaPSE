@@ -38,11 +38,14 @@ def bar_count_fig(series):
     fig = Figure()
     ax = fig.add_subplot(111)
     
-    counts = series.value_counts()
+    counts = series.value_counts().sort_index()
     sns.barplot(x = counts.index, 
                 y = counts.values, 
                 ax = ax)
-
+    if counts.name:
+        ax.set_xlabel(counts.name)
+    ax.set_ylabel('count')
+    
     return fig
 
 
