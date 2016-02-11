@@ -13,6 +13,16 @@ def setInputCode_CheckBoxList(widget):
             spc(8), widget.w_name, cbl_items)
 
 
+def setInputCode_CheckBoxFloatFieldList(widget):
+    
+    cbl_items = '[???]'
+    if isinstance(widget.w_value, (str, unicode)):
+        cbl_items = str(strlist_to_liststr(widget.w_value))
+
+    return '%sself.%s = CheckBoxFloatFieldList_Model(%s)\n' % (
+            spc(8), widget.w_name, cbl_items)
+
+
 def setInputCode_OrderedList(widget):
     
     return '%sself.%s = OrderedList_Model()\n' % (
@@ -43,6 +53,9 @@ def getOutputCode(widget):
     
     if widget.w_type == 'CheckBoxList':
         outputCode += '%s%s = %sself.%s.checked_item_names()%s\n' \
+                      % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
+    elif widget.w_type == 'CheckBoxFloatFieldList':
+        outputCode += '%s%s = %sself.%s.checked_item_values()%s\n' \
                       % (spc(16), widget.w_name, start_cond, widget.w_name, end_cond)
     elif widget.w_type == 'InputsTargetsSelector':
         outputCode += '%sinput_columns = %sself.%s.checked_inputs()%s\n' \
@@ -84,6 +97,8 @@ def getModelCode(calc_name, dataframe):
     for widge in widgets:  
         if widge.w_type == 'CheckBoxList':
             modelCode += setInputCode_CheckBoxList(widge)
+        if widge.w_type == 'CheckBoxFloatFieldList':
+            modelCode += setInputCode_CheckBoxFloatFieldList(widge)
         elif widge.w_type == 'OrderedList':
             modelCode += setInputCode_OrderedList(widge)
         elif widge.w_type == 'InputsTargetsSelector':
@@ -101,6 +116,9 @@ def getModelCode(calc_name, dataframe):
                               'OrderedList'):
             uiArgs.append('%s = self.%s.uiModel' % (widge.w_name, 
                                                     widge.w_name))
+        elif widge.w_type == 'CheckBoxFloatFieldList':
+            uiArgs.append('%s = self.%s' % (widge.w_name, 
+                                            widge.w_name))            
     if uiArgs:
         modelCode += ', '.join(uiArgs)                
     modelCode += ')\n'

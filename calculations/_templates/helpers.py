@@ -2,6 +2,7 @@ import sys
 
 
 custom_widgets = ('CheckBoxList',
+                  'CheckBoxFloatFieldList',
                   'InputsTargetsSelector',
                   'OrderedList',
                   'RadioButtonList',

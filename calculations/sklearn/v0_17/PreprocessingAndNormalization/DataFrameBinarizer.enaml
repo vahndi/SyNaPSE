@@ -1,0 +1,123 @@
+# Atom
+from atom.api import Atom, Float, List, Str, Value
+
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import FloatField
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_Model, CheckBoxFloatFieldList_View
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from sklearn.preprocessing import Binarizer
+
+
+class DataFrameBinarizer_UI(Atom):
+
+    # threshold_type
+    threshold_type = Str('individual')
+    threshold_type_list = List(str, ['individual', 'global'])
+    threshold_type_tooltip = (
+        'Choose whether to specify the threshold for all selected columns, \n' + 
+        'or for each one individually.'
+        )
+    # thresholds
+    thresholds = Value(Atom)
+    # columns
+    columns = Value(Atom)
+    # threshold
+    threshold = Float(0)
+    threshold_tooltip = (
+        'Feature values below or equal to this are replaced by 0, above it by 1.\n'
+        'Threshold may not be less than 0 for operations on sparse matrices.\n'
+        )
+
+
+
+class DataFrameBinarizer_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Binarizer'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        
+        numeric_cols = dataframe.select_dtypes(['number']).columns
+        self.thresholds = CheckBoxFloatFieldList_Model(item_names = numeric_cols)
+        self.columns = CheckBoxList_Model(numeric_cols)
+
+        self.uiModel = DataFrameBinarizer_UI(
+            thresholds = self.thresholds, 
+            columns = self.columns.uiModel
+            )
+
+    def getOutputs(self):
+
+        try:
+            
+            df = self._dataframe
+            
+            if self.uiModel.threshold_type == 'individual':
+                names_values = self.thresholds.checked_item_values()
+                for name in names_values.keys():
+                    b = Binarizer(names_values[name])                
+                    df[name + '_binarized'] = b.fit_transform(
+                                                  df[name].reshape(-1, 1)
+                                                  )
+            else:
+                names = self.columns.checked_item_names()
+                b = Binarizer(self.uiModel.threshold)
+                for name in names:                
+                    df[name + '_binarized'] = b.fit_transform(
+                                                  df[name].reshape(-1, 1)
+                                                  )                                
+            return {'dataframe': df}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameBinarizer_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Threshold Type'
+            tool_tip = model.threshold_type_tooltip
+        ObjectCombo:
+            items = model.threshold_type_list
+            selected := model.threshold_type
+            tool_tip = me.model.threshold_type_tooltip
+
+        Conditional:
+            condition << model.threshold_type == 'individual'
+            Label:
+                text = 'Thresholds'
+            CheckBoxFloatFieldList_View:
+                model:= me.model.thresholds
+    
+
+        Conditional:
+            condition << model.threshold_type == 'global'
+            Label:
+                text = 'Columns'
+            CheckBoxList_View:
+                model:= me.model.columns
+    
+
+        Conditional:
+            condition << model.threshold_type == 'global'
+            Label:
+                text = 'Threshold'
+                tool_tip = model.threshold_tooltip
+            FloatField:
+                value := model.threshold
+                tool_tip = me.model.threshold_tooltip
