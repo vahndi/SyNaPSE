@@ -65,15 +65,15 @@ class DataFrameBinarizer_Model(ABCDataFrameToDataFrame):
             if self.uiModel.threshold_type == 'individual':
                 names_values = self.thresholds.checked_item_values()
                 for name in names_values.keys():
-                    b = Binarizer(names_values[name])                
-                    df[name + '_binarized'] = b.fit_transform(
+                    binarizer = Binarizer(names_values[name])                
+                    df[name + '_binarized'] = binarizer.fit_transform(
                                                   df[name].reshape(-1, 1)
                                                   )
             else:
                 names = self.columns.checked_item_names()
-                b = Binarizer(self.uiModel.threshold)
+                binarizer = Binarizer(self.uiModel.threshold)
                 for name in names:                
-                    df[name + '_binarized'] = b.fit_transform(
+                    df[name + '_binarized'] = binarizer.fit_transform(
                                                   df[name].reshape(-1, 1)
                                                   )                                
             return {'dataframe': df}

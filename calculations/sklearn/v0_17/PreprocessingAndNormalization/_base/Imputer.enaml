@@ -1,0 +1,81 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import IntField
+
+
+
+class Imputer_UI(Atom):
+
+    # missing_values
+    missing_values = Int()
+    use_missing_values = Bool()
+    missing_values_tooltip = (
+        'The placeholder for the missing values.\n' 
+        'All occurrences of missing_values will be imputed.'
+        )
+    # strategy
+    strategy = Str('mean')
+    strategy_list = List(str, ['mean', 'median', 'most_frequent'])
+    strategy_tooltip = (
+        'The imputation strategy.\n' + 
+        'If \'mean\', then replace missing values using the mean along the axis.\n' + 
+        'If \'median\', then replace missing values using the median along the axis.\n' + 
+        'If \'most_frequent\', then replace missing using the most frequent value along the axis.'
+        )
+    # verbose
+    verbose = Bool(False)
+    verbose_tooltip = 'Controls the verbosity of the imputer.'
+
+
+
+class Imputer_Model(object):
+
+    
+    def getArgs(self):
+        
+        return {
+            'missing_values': ('NaN' 
+                               if not self.uiModel.use_missing_values 
+                               else self.uiModel.missing_values),
+            'strategy': self.uiModel.strategy,
+            'verbose': self.uiModel.verbose
+            }
+
+
+
+enamldef Imputer_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.missing_values_tooltip
+            text = 'Missing Values'
+            checked := model.use_missing_values
+        Label:
+            text = 'N/A'
+            visible << not model.use_missing_values
+        IntField:
+            value := model.missing_values
+            visible << model.use_missing_values
+            tool_tip = me.model.missing_values_tooltip
+
+        Label:
+            text = 'Strategy'
+            tool_tip = model.strategy_tooltip
+        ObjectCombo:
+            items = model.strategy_list
+            selected := model.strategy
+            tool_tip = me.model.strategy_tooltip
+
+        Label:
+            text = 'Verbose'
+            tool_tip = model.verbose_tooltip
+        CheckBox:
+            checked := model.verbose
+            tool_tip = me.model.verbose_tooltip
+

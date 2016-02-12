@@ -1,0 +1,74 @@
+# Atom
+from atom.api import List, Str
+
+# Enaml
+from enaml.widgets.api import Label, ObjectCombo
+
+# Models
+from ._base.Imputer import Imputer_UI, Imputer_Model, Imputer_View
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from sklearn.preprocessing import Imputer
+from pandas import concat, DataFrame
+
+
+
+class DataFrameImputer_UI(Imputer_UI):
+
+    # axis
+    axis = Str('rows')
+    axis_list = List(str, ['rows', 'columns'])
+    axis_tooltip = 'The axis along which to impute.'
+
+
+
+class DataFrameImputer_Model(Imputer_Model, ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Imputer'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrameImputer_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # split numeric and object types
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
+
+            # apply transform
+            args = self.getArgs()
+            args['axis'] = (0 if self.uiModel.axis == 'rows'
+                            else 1)
+            imputer = Imputer(** args)
+            df_numeric_imputed = DataFrame(imputer.fit_transform(df_numeric),
+                                           index = df_numeric.index,
+                                           columns = df_numeric.columns)
+
+            # join back together
+            df_joined = concat([df_object, df_numeric_imputed], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+
+            return {'dataframe': df_joined}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameImputer_View(Imputer_View): me:
+
+
+    Label:
+        text = 'Axis'
+        tool_tip = model.axis_tooltip
+    ObjectCombo:
+        items = model.axis_list
+        selected := model.axis
+        tool_tip = me.model.axis_tooltip
