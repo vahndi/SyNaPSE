@@ -1,0 +1,61 @@
+# Atom
+from atom.api import List, Str
+
+# Enaml
+from enaml.widgets.api import Label, ObjectCombo
+
+# Models
+from ._base.Imputer import Imputer_UI, Imputer_Model, Imputer_View
+from calculations._core.ABCs import ABCSeriesToSeries
+from sklearn.preprocessing import Imputer
+from pandas import Series, Index
+
+
+
+class SeriesImputer_UI(Imputer_UI):
+
+    pass
+
+
+
+class SeriesImputer_Model(Imputer_Model, ABCSeriesToSeries):
+
+
+    calc_name = 'Imputer'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = SeriesImputer_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # apply transform
+            args = self.getArgs()
+            imputer = Imputer(** args)
+            imputed_values = imputer.fit_transform(
+                self._series.reshape(1, -1)
+                ).squeeze()
+            series = Series(imputed_values,
+                            index = Index(
+                                self._series.index,
+                                name = (self._series.index.name + '_imputed'
+                                        if self._series.index.name:
+                                        else 'imputed')
+                                ))
+
+            return {'series': series}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesImputer_View(Imputer_View): me:
+
+    pass
