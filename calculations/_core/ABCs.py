@@ -60,6 +60,9 @@ class ABCSeriesToBool(ABCTakesSeries, ABCOutputsBool):
 class ABCSeriesToInt(ABCTakesSeries, ABCOutputsInt):                 
     pass
 
+class ABCSeriesToDataFrame(ABCTakesSeries, ABCOutputsDataFrame):
+    pass
+
 class ABCSeriesToFloat(ABCTakesSeries, ABCOutputsFloat):
     pass
 

@@ -1,0 +1,55 @@
+# Atom
+from atom.api import Atom, Int
+
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import IntField
+
+
+
+class LabelBinarizer_UI(Atom):
+
+    # neg_label
+    neg_label = Int(0)
+    neg_label_tooltip = 'Value with which negative labels must be encoded.'
+    # pos_label
+    pos_label = Int(1)
+    pos_label_tooltip = 'Value with which positive labels must be encoded.'
+
+
+
+class LabelBinarizer_Model(object):
+
+
+    calc_name = 'Label Binarizer'
+
+
+    def getArgs(self):
+
+        return {
+            'neg_label': self.uiModel.neg_label,
+            'pos_label': self.uiModel.pos_label
+            }
+
+
+
+enamldef LabelBinarizer_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Negative Label'
+            tool_tip = model.neg_label_tooltip
+        IntField:
+            value := model.neg_label
+            tool_tip = me.model.neg_label_tooltip
+
+        Label:
+            text = 'Positive Label'
+            tool_tip = model.pos_label_tooltip
+        IntField:
+            value := model.pos_label
+            tool_tip = me.model.pos_label_tooltip

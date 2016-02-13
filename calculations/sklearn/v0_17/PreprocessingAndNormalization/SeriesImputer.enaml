@@ -44,7 +44,7 @@ class SeriesImputer_Model(Imputer_Model, ABCSeriesToSeries):
                             index = Index(
                                 self._series.index,
                                 name = (self._series.index.name + '_imputed'
-                                        if self._series.index.name:
+                                        if self._series.index.name
                                         else 'imputed')
                                 ))
 

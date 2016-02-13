@@ -1,0 +1,53 @@
+# Enaml
+from enaml.widgets.api import Label, ObjectCombo
+
+# Models
+from ._base.LabelBinarizer import LabelBinarizer_UI, LabelBinarizer_Model, LabelBinarizer_View
+from calculations._core.ABCs import ABCSeriesToDataFrame
+from sklearn.preprocessing import LabelBinarizer
+from pandas import Series, DataFrame, Index
+
+
+
+class SeriesLabelBinarizer_UI(LabelBinarizer_UI):
+
+    pass
+
+
+
+class SeriesLabelBinarizer_Model(LabelBinarizer_Model, ABCSeriesToDataFrame):
+
+
+    calc_name = 'Label Binarizer'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = LabelBinarizer_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # apply transform
+            args = self.getArgs()
+            binarizer = LabelBinarizer(** args)
+            binarizer_values = binarizer.fit_transform( self._series)
+            dataframe = DataFrame(binarizer_values,
+                                  index = self._series.index,
+                                  columns = binarizer.classes_)
+
+
+            return {'dataframe': dataframe}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesLabelBinarizer_View(LabelBinarizer_View): me:
+
+    pass

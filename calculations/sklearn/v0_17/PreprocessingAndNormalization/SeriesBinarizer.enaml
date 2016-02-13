@@ -47,7 +47,7 @@ class SeriesBinarizer_Model(ABCSeriesToSeries):
             series = Series(binarized,
                             index = self._series.index,
                             name = (self._series.index.name + '_binarized'
-                                    if self._series.index.name:
+                                    if self._series.index.name
                                     else 'binarized'))
 
             return {'series': series}
