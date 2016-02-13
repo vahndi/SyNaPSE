@@ -1,0 +1,70 @@
+#Atom
+from atom.api import Atom, Value
+# Enaml
+from enaml.widgets.api import Label
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+# Models
+from ._base.LabelBinarizer import LabelBinarizer_UI, LabelBinarizer_Model, LabelBinarizer_View
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from sklearn.preprocessing import LabelBinarizer
+from pandas import concat, DataFrame
+
+
+
+class DataFrameLabelBinarizer_UI(LabelBinarizer_UI):
+
+    # columns
+    columns = Value(Atom)
+
+
+
+class DataFrameLabelBinarizer_Model(LabelBinarizer_Model, 
+                                    ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Label Binarizer'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        
+        object_cols = dataframe.select_dtypes(['object']).columns
+        self.columns = CheckBoxList_Model(object_cols)
+
+        self.uiModel = DataFrameLabelBinarizer_UI(
+            columns = self.columns.uiModel
+            )
+
+
+    def getOutputs(self):
+
+        try:
+            args = self.getArgs()
+            binarizer = LabelBinarizer(** args)
+            names = self.columns.checked_item_names()
+            df = self._dataframe
+            dfs = []
+            for name in names:
+                binarizer_values = binarizer.fit_transform(df[name])
+                dfs.append(DataFrame(binarizer_values,
+                                     index = df.index,
+                                     columns = binarizer.classes_))
+            df = concat([df] + dfs, axis = 1)
+
+            return {'dataframe': df}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameLabelBinarizer_View(LabelBinarizer_View): me:
+
+            
+    Label:
+        text = 'Columns'
+    CheckBoxList_View:
+        model:= me.model.columns
+
