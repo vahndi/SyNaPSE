@@ -1,0 +1,51 @@
+from _base.StandardScaler import StandardScaler_UI, StandardScaler_Model, StandardScaler_View
+from calculations._core.ABCs import ABCSeriesToSeries
+from sklearn.preprocessing import StandardScaler
+from pandas import Series
+
+
+
+class SeriesStandardScaler_UI(StandardScaler_UI):
+    
+    pass
+
+
+
+class SeriesStandardScaler_Model(ABCSeriesToSeries,
+                                 StandardScaler_Model):
+
+
+    calc_name = 'Standard Scaler'
+    
+    
+    def setInputs(self, series):    
+        
+        self._series = series
+        self.uiModel = SeriesStandardScaler_UI()
+        
+
+    def getOutputs(self):
+        
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            scaler = StandardScaler(** args)
+            scaled_values = scaler.fit_transform(
+                                self._series.reshape(-1, 1)
+                                ).squeeze()
+            series = Series(scaled_values,
+                            index = self._series.index,
+                            name = self._series.name + '_scaled')
+
+            return {'series': series}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesStandardScaler_View(StandardScaler_View):
+    
+    pass

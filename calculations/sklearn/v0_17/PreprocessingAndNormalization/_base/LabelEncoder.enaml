@@ -1,0 +1,16 @@
+# Atom
+from atom.api import Atom
+# Enaml
+from enaml.widgets.api import GroupBox
+
+
+class LabelEncoder_UI(Atom):
+
+    pass
+
+
+
+enamldef LabelEncoder_View(GroupBox):
+    
+    pass
+    

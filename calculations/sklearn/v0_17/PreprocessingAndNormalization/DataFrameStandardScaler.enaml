@@ -1,0 +1,76 @@
+# Atom
+from atom.api import Atom, Value
+# Enaml
+from enaml.widgets.api import Form, Label
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+
+# Models
+from _base.StandardScaler import StandardScaler_UI, StandardScaler_Model
+from _base.StandardScaler import StandardScaler_View
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from sklearn.preprocessing import StandardScaler
+from pandas import Series
+
+
+
+class DataFrameStandardScaler_UI(StandardScaler_UI):
+    
+    # columns
+    columns = Value(Atom)
+    columns_tooltip = 'Select the columns to scale.'
+
+
+
+class DataFrameStandardScaler_Model(ABCDataFrameToDataFrame,
+                                    StandardScaler_Model):
+
+
+    calc_name = 'Standard Scaler'
+    
+    
+    def setInputs(self, dataframe):    
+        
+        self._dataframe = dataframe
+        numeric_cols = dataframe.select_dtypes(['number']).columns
+        self.columns = CheckBoxList_Model(numeric_cols)
+        self.uiModel = DataFrameStandardScaler_UI(
+            columns = self.columns.uiModel
+            )
+        
+
+    def getOutputs(self):
+        
+        try:
+
+            # Assign local variables
+            df = self._dataframe
+            args = self.getArgs()
+            columns = self.columns.checked_item_names()
+            scaler = StandardScaler(** args)
+            for column in columns:
+                scaled_values = scaler.fit_transform(
+                                    self._dataframe[column].reshape(-1, 1)
+                                    ).squeeze()
+                df[column + '_scaled'] = Series(scaled_values,
+                                                index = self._dataframe.index)
+
+            return {'dataframe': df}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameStandardScaler_View(StandardScaler_View): me:
+    
+    
+    Form:
+
+        Label:
+            text = 'Columns'
+            tool_tip = model.columns_tooltip
+        CheckBoxList_View:
+            model:= me.model.columns
+            tool_tip = me.model.columns_tooltip
+    

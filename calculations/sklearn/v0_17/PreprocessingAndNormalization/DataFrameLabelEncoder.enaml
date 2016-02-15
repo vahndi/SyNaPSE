@@ -1,0 +1,69 @@
+# Atom
+from atom.api import Atom, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label
+
+# Models
+from _base.LabelEncoder import LabelEncoder_UI, LabelEncoder_View
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+from sklearn.preprocessing import LabelEncoder
+from pandas import Series
+
+
+
+class DataFrameLabelEncoder_UI(LabelEncoder_UI):
+
+    # columns
+    columns = Value(Atom)
+    columns_tooltip = 'Select the columns to encode labels for.'
+
+
+
+class DataFrameLabelEncoder_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Label Encoder'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe        
+        object_cols = dataframe.select_dtypes(['object']).columns
+        self.columns = CheckBoxList_Model(object_cols)
+        self.uiModel = DataFrameLabelEncoder_UI(columns = self.columns.uiModel)
+
+
+    def getOutputs(self):
+
+        df = self._dataframe
+        columns = self.columns.checked_item_names()
+        encoder = LabelEncoder()
+        for column in columns:
+            series = df[column]
+            df[column + '_encoded'] = Series(
+                            encoder.fit_transform(series), 
+                            index = series.index,
+                            name = series.name + '_encoded'
+                            )
+        
+        return {'dataframe': df}
+
+
+
+enamldef DataFrameLabelEncoder_View(LabelEncoder_View): me:
+    
+    
+    attr model
+
+
+    Form:
+
+        Label:
+            text = 'Columns'
+            tool_tip = model.columns_tooltip
+        CheckBoxList_View:
+            model:= me.model.columns
+            tool_tip = me.model.columns_tooltip
+    

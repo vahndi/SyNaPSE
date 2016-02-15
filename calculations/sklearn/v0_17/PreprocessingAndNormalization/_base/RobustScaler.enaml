@@ -1,0 +1,61 @@
+# Atom
+from atom.api import Atom, Bool
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+
+# Models
+from models_views.calculation import Calculation_Model
+
+
+
+
+class RobustScaler_UI(Atom):
+
+    # with_centering
+    with_centering = Bool(True)
+    with_centering_tooltip = (
+        'If True, center the data before scaling.\n'
+        'This does not work (and will raise an exception) when attempted on sparse matrices, \n'
+        'Because centering them entails building a dense matrix which in common use cases is likely to be too large to fit in memory.\n'
+        )
+    # with_scaling
+    with_scaling = Bool(True)
+    with_scaling_tooltip = 'If True, scale the data to interquartile range.'
+
+
+
+class RobustScaler_Model(Calculation_Model):
+
+
+    calc_name = 'Robust Scaler'
+
+
+    def getArgs(self):
+
+        return {
+            'with_centering': self.uiModel.with_centering,
+            'with_scaling': self.uiModel.with_scaling
+            }
+
+
+
+enamldef RobustScaler_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'With Centering'
+            tool_tip = model.with_centering_tooltip
+        CheckBox:
+            checked := model.with_centering
+            tool_tip = me.model.with_centering_tooltip
+
+        Label:
+            text = 'With Scaling'
+            tool_tip = model.with_scaling_tooltip
+        CheckBox:
+            checked := model.with_scaling
+            tool_tip = me.model.with_scaling_tooltip

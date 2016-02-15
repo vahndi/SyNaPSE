@@ -1,0 +1,51 @@
+# Atom
+from atom.api import Atom, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+
+# Models
+from models_views.calculation import Calculation_Model
+
+
+
+class SeriesMultiLabelBinarizer_UI(MultiLabelBinarizer_UI):
+
+    # classes
+    classes = Value(Atom)
+    classes_tooltip = 'Indicates an ordering for the class labels.'
+
+
+
+class SeriesMultiLabelBinarizer_Model(Calculation_Model):
+
+
+    calc_name = 'MultiLabel Binarizer'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.classes = OrderedList_Model()
+        self.uiModel = SeriesMultiLabelBinarizer_UI(classes = self.classes.uiModel)
+
+
+    def getArgs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesMultiLabelBinarizer_View(MultiLabelBinarizer_View): me:
+
+    pass
+

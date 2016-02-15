@@ -1,0 +1,59 @@
+# Atom
+from atom.api import Atom, Bool
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+
+# Models
+from models_views.calculation import Calculation_Model
+
+
+
+class StandardScaler_UI(Atom):
+
+    # with_mean
+    with_mean = Bool(True)
+    with_mean_tooltip = 'If True, center the data before scaling.'
+    # with_std
+    with_std = Bool(True)
+    with_std_tooltip = (
+        'If True, scale the data to unit variance (or equivalently,\n'
+        'unit standard deviation).'
+        )
+
+
+
+class StandardScaler_Model(object):
+
+
+    calc_name = 'Standard Scaler'
+
+
+    def getArgs(self):
+
+        return {
+            'with_mean': self.uiModel.with_mean,
+            'with_std': self.uiModel.with_std
+            }
+
+
+
+enamldef StandardScaler_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'With Mean'
+            tool_tip = model.with_mean_tooltip
+        CheckBox:
+            checked := model.with_mean
+            tool_tip = me.model.with_mean_tooltip
+
+        Label:
+            text = 'With Standard Deviation'
+            tool_tip = model.with_std_tooltip
+        CheckBox:
+            checked := model.with_std
+            tool_tip = me.model.with_std_tooltip

@@ -1,0 +1,16 @@
+# Atom
+from atom.api import Atom
+# Enaml
+from enaml.widgets.api import GroupBox
+
+
+class MaxAbsScaler_UI(Atom):
+
+    pass
+
+
+
+enamldef MaxAbsScaler_View(GroupBox):
+    
+    pass
+    
