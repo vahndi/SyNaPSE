@@ -1,4 +1,3 @@
-print 'importing %s' % __name__
 # Atom
 from atom.api import Atom, Int, Str
 

@@ -1,0 +1,42 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class FindIndex_UI(Atom):
+
+    # sub
+    sub = Str()
+    sub_tooltip = 'Substring being searched for.'
+    # start
+    start = Int(0)
+    start_tooltip = 'Left edge index.'
+    # end
+    end = Int()
+    use_end = Bool()
+    end_tooltip = 'Right edge index.'
+
+
+
+class FindIndex_Model(object):
+
+
+    def getArgs(self):
+        
+        return {
+            'sub': self.uiModel.sub,
+            'start': self.uiModel.start,
+            'end': (None 
+                    if not self.uiModel.use_end 
+                    else self.uiModel.end)
+            }
+

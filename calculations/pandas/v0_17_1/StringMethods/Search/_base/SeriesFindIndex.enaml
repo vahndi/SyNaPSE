@@ -7,32 +7,33 @@ from custom_views.fields import Field, IntField
 
 # Models
 from FindIndex import FindIndex_UI, FindIndex_Model
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
+from ..._base.SeriesStringMethod import SeriesStringMethod_UI
+from ..._base.SeriesStringMethod import SeriesStringMethod_Model
+from ..._base.SeriesStringMethod import SeriesStringMethod_View
 
 
 
-class DataFrameFindIndex_UI(DataFrameStringMethod_UI, FindIndex_UI):
+class SeriesFindIndex_UI(SeriesStringMethod_UI, FindIndex_UI):
 
     pass
 
 
 
-class DataFrameFindIndex_Model(DataFrameStringMethod_Model, FindIndex_Model):
+class SeriesFindIndex_Model(SeriesStringMethod_Model, FindIndex_Model):
 
 
-    def setInputs(self, dataframe):
+    calc_name = 'Find Index'
 
-        self._dataframe = dataframe     
-        
+
+    def setInputs(self, series):
+
+        self._series = series
         self.ui_args = {}
-        self.set_inputs()
-        self.uiModel = DataFrameFindIndex_UI(** self.ui_args)
+        self.uiModel = SeriesFindIndex_UI(** self.ui_args)
 
 
 
-enamldef DataFrameFindIndex_View(DataFrameStringMethod_View): me:
+enamldef SeriesFindIndex_View(SeriesStringMethod_View): me:
 
     attr model
 
