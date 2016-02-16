@@ -1,0 +1,22 @@
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class DataFrameIsAlphaNumeric_Model(DataFrameStringMethod_Model):
+
+
+    calc_name = 'Is Alpha-Numeric'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isalnum'
+        
+
+
+enamldef DataFrameIsAlphaNumeric_View(DataFrameStringMethod_View): me:
+
+    pass
+

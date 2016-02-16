@@ -6,13 +6,13 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field
 
 # Models
-from ..._base.StringMethod import StringMethod_UI
-from ..._base.StringMethod import StringMethod_Model
-from ..._base.StringMethod import StringMethod_View
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
 
 
 
-class StripBase_UI(StringMethod_UI):
+class DataFrameStripBase_UI(DataFrameStringMethod_UI):
 
     # to_strip
     to_strip = Str()
@@ -24,7 +24,7 @@ class StripBase_UI(StringMethod_UI):
 
 
 
-class StripBase_Model(StringMethod_Model):
+class DataFrameStripBase_Model(DataFrameStringMethod_Model):
 
 
     def setInputs(self, dataframe = None, series = None):
@@ -47,7 +47,7 @@ class StripBase_Model(StringMethod_Model):
 
 
 
-enamldef StripBase_View(StringMethod_View): me:
+enamldef DataFrameStripBase_View(DataFrameStringMethod_View): me:
 
     attr model
 

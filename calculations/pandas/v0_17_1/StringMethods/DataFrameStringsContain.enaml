@@ -8,13 +8,13 @@ from custom_views.fields import Field
 from custom_views.RegExFlags import RegExFlags_Model, RegExFlags_View
 
 # Models
-from ._base.StringMethod import StringMethod_UI
-from ._base.StringMethod import StringMethod_Model
-from ._base.StringMethod import StringMethod_View
+from ._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ._base.DataFrameStringMethod import DataFrameStringMethod_View
 
 
 
-class StringsContain_UI(StringMethod_UI):
+class DataFrameStringsContain_UI(DataFrameStringMethod_UI):
 
     # pat
     pat = Str()
@@ -35,7 +35,7 @@ class StringsContain_UI(StringMethod_UI):
 
 
 
-class StringsContain_Model(StringMethod_Model):
+class DataFrameStringsContain_Model(DataFrameStringMethod_Model):
 
 
     calc_name = 'Contains'
@@ -54,7 +54,7 @@ class StringsContain_Model(StringMethod_Model):
         self.regex_flags = RegExFlags_Model()
         self.ui_args = {'flags': self.regex_flags}
         self.set_inputs()
-        self.uiModel = StringsContain_UI(** self.ui_args)
+        self.uiModel = DataFrameStringsContain_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -73,7 +73,7 @@ class StringsContain_Model(StringMethod_Model):
 
 
 
-enamldef StringsContain_View(StringMethod_View): me:
+enamldef DataFrameStringsContain_View(DataFrameStringMethod_View): me:
 
 
     attr model

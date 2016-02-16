@@ -1,0 +1,22 @@
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class DataFrameIsAlpha_Model(DataFrameStringMethod_Model):
+
+
+    calc_name = 'Is Alpha'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isalpha'
+        
+
+
+enamldef DataFrameIsAlpha_View(DataFrameStringMethod_View): me:
+
+    pass
+

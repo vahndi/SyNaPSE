@@ -6,13 +6,13 @@ from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field, IntField
 
 # Models
-from ..._base.StringMethod import StringMethod_UI
-from ..._base.StringMethod import StringMethod_Model
-from ..._base.StringMethod import StringMethod_View
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
 
 
 
-class AlignStrings_UI(StringMethod_UI):
+class AlignStrings_UI(DataFrameStringMethod_UI):
 
     # width
     width = Int(10)
@@ -25,7 +25,7 @@ class AlignStrings_UI(StringMethod_UI):
 
 
 
-class AlignStrings_Model(StringMethod_Model):
+class AlignStrings_Model(DataFrameStringMethod_Model):
 
 
     def setInputs(self, dataframe = None, series = None):
@@ -47,7 +47,7 @@ class AlignStrings_Model(StringMethod_Model):
 
 
 
-enamldef AlignStrings_View(StringMethod_View): me:
+enamldef AlignStrings_View(DataFrameStringMethod_View): me:
 
     attr model
 

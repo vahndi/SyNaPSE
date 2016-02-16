@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrameFindIndex import DataFrameFindIndex_Model
+from ._base.DataFrameFindIndex import DataFrameFindIndex_View
+
+
+
+class DataFrameRightIndex_Model(DataFrameFindIndex_Model):
+
+
+    calc_name = 'Right Index'
+
+
+    def __init__(self):
+        
+        self.func_name = 'rindex'
+
+
+
+enamldef DataFrameRightIndex_View(DataFrameFindIndex_View): me:
+
+    pass

@@ -1,0 +1,22 @@
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class DataFrameSwapCase_Model(DataFrameStringMethod_Model):
+
+
+    calc_name = 'Swap Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'swapcase'
+        
+
+
+enamldef DataFrameSwapCase_View(DataFrameStringMethod_View): me:
+
+    pass
+

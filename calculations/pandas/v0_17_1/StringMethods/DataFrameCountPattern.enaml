@@ -7,13 +7,13 @@ from custom_views.fields import Field
 from custom_views.RegExFlags import RegExFlags_Model, RegExFlags_View
 
 # Models
-from ._base.StringMethod import StringMethod_UI
-from ._base.StringMethod import StringMethod_Model
-from ._base.StringMethod import StringMethod_View
+from ._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ._base.DataFrameStringMethod import DataFrameStringMethod_View
 
 
 
-class CountPattern_UI(StringMethod_UI):
+class DataFrameCountPattern_UI(DataFrameStringMethod_UI):
 
     # pat
     pat = Str()
@@ -24,7 +24,7 @@ class CountPattern_UI(StringMethod_UI):
 
 
 
-class CountPattern_Model(StringMethod_Model):
+class DataFrameCountPattern_Model(DataFrameStringMethod_Model):
 
 
     calc_name = 'Count Pattern'
@@ -43,7 +43,7 @@ class CountPattern_Model(StringMethod_Model):
         self.regex_flags = RegExFlags_Model()
         self.ui_args = {'flags': self.regex_flags}
         self.set_inputs()
-        self.uiModel = CountPattern_UI(** self.ui_args)
+        self.uiModel = DataFrameCountPattern_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -55,7 +55,7 @@ class CountPattern_Model(StringMethod_Model):
 
 
 
-enamldef CountPattern_View(StringMethod_View): me:
+enamldef DataFrameCountPattern_View(DataFrameStringMethod_View): me:
 
     attr model
 

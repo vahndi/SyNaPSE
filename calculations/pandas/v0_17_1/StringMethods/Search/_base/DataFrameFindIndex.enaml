@@ -6,13 +6,13 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field, IntField
 
 # Models
-from ..._base.StringMethod import StringMethod_UI
-from ..._base.StringMethod import StringMethod_Model
-from ..._base.StringMethod import StringMethod_View
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
 
 
 
-class FindIndex_UI(StringMethod_UI):
+class DataFrameFindIndex_UI(DataFrameStringMethod_UI):
 
     # sub
     sub = Str()
@@ -27,7 +27,7 @@ class FindIndex_UI(StringMethod_UI):
 
 
 
-class FindIndex_Model(StringMethod_Model):
+class DataFrameFindIndex_Model(DataFrameStringMethod_Model):
 
 
     calc_name = 'Find Index'
@@ -40,7 +40,7 @@ class FindIndex_Model(StringMethod_Model):
         
         self.ui_args = {}
         self.set_inputs()
-        self.uiModel = FindIndex_UI(** self.ui_args)
+        self.uiModel = DataFrameFindIndex_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -55,7 +55,7 @@ class FindIndex_Model(StringMethod_Model):
 
 
 
-enamldef FindIndex_View(StringMethod_View): me:
+enamldef DataFrameFindIndex_View(DataFrameStringMethod_View): me:
 
     attr model
 

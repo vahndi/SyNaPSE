@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrameStripBase import DataFrameStripBase_Model
+from ._base.DataFrameStripBase import DataFrameStripBase_View
+
+
+
+class DataFrameRightStrip_Model(DataFrameStripBase_Model):
+
+
+    calc_name = 'Right Strip'
+
+
+    def __init__(self):
+        
+        self.func_name = 'rstrip'
+
+
+
+enamldef DataFrameRightStrip_View(DataFrameStripBase_View): me:
+
+    pass

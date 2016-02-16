@@ -1,0 +1,22 @@
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class DataFrameToLower_Model(DataFrameStringMethod_Model):
+
+
+    calc_name = 'To Lower Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'lower'
+        
+
+
+enamldef DataFrameToLower_View(DataFrameStringMethod_View): me:
+
+    pass
+

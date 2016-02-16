@@ -1,0 +1,21 @@
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+
+
+
+class DataFrameIsUpper_Model(DataFrameStringMethod_Model):
+
+
+    calc_name = 'Is Upper Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isupper'
+        
+
+
+enamldef DataFrameIsUpper_View(DataFrameStringMethod_View): me:
+
+    pass

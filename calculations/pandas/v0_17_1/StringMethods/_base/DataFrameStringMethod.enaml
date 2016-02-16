@@ -12,7 +12,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
 
 
 
-class StringMethod_UI(Atom):
+class DataFrameStringMethod_UI(Atom):
 
     # input_type
     input_type = Str()
@@ -22,7 +22,7 @@ class StringMethod_UI(Atom):
 
 
 
-class StringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class DataFrameStringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
     def set_inputs(self):
@@ -51,7 +51,7 @@ class StringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
         
         self.ui_args = {}
         self.set_inputs()
-        self.uiModel = StringMethod_UI(** self.ui_args)
+        self.uiModel = DataFrameStringMethod_UI(** self.ui_args)
 
 
     def getArgs(self):
@@ -84,7 +84,7 @@ class StringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
 
 
 
-enamldef StringMethod_View(GroupBox): me:
+enamldef DataFrameStringMethod_View(GroupBox): me:
 
 
     attr model

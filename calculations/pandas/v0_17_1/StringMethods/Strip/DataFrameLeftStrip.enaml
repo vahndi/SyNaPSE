@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrameStripBase import DataFrameStripBase_Model
+from ._base.DataFrameStripBase import DataFrameStripBase_View
+
+
+
+class DataFrameLeftStrip_Model(DataFrameStripBase_Model):
+
+
+    calc_name = 'Left Strip'
+
+
+    def __init__(self):
+        
+        self.func_name = 'lstrip'
+
+
+
+enamldef DataFrameLeftStrip_View(DataFrameStripBase_View): me:
+
+    pass
