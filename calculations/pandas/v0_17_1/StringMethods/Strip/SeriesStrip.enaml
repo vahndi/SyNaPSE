@@ -1,0 +1,21 @@
+# Models
+from ._base.SeriesStripBase import SeriesStripBase_Model
+from ._base.SeriesStripBase import SeriesStripBase_View
+
+
+
+class SeriesStrip_Model(SeriesStripBase_Model):
+
+
+    calc_name = 'Strip'
+
+
+    def __init__(self):
+        
+        self.func_name = 'strip'
+
+
+
+enamldef SeriesStrip_View(SeriesStripBase_View): me:
+
+    pass

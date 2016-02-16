@@ -6,33 +6,32 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field
 
 # Models
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
-from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
+from ..._base.SeriesStringMethod import SeriesStringMethod_UI
+from ..._base.SeriesStringMethod import SeriesStringMethod_Model
+from ..._base.SeriesStringMethod import SeriesStringMethod_View
 from StripBase import StripBase_UI, StripBase_Model
 
 
 
-class DataFrameStripBase_UI(DataFrameStringMethod_UI, StripBase_UI):
+class SeriesStripBase_UI(StripBase_UI):
 
     pass
 
 
 
-class DataFrameStripBase_Model(DataFrameStringMethod_Model, StripBase_Model):
+class SeriesStripBase_Model(SeriesStringMethod_Model, StripBase_Model):
 
 
-    def setInputs(self, dataframe):
+    def setInputs(self, series = None):
 
-        self._dataframe = dataframe
+        self._series = series
         
         self.ui_args = {}
-        self.set_inputs()
-        self.uiModel = DataFrameStripBase_UI(** self.ui_args)
+        self.uiModel = SeriesStripBase_UI(** self.ui_args)
 
 
 
-enamldef DataFrameStripBase_View(DataFrameStringMethod_View): me:
+enamldef SeriesStripBase_View(SeriesStringMethod_View): me:
 
     attr model
 

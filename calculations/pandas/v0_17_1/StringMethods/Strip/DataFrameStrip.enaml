@@ -7,7 +7,7 @@ from ._base.DataFrameStripBase import DataFrameStripBase_View
 class DataFrameStrip_Model(DataFrameStripBase_Model):
 
 
-    calc_name = 'Left Strip'
+    calc_name = 'Strip'
 
 
     def __init__(self):
