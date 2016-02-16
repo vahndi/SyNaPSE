@@ -1,0 +1,85 @@
+# Atom
+from atom.api import Atom, Bool, Float
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import FloatField
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+
+
+class DataFrameClipValues_UI(Atom):
+
+    # lower
+    lower = Float()
+    use_lower = Bool()
+    lower_tooltip = 'The lower bound to truncate values'
+    # upper
+    upper = Float()
+    use_upper = Bool()
+    upper_tooltip = 'The upper bound to truncate values'
+
+
+
+class DataFrameClipValues_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Clip Values'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrameClipValues_UI()
+
+
+    def getOutputs(self):
+
+        try:
+            
+            args = {'lower': (self.uiModel.lower
+                              if self.uiModel.use_lower
+                              else None),
+                    'upper': (self.uiModel.upper
+                              if self.uiModel.use_upper
+                              else None)}
+
+            return {'dataframe': self._dataframe.clip(** args)}
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+            
+
+enamldef DataFrameClipValues_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            text = 'Lower'
+            checked := model.use_lower
+            tool_tip = model.lower_tooltip
+        Label:
+            text = 'N/A'
+            visible << not model.use_lower
+        FloatField:
+            value := model.lower
+            visible << model.use_lower
+            tool_tip = model.lower_tooltip
+
+        CheckBox:
+            text = 'Upper'
+            checked := model.use_upper
+            tool_tip = model.upper_tooltip
+        Label:
+            text = 'N/A'
+            visible << not model.use_upper
+        FloatField:
+            value := model.upper
+            visible << model.use_upper
+            tool_tip = model.upper_tooltip

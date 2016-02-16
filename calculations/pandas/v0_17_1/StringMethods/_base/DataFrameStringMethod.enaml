@@ -1,3 +1,4 @@
+print 'importing %s' % __name__
 # Atom
 from atom.api import Atom, List, Str, Value
 
@@ -8,7 +9,7 @@ from custom_views.fields import IntField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 # Models
-from calculations._core.ABCs import ABCDataFrameToDataFrame, ABCSeriesToSeries
+from calculations._core.ABCs import ABCDataFrameToDataFrame
 
 
 
@@ -22,7 +23,7 @@ class DataFrameStringMethod_UI(Atom):
 
 
 
-class DataFrameStringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
+class DataFrameStringMethod_Model(ABCDataFrameToDataFrame):
 
 
     def set_inputs(self):
@@ -30,33 +31,18 @@ class DataFrameStringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
         Adds input_type and input_columns to the args for the uiModel, and
         adds a CheckBoxList_Model to the class
         '''        
-
-        if  self._dataframe is not None:
-            
-            self.ui_args['input_type'] =  'DataFrame'
-            str_cols = [col for col in 
-                        self._dataframe.select_dtypes(['object'])]
-            self.input_columns = CheckBoxList_Model(str_cols)
-            self.ui_args['input_columns'] = self.input_columns.uiModel
-
-        else:
-
-            self.ui_args['input_type'] =  'Series'
+        str_cols = [col for col in 
+                    self._dataframe.select_dtypes(['object'])]
+        self.input_columns = CheckBoxList_Model(str_cols)
+        self.ui_args['input_columns'] = self.input_columns.uiModel
             
     
-    def setInputs(self, dataframe = None, series = None):
+    def setInputs(self, dataframe):
 
-        self._dataframe = dataframe
-        self._series = series
-        
+        self._dataframe = dataframe        
         self.ui_args = {}
         self.set_inputs()
         self.uiModel = DataFrameStringMethod_UI(** self.ui_args)
-
-
-    def getArgs(self):
-        
-        return {}
 
 
     def getOutputs(self):
@@ -65,18 +51,12 @@ class DataFrameStringMethod_Model(ABCDataFrameToDataFrame, ABCSeriesToSeries):
             
             args = self.getArgs()
             
-            if self._dataframe is not None:
-                # Apply method to each column and add to new dataframe
-                df = self._dataframe.copy()
-                for col in self.input_columns.checked_item_names():
-                    func = getattr(df[col].str, self.func_name)
-                    df[col] = func(** args)
-                return {'dataframe': df}
-            else:
-                srs = self._series.copy()
-                func = getattr(srs.str, self.func_name)
-                srs = func(** args)
-                return {'series': srs}
+            # Apply method to each column and add to new dataframe
+            df = self._dataframe.copy()
+            for col in self.input_columns.checked_item_names():
+                func = getattr(df[col].str, self.func_name)
+                df[col] = func(** args)
+            return {'dataframe': df}
                 
         except Exception as e:
 
@@ -90,15 +70,12 @@ enamldef DataFrameStringMethod_View(GroupBox): me:
     attr model
 
 
-    Conditional:
+    Form:            
         
-        condition = model.input_type == 'DataFrame'
-        Form:            
+        Label:
+            text = 'Input Columns'
+            tool_tip = model.input_columns_tooltip
             
-            Label:
-                text = 'Input Columns'
-                tool_tip = model.input_columns_tooltip
-                
-            CheckBoxList_View:
-                model := me.model.input_columns
-                tool_tip = me.model.input_columns_tooltip
+        CheckBoxList_View:
+            model := me.model.input_columns
+            tool_tip = me.model.input_columns_tooltip

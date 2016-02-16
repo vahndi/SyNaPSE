@@ -1,3 +1,4 @@
+print 'importing %s' % __name__
 # Atom
 from atom.api import Atom, Int, Str
 
@@ -9,45 +10,31 @@ from custom_views.fields import Field, IntField
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
+from AlignStrings import AlignStrings_UI, AlignStrings_Model, AlignStrings_View
 
 
 
-class AlignStrings_UI(DataFrameStringMethod_UI):
+class DataFrameAlignStrings_UI(DataFrameStringMethod_UI, AlignStrings_UI):
 
-    # width
-    width = Int(10)
-    width_tooltip = ('Minimum width of resulting string.\n' +  
-                     'Additional characters will be filled with fillchar.')
-    # fillchar
-    fillchar = Str(' ')
-    fillchar_tooltip = \
-        'Additional character for filling, default is whitespace.'
+    pass
 
 
 
-class AlignStrings_Model(DataFrameStringMethod_Model):
+class DataFrameAlignStrings_Model(DataFrameStringMethod_Model,
+                                  AlignStrings_Model):
 
 
-    def setInputs(self, dataframe = None, series = None):
+    def setInputs(self, dataframe):
 
         self._dataframe = dataframe
-        self._series = series
         
         self.ui_args = {}
         self.set_inputs()
-        self.uiModel = AlignStrings_UI(** self.ui_args)
-
-
-    def getArgs(self):
-        
-        return {
-            'width': self.uiModel.width,
-            'fillchar': self.uiModel.fillchar
-            }
+        self.uiModel = DataFrameAlignStrings_UI(** self.ui_args)
 
 
 
-enamldef AlignStrings_View(DataFrameStringMethod_View): me:
+enamldef DataFrameAlignStrings_View(DataFrameStringMethod_View):
 
     attr model
 

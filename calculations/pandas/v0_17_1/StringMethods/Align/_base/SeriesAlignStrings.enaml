@@ -1,0 +1,53 @@
+# Atom
+from atom.api import Atom, Int, Str
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from ..._base.SeriesStringMethod import SeriesStringMethod_UI
+from ..._base.SeriesStringMethod import SeriesStringMethod_Model
+from ..._base.SeriesStringMethod import SeriesStringMethod_View
+from AlignStrings import AlignStrings_UI, AlignStrings_Model, AlignStrings_View
+
+
+
+class SeriesAlignStrings_UI(SeriesStringMethod_UI, AlignStrings_UI):
+
+    pass
+
+
+
+class SeriesAlignStrings_Model(SeriesStringMethod_Model,
+                               AlignStrings_Model):
+
+
+    def setInputs(self, series):
+
+        self._series = series        
+        self.ui_args = {}
+        self.uiModel = SeriesAlignStrings_UI(** self.ui_args)
+
+
+
+enamldef SeriesAlignStrings_View(SeriesStringMethod_View):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Width'
+            tool_tip = model.width_tooltip
+        IntField:
+            value := model.width
+            tool_tip = model.width_tooltip
+
+        Label:
+            text = 'Fillchar'
+            tool_tip = model.fillchar_tooltip
+        Field:
+            text := model.fillchar
+            tool_tip = model.fillchar_tooltip
+

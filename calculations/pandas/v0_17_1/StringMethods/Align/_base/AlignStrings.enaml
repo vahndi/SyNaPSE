@@ -1,0 +1,54 @@
+print 'importing %s' % __name__
+# Atom
+from atom.api import Atom, Int, Str
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+
+
+class AlignStrings_UI(Atom):
+    
+    # width
+    width = Int(10)
+    width_tooltip = ('Minimum width of resulting string.\n' +  
+                     'Additional characters will be filled with fillchar.')
+    # fillchar
+    fillchar = Str(' ')
+    fillchar_tooltip = \
+        'Additional character for filling, default is whitespace.'
+
+
+
+class AlignStrings_Model(object):
+
+
+    def getArgs(self):
+        
+        return {
+            'width': self.uiModel.width,
+            'fillchar': self.uiModel.fillchar
+            }
+
+
+
+enamldef AlignStrings_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Width'
+            tool_tip = model.width_tooltip
+        IntField:
+            value := model.width
+            tool_tip = model.width_tooltip
+
+        Label:
+            text = 'Fillchar'
+            tool_tip = model.fillchar_tooltip
+        Field:
+            text := model.fillchar
+            tool_tip = model.fillchar_tooltip

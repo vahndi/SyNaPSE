@@ -16,6 +16,6 @@ class DataFrameCenterStrings_Model(DataFrameAlignStrings_Model):
 
 
 
-enamldef DataFrameCenterStrings_View(DataFrameAlignStrings_View): me:
+enamldef DataFrameCenterStrings_View(DataFrameAlignStrings_View):
 
     pass

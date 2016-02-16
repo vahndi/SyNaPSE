@@ -16,6 +16,6 @@ class DataFrameRightJustifyStrings_Model(DataFrameAlignStrings_Model):
 
 
 
-enamldef DataFrameRightJustifyStrings_View(AlignStrings_View): me:
+enamldef DataFrameRightJustifyStrings_View(DataFrameAlignStrings_View): me:
 
     pass
