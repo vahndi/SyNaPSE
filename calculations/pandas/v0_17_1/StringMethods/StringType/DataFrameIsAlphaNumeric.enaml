@@ -15,6 +15,11 @@ class DataFrameIsAlphaNumeric_Model(DataFrameStringMethod_Model):
         self.func_name = 'isalnum'
         
 
+    def getArgs(self):
+        
+        return {}
+
+
 
 enamldef DataFrameIsAlphaNumeric_View(DataFrameStringMethod_View): me:
 

@@ -1,0 +1,27 @@
+from .._base.SeriesStringMethod import SeriesStringMethod_UI
+from .._base.SeriesStringMethod import SeriesStringMethod_Model
+from .._base.SeriesStringMethod import SeriesStringMethod_View
+
+
+
+class SeriesIsNumeric_Model(SeriesStringMethod_Model):
+
+
+    calc_name = 'Is Numeric'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isnumeric'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+
+enamldef SeriesIsNumeric_View(SeriesStringMethod_View): me:
+
+    pass
+

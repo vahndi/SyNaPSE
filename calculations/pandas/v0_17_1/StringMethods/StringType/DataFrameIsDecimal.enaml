@@ -15,6 +15,11 @@ class DataFrameIsDecimal_Model(DataFrameStringMethod_Model):
         self.func_name = 'isdecimal'
         
 
+    def getArgs(self):
+        
+        return {}
+
+
 
 enamldef DataFrameIsDecimal_View(DataFrameStringMethod_View): me:
 

@@ -15,6 +15,11 @@ class DataFrameIsAlpha_Model(DataFrameStringMethod_Model):
         self.func_name = 'isalpha'
         
 
+    def getArgs(self):
+        
+        return {}
+
+
 
 enamldef DataFrameIsAlpha_View(DataFrameStringMethod_View): me:
 
