@@ -9,7 +9,7 @@ from custom_views.fields import Field, IntField
 from ..._base.SeriesStringMethod import SeriesStringMethod_UI
 from ..._base.SeriesStringMethod import SeriesStringMethod_Model
 from ..._base.SeriesStringMethod import SeriesStringMethod_View
-from AlignStrings import AlignStrings_UI, AlignStrings_Model, AlignStrings_View
+from AlignStrings import AlignStrings_UI, AlignStrings_Model
 
 
 

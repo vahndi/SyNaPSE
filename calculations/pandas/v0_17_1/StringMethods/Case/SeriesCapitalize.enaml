@@ -1,0 +1,27 @@
+from .._base.SeriesStringMethod import SeriesStringMethod_UI
+from .._base.SeriesStringMethod import SeriesStringMethod_Model
+from .._base.SeriesStringMethod import SeriesStringMethod_View
+
+
+
+class SeriesCapitalize_Model(SeriesStringMethod_Model):
+
+
+    calc_name = 'Capitalize'
+
+
+    def __init__(self):
+        
+        self.func_name = 'capitalize'
+
+
+    def getArgs(self):
+        
+        return {}
+        
+
+
+enamldef SeriesCapitalize_View(SeriesStringMethod_View): me:
+
+    pass
+

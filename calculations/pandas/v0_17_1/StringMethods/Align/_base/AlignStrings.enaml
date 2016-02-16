@@ -30,25 +30,3 @@ class AlignStrings_Model(object):
             'width': self.uiModel.width,
             'fillchar': self.uiModel.fillchar
             }
-
-
-
-enamldef AlignStrings_View(GroupBox):
-
-    attr model
-
-    Form:
-
-        Label:
-            text = 'Width'
-            tool_tip = model.width_tooltip
-        IntField:
-            value := model.width
-            tool_tip = model.width_tooltip
-
-        Label:
-            text = 'Fillchar'
-            tool_tip = model.fillchar_tooltip
-        Field:
-            text := model.fillchar
-            tool_tip = model.fillchar_tooltip

@@ -10,7 +10,7 @@ from custom_views.fields import Field, IntField
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_UI
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_Model
 from ..._base.DataFrameStringMethod import DataFrameStringMethod_View
-from AlignStrings import AlignStrings_UI, AlignStrings_Model, AlignStrings_View
+from AlignStrings import AlignStrings_UI, AlignStrings_Model
 
 
 

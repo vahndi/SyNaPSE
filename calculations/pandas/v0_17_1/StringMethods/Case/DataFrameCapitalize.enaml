@@ -14,7 +14,12 @@ class DataFrameCapitalize_Model(DataFrameStringMethod_Model):
         
         self.func_name = 'capitalize'
         
-
+        
+    def getArgs(self):
+        
+        return {}
+        
+        
 
 enamldef DataFrameCapitalize_View(DataFrameStringMethod_View): me:
 

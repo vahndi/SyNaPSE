@@ -15,6 +15,11 @@ class DataFrameIsTitle_Model(DataFrameStringMethod_Model):
         self.func_name = 'istitle'
         
 
+    def getArgs(self):
+        
+        return {}
+        
+        
 
 enamldef DataFrameIsTitle_View(DataFrameStringMethod_View): me:
 

@@ -15,6 +15,11 @@ class DataFrameIsUpper_Model(DataFrameStringMethod_Model):
         self.func_name = 'isupper'
         
 
+    def getArgs(self):
+        
+        return {}
+        
+        
 
 enamldef DataFrameIsUpper_View(DataFrameStringMethod_View): me:
 

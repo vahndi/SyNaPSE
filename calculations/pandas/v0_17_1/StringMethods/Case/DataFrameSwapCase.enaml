@@ -13,7 +13,12 @@ class DataFrameSwapCase_Model(DataFrameStringMethod_Model):
     def __init__(self):
         
         self.func_name = 'swapcase'
+
         
+    def getArgs(self):
+        
+        return {}
+
 
 
 enamldef DataFrameSwapCase_View(DataFrameStringMethod_View): me:

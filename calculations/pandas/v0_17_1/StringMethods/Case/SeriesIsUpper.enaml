@@ -1,0 +1,26 @@
+from .._base.SeriesStringMethod import SeriesStringMethod_UI
+from .._base.SeriesStringMethod import SeriesStringMethod_Model
+from .._base.SeriesStringMethod import SeriesStringMethod_View
+
+
+
+class SeriesIsUpper_Model(SeriesStringMethod_Model):
+
+
+    calc_name = 'Is Upper Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isupper'
+        
+
+    def getArgs(self):
+        
+        return {}
+        
+        
+
+enamldef SeriesIsUpper_View(SeriesStringMethod_View): me:
+
+    pass
