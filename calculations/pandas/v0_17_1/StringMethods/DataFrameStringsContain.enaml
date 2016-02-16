@@ -38,7 +38,7 @@ class DataFrameStringsContain_UI(DataFrameStringMethod_UI):
 class DataFrameStringsContain_Model(DataFrameStringMethod_Model):
 
 
-    calc_name = 'Contains'
+    calc_name = 'Contains String'
 
 
     def __init__(self):

@@ -1,0 +1,70 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+from ._base.StringSplit import StringSplit_UI, StringSplit_Model
+
+
+
+class DataFrameStringRightSplit_UI(DataFrameStringMethod_UI, StringSplit_UI):
+
+    pass
+
+
+
+class DataFrameStringRightSplit_Model(StringSplit_Model, DataFrameStringMethod_Model):
+
+
+    calc_name = 'Right Split'
+
+
+    def __init__(self):
+            
+        self.func_name = 'rsplit'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = DataFrameStringRightSplit_UI(** self.ui_args)
+
+
+
+enamldef DataFrameStringRightSplit_View(DataFrameStringMethod_View): me:
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.pat_tooltip
+            text = 'Pat'
+            checked := model.use_pat
+        Label:
+            text = 'N/A'
+            visible << not model.use_pat
+        Field:
+            text := model.pat
+            visible << model.use_pat
+            tool_tip = me.model.pat_tooltip
+
+        CheckBox:
+            tool_tip = model.n_tooltip
+            text = 'N'
+            checked := model.use_n
+        Label:
+            text = 'N/A'
+            visible << not model.use_n
+        IntField:
+            value := model.n
+            minimum = model.n_min
+            visible << model.use_n
+            tool_tip = me.model.n_tooltip

@@ -118,6 +118,10 @@ def getDataFrameFigure(dataframe):
     if len(dataframe) == 0:
         return None
     
+    # Drop any columns with lists in
+    dataframe = dataframe[[col for col in dataframe.columns
+                           if type(dataframe[col].ix[0]) is not list]]
+    
     # Time-series
     if isinstance(dataframe.index, DatetimeIndex):
         return timeseries_fig(dataframe)

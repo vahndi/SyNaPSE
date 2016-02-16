@@ -54,6 +54,11 @@ def getSeriesHtml(series):
 
 def getSeriesFigure(series):
 
+
+    # Ignore lists for now
+    if type(series.ix[0]) is list:
+        return None
+
     fig = Figure()
     ax = fig.add_subplot(111)
 

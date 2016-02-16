@@ -1,0 +1,40 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+
+
+class StringSplit_UI(Atom):
+
+    # pat
+    pat = Str()
+    use_pat = Bool()
+    pat_tooltip = 'Separator to split on. If None, splits on whitespace.'
+    # n
+    n = Int(1)
+    n_min = Int(-1)
+    use_n = Bool()
+    n_tooltip = (
+        'The number of splits to return. \n'
+        'None, 0 and -1 will be interpreted as return all splits.\n'
+        )
+
+
+
+class StringSplit_Model(object):
+
+
+    def getArgs(self):
+
+        return {
+                'pat': (None 
+                        if not self.uiModel.use_pat 
+                        else self.uiModel.pat),
+                'n': (None 
+                      if not self.uiModel.use_n 
+                      else self.uiModel.n)
+                }
+
