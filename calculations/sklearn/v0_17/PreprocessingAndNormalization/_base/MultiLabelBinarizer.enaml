@@ -32,7 +32,7 @@ class MultiLabelBinarizer_Model(Calculation_Model):
 
             # Assign local variables
             return {
-                'classes': self.classes.ordered_item_names()
+                'classes': self.uiModel.classes.ordered_item_names()
                 }
 
         except Exception as e:

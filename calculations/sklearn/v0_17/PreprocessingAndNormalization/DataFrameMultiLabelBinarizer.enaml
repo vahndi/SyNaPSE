@@ -1,8 +1,9 @@
 # Atom
 from atom.api import Atom, List, Str, Value
+from atom.api import observe
 
 # Enaml
-from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.OrderedList import OrderedList_Model, OrderedList_View
 
 # Models
@@ -11,21 +12,31 @@ from _base.MultiLabelBinarizer import MultiLabelBinarizer_UI
 from _base.MultiLabelBinarizer import MultiLabelBinarizer_Model
 from _base.MultiLabelBinarizer import MultiLabelBinarizer_View
 from sklearn.preprocessing import MultiLabelBinarizer
-from pandas import DataFrame
+from pandas import DataFrame, concat
 
 
 
 class DataFrameMultiLabelBinarizer_UI(MultiLabelBinarizer_UI):
 
+    label_columns_values = Value()
+    
     # label_column
     label_column = Str()
     label_column_list = List(str)
-    label_column_tooltip = 'Select the column to generate labels from'
+    label_column_tooltip = 'Select the column to generate labels from.'
     
+    @observe('label_column')
+    def label_column_changed(self, change):
+
+        if self.label_column:
+            self.classes.set_item_names(
+                self.label_columns_values[self.label_column]
+                )
+
 
 
 class DataFrameMultiLabelBinarizer_Model(MultiLabelBinarizer_Model, 
-                                      ABCDataFrameToDataFrame):
+                                         ABCDataFrameToDataFrame):
 
 
     calc_name = 'MultiLabel Binarizer'
@@ -37,10 +48,19 @@ class DataFrameMultiLabelBinarizer_Model(MultiLabelBinarizer_Model,
         list_values = []
         self.classes = OrderedList_Model(list_values)
         label_columns = [col for col in dataframe.columns
-                         if type(dataframe[col].ix[0]) is list]:
+                         if type(dataframe[col].ix[0]) is list]
+        label_columns_values = {
+            label_column :
+                sorted({item 
+                        for cell in dataframe[label_column] 
+                        for item in cell})
+            for label_column in label_columns
+        }
+
         self.uiModel = DataFrameMultiLabelBinarizer_UI(
-            classes = self.classes.uiModel,
-            label_column_list = label_columns
+            classes = self.classes,
+            label_column_list = label_columns,
+            label_columns_values = label_columns_values
             )
 
 
@@ -52,11 +72,13 @@ class DataFrameMultiLabelBinarizer_Model(MultiLabelBinarizer_Model,
             args = self.getArgs()
             mlb = MultiLabelBinarizer(** args)
             series = self._dataframe[self.uiModel.label_column]
-            dataframe = DataFrame(mlb.fit_transform(self._series),
+            dataframe = DataFrame(mlb.fit_transform(series),
                                   columns = args['classes'],
-                                  index = self._series.index)
-            
-            return {'dataframe': dataframe}
+                                  index = series.index)
+
+            return {'dataframe': 
+                        concat([self._dataframe, dataframe],
+                               axis = 1)}
 
         except Exception as e:
 
@@ -75,4 +97,3 @@ enamldef DataFrameMultiLabelBinarizer_View(MultiLabelBinarizer_View): me:
         selected := model.label_column
         tool_tip = me.model.label_column_tooltip
         
-
