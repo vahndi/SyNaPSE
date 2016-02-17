@@ -1,7 +1,8 @@
 from atom.api import Atom, Bool, ContainerList, Int, List, Callable, Value
 from enaml.core.api import Conditional, Looper
 from enaml.widgets.api import  (
-    CheckBox, Container, GroupBox, Label, PushButton, RadioButton, ScrollArea)
+    CheckBox, Container, GroupBox, Label, PushButton, RadioButton, ScrollArea
+    )
 from enaml.layout.api import grid
 
 
@@ -21,16 +22,12 @@ class OrderedListItem(object):
 
 
 
-class OrderedList_UI(Atom):
+class OrderedList_Model(Atom):
 
+    item_names = List()
     list_items = ContainerList(OrderedListItem) 
-    selected_item = Value(OrderedListItem)
-    fn_move_item_up = Callable()
-    fn_move_item_down = Callable()
-
-
-
-class OrderedList_Model(object):
+    selected_item = Value(OrderedListItem, None)
+    fn_selected_changed = Callable()
 
 
     def __init__(self, item_names, fn_selected_changed = None):
@@ -44,35 +41,32 @@ class OrderedList_Model(object):
             the contents of other widgets depend on the selected items. The 
             function will be called with a list of names of items which are
             selected.
-        '''
-        self.item_names = item_names
-        
-        self.list_items = [OrderedListItem(name, self) 
-                               for name in list(item_names)]
-                                
+        '''                                
+        self.set_item_names(item_names)
         self.fn_selected_changed = fn_selected_changed
 
-        self.uiModel = OrderedList_UI(
-                        list_items = self.list_items,
-                        selected_item = None,
-                        fn_move_item_up = self.move_item_up,
-                        fn_move_item_down = self.move_item_down
-                        )
+
+    def set_item_names(self, item_names):
+        '''
+        Set the item names and (re)generate the list of items
+        '''
+        self.item_names = item_names
+        self.list_items = [OrderedListItem(name, self) 
+                               for name in list(item_names)]       
 
 
     def move_item_up(self):
         '''
         move the checked selected item up one
         '''
-        item = self.uiModel.selected_item
+        item = self.selected_item
         idx_selected = self.list_items.index(item)
         
         if idx_selected > 0:
             
             self.list_items.remove(item)
             self.list_items.insert(idx_selected - 1, item)
-            self.uiModel.list_items = self.list_items
-            self.uiModel.selected_item = item
+            self.selected_item = item
 
             if self.fn_selected_changed:
                 self.fn_selected_changed(self.ordered_item_names())
@@ -82,15 +76,14 @@ class OrderedList_Model(object):
         '''
         move the checked selected item down one
         '''
-        item = self.uiModel.selected_item
+        item = self.selected_item
         idx_selected = self.list_items.index(item)
         
         if idx_selected < len(self.list_items) - 1:
             
             self.list_items.remove(item)
             self.list_items.insert(idx_selected + 1, item)
-            self.uiModel.list_items = self.list_items
-            self.uiModel.selected_item = item
+            self.selected_item = item
 
             if self.fn_selected_changed:
                 self.fn_selected_changed(self.ordered_item_names())
@@ -103,8 +96,6 @@ class OrderedList_Model(object):
 
             
 enamldef OrderedList_View(GroupBox):
-    '''
-    '''
 
     attr model
 
@@ -137,9 +128,9 @@ enamldef OrderedList_View(GroupBox):
         PushButton: btn_move_up:
             text = 'Move Up'
             clicked::
-                model.fn_move_item_up()
+                model.move_item_up()
                 
         PushButton: btn_move_down:
             text = 'Move Down'
             clicked::
-                model.fn_move_item_down()    
+                model.move_item_down()    

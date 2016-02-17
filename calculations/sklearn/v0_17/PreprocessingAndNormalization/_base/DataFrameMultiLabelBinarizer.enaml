@@ -1,0 +1,78 @@
+# Atom
+from atom.api import Atom, List, Str, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_UI
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_Model
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_View
+from sklearn.preprocessing import MultiLabelBinarizer
+from pandas import DataFrame
+
+
+
+class DataFrameMultiLabelBinarizer_UI(MultiLabelBinarizer_UI):
+
+    # label_column
+    label_column = Str()
+    label_column_list = List(str)
+    label_column_tooltip = 'Select the column to generate labels from'
+    
+
+
+class DataFrameMultiLabelBinarizer_Model(MultiLabelBinarizer_Model, 
+                                      ABCDataFrameToDataFrame):
+
+
+    calc_name = 'MultiLabel Binarizer'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        list_values = []
+        self.classes = OrderedList_Model(list_values)
+        label_columns = [col for col in dataframe.columns
+                         if type(dataframe[col].ix[0]) is list]:
+        self.uiModel = DataFrameMultiLabelBinarizer_UI(
+            classes = self.classes.uiModel,
+            label_column_list = label_columns
+            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            mlb = MultiLabelBinarizer(** args)
+            series = self._dataframe[self.uiModel.label_column]
+            dataframe = DataFrame(mlb.fit_transform(self._series),
+                                  columns = args['classes'],
+                                  index = self._series.index)
+            
+            return {'dataframe': dataframe}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameMultiLabelBinarizer_View(MultiLabelBinarizer_View): me:
+
+
+    Label:
+        text = 'Label Column'
+        tool_tip = me.model.label_column_tooltip
+    ObjectCombo:
+        items = model.label_column_list
+        selected := model.label_column
+        tool_tip = me.model.label_column_tooltip
+        
+
