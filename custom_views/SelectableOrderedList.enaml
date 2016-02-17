@@ -1,0 +1,224 @@
+from atom.api import Atom, Bool, ContainerList, Int, List, Callable, Value
+from enaml.core.api import Conditional, Looper
+from enaml.widgets.api import  (
+    CheckBox, Container, GroupBox, Label, PushButton, RadioButton, ScrollArea)
+from enaml.layout.api import grid
+
+
+
+class SelectableOrderedListItem(object):
+    
+    
+    def __init__(self, name, container):
+        
+        self.name = name
+        self.container = container
+
+
+    def __str__(self):
+        
+        return str(self.name)
+
+
+
+class SelectableOrderedList_UI(Atom):
+
+    unselected_items = ContainerList(SelectableOrderedListItem)
+    selected_items = ContainerList(SelectableOrderedListItem) 
+    selected_item = Value(SelectableOrderedListItem)
+    unselected_item = Value(SelectableOrderedListItem)
+    fn_select_item = Callable()
+    fn_unselect_item = Callable()
+    fn_move_item_up = Callable()
+    fn_move_item_down = Callable()
+
+
+
+class SelectableOrderedList_Model(object):
+
+
+    def __init__(self, item_names, selected_item_names = [], 
+                 fn_selected_changed = None):
+        '''
+        Arguments
+        ---------
+        item_names (iterable of str):
+            A list of the names of the items which can be selected.
+        selected_item_names (iterable of str):
+            A list of the names of the items which are already selected.
+        fn_selected_changed (Callable or None):
+            A function to call when the selected items are changed, in case
+            the contents of other widgets depend on the selected items. The 
+            function will be called with a list of names of items which are
+            selected.
+        '''
+        self.item_names = item_names
+        self.selected_items = [SelectableOrderedListItem(name, self) 
+                               for name in list(selected_item_names)]
+                                
+        self.unselected_items = [SelectableOrderedListItem(name, self) 
+                                 for name in 
+                                 [n for n in list(item_names) 
+                                  if n not in selected_item_names]]
+
+        self.fn_selected_changed = fn_selected_changed
+
+        self.uiModel = SelectableOrderedList_UI(
+                        selected_items = self.selected_items,
+                        unselected_items = self.unselected_items,
+                        selected_item = None,
+                        unselected_item = self.unselected_items[0],
+                        fn_select_item = self.select_item,
+                        fn_unselect_item = self.unselect_item,
+                        fn_move_item_up = self.move_item_up,
+                        fn_move_item_down = self.move_item_down)
+
+
+    def select_item(self):
+        '''
+        move the checked unselected item to the selected items
+        '''
+        item = self.uiModel.unselected_item
+        
+        if item is not None:
+
+            self.unselected_items.remove(item)
+            self.selected_items.append(item)
+
+            self.uiModel.unselected_items = self.unselected_items        
+            self.uiModel.selected_items = self.selected_items
+            self.uiModel.unselected_item = None
+            self.uiModel.selected_item = item
+            
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
+
+    
+    def unselect_item(self):
+        '''
+        move the checked selected item to the unselected items
+        '''
+        item = self.uiModel.selected_item
+        
+        if item is not None:
+    
+            self.selected_items.remove(item)
+            self.unselected_items.append(item)
+
+            self.uiModel.selected_items = self.selected_items    
+            self.uiModel.unselected_items = self.unselected_items            
+            self.uiModel.selected_item = None
+            self.uiModel.unselected_item = item
+
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
+
+
+    def move_item_up(self):
+        '''
+        move the checked unselected item up one
+        '''
+        item = self.uiModel.selected_item
+        idx_selected = self.selected_items.index(item)
+        
+        if idx_selected > 0:
+            
+            self.selected_items.remove(item)
+            self.selected_items.insert(idx_selected - 1, item)
+            self.uiModel.selected_items = self.selected_items
+            self.uiModel.selected_item = item
+
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
+
+
+    def move_item_down(self):
+        '''
+        move the checked unselected item down one
+        '''
+        item = self.uiModel.selected_item
+        idx_selected = self.selected_items.index(item)
+        
+        if idx_selected < len(self.selected_items) - 1:
+            
+            self.selected_items.remove(item)
+            self.selected_items.insert(idx_selected + 1, item)
+            self.uiModel.selected_items = self.selected_items
+            self.uiModel.selected_item = item
+
+            if self.fn_selected_changed:
+                self.fn_selected_changed(self.selected_item_names())
+
+    def selected_item_names(self):
+        
+        return [str(i) for i in self.selected_items]
+
+
+            
+enamldef SelectableOrderedList_View(GroupBox):
+    '''
+    '''
+
+    attr model
+
+    Container:
+        constraints = [
+            grid(
+                [lbl_unselected,  lbl_selected],
+                [rbs_unselected,  rbs_selected],
+                [btn_select, btn_unselect],
+                [None, btn_move_up],
+                [None, btn_move_down],
+                column_align = 'width',
+                row_align = 'v_center',
+            ),
+        ]
+
+
+        Label: lbl_unselected:
+            text = 'Unselected Items'
+        
+        ScrollArea: rbs_unselected:
+            Container:    
+                Looper: lpr_unselected:
+                    iterable << [obj for obj in model.unselected_items]
+                    RadioButton: 
+                        text << str(loop_item)
+                        clicked:: 
+                            model.unselected_item = loop_item
+                        checked << loop_item == model.unselected_item
+
+        PushButton: btn_select:
+            text = 'Select'
+            clicked::
+                model.fn_select_item()
+
+        
+        Label: lbl_selected:
+            text = 'Selected Items'
+
+        ScrollArea: rbs_selected:            
+            Container: 
+                Looper: lpr_selected:
+                    iterable << [obj for obj in model.selected_items]
+                    RadioButton: 
+                        text << str(loop_item)
+                        clicked:: 
+                            model.selected_item = loop_item
+                        checked << loop_item == model.selected_item
+    
+        PushButton: btn_unselect:
+            text = 'Unselect'
+            clicked::
+                model.fn_unselect_item()
+
+
+        PushButton: btn_move_up:
+            text = 'Move Up'
+            clicked::
+                model.fn_move_item_up()
+                
+        PushButton: btn_move_down:
+            text = 'Move Down'
+            clicked::
+                model.fn_move_item_down()    

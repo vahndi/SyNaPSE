@@ -4,7 +4,7 @@ from atom.api import Atom, Value
 
 # Enaml
 from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
-from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+from custom_views.OrderedList import OrderedList_View
 
 # Models
 from models_views.calculation import Calculation_Model
@@ -32,7 +32,7 @@ class MultiLabelBinarizer_Model(Calculation_Model):
 
             # Assign local variables
             return {
-                classes: self.classes.selected_item_names()
+                'classes': self.classes.ordered_item_names()
                 }
 
         except Exception as e:

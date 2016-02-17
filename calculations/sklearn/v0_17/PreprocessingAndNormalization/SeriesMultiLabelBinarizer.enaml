@@ -1,0 +1,65 @@
+# Atom
+from atom.api import Atom, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+
+# Models
+from calculations._core.ABCs import ABCSeriesToDataFrame
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_UI
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_Model
+from _base.MultiLabelBinarizer import MultiLabelBinarizer_View
+from sklearn.preprocessing import MultiLabelBinarizer
+from pandas import DataFrame
+
+
+
+class SeriesMultiLabelBinarizer_UI(MultiLabelBinarizer_UI):
+
+    # classes
+    classes = Value(Atom)
+    classes_tooltip = 'Indicates an ordering for the class labels.'
+
+
+
+class SeriesMultiLabelBinarizer_Model(MultiLabelBinarizer_Model, 
+                                      ABCSeriesToDataFrame):
+
+
+    calc_name = 'MultiLabel Binarizer'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        list_values = sorted({item for cell in series for item in cell})
+        self.classes = OrderedList_Model(list_values)
+        self.uiModel = SeriesMultiLabelBinarizer_UI(
+            classes = self.classes.uiModel
+            )
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            mlb = MultiLabelBinarizer(** args)
+            dataframe = DataFrame(mlb.fit_transform(self._series),
+                                  columns = args['classes'],
+                                  index = self._series.index)
+            
+            return {'dataframe': dataframe}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef SeriesMultiLabelBinarizer_View(MultiLabelBinarizer_View): me:
+
+    pass
+

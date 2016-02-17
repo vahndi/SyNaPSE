@@ -13,7 +13,7 @@ widgets_atoms = {'Field': ['Str'],
                  'InputsTargetsSelector': ['Atom', 'Value'],
                  'IntField': ['Int'],
                  'ObjectCombo': ['List', 'Str'],  
-                 'OrderedList': ['Atom', 'Value'],               
+                 'SelectableOrderedList': ['Atom', 'Value'],               
                  'RadioButtonList': ['ContainerList', 'Int', 'Value'],
                  'RegExFlags': ['Atom', 'Value'],
                  'SpinBox': ['Int', 'Value']} 

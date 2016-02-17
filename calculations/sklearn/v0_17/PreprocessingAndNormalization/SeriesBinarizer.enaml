@@ -6,7 +6,8 @@ from enaml.core.api import Conditional
 from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
 from custom_views.fields import FloatField
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_Model, CheckBoxFloatFieldList_View
+from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_Model
+from custom_views.CheckBoxFloatFieldList import CheckBoxFloatFieldList_View
 
 # Models
 from calculations._core.ABCs import ABCSeriesToSeries

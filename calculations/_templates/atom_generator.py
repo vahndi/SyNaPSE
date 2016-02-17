@@ -90,7 +90,7 @@ def get_Atom_ObjectCombo(widget):
     return str_atom 
 
 
-def get_Atom_OrderedList(widget):
+def get_Atom_SelectableOrderedList(widget):
     
     return '%s%s = Value(Atom)\n' % (indent, widget.w_name)
 
@@ -125,7 +125,7 @@ getAtomFunc = {'Field': get_Atom_Field,
                'InputsTargetsSelector': get_Atom_InputsTargetsSelector,
                'IntField': get_Atom_IntField,
                'ObjectCombo': get_Atom_ObjectCombo,
-               'OrderedList': get_Atom_OrderedList,
+               'SelectableOrderedList': get_Atom_SelectableOrderedList,
                'RegExFlags': get_Atom_RegExFlags,
                'SpinBox': get_Atom_SpinBox}
 

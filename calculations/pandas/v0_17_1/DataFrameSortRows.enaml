@@ -4,7 +4,8 @@ from atom.api import Atom, Bool, ContainerList, List, Str, Value
 # Enaml
 from enaml.core.api import Conditional
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
-from custom_views.OrderedList import OrderedList_Model, OrderedList_View
+from custom_views.SelectableOrderedList import SelectableOrderedList_Model
+from custom_views.SelectableOrderedList import SelectableOrderedList_View
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
 
 # Models
@@ -57,7 +58,7 @@ class DataFrameSortRows_Model(ABCDataFrameToDataFrame):
         self._dataframe = dataframe
         cols = list(dataframe.columns)
         self.ascending_individual = CheckBoxList_Model([])
-        self.by_multiple = OrderedList_Model(
+        self.by_multiple = SelectableOrderedList_Model(
                 item_names = cols,
                 fn_selected_changed = self.ascending_individual.set_item_names
                 )
@@ -124,7 +125,7 @@ enamldef DataFrameSortRows_View(GroupBox): me:
             Label:
                 text = 'Sort Columns'
                 tool_tip = model.by_multiple_tooltip
-            OrderedList_View:
+            SelectableOrderedList_View:
                 model:= me.model.by_multiple
                 tool_tip = me.model.by_multiple_tooltip
     
