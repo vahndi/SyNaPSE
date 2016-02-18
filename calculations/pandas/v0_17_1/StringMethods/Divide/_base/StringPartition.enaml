@@ -1,0 +1,29 @@
+# Atom
+from atom.api import Atom, Bool, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field
+
+
+
+
+class StringPartition_UI(Atom):
+
+    # pat
+    pat = Str()
+    pat_tooltip = 'Separator to split on. If None, splits on whitespace.'
+
+
+
+class StringPartition_Model(object):
+
+
+    def getArgs(self):
+
+        return {
+            'pat': self.uiModel.pat,
+            'expand': False
+            }
+

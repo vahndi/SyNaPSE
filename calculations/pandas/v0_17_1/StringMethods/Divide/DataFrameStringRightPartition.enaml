@@ -1,0 +1,54 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from .._base.DataFrameStringMethod import DataFrameStringMethod_UI
+from .._base.DataFrameStringMethod import DataFrameStringMethod_Model
+from .._base.DataFrameStringMethod import DataFrameStringMethod_View
+from ._base.StringPartition import StringPartition_UI, StringPartition_Model
+
+
+
+class DataFrameStringRightPartition_UI(DataFrameStringMethod_UI, StringPartition_UI):
+
+    pass
+
+
+
+class DataFrameStringRightPartition_Model(StringPartition_Model, DataFrameStringMethod_Model):
+
+
+    calc_name = 'Right Partition'
+
+
+    def __init__(self):
+            
+        self.func_name = 'rpartition'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = DataFrameStringRightPartition_UI(** self.ui_args)
+
+
+
+enamldef DataFrameStringRightPartition_View(DataFrameStringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Pattern'
+            tool_tip = model.pat_tooltip
+        Field:
+            text := model.pat
+            tool_tip = me.model.pat_tooltip
