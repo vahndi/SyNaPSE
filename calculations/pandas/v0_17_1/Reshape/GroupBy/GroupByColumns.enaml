@@ -1,0 +1,166 @@
+# Atom
+from atom.api import Atom, Bool, Dict, Int, Value
+
+# Enaml
+from enaml.widgets.api import (
+    CheckBox, Form, GroupBox, Label, Notebook, Page, SpinBox
+    )
+from enaml.core.api import Conditional
+from custom_views.SelectableOrderedList import SelectableOrderedList_Model
+from custom_views.SelectableOrderedList import SelectableOrderedList_View
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrameGroupBy
+
+
+
+class GroupByColumns_UI(Atom):
+
+    # by
+    by = Value(Atom)
+    by_tooltip = (
+        'Called on each element of the object index to determine the groups.'
+        )
+    # axis_levels
+    axis_levels = Dict()
+    # axis
+    axis = Int(0)
+    axis_tooltip = 'The axis to group over.'
+    # level
+    level = Int(0)
+    level_tooltip = (
+        'If the axis is a MultiIndex (hierarchical),\n' 
+        'group by a particular level or levels.'
+        )
+    # as_index
+    as_index = Bool(True)
+    as_index_tooltip = (
+        'For aggregated output, return object with group labels as the index.\n'
+        'as_index=False is effectively "SQL-style" grouped output.'
+        )
+    # sort
+    sort = Bool(True)
+    sort_tooltip = (
+        'Sort group keys. Get better performance by turning this off. \n'
+        'Note this does not influence the order of observations within each group.\n'
+        'groupby preserves the order of rows within each group.'
+        )
+    # group_keys
+    group_keys = Bool(True)
+    group_keys_tooltip = (
+        'When calling apply, add group keys to index to identify pieces.'
+        )
+    # squeeze
+    squeeze = Bool(False)
+    squeeze_tooltip = (
+        'Reduce the dimensionality of the return type if possible,\n' 
+        'otherwise return a consistent type.'
+        )
+
+
+
+class GroupByColumns_Model(ABCDataFrameToDataFrameGroupBy):
+
+
+    calc_name = 'Group By Columns'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.by = SelectableOrderedList_Model(dataframe.columns)
+        axis_levels = {i: dataframe.axes[i].nlevels
+                       for i in range(len(dataframe.axes))}
+        self.uiModel = GroupByColumns_UI(by = self.by.uiModel,
+                                         axis_levels = axis_levels)
+
+
+    def getArgs(self):
+        
+        return {
+            'by': self.by.selected_item_names(),
+            'axis': self.uiModel.axis,
+            'level': (self.uiModel.level
+                      if self.uiModel.axis_levels[self.uiModel.axis] > 1
+                      else None),
+            'as_index': self.uiModel.as_index,
+            'sort': self.uiModel.sort,
+            'group_keys': self.uiModel.group_keys,
+            'squeeze': self.uiModel.squeeze
+            }
+
+
+    def getOutputs(self):
+
+        try:
+
+            args = self.getArgs()
+            groupby = self._dataframe.groupby(** args)            
+            return {'groupby': groupby}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef GroupByColumns_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'By'
+            tool_tip = model.by_tooltip
+        SelectableOrderedList_View:
+            model:= me.model.by
+            tool_tip = me.model.by_tooltip
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        SpinBox:
+            value := model.axis
+            minimum = 0
+            maximum = 1
+            tool_tip = me.model.axis_tooltip
+
+        Conditional:
+            condition << model.axis_levels[model.axis] > 1
+            Label:
+                text = 'Level'
+                tool_tip = model.level_tooltip
+            SpinBox:
+                value := model.level
+                minimum = 0
+                maximum << model.axis_levels[model.axis] - 1
+                tool_tip = me.model.level_tooltip
+
+        Label:
+            text = 'As Index'
+            tool_tip = model.as_index_tooltip
+        CheckBox:
+            checked := model.as_index
+            tool_tip = me.model.as_index_tooltip
+
+        Label:
+            text = 'Sort'
+            tool_tip = model.sort_tooltip
+        CheckBox:
+            checked := model.sort
+            tool_tip = me.model.sort_tooltip
+
+        Label:
+            text = 'Group Keys'
+            tool_tip = model.group_keys_tooltip
+        CheckBox:
+            checked := model.group_keys
+            tool_tip = me.model.group_keys_tooltip
+
+        Label:
+            text = 'Squeeze'
+            tool_tip = model.squeeze_tooltip
+        CheckBox:
+            checked := model.squeeze
+            tool_tip = me.model.squeeze_tooltip

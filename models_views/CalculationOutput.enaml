@@ -12,6 +12,7 @@ from custom_views.fields import Field
 # Numerical
 import pandas as pd
 from pandas import DataFrame, Series, Index
+from pandas.core.groupby import DataFrameGroupBy
 from numpy import ndarray, dtype
 
 # Plotting                             
@@ -20,6 +21,10 @@ from matplotlib.figure import Figure
 # Custom Views
 from custom_views.DataFrame_View import (
     DataFrame_TableView, DataFrame_FigureModel, DataFrame_FigureView
+    )
+from custom_views.DataFrameGroupBy_View import(
+    DataFrameGroupBy_TableView, DataFrameGroupBy_FigureModel, 
+    DataFrameGroupBy_FigureView
     )
 from custom_views.Series_View import (
     Series_TableView, Series_FigureModel, Series_FigureView
@@ -48,6 +53,19 @@ template OutputTemplate(model_type: DataFrame):
     DataFrame_TableView:
         model = output_model
 
+template OutputTemplate(model_type: DataFrameGroupBy):
+    
+    DataFrameGroupBy_FigureView:
+        model = DataFrameGroupBy_FigureModel(output_model)
+
+    DataFrameGroupBy_TableView:
+        model = output_model
+
+template OutputTemplate(model_type: Index): 
+
+    Index_TableView:
+        model = output_model
+
 template OutputTemplate(model_type: Series): 
 
     Series_FigureView:
@@ -55,10 +73,6 @@ template OutputTemplate(model_type: Series):
     Series_TableView:
         model = output_model
 
-template OutputTemplate(model_type: Index): 
-
-    Index_TableView:
-        model = output_model
 
 
 # Numpy templates

@@ -149,6 +149,7 @@ class SelectableOrderedList_Model(object):
             if self.fn_selected_changed:
                 self.fn_selected_changed(self.selected_item_names())
 
+
     def selected_item_names(self):
         
         return [str(i) for i in self.selected_items]

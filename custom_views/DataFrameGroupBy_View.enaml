@@ -1,0 +1,38 @@
+from enaml.widgets.api import Container, MPLCanvas
+from enaml.core.api import Conditional
+from custom_views.fields import Field
+from modules.dataframegroupby_figures import dataframegroupby_fig
+
+
+
+enamldef DataFrameGroupBy_TableView(Container):
+    
+    attr model
+    
+    Field:
+        text = str(model)
+
+
+
+class DataFrameGroupBy_FigureModel(object):
+    
+    
+    def __init__(self, dataframegroupby):
+        print dataframegroupby.ngroups
+        self.figure = (dataframegroupby_fig(dataframegroupby)
+                       if dataframegroupby.ngroups <= 20
+                       else None)
+
+
+
+enamldef DataFrameGroupBy_FigureView(Container):
+    
+    attr model
+
+    hug_height = 'strong'
+        
+    Conditional:
+        condition = model.figure is not None
+        MPLCanvas:
+            figure = model.figure
+    

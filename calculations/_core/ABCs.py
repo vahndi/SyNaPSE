@@ -13,6 +13,9 @@ class ABCOutputsBool(ABCOutputsValue):
 class ABCOutputsDataFrame(Calculation_Model):
     pass
 
+class ABCOutputsDataFrameGroupBy(Calculation_Model):
+    pass
+
 class ABCOutputsFloat(ABCOutputsValue):
     pass
 
@@ -46,6 +49,10 @@ class ABCTakes2Series(Calculation_Model):
 # To
 # --
 class ABCDataFrameToDataFrame(ABCTakesDataFrame, ABCOutputsDataFrame):
+    pass
+
+class ABCDataFrameToDataFrameGroupBy(ABCTakesDataFrame, 
+                                     ABCOutputsDataFrameGroupBy):
     pass
 
 class ABCDataFrameToIndex(ABCTakesDataFrame, ABCOutputsIndex):
