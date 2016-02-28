@@ -3,7 +3,7 @@ from ._base.DataFrameStatistic2 import DataFrameStatistic2_View
 
 
 
-class DataFrameStdDev_Model(DataFrameStatistic2_Model):
+class DataFrameStandardDeviation_Model(DataFrameStatistic2_Model):
     
     
     calc_name = 'Standard Deviation'
@@ -15,6 +15,6 @@ class DataFrameStdDev_Model(DataFrameStatistic2_Model):
 
 
 
-enamldef DataFrameStdDev_View(DataFrameStatistic2_View):
+enamldef DataFrameStandardDeviation_View(DataFrameStatistic2_View):
     
     pass

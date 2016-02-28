@@ -4,18 +4,19 @@ from _base.DataFrameGroupByAggregate import DataFrameGroupByAggregate_View
 
 
 
-class DataFrameGroupByMean_Model(DataFrameGroupByAggregate_Model):
+class DataFrameGroupByVariance_Model(DataFrameGroupByAggregate_Model):
 
 
-    calc_name = 'Mean'
+    calc_name = 'Variance'
 
 
     def __init__(self):
         
-        self.func_name = 'mean'
+        self.func_name = 'var'
 
 
 
-enamldef DataFrameGroupByMean_View(DataFrameGroupByAggregate_View):
+enamldef DataFrameGroupByVariance_View(DataFrameGroupByAggregate_View):
 
     pass
+
