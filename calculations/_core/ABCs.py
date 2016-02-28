@@ -35,6 +35,9 @@ class ABCOutputsSeries(ABCOutputsValue):
 class ABCTakesDataFrame(Calculation_Model):
     preceding_calcs = [ABCOutputsDataFrame]
 
+class ABCTakesDataFrameGroupBy(Calculation_Model):
+    preceding_calcs = [ABCOutputsDataFrameGroupBy]
+
 class ABCTakesIndex(Calculation_Model):    
     preceding_calcs = [ABCOutputsIndex]
 
@@ -53,6 +56,10 @@ class ABCDataFrameToDataFrame(ABCTakesDataFrame, ABCOutputsDataFrame):
 
 class ABCDataFrameToDataFrameGroupBy(ABCTakesDataFrame, 
                                      ABCOutputsDataFrameGroupBy):
+    pass
+
+class ABCDataFrameGroupByToDataFrame(ABCTakesDataFrameGroupBy, 
+                                     ABCOutputsDataFrame):
     pass
 
 class ABCDataFrameToIndex(ABCTakesDataFrame, ABCOutputsIndex):

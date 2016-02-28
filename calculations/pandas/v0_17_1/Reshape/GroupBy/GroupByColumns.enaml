@@ -96,7 +96,7 @@ class GroupByColumns_Model(ABCDataFrameToDataFrameGroupBy):
 
             args = self.getArgs()
             groupby = self._dataframe.groupby(** args)            
-            return {'groupby': groupby}
+            return {'dataframegroupby': groupby}
 
         except Exception as e:
 
