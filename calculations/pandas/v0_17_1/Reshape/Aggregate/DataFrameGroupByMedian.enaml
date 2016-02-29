@@ -1,0 +1,21 @@
+from _base.DataFrameGroupByAggregate import DataFrameGroupByAggregate_UI
+from _base.DataFrameGroupByAggregate import DataFrameGroupByAggregate_Model
+from _base.DataFrameGroupByAggregate import DataFrameGroupByAggregate_View
+
+
+
+class DataFrameGroupByMedian_Model(DataFrameGroupByAggregate_Model):
+
+
+    calc_name = 'Median'
+
+
+    def __init__(self):
+        
+        self.func_name = 'median'
+
+
+
+enamldef DataFrameGroupByMedian_View(DataFrameGroupByAggregate_View):
+
+    pass

@@ -3,7 +3,7 @@ from ._base.SeriesStatistic2 import SeriesStatistic2_View
 
 
 
-class SeriesStdDev_Model(SeriesStatistic2_Model):
+class SeriesStandardDeviation_Model(SeriesStatistic2_Model):
     
     
     calc_name = 'Standard Deviation'
@@ -15,6 +15,6 @@ class SeriesStdDev_Model(SeriesStatistic2_Model):
 
 
 
-enamldef SeriesStdDev_View(SeriesStatistic2_View):
+enamldef SeriesStandardDeviation_View(SeriesStatistic2_View):
     
     pass
