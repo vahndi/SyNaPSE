@@ -1,0 +1,20 @@
+from ._base.DataFrame_Statistic2 import DataFrame_Statistic2_Model
+from ._base.DataFrame_Statistic2 import DataFrame_Statistic2_View
+
+
+
+class DataFrame_StandardDeviation_Model(DataFrame_Statistic2_Model):
+    
+    
+    calc_name = 'Standard Deviation'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'std'
+
+
+
+enamldef DataFrame_StandardDeviation_View(DataFrame_Statistic2_View):
+    
+    pass

@@ -1,0 +1,39 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from calculations._core.ABCs import ABCSeriesToSeries
+
+
+
+class Series_IsNull_Model(ABCSeriesToSeries):
+
+
+    calc_name = 'Is Null'
+    calc_desc = (
+        'Return a boolean series indicating if the values are null.'
+        )
+
+
+    def setInputs(self, series):
+
+        self._series = series      
+
+
+    def getOutputs(self):
+
+        try:
+            
+            return {'series': self._series.isnull()}        
+
+        except Exception as e:
+            
+            return self.standard_exception(e)   
+
+
+
+enamldef Series_IsNull_View(GroupBox):
+
+    Form:
+        
+        pass

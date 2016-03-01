@@ -1,0 +1,51 @@
+# Atom
+from atom.api import Atom
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from calculations._core.ABCs import ABCDataFrameGroupByToDataFrame 
+
+
+
+class DataFrameGroupBy_Aggregate_UI(Atom):
+
+    pass
+
+
+
+class DataFrameGroupBy_Aggregate_Model(ABCDataFrameGroupByToDataFrame):
+
+
+    def setInputs(self, dataframegroupby):
+
+        self._dataframegroupby = dataframegroupby
+        self.uiModel = DataFrameGroupBy_Aggregate_UI()
+
+
+    def getArgs(self):
+        
+        return {}
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            func = getattr(self._dataframegroupby, self.func_name)
+            df = func(** args)
+
+            return {'dataframe': df}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrameGroupBy_Aggregate_View(GroupBox):
+
+    pass

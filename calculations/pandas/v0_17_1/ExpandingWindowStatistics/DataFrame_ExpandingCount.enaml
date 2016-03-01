@@ -1,0 +1,83 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+from pandas import concat, expanding_count
+from modules.pandas_helpers import pandas_freqs, pandas_freq_tooltip
+
+
+
+class DataFrame_ExpandingCount_UI(Atom):
+
+    # freq
+    freq = Str('D')
+    freq_list = List(str, pandas_freqs)
+    use_freq = Bool()
+    freq_tooltip = pandas_freq_tooltip
+
+
+
+class DataFrame_ExpandingCount_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Expanding Count'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrame_ExpandingCount_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'freq': (None 
+                         if not self.uiModel.use_freq 
+                         else self.uiModel.freq)
+                }
+
+            df_numeric = self._dataframe.select_dtypes(['number'])
+            df_object = self._dataframe.select_dtypes(['object'])
+            args['arg'] = df_numeric
+
+            # apply function
+            statistic = expanding_count(** args)
+            
+            df_joined = concat([df_object, statistic], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            
+            return {'dataframe': df_joined}                
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_ExpandingCount_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.freq_tooltip
+            text = 'Freq'
+            checked := model.use_freq
+        Label:
+            text = 'N/A'
+            visible << not model.use_freq
+        ObjectCombo:
+            items = model.freq_list
+            selected := model.freq
+            visible << model.use_freq
+            tool_tip = model.freq_tooltip

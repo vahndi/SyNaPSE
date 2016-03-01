@@ -1,0 +1,21 @@
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+
+
+
+class DataFrameGroupBy_Count_Model(DataFrameGroupBy_Aggregate_Model):
+
+
+    calc_name = 'Count'
+
+
+    def __init__(self):
+        
+        self.func_name = 'count'
+
+
+
+enamldef DataFrameGroupBy_Count_View(DataFrameGroupBy_Aggregate_View):
+
+    pass

@@ -1,0 +1,27 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.DataFrame_Attribute import DataFrame_Attribute_Model
+from ._base.DataFrame_Attribute import DataFrame_Attribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class DataFrame_Size_Model(DataFrame_Attribute_Model):
+
+
+    calc_name = 'Size'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'size'
+
+
+
+enamldef DataFrame_Size_View(DataFrame_Attribute_View): me:
+
+    Form:
+        
+        pass

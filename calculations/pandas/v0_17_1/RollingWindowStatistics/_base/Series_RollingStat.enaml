@@ -1,0 +1,46 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from custom_views.fields import IntField
+
+# Models
+from calculations._core.ABCs import ABCSeriesToSeries
+
+# Pandas
+import pandas as pd
+from pandas import DataFrame, concat
+from RollingStat import RollingStat_UI, RollingStat_Model
+
+
+
+class Series_RollingStat_Model(RollingStat_Model, ABCSeriesToSeries):
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = RollingStat_UI(window_min = self.window_min,
+                                      window = self.window_min,
+                                      how = self.how)
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            args['arg'] = self._series
+                
+            # apply function
+            func = getattr(pd, self.outputFunction)
+            rolling_stat = func(** args)
+            
+            return {'series': rolling_stat}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+

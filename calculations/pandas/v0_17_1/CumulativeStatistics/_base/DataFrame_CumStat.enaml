@@ -1,0 +1,79 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+from pandas import concat
+
+
+
+class DataFrame_CumStat_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = ('Exclude NA/null values. If an entire row/column ' + 
+                      'is NA, the result will be NA')
+
+
+class DataFrame_CumStat_Model(ABCDataFrameToDataFrame):
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrame_CumStat_UI()
+        
+
+    def getOutputs(self):
+        
+        try:
+            
+            args = {'axis': self.uiModel.axis,
+                    'skipna': self.uiModel.skipna}
+            # split numeric and object types
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
+            # apply cumulative function
+            func = getattr(df_numeric, self.outputFunction)
+            df_stat = func(** args)
+            df_stat = df_stat.convert_objects(convert_numeric = True)
+            # join back together
+            df_joined = concat([df_object, df_stat], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            
+            return {'dataframe': df_joined}    
+
+        except Exception as e:
+            
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_CumStat_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Skip NA / Null Values'
+            tool_tip = model.skipna_tooltip
+        CheckBox:
+            checked := model.skipna
+            tool_tip = model.skipna_tooltip

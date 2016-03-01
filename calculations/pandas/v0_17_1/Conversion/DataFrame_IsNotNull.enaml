@@ -1,0 +1,36 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+
+
+class DataFrame_IsNotNull_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Is Not Null'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe      
+
+
+    def getOutputs(self):
+
+        try:
+            
+            return {'dataframe': self._dataframe.notnull()}        
+
+        except Exception as e:
+            
+            return self.standard_exception(e)   
+
+
+
+enamldef DataFrame_IsNotNull_View(GroupBox):
+
+    Form:
+        
+        pass

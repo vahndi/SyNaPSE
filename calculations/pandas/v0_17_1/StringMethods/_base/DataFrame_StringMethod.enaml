@@ -1,0 +1,81 @@
+print 'importing %s' % __name__
+# Atom
+from atom.api import Atom, List, Str, Value
+
+# Enaml
+from enaml.core.api import Conditional
+from enaml.widgets.api import Form, GroupBox, Label
+from custom_views.fields import IntField
+from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+
+
+class DataFrame_StringMethod_UI(Atom):
+
+    # input_type
+    input_type = Str()
+    # input_columns
+    input_columns = Value(Atom)
+    input_columns_tooltip = 'Select input columns to apply method to'
+
+
+
+class DataFrame_StringMethod_Model(ABCDataFrameToDataFrame):
+
+
+    def set_inputs(self):
+        '''
+        Adds input_type and input_columns to the args for the uiModel, and
+        adds a CheckBoxList_Model to the class
+        '''        
+        str_cols = [col for col in 
+                    self._dataframe.select_dtypes(['object'])]
+        self.input_columns = CheckBoxList_Model(str_cols)
+        self.ui_args['input_columns'] = self.input_columns.uiModel
+            
+    
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe        
+        self.ui_args = {}
+        self.set_inputs()
+        self.uiModel = DataFrame_StringMethod_UI(** self.ui_args)
+
+
+    def getOutputs(self):
+
+        try:
+            
+            args = self.getArgs()
+            
+            # Apply method to each column and add to new dataframe
+            df = self._dataframe.copy()
+            for col in self.input_columns.checked_item_names():
+                func = getattr(df[col].str, self.func_name)
+                df[col] = func(** args)
+            return {'dataframe': df}
+                
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_StringMethod_View(GroupBox): me:
+
+
+    attr model
+
+
+    Form:            
+        
+        Label:
+            text = 'Input Columns'
+            tool_tip = model.input_columns_tooltip
+            
+        CheckBoxList_View:
+            model := me.model.input_columns
+            tool_tip = me.model.input_columns_tooltip

@@ -1,0 +1,20 @@
+from ._base.DataFrame_ExpandingStat import DataFrame_ExpandingStat_Model
+from ._base.DataFrame_ExpandingStat import DataFrame_ExpandingStat_View
+
+
+
+class DataFrame_ExpandingSkew_Model(DataFrame_ExpandingStat_Model):
+    
+    
+    calc_name = 'Expanding Skew'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_skew'
+
+
+
+enamldef DataFrame_ExpandingSkew_View(DataFrame_ExpandingStat_View):
+    
+    pass

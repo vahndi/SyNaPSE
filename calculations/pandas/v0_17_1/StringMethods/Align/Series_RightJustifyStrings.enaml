@@ -1,0 +1,21 @@
+# Models
+from ._base.Series_AlignStrings import Series_AlignStrings_Model
+from ._base.Series_AlignStrings import Series_AlignStrings_View
+
+
+
+class Series_RightJustifyStrings_Model(Series_AlignStrings_Model):
+
+
+    calc_name = 'Right Justify'
+
+
+    def __init__(self):
+        
+        self.func_name = 'rjust'
+
+
+
+enamldef Series_RightJustifyStrings_View(Series_AlignStrings_View): me:
+
+    pass

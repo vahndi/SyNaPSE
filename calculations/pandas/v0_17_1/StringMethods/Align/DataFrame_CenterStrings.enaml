@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_Model
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_View
+
+
+
+class DataFrame_CenterStrings_Model(DataFrame_AlignStrings_Model):
+
+
+    calc_name = 'Center Strings'
+
+
+    def __init__(self):
+        
+        self.func_name = 'center'
+
+
+
+enamldef DataFrame_CenterStrings_View(DataFrame_AlignStrings_View):
+
+    pass

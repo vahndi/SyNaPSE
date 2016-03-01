@@ -1,0 +1,27 @@
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_UI
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_Model
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_View
+
+
+
+class DataFrame_ToUpper_Model(DataFrame_StringMethod_Model):
+
+
+    calc_name = 'To Upper Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'upper'
+        
+
+    def getArgs(self):
+        
+        return {}
+        
+        
+
+enamldef DataFrame_ToUpper_View(DataFrame_StringMethod_View): me:
+
+    pass
+

@@ -1,0 +1,21 @@
+from ._base.DataFrame_RollingStat import DataFrame_RollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class DataFrame_RollingKurtosis_Model(DataFrame_RollingStat_Model):
+    
+    
+    calc_name = 'Rolling Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_kurt'
+        self.window_min = 4
+        self.how = 'mean'
+
+
+enamldef DataFrame_RollingKurtosis_View(RollingStat_View):
+    
+    pass

@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_IsDigit_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Is Digit'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isdigit'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+
+enamldef Series_IsDigit_View(Series_StringMethod_View): me:
+
+    pass
+

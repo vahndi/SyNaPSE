@@ -1,0 +1,53 @@
+# Atom
+from atom.api import Atom, Bool, Int, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, ObjectCombo
+from custom_views.fields import IntField
+
+# Models
+from calculations._core.ABCs import ABCSeriesToSeries
+
+# Pandas
+import pandas as pd
+from ExpandingStat import ExpandingStat_UI, ExpandingStat_View
+
+
+
+class Series_ExpandingStat_Model(ABCSeriesToSeries):
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = ExpandingStat_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # assign local variables
+            args = {
+                'arg': self._series,
+                'min_periods': self.uiModel.min_periods,
+                'freq': (None 
+                         if not self.uiModel.use_freq 
+                         else self.uiModel.freq)
+                }
+
+            # apply function
+            func = getattr(pd, self.outputFunction)
+            expanding_stat = func(** args)
+            
+            return {'series': expanding_stat}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Series_ExpandingStat_View(ExpandingStat_View):
+    
+    pass

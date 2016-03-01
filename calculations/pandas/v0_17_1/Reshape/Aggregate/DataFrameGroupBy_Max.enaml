@@ -1,0 +1,22 @@
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+
+
+
+class DataFrameGroupBy_Max_Model(DataFrameGroupBy_Aggregate_Model):
+
+
+    calc_name = 'Maximum'
+
+
+    def __init__(self):
+        
+        self.func_name = 'max'
+
+
+
+enamldef DataFrameGroupBy_Max_View(DataFrameGroupBy_Aggregate_View):
+
+    pass
+

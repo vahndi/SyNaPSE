@@ -1,0 +1,20 @@
+from ._base.Series_Statistic1 import Series_Statistic1_Model
+from ._base.Series_Statistic1 import Series_Statistic1_View
+
+
+
+class Series_Minimum_Model(Series_Statistic1_Model):
+    
+    
+    calc_name = 'Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'min'
+
+
+
+enamldef Series_Minimum_View(Series_Statistic1_View):
+    
+    pass

@@ -1,0 +1,20 @@
+from ._base.DataFrame_CumStat import DataFrame_CumStat_Model
+from ._base.DataFrame_CumStat import DataFrame_CumStat_View
+
+
+
+class DataFrame_CumProd_Model(DataFrame_CumStat_Model):
+    
+    
+    calc_name = 'Cumulative Product'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cumprod'
+
+
+
+enamldef DataFrame_CumProd_View(DataFrame_CumStat_View):
+    
+    pass

@@ -1,0 +1,28 @@
+# Enaml
+from enaml.widgets.api import Form
+
+# Models
+from ._base.Series_Attribute import Series_Attribute_Model
+from ._base.Series_Attribute import Series_Attribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class Series_DType_Model(Series_Attribute_Model):
+
+
+    calc_name = 'D-Type'
+    calc_desc = 'Return the dtype object of the underlying data.'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'dtype'
+
+
+
+enamldef Series_DType_View(Series_Attribute_View): me:
+
+    Form:
+        
+        pass

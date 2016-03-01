@@ -1,0 +1,49 @@
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from _base.RollingWindow import RollingWindow_UI
+from _base.RollingWindow import RollingWindow_Model, RollingWindow_View
+
+# Pandas
+import pandas as pd
+from pandas import DataFrame, Series, concat
+from pandas.stats.moments import rolling_window
+
+
+
+class DataFrame_RollingWindow_Model(ABCDataFrameToDataFrame, 
+                                   RollingWindow_Model):
+    
+    
+    calc_name = 'Rolling Window'
+    
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = RollingWindow_UI(show_axis = True)
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()
+            args['arg'] = df_numeric
+                
+            # apply function
+            rolling_stat = rolling_window(** args)
+            
+            df_joined = concat([df_object, rolling_stat], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            return {'dataframe': df_joined}                
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_RollingWindow_View(RollingWindow_View):
+
+    pass

@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_IsAlpha_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Is Alpha'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isalpha'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+
+enamldef Series_IsAlpha_View(Series_StringMethod_View): me:
+
+    pass
+

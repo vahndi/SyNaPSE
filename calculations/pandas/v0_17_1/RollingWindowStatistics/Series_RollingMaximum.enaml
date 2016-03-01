@@ -1,0 +1,23 @@
+from calculations._core.ABCs import ABCSeriesToSeries
+from ._base.Series_RollingStat import Series_RollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class Series_RollingMaximum_Model(Series_RollingStat_Model):
+    
+    
+    calc_name = 'Rolling Maximum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_max'
+        self.window_min = 1
+        self.how = 'max'
+
+
+
+enamldef Series_RollingMaximum_View(RollingStat_View):
+    
+    pass

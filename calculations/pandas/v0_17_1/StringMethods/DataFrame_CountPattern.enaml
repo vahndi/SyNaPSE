@@ -1,0 +1,76 @@
+# Atom
+from atom.api import Atom, Str, Value
+
+# Enaml
+from enaml.widgets.api import Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field
+from custom_views.RegExFlags import RegExFlags_Model, RegExFlags_View
+
+# Models
+from ._base.DataFrame_StringMethod import DataFrame_StringMethod_UI
+from ._base.DataFrame_StringMethod import DataFrame_StringMethod_Model
+from ._base.DataFrame_StringMethod import DataFrame_StringMethod_View
+
+
+
+class DataFrame_CountPattern_UI(DataFrame_StringMethod_UI):
+
+    # pat
+    pat = Str()
+    pat_tooltip = 'valid regular expression'
+    # flags
+    flags = Value(Atom)
+    flags_tooltip = 're module flags'
+
+
+
+class DataFrame_CountPattern_Model(DataFrame_StringMethod_Model):
+
+
+    calc_name = 'Count Pattern'
+
+
+    def __init__(self):
+        
+        self.func_name = 'count'
+
+
+    def setInputs(self, dataframe = None, series = None):
+
+        self._dataframe = dataframe
+        self._series = series
+        
+        self.regex_flags = RegExFlags_Model()
+        self.ui_args = {'flags': self.regex_flags}
+        self.set_inputs()
+        self.uiModel = DataFrame_CountPattern_UI(** self.ui_args)
+
+
+    def getArgs(self):
+
+        return {
+            'pat': self.uiModel.pat,
+            'flags': self.uiModel.flags
+            }
+
+
+
+enamldef DataFrame_CountPattern_View(DataFrame_StringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Pattern'
+            tool_tip = model.pat_tooltip
+        Field:
+            text := model.pat
+            tool_tip = me.model.pat_tooltip
+
+        Label:
+            text = 'Regex Flags'
+            tool_tip = model.flags_tooltip
+        RegExFlags_View:
+            model:= me.model.flags
+            tool_tip = me.model.flags_tooltip

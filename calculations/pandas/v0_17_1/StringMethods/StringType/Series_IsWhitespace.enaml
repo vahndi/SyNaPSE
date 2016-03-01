@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_IsWhitespace_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Is Whitespace'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isspace'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+
+enamldef Series_IsWhitespace_View(Series_StringMethod_View): me:
+
+    pass
+

@@ -1,0 +1,86 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from calculations._core.ABCs import ABCSeriesToBool
+
+
+
+class Series_AllAreTrue_UI(Atom):
+
+
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = ('Exclude NA / null values.\n' + 
+                      'If an entire row / column is NA, the result will' +
+                      ' be NA.')
+    # bool_only
+    bool_only = Bool()
+    use_bool_only = Bool()
+    bool_only_tooltip = ('Include only boolean data.\n' +
+                         'If None, will attempt to use everything, ' +
+                         'then use only boolean data.')
+
+
+class Series_AllAreTrue_Model(ABCSeriesToBool):
+
+
+    calc_name = 'All are True'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.uiModel = Series_AllAreTrue_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'skipna': self.uiModel.skipna,
+                'bool_only': (None 
+                              if not self.uiModel.use_bool_only 
+                              else self.uiModel.bool_only)
+                }
+            
+            boolean = self._series.all(**args)
+            
+            return {'bool': boolean}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef Series_AllAreTrue_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Skip N/A'
+            tool_tip = model.skipna_tooltip
+        CheckBox:
+            checked := model.skipna
+            tool_tip = model.skipna_tooltip
+
+        CheckBox:
+            tool_tip = model.bool_only_tooltip
+            text = 'Bool Only'
+            checked := model.use_bool_only
+        Label:
+            text = 'N/A'
+            visible << not model.use_bool_only
+        CheckBox:
+            checked := model.bool_only
+            visible << model.use_bool_only
+            tool_tip = model.bool_only_tooltip

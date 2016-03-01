@@ -1,0 +1,98 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+from custom_views.fields import Field
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+import re
+from pandas import Series, DataFrame
+
+
+
+class DataFrame_Quantiles_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # quantiles
+    quantiles = Str('0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9')
+    quantiles_tooltip = ('The quantiles to calculate.\n' +
+                         'Enter a list of values, separated by commas.\n' + 
+                         'Values should be between 0 and 1.')
+    # numeric_only
+    numeric_only = Bool(True)
+        
+
+
+class DataFrame_Quantiles_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Quantiles'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrame_Quantiles_UI()
+
+
+    def getOutputs(self):
+
+        def getQuantiles(str_quantiles):
+            try:
+                quantiles = [float(q) for q in re.split('\s*,\s*', 
+                                                        str_quantiles)]
+            except:
+                quantiles = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            return quantiles
+
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'q': getQuantiles(self.uiModel.quantiles),
+                'numeric_only': self.uiModel.numeric_only
+                }
+            
+            quantiles = self._dataframe.quantile(** args)
+            quantiles.index.name = 'quantile'
+            return {'dataframe': quantiles}
+
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_Quantiles_View(GroupBox):
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Quantiles'
+            tool_tip = model.quantiles_tooltip
+        Field:
+            text := model.quantiles
+            tool_tip = model.quantiles_tooltip
+
+        Label:
+            text = 'Numeric Only'
+        CheckBox:
+            checked := model.numeric_only

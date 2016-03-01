@@ -1,0 +1,25 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_IsTitle_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Is Title Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'istitle'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+enamldef Series_IsTitle_View(Series_StringMethod_View): me:
+
+    pass

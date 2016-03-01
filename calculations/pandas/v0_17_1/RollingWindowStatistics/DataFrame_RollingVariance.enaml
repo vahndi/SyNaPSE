@@ -1,0 +1,22 @@
+from ._base.DataFrame_RollingStat import DataFrame_RollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class DataFrame_RollingVariance_Model(DataFrame_RollingStat_Model):
+    
+    
+    calc_name = 'Rolling Variance'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_var'
+        self.window_min = 2
+        self.how = 'mean'
+
+
+
+enamldef DataFrame_RollingVariance_View(RollingStat_View):
+    
+    pass

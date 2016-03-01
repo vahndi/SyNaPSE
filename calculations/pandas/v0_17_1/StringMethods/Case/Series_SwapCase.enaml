@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_SwapCase_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Swap Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'swapcase'
+        
+
+    def getArgs(self):
+        
+        return {}
+        
+        
+
+enamldef Series_SwapCase_View(Series_StringMethod_View): me:
+
+    pass
+

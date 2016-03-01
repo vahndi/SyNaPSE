@@ -1,0 +1,21 @@
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+
+
+
+class DataFrameGroupBy_First_Model(DataFrameGroupBy_Aggregate_Model):
+
+
+    calc_name = 'First'
+
+
+    def __init__(self):
+        
+        self.func_name = 'first'
+
+
+
+enamldef DataFrameGroupBy_First_View(DataFrameGroupBy_Aggregate_View):
+
+    pass

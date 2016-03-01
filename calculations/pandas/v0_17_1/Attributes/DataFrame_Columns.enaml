@@ -1,0 +1,27 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.DataFrame_Attribute import DataFrame_Attribute_Model
+from ._base.DataFrame_Attribute import DataFrame_Attribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class DataFrame_Columns_Model(DataFrame_Attribute_Model):
+
+
+    calc_name = 'Columns'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'columns'
+
+
+
+enamldef DataFrame_Columns_View(DataFrame_Attribute_View): me:
+
+    Form:
+        
+        pass

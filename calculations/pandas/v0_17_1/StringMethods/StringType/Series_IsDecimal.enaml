@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_IsDecimal_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'Is Decimal'
+
+
+    def __init__(self):
+        
+        self.func_name = 'isdecimal'
+        
+
+    def getArgs(self):
+        
+        return {}
+
+
+
+enamldef Series_IsDecimal_View(Series_StringMethod_View): me:
+
+    pass
+

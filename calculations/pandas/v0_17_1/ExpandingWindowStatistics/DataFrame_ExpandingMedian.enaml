@@ -1,0 +1,20 @@
+from ._base.DataFrame_ExpandingStat import DataFrame_ExpandingStat_Model
+from ._base.DataFrame_ExpandingStat import DataFrame_ExpandingStat_View
+
+
+
+class DataFrame_ExpandingMedian_Model(DataFrame_ExpandingStat_Model):
+    
+    
+    calc_name = 'Expanding Median'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'expanding_median'
+
+
+
+enamldef DataFrame_ExpandingMedian_View(DataFrame_ExpandingStat_View):
+    
+    pass

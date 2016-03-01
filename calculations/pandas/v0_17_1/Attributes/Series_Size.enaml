@@ -1,0 +1,28 @@
+# Enaml
+from enaml.widgets.api import Form
+
+# Models
+from ._base.Series_Attribute import Series_Attribute_Model
+from ._base.Series_Attribute import Series_Attribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class Series_Size_Model(Series_Attribute_Model):
+
+
+    calc_name = 'Size'
+    calc_desc = 'Return the number of elements in the underlying data.'
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'size'
+
+
+
+enamldef Series_Size_View(Series_Attribute_View): me:
+
+    Form:
+        
+        pass

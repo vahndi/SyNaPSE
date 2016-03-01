@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrame_FindIndex import DataFrame_FindIndex_Model
+from ._base.DataFrame_FindIndex import DataFrame_FindIndex_View
+
+
+
+class DataFrame_LeftFind_Model(DataFrame_FindIndex_Model):
+
+
+    calc_name = 'Left Find'
+
+
+    def __init__(self):
+        
+        self.func_name = 'find'
+
+
+
+enamldef DataFrame_LeftFind_View(DataFrame_FindIndex_View): me:
+
+    pass

@@ -1,0 +1,20 @@
+from ._base.Series_Statistic2 import Series_Statistic2_Model
+from ._base.Series_Statistic2 import Series_Statistic2_View
+
+
+
+class Series_StandardDeviation_Model(Series_Statistic2_Model):
+    
+    
+    calc_name = 'Standard Deviation'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'std'
+
+
+
+enamldef Series_StandardDeviation_View(Series_Statistic2_View):
+    
+    pass

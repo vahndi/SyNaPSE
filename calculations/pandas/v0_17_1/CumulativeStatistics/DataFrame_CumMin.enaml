@@ -1,0 +1,20 @@
+from ._base.DataFrame_CumStat import DataFrame_CumStat_Model
+from ._base.DataFrame_CumStat import DataFrame_CumStat_View
+
+
+
+class DataFrame_CumMin_Model(DataFrame_CumStat_Model):
+    
+    
+    calc_name = 'Cumulative Minimum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cummin'
+
+
+
+enamldef DataFrame_CumMin_View(DataFrame_CumStat_View):
+    
+    pass

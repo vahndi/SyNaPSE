@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_Model
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_View
+
+
+
+class DataFrame_LeftJustifyStrings_Model(DataFrame_AlignStrings_Model):
+
+
+    calc_name = 'Left Justify'
+
+
+    def __init__(self):
+        
+        self.func_name = 'ljust'
+
+
+
+enamldef DataFrame_LeftJustifyStrings_View(DataFrame_AlignStrings_View): me:
+
+    pass

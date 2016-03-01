@@ -1,0 +1,46 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+
+# Other
+from pandas import concat
+
+
+
+class DataFrame_AbsoluteValues_Model(ABCDataFrameToDataFrame):
+
+
+    calc_name = 'Absolute Values'
+    calc_desc = 'Return an object with absolute value taken.'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe      
+
+
+    def getOutputs(self):
+
+        try:
+            
+            df_object = self._dataframe.select_dtypes(include = [object])        
+            df_numeric = self._dataframe.select_dtypes(exclude = [object])
+            df_numeric_abs = df_numeric.abs()
+            df_joined = concat([df_object, df_numeric_abs], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+
+            return {'dataframe': df_joined}        
+
+        except Exception as e:
+            
+            return self.standard_exception(e)   
+
+
+
+enamldef DataFrame_AbsoluteValues_View(GroupBox): me:
+
+    Form:
+        
+        pass

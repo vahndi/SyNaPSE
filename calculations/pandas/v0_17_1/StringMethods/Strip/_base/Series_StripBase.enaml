@@ -1,0 +1,50 @@
+# Atom
+from atom.api import Atom, Bool, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field
+
+# Models
+from ..._base.Series_StringMethod import Series_StringMethod_UI
+from ..._base.Series_StringMethod import Series_StringMethod_Model
+from ..._base.Series_StringMethod import Series_StringMethod_View
+from StripBase import StripBase_UI, StripBase_Model
+
+
+
+class Series_StripBase_UI(StripBase_UI):
+
+    pass
+
+
+
+class Series_StripBase_Model(Series_StringMethod_Model, StripBase_Model):
+
+
+    def setInputs(self, series = None):
+
+        self._series = series
+        
+        self.ui_args = {}
+        self.uiModel = Series_StripBase_UI(** self.ui_args)
+
+
+
+enamldef Series_StripBase_View(Series_StringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.to_strip_tooltip
+            text = 'String to Strip'
+            checked := model.use_to_strip
+        Label:
+            text = 'N/A'
+            visible << not model.use_to_strip
+        Field:
+            text := model.to_strip
+            visible << model.use_to_strip
+            tool_tip = me.model.to_strip_tooltip

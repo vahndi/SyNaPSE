@@ -1,0 +1,23 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.Series_Arithmetic import Series_Arithmetic_Model, Series_Arithmetic_View
+
+
+
+class Series_Power_Model(Series_Arithmetic_Model):
+
+
+    calc_name = '**'
+    calc_desc = 'Exponential power of series and other, element-wise.'
+
+    def __init__(self):
+        
+        self.func_name = 'pow'
+
+
+
+enamldef Series_Power_View(Series_Arithmetic_View):
+
+    pass

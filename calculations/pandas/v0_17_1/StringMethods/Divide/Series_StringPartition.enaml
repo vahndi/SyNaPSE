@@ -1,0 +1,52 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+from ._base.StringPartition import StringPartition_UI, StringPartition_Model
+
+
+
+class Series_StringPartition_UI(Series_StringMethod_UI, StringPartition_UI):
+
+    pass
+
+
+
+class Series_StringPartition_Model(StringPartition_Model, Series_StringMethod_Model):
+
+
+    calc_name = 'Partition'
+
+
+    def __init__(self):
+            
+        self.func_name = 'partition'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.ui_args = {}
+        self.uiModel = Series_StringPartition_UI(** self.ui_args)
+
+
+
+enamldef Series_StringPartition_View(Series_StringMethod_View): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Pattern'
+            tool_tip = model.pat_tooltip
+        Field:
+            text := model.pat
+            tool_tip = me.model.pat_tooltip

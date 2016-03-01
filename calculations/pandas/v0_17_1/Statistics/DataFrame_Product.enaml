@@ -1,0 +1,20 @@
+from ._base.DataFrame_Statistic1 import DataFrame_Statistic1_Model
+from ._base.DataFrame_Statistic1 import DataFrame_Statistic1_View
+
+
+
+class DataFrame_Product_Model(DataFrame_Statistic1_Model):
+    
+    
+    calc_name = 'Product'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'product'
+
+
+
+enamldef DataFrame_Product_View(DataFrame_Statistic1_View):
+    
+    pass

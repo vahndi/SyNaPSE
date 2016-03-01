@@ -1,0 +1,20 @@
+from ._base.DataFrame_CumStat import DataFrame_CumStat_Model
+from ._base.DataFrame_CumStat import DataFrame_CumStat_View
+
+
+
+class DataFrame_CumSum_Model(DataFrame_CumStat_Model):
+    
+    
+    calc_name = 'Cumulative Sum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'cumsum'
+
+
+
+enamldef DataFrame_CumSum_View(DataFrame_CumStat_View):
+    
+    pass

@@ -1,0 +1,20 @@
+from ._base.Series_CumStat import Series_CumStat_Model
+from ._base.Series_CumStat import Series_CumStat_View
+
+
+
+class Series_CumSum_Model(Series_CumStat_Model):
+    
+    
+    calc_name = 'Cumulative Sum'
+
+    
+    def __init__(self):
+        
+        self.output_func = 'cumsum'
+
+
+
+enamldef Series_CumSum_View(Series_CumStat_View):
+    
+    pass

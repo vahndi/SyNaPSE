@@ -1,0 +1,20 @@
+from ._base.Series_Statistic1 import Series_Statistic1_Model
+from ._base.Series_Statistic1 import Series_Statistic1_View
+
+
+
+class Series_Mean_Model(Series_Statistic1_Model):
+    
+    
+    calc_name = 'Mean'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'mean'
+
+
+
+enamldef Series_Mean_View(Series_Statistic1_View):
+    
+    pass

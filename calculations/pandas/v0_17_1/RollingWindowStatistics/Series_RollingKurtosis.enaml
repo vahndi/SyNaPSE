@@ -1,0 +1,22 @@
+from calculations._core.ABCs import ABCSeriesToSeries
+from ._base.Series_RollingStat import Series_RollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class Series_RollingKurtosis_Model(Series_RollingStat_Model):
+    
+    
+    calc_name = 'Rolling Kurtosis'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_kurt'
+        self.window_min = 4
+        self.how = 'mean'
+
+
+enamldef Series_RollingKurtosis_View(RollingStat_View):
+    
+    pass

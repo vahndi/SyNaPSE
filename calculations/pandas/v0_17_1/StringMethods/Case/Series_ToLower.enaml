@@ -1,0 +1,27 @@
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+
+
+
+class Series_ToLower_Model(Series_StringMethod_Model):
+
+
+    calc_name = 'To Lower Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'lower'
+        
+
+    def getArgs(self):
+        
+        return {}
+        
+        
+
+enamldef Series_ToLower_View(Series_StringMethod_View): me:
+
+    pass
+

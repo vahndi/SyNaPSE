@@ -1,0 +1,21 @@
+# Models
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_Model
+from ._base.DataFrame_AlignStrings import DataFrame_AlignStrings_View
+
+
+
+class DataFrame_RightJustifyStrings_Model(DataFrame_AlignStrings_Model):
+
+
+    calc_name = 'Right Justify Strings'
+
+
+    def __init__(self):
+        
+        self.func_name = 'rjust'
+
+
+
+enamldef DataFrame_RightJustifyStrings_View(DataFrame_AlignStrings_View): me:
+
+    pass

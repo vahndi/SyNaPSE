@@ -1,0 +1,31 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.DataFrame_Attribute import DataFrame_Attribute_Model
+from ._base.DataFrame_Attribute import DataFrame_Attribute_View
+from modules.core_helpers import public_attrs_to_dict
+
+
+
+class DataFrame_Blocks_Model(DataFrame_Attribute_Model):
+
+
+    calc_name = 'Blocks'
+    calc_desc = (
+        'Convert the frame to a dict of dtype -> Constructor Types that \n' +
+        'each has a homogeneous dtype.'
+        )
+
+
+    def __init__(self):
+        
+        self._attribute_name = 'blocks'
+
+
+
+enamldef DataFrame_Blocks_View(DataFrame_Attribute_View): me:
+
+    Form:
+        
+        pass

@@ -1,0 +1,100 @@
+# Atom
+from atom.api import Atom, Bool, List, Str
+
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, ObjectCombo, Page
+
+# Models
+from calculations._core.ABCs import ABCDataFrameToSeries
+
+
+
+class DataFrame_AllAreTrue_UI(Atom):
+
+    # axis
+    axis = Str('index')
+    axis_list = List(str, ['index', 'columns'])
+    axis_tooltip = 'The axis over which the calculation should be applied.'
+    # skipna
+    skipna = Bool()
+    skipna_tooltip = ('Exclude NA / null values.\n' + 
+                      'If an entire row / column is NA, the result will' +
+                      ' be NA.')
+    # bool_only
+    bool_only = Bool()
+    use_bool_only = Bool()
+    bool_only_tooltip = ('Include only boolean data.\n' +
+                         'If None, will attempt to use everything, ' +
+                         'then use only boolean data.')
+
+
+class DataFrame_AllAreTrue_Model(ABCDataFrameToSeries):
+
+
+    calc_name = 'All are True'
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = DataFrame_AllAreTrue_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = {
+                'axis': self.uiModel.axis,
+                'skipna': self.uiModel.skipna,
+                'bool_only': (None 
+                              if not self.uiModel.use_bool_only 
+                              else self.uiModel.bool_only)
+                }
+            
+            series = self._dataframe.all(**args)
+            series.index.name = self.uiModel.axis
+            series.name = 'all true'
+            
+            return {'series': series}
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_AllAreTrue_View(GroupBox): me:
+
+    attr model
+
+    Form:
+
+        Label:
+            text = 'Axis'
+            tool_tip = model.axis_tooltip
+        ObjectCombo:
+            items = model.axis_list
+            selected := model.axis
+            tool_tip = model.axis_tooltip
+
+        Label:
+            text = 'Skipna'
+            tool_tip = model.skipna_tooltip
+        CheckBox:
+            checked := model.skipna
+            tool_tip = model.skipna_tooltip
+
+        CheckBox:
+            tool_tip = model.bool_only_tooltip
+            text = 'Bool Only'
+            checked := model.use_bool_only
+        Label:
+            text = 'N/A'
+            visible << not model.use_bool_only
+        CheckBox:
+            checked := model.bool_only
+            visible << model.use_bool_only
+            tool_tip = model.bool_only_tooltip

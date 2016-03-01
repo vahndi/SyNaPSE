@@ -1,0 +1,44 @@
+# Models
+from calculations._core.ABCs import ABCDataFrameToDataFrame
+from ._base.EWMStDev import EWMStDev_UI, EWMStDev_Model, EWMStDev_View
+from pandas import concat
+from pandas.stats.moments import ewmstd
+
+
+
+class DataFrame_EWMStDev_Model(EWMStDev_Model, ABCDataFrameToDataFrame):
+
+
+    def setInputs(self, dataframe):
+
+        self._dataframe = dataframe
+        self.uiModel = EWMStDev_UI()
+
+
+    def getOutputs(self):
+
+        try:
+
+            # Assign local variables
+            args = self.getArgs()            
+            df_numeric = self._dataframe.select_dtypes(['number'])
+            df_object = self._dataframe.select_dtypes(['object'])
+            args['arg'] = df_numeric
+
+            # apply function
+            ewm_stat = ewmstd(** args)
+            
+            df_joined = concat([df_object, ewm_stat], axis = 1)
+            df_joined = df_joined[[col for col in self._dataframe.columns]]
+            
+            return {'dataframe': df_joined}                
+
+        except Exception as e:
+
+            return self.standard_exception(e)
+
+
+
+enamldef DataFrame_EWMStDev_View(EWMStDev_View):
+    
+    pass

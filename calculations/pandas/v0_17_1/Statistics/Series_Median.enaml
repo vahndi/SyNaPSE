@@ -1,0 +1,20 @@
+from ._base.Series_Statistic1 import Series_Statistic1_Model
+from ._base.Series_Statistic1 import Series_Statistic1_View
+
+
+
+class Series_Median_Model(Series_Statistic1_Model):
+    
+    
+    calc_name = 'Median'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'median'
+
+
+
+enamldef Series_Median_View(Series_Statistic1_View):
+    
+    pass

@@ -1,0 +1,21 @@
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+
+
+
+class DataFrameGroupBy_Mean_Model(DataFrameGroupBy_Aggregate_Model):
+
+
+    calc_name = 'Mean'
+
+
+    def __init__(self):
+        
+        self.func_name = 'mean'
+
+
+
+enamldef DataFrameGroupBy_Mean_View(DataFrameGroupBy_Aggregate_View):
+
+    pass

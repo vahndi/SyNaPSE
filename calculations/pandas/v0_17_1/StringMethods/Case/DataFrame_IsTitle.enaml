@@ -1,0 +1,26 @@
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_UI
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_Model
+from .._base.DataFrame_StringMethod import DataFrame_StringMethod_View
+
+
+
+class DataFrame_IsTitle_Model(DataFrame_StringMethod_Model):
+
+
+    calc_name = 'Is Title Case'
+
+
+    def __init__(self):
+        
+        self.func_name = 'istitle'
+        
+
+    def getArgs(self):
+        
+        return {}
+        
+        
+
+enamldef DataFrame_IsTitle_View(DataFrame_StringMethod_View): me:
+
+    pass

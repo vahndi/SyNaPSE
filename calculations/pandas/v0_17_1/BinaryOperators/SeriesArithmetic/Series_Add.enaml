@@ -1,0 +1,24 @@
+# Enaml
+from enaml.widgets.api import Form, GroupBox
+
+# Models
+from ._base.Series_Arithmetic import Series_Arithmetic_Model, Series_Arithmetic_View
+
+
+
+class Series_Add_Model(Series_Arithmetic_Model):
+
+
+    calc_name = '+'
+    calc_desc = 'Addition of series and other, element-wise.'
+    
+
+    def __init__(self):
+        
+        self.func_name = 'add'
+
+
+
+enamldef Series_Add_View(Series_Arithmetic_View):
+
+    pass

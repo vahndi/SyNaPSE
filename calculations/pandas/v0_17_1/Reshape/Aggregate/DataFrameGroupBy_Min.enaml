@@ -1,0 +1,22 @@
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+
+
+
+class DataFrameGroupBy_Min_Model(DataFrameGroupBy_Aggregate_Model):
+
+
+    calc_name = 'Minimum'
+
+
+    def __init__(self):
+        
+        self.func_name = 'min'
+
+
+
+enamldef DataFrameGroupBy_Min_View(DataFrameGroupBy_Aggregate_View):
+
+    pass
+

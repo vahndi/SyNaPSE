@@ -1,0 +1,23 @@
+from calculations._core.ABCs import ABCSeriesToSeries
+from ._base.Series_RollingStat import Series_RollingStat_Model
+from ._base.RollingStat import RollingStat_View
+
+
+
+class Series_RollingSum_Model(Series_RollingStat_Model):
+    
+    
+    calc_name = 'Rolling Sum'
+
+    
+    def __init__(self):
+        
+        self.outputFunction = 'rolling_sum'
+        self.window_min = 1
+        self.how = 'mean'
+
+
+
+enamldef Series_RollingSum_View(RollingStat_View):
+    
+    pass

@@ -1,0 +1,68 @@
+# Atom
+from atom.api import Atom, Bool, Int, Str
+
+# Enaml
+from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
+from custom_views.fields import Field, IntField
+
+# Models
+from .._base.Series_StringMethod import Series_StringMethod_UI
+from .._base.Series_StringMethod import Series_StringMethod_Model
+from .._base.Series_StringMethod import Series_StringMethod_View
+from ._base.StringSplit import StringSplit_UI, StringSplit_Model
+
+
+
+class Series_StringSplit_UI(Series_StringMethod_UI, StringSplit_UI):
+
+    pass
+
+
+
+class Series_StringSplit_Model(StringSplit_Model, Series_StringMethod_Model):
+
+
+    calc_name = 'Split'
+
+
+    def __init__(self):
+            
+        self.func_name = 'split'
+
+
+    def setInputs(self, series):
+
+        self._series = series
+        self.ui_args = {}
+        self.uiModel = Series_StringSplit_UI(** self.ui_args)
+
+
+
+enamldef Series_StringSplit_View(Series_StringMethod_View): me:
+
+    Form:
+
+        CheckBox:
+            tool_tip = model.pat_tooltip
+            text = 'Pat'
+            checked := model.use_pat
+        Label:
+            text = 'N/A'
+            visible << not model.use_pat
+        Field:
+            text := model.pat
+            visible << model.use_pat
+            tool_tip = me.model.pat_tooltip
+
+        CheckBox:
+            tool_tip = model.n_tooltip
+            text = 'N'
+            checked := model.use_n
+        Label:
+            text = 'N/A'
+            visible << not model.use_n
+        IntField:
+            value := model.n
+            minimum = model.n_min
+            visible << model.use_n
+            tool_tip = me.model.n_tooltip
