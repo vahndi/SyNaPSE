@@ -45,7 +45,7 @@ fabric.properties
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
-__enamlcache__/
+*__enamlcache__/
 *.py[cod]
 *$py.class
 
@@ -135,3 +135,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+/custom_views/__enamlcache__/
+/calculations/pandas/v0_17_1/Attributes/__enamlcache__/
+/calculations/pandas/v0_17_1/BinaryOperators/__enamlcache__/
