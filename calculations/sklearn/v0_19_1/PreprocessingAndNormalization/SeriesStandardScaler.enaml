@@ -1,4 +1,4 @@
-from _base.StandardScaler import StandardScaler_UI, StandardScaler_Model, StandardScaler_View
+from ._base.StandardScaler import StandardScaler_UI, StandardScaler_Model, StandardScaler_View
 from calculations._core.ABCs import ABCSeriesToSeries
 from sklearn.preprocessing import StandardScaler
 from pandas import Series

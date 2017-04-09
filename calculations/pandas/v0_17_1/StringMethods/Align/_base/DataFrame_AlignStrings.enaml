@@ -1,4 +1,4 @@
-print 'importing %s' % __name__
+print('importing %s' % __name__)
 # Atom
 from atom.api import Atom, Int, Str
 
@@ -10,7 +10,7 @@ from custom_views.fields import Field, IntField
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_UI
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_Model
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_View
-from AlignStrings import AlignStrings_UI, AlignStrings_Model
+from .AlignStrings import AlignStrings_UI, AlignStrings_Model
 
 
 

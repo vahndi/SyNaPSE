@@ -1,7 +1,7 @@
 from pydoc import locate
 import os
 import enaml
-import copy_reg
+import copyreg
 import types
 import sys
 
@@ -15,6 +15,7 @@ def _pickle_method(method):
     cls = method.im_class
     return _unpickle_method, (func_name, obj, cls)
 
+
 def _unpickle_method(func_name, obj, cls):
     
     for cls in cls.mro():
@@ -26,7 +27,7 @@ def _unpickle_method(func_name, obj, cls):
             break
         return func.__get__(obj, cls)
 
-copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
+copyreg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 
 
 # A list of tuples (package_path, relative_system_path) of all the locations
@@ -63,7 +64,7 @@ def get_enaml_dirs_files(root_dir):
 def dict_to_path(path_dict, init_path, path_sep, path_list):
     
     # iterate through keys and values at the current level
-    for k, v in path_dict.iteritems():
+    for k, v in path_dict.items():
         if isinstance(v, list): # files
             # add the current path to the list
             path_list.append(init_path)
@@ -85,7 +86,7 @@ def get_calc_models(pkg_path, sys_path):
                    if fn.endswith('.enaml')]
     for model_file in model_files:
         model_name = model_file.split('.')[0]
-        print 'Loading calculation: %s...' % model_name
+        print('Loading calculation: %s...' % model_name)
         model_list.append(locate('%s.%s.%s_Model' 
                                  % (pkg_path, model_name, model_name)))
             
@@ -123,6 +124,7 @@ for pkg_path, sys_path in pkg_sys:
 model_view_dict = {mv[0]: mv[1]
                    for mv in calculation_models_views}
 
+
 # Create a menu dict
 def get_menus_calcs(root_dir):
     '''
@@ -142,7 +144,6 @@ def get_menus_calcs(root_dir):
     calcs = []
     for fname in files:
         for calc_model in calculation_models:
-#            print calc_model
             try:
                 if calc_model.__name__[: -6] == fname[: -6]:
                     calcs.append(calc_model)

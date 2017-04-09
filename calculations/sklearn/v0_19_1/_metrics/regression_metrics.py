@@ -11,7 +11,7 @@ class RegressionMetrics(object):
     def get_metrics(cls, y_true, y_pred, 
                     sample_weight = None):
         
-        '''
+        """
         Returns typical metrics for regression from the sklearn.metrics module
         
         Inputs
@@ -40,7 +40,7 @@ class RegressionMetrics(object):
             'variance_weighted' :
                 Scores of all outputs are averaged, weighted by the variances 
                 of each individual output.
-        '''
+        """
         metrics_dict = {}
         multioutputs2 = ['raw_values', 'uniform_average']
         multioutputs3 = ['raw_values', 'uniform_average', 'variance_weighted']

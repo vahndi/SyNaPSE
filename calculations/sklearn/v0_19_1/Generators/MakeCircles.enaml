@@ -1,44 +1,61 @@
 # Atom
 from atom.api import Atom, Bool, Float, Int
 
-
 # Enaml
 from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from RegressionGenerator import RegressionGenerator
+from ._base.ClassificationGenerator import LabelClassificationGenerator
+from sklearn.datasets import make_circles
 
 
 
-class Make1_UI(Atom):
+class MakeCircles_UI(Atom):
 
     # n_samples
     n_samples = Int(100)
     n_samples_min = Int(1)
     n_samples_tooltip = 'The total number of points generated.'
+    # factor
+    factor = Float(0.8)
+    factor_min = Float(0)
+    factor_max = Float(1)
+    factor_tooltip = 'Scale factor between inner and outer circle.'
     # noise
-    noise = Float(0)
+    noise = Float(0.05)
+    use_noise = Bool()
     noise_tooltip = 'Standard deviation of Gaussian noise added to the data.'
+    # shuffle
+    shuffle = Bool(True)
+    shuffle_tooltip = 'Whether to shuffle the samples.'
     # random_state
     random_state = Int(1)
     use_random_state = Bool()
     random_state_tooltip = 'The random state seed.'
 
 
-class Make1_Model(RegressionGenerator):
+class MakeCircles_Model(LabelClassificationGenerator):
+
+
+    calc_name = 'Make Circles'
 
 
     def __init__(self):
         
-        self.uiModel = Make1_UI()
+        self.uiModel = MakeCircles_UI()
+        self.outputFunction = make_circles
 
 
     def getArgs(self):
         
         return {
             'n_samples': self.uiModel.n_samples,
-            'noise': self.uiModel.noise,
+            'factor': self.uiModel.factor,
+            'noise': (None 
+                      if not self.uiModel.use_noise 
+                      else self.uiModel.noise),
+            'shuffle': self.uiModel.shuffle,
             'random_state': (None 
                              if not self.uiModel.use_random_state 
                              else self.uiModel.random_state)
@@ -46,14 +63,14 @@ class Make1_Model(RegressionGenerator):
 
 
 
-enamldef Make1_View(GroupBox):
+enamldef MakeCircles_View(GroupBox): me:
 
     attr model
 
     Form:
 
         Label:
-            text = '# Samples'
+            text = 'N Samples'
             tool_tip = model.n_samples_tooltip
         IntField:
             value := model.n_samples
@@ -61,11 +78,32 @@ enamldef Make1_View(GroupBox):
             tool_tip = model.n_samples_tooltip
 
         Label:
-            text = 'Noise'
+            text = 'Factor'
+            tool_tip = model.factor_tooltip
+        FloatField:
+            value := model.factor
+            minimum = model.factor_min
+            maximum = model.factor_max
+            tool_tip = model.factor_tooltip
+
+        CheckBox:
             tool_tip = model.noise_tooltip
+            text = 'Noise'
+            checked := model.use_noise
+        Label:
+            text = 'N/A'
+            visible << not model.use_noise
         FloatField:
             value := model.noise
+            visible << model.use_noise
             tool_tip = model.noise_tooltip
+
+        Label:
+            text = 'Shuffle'
+            tool_tip = model.shuffle_tooltip
+        CheckBox:
+            checked := model.shuffle
+            tool_tip = model.shuffle_tooltip
 
         CheckBox:
             tool_tip = model.random_state_tooltip

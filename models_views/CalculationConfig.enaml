@@ -20,13 +20,10 @@ def _get_calculation_view(calculation_item):
         return Form()
 
 
-
 enamldef CalculationConfig_View(DockPane):
-
 
     attr model
 
-    
     title = 'Calculation Configuration'
     dock_area = 'left'
     allowed_dock_areas = ['left', 'right'] 

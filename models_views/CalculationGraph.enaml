@@ -10,11 +10,12 @@ from enaml.layout.api import hbox, vbox
 from enaml.core.api import Include
 
 # Models
-from calculation import CalculationItem
-from ChooseCalculation import ChooseCalculation_View
+from .calculation import CalculationItem
+from .ChooseCalculation import ChooseCalculation_View
 
 # Other
 import networkx as nx
+from networkx.drawing.layout import shell_layout
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.patches import Arrow, Circle
@@ -138,7 +139,7 @@ class CalculationGraph_Model(object):
             coord_graph.add_node(node.item_name)
         for edge in graph.edges():
             coord_graph.add_edge(edge[0].item_name, edge[1].item_name)
-        node_coords = nx.graphviz_layout(coord_graph, prog = 'dot')
+        node_coords = shell_layout(coord_graph)
         node_x = [node_coords[node][0] for node in coord_graph.nodes()]
         node_y = [node_coords[node][1] for node in coord_graph.nodes()]
         node_labels = [node.replace(' ', '\n') 
@@ -235,12 +236,12 @@ class CalculationGraph_Model(object):
             
         elif isinstance(event.artist, Arrow):
             
-            print 'Arrow Picked'
+            print('Arrow Picked')
 
 
     def relayout_nodes(self):
         
-        layout = nx.graphviz_layout(self._calc_graph, prog = 'dot')
+        layout = shell_layout(self._calc_graph)
         for item, coord in layout.items():
             item.x = int(coord[0])
             item.y = int(coord[1])
@@ -293,11 +294,11 @@ class CalculationGraph_Model(object):
             except Exception as e:
                 
                 self._calc_graph.remove_node(new_item)
-                print 'Error mapping outputs of selected calc to new calc'
-                print '__class__:', str(e.__class__)
-                print '__doc__:', e.__doc__
-                print 'message:', e.message
-                print 'args:', str(e.args)                
+                print('Error mapping outputs of selected calc to new calc')
+                print('__class__:', str(e.__class__))
+                print('__doc__:', e.__doc__)
+                print('message:', e.message)
+                print('args:', str(e.args))
                 return
                 
         else:
@@ -349,17 +350,15 @@ class CalculationGraph_Model(object):
 
 enamldef CalculationGraph_View(DockPane): me:
 
-
     attr model
 
-    
     title = 'Calculation Graph'
     dock_area = 'left'
     allowed_dock_areas = ['left', 'right'] 
     closable = False
     
     Container: main_cntnr:
-        
+
         constraints = [vbox(button_cntnr, calcs_cntnr)]
 
         Container: button_cntnr:

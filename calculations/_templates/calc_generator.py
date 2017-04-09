@@ -13,26 +13,26 @@ def generate_calc(spreadsheet_name, calc_name):
     if not ss_name.endswith('.xls'):
         ss_name += '.xls'
     df = pd.read_excel(ss_name, 
-                       sheetname = calc_name)
+                       sheetname=calc_name)
 
     # TODO: write to a new .enaml file
-    print getImportsCode(calc_name, df)
-    print getModelCode(calc_name, df)
-    print getEnamlCode(calc_name, df)
+    print(getImportsCode(calc_name, df))
+    print(getModelCode(calc_name, df))
+    print(getEnamlCode(calc_name, df))
 
 
 def inspect_calc_args(pickle_name, module_name = ''):
-    '''
+    """
     Find the number of occurences of each named argument in the list of models
     Sheet Columns should be ['Model', 'Args']
-    '''
+    """
     pkl_name = pickle_name;
     if not pkl_name.endswith('.pkl'):
         pkl_name += '.pkl'
     df = pd.read_pickle(pkl_name)
     if module_name:
         df = df[df.module == module_name]
-    print len(df)
+    print(len(df))
     
     # get all the arguments
     argCount = {}
@@ -46,7 +46,7 @@ def inspect_calc_args(pickle_name, module_name = ''):
                 argCount[arg_val[0]] = 1
     
     for arg in sorted(argCount.keys()):
-        print arg, argCount[arg]
+        print(arg, argCount[arg])
     
     # create a new dataframe showing which arguments are in which model
     model_names = list(df['class_name'].unique())
@@ -104,7 +104,7 @@ def inspect_calc_args(pickle_name, module_name = ''):
                          reverse = True)
 
     for at in at_num_list:
-        print at
+        print(at)
 
 
 

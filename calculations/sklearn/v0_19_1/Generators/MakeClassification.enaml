@@ -7,7 +7,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from _base.ClassificationGenerator import NumericClassificationGenerator
+from ._base.ClassificationGenerator import NumericClassificationGenerator
 from sklearn.datasets import make_classification
 
 

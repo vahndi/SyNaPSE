@@ -9,9 +9,9 @@ import seaborn as sns
 
 
 def getPublicAttributes(obj):
-    '''
+    """
     Returns a list of an object's public attributes
-    '''
+    """
     return [a for a in dir(obj) 
             if not a.startswith('_') 
             and not callable(getattr(obj, a))]

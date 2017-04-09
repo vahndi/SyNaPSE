@@ -2,7 +2,7 @@
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 
 # Models
-from linear_model import ABCLinearModel
+from .linear_model import ABCLinearModel
 
 # Other
 from numpy import int64
@@ -10,7 +10,6 @@ from modules.pandas_helpers import join_inputs_targets_predictions
 from pandas import DataFrame
 from ..._metrics.classification_metrics import ClassificationMetrics as CM
 from sklearn.metrics import confusion_matrix
-
 
 
 class ABCClassificationModel(ABCLinearModel):

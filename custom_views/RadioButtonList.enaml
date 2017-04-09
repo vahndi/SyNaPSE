@@ -7,7 +7,7 @@ from enaml.widgets.api import  (
 
 
 enamldef RadioButtonList_View(GroupBox):
-    '''
+    """
     A container for a list of RadioButtons which hold a ContainerList of
     instances of a class which implements .__str__() and .select() methods.
     To add or remove objects from the list, the entire list must be replaced
@@ -23,7 +23,7 @@ enamldef RadioButtonList_View(GroupBox):
     .__str__(): return the name for the RadioButton
     .select(): the method to call when the Button is selected by the user
     
-    '''
+    """
     attr model
     attr selectedIndex
     

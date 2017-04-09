@@ -6,7 +6,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import Field, IntField
 
 # Models
-from FindIndex import FindIndex_UI, FindIndex_Model
+from .FindIndex import FindIndex_UI, FindIndex_Model
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_UI
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_Model
 from ..._base.DataFrame_StringMethod import DataFrame_StringMethod_View

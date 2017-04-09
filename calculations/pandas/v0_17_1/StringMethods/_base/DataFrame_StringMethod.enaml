@@ -1,4 +1,4 @@
-print 'importing %s' % __name__
+print('importing %s' % __name__)
 # Atom
 from atom.api import Atom, List, Str, Value
 
@@ -27,10 +27,10 @@ class DataFrame_StringMethod_Model(ABCDataFrameToDataFrame):
 
 
     def set_inputs(self):
-        '''
+        """
         Adds input_type and input_columns to the args for the uiModel, and
         adds a CheckBoxList_Model to the class
-        '''        
+        """
         str_cols = [col for col in 
                     self._dataframe.select_dtypes(['object'])]
         self.input_columns = CheckBoxList_Model(str_cols)

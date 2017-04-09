@@ -2,7 +2,7 @@
 from custom_views.InputsTargetsSelector import InputsTargetsSelector_Model
 
 # Models
-from linear_model import ABCLinearModel
+from .linear_model import ABCLinearModel
 
 # Other
 from numpy import float64, int64
@@ -10,9 +10,7 @@ from modules.pandas_helpers import join_inputs_targets_predictions
 from ..._metrics.regression_metrics import RegressionMetrics as RM
 
 
-
 class ABCRegressionModel(ABCLinearModel):
-
 
     def set_inputs(self, dataframe):
         

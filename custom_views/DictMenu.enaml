@@ -21,14 +21,13 @@ def ToWords(CamelCaseString):
     return words
 
 
-
 enamldef DictMenuAction(Action):
     
     attr dictmenu_item
     attr triggered_func
     attr tooltip_attribute
 
-    text = str(dictmenu_item)
+    text = str(dictmenu_item.calc_name)
     triggered :: 
         triggered_func(dictmenu_item)
     tool_tip =  (getattr(dictmenu_item.tooltip_attribute)
@@ -105,13 +104,13 @@ class DictMenu_Model(Atom):
 
 
 enamldef DictMenu_View(Menu): me:
-    '''
+    """
     N.B. to include a DictMenu_View in a MenuBar or Menu use:
 
     Include:
         objects = [DictMenu_Model(menu_dict = dict_name,
                                   menu_name = 'Menu Name').menu]
-    '''    
+    """
     attr model
     
     Include:

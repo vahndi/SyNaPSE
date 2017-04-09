@@ -5,17 +5,17 @@ from atom.api import Atom, Dict, Str, Value
 from enaml.widgets.api import MainWindow
 
 # Subviews
-from Menu import Menu_View
-from CalculationGraph import CalculationGraph_Model, CalculationGraph_View
-from CalculationConfig import CalculationConfig_View
-from CalculationOutput import CalculationOutput_Model, CalculationOutput_View
-from ChooseCalculation import ChooseCalculation_Model
+from .Menu import Menu_View
+from .CalculationGraph import CalculationGraph_Model, CalculationGraph_View
+from .CalculationConfig import CalculationConfig_View
+from .CalculationOutput import CalculationOutput_Model, CalculationOutput_View
+from .ChooseCalculation import ChooseCalculation_Model
 
 # Other
 from modules.startup import calculation_models
 from modules.startup import _pickle_method, _unpickle_method
 from modules.startup import menus_calcs
-from calculation import CalculationTypeManager
+from .calculation import CalculationTypeManager
 
 import networkx as nx
 

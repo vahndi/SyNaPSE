@@ -30,7 +30,7 @@ class ClassificationMetrics(object):
                     labels = None, pos_label = 1, beta = None, 
                     classes = None, eps = 1e-15, 
                     warn_for = ('precision', 'recall', 'f-score')):
-        '''
+        """
         Returns dicts of scores and losses relating to classification metrics
         
         Inputs
@@ -84,7 +84,7 @@ class ClassificationMetrics(object):
             This determines which warnings will be made in the case that the 
             precision_recall_fscore_support function is being used to return 
             only one of its metrics.
-        '''
+        """
         
         scores_dict = {}
         losses_dict = {}

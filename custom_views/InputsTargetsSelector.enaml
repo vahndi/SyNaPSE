@@ -95,33 +95,33 @@ class InputsTargetsSelector_Model(object):
 
 
     def checked_inputs(self):
-        '''
+        """
         Returns the names of the checked input columns as a list of str
-        '''
+        """
         return self.input_cols.checked_item_names()
         
     def get_inputs(self):
-        '''
+        """
         Returns a DataFrame with columns corresponding to the checked inputs
-        '''
+        """
         return self._dataframe[self.checked_inputs()]
 
     def selected_target(self):
-        '''
+        """
         Returns the name of the selected target column
-        '''
+        """
         return self.uiModel.target_column
 
     def get_targets(self):
-        '''
+        """
         Returns a Series with the selected target column
-        '''
+        """
         return self._dataframe[self.selected_target()]
 
     def validate_inputs(self):
-        '''
+        """
         Checks that all necessary inputs are selected
-        '''
+        """
         if not self.checked_inputs():
             return False
         if self.target_mandatory and not self.uiModel.target_column:
@@ -131,9 +131,9 @@ class InputsTargetsSelector_Model(object):
 
 
     def get_data(self):
-        '''
+        """
         Returns the selected dataset inputs and targets, shuffled if specified
-        '''
+        """
         if not self.validate_inputs():
             return None
 
@@ -151,10 +151,10 @@ class InputsTargetsSelector_Model(object):
 
 
     def get_training_test_data(self):
-        '''
+        """
         Returns the selected dataset inputs (and targets), shuffled if
         specified, split into training and test sets
-        '''
+        """
         if not self.validate_inputs() or not self.show_pct_training:
             return None
 
@@ -194,11 +194,11 @@ class InputsTargetsSelector_Model(object):
         
 
     def get_problem_type(self):
-        '''
+        """
         Returns the type of the problem for classification metrics, depending
         on the number of different classes in the target variable column.
         N.B. the 'multilabel' case is not yet implemented.
-        '''
+        """
         target_classes = list(self.get_unique_targets())
         if len(target_classes) == 2:
             return 'binary'

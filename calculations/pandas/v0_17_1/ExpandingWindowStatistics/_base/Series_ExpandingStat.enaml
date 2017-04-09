@@ -10,7 +10,7 @@ from calculations._core.ABCs import ABCSeriesToSeries
 
 # Pandas
 import pandas as pd
-from ExpandingStat import ExpandingStat_UI, ExpandingStat_View
+from .ExpandingStat import ExpandingStat_UI, ExpandingStat_View
 
 
 

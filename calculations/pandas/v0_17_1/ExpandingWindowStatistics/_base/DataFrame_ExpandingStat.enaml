@@ -7,7 +7,7 @@ from calculations._core.ABCs import ABCDataFrameToDataFrame
 # Pandas
 import pandas as pd
 from pandas import DataFrame, concat
-from ExpandingStat import ExpandingStat_UI, ExpandingStat_View
+from .ExpandingStat import ExpandingStat_UI, ExpandingStat_View
 
 
 

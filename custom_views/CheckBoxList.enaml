@@ -1,7 +1,8 @@
 from atom.api import Atom, Bool, ContainerList, List, Callable
 from enaml.core.api import Conditional, Looper
 from enaml.widgets.api import  (
-    CheckBox, Container, GroupBox, PushButton, RadioButton, ScrollArea)
+    CheckBox, Container, GroupBox, PushButton, RadioButton, ScrollArea
+)
 
 
 
@@ -73,10 +74,10 @@ class CheckBoxList_Model(object):
 
 
     def set_item_names(self, item_names):
-        '''
+        """
         Adds or removes items from the existing list of items, depending if the
         name already exists. Preserves the check state of existing items
-        '''
+        """
         new_items = []
         new_checked_indices = []
         # Create new list of items
@@ -121,24 +122,24 @@ class CheckBoxList_Model(object):
     
     
     def checked_item_names(self):
-        '''
+        """
         Returns a list of the names of the items which are checked
-        '''
+        """
         return [self.uiModel.check_items[i].name
                 for i in self.uiModel.checked_indices]
 
 
     def item_check_values(self):
-        '''
+        """
         Returns a list of bools, indicating whether each item is checked or not
-        '''
+        """
         return [i in self.uiModel.checked_indices
                 for i in range(len(self.uiModel.items))]
 
 
 
 enamldef CheckBoxList_View(GroupBox):
-    '''
+    """
     A container for a list of CheckBoxes which hold a ContainerList of 
     instances of a class which implements .__str__() and .toggle(bool) methods.
     To add or remove objects from the list, the entire list must be replaced
@@ -160,8 +161,7 @@ enamldef CheckBoxList_View(GroupBox):
     N.B. in order to update the checked_indices ContainerList, the individual
     items must call a function on their parent when item.toggle() is invoked, 
     which should get a copy of the items in the list and append or remove the
-    index of the item.
-    '''
+    """
 
     attr model
 

@@ -13,7 +13,6 @@ class ChooseCalculation_UI(Atom):
         selected_calc_type = Str()
 
 
-
 class ChooseCalculation_Model(object):
         
     
@@ -83,8 +82,8 @@ enamldef ChooseCalculation_View(Dialog): me:
             clicked :: 
                 # Add a new calc to the list and update choosable types
                 calcGraphView_Model.add_calc_item(
-                                            model.uiModel.selected_calc_type
-                                            )                
+                    model.uiModel.selected_calc_type
+                )
                 # Close this window
                 me.accept()
         PushButton:

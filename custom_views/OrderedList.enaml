@@ -31,7 +31,7 @@ class OrderedList_Model(Atom):
 
 
     def __init__(self, item_names, fn_selected_changed = None):
-        '''
+        """
         Arguments
         ---------
         item_names (iterable of str):
@@ -41,24 +41,24 @@ class OrderedList_Model(Atom):
             the contents of other widgets depend on the selected items. The 
             function will be called with a list of names of items which are
             selected.
-        '''                                
+        """
         self.set_item_names(item_names)
         self.fn_selected_changed = fn_selected_changed
 
 
     def set_item_names(self, item_names):
-        '''
+        """
         Set the item names and (re)generate the list of items
-        '''
+        """
         self.item_names = item_names
         self.list_items = [OrderedListItem(name, self) 
                                for name in list(item_names)]       
 
 
     def move_item_up(self):
-        '''
+        """
         move the checked selected item up one
-        '''
+        """
         item = self.selected_item
         idx_selected = self.list_items.index(item)
         
@@ -73,9 +73,9 @@ class OrderedList_Model(Atom):
 
 
     def move_item_down(self):
-        '''
+        """
         move the checked selected item down one
-        '''
+        """
         item = self.selected_item
         idx_selected = self.list_items.index(item)
         

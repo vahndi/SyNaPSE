@@ -5,7 +5,7 @@ from atom.api import Atom
 from enaml.widgets.api import GroupBox
 
 # Models
-from _base.MaxAbsScaler import MaxAbsScaler_UI, MaxAbsScaler_View
+from ._base.MaxAbsScaler import MaxAbsScaler_UI, MaxAbsScaler_View
 from calculations._core.ABCs import ABCSeriesToSeries
 from sklearn.preprocessing import MaxAbsScaler
 from pandas import Series

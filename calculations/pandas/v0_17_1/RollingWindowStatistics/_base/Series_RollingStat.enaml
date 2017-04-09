@@ -11,7 +11,7 @@ from calculations._core.ABCs import ABCSeriesToSeries
 # Pandas
 import pandas as pd
 from pandas import DataFrame, concat
-from RollingStat import RollingStat_UI, RollingStat_Model
+from .RollingStat import RollingStat_UI, RollingStat_Model
 
 
 

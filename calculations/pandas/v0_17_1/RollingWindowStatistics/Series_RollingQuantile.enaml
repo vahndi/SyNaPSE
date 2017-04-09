@@ -1,7 +1,7 @@
 # Models
 from calculations._core.ABCs import ABCSeriesToSeries
-from _base.RollingQuantile import RollingQuantile_UI
-from _base.RollingQuantile import RollingQuantile_Model, RollingQuantile_View
+from ._base.RollingQuantile import RollingQuantile_UI
+from ._base.RollingQuantile import RollingQuantile_Model, RollingQuantile_View
 
 # Pandas
 import pandas as pd

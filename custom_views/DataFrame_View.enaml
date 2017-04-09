@@ -19,7 +19,7 @@ from modules.dataframe_figures import (
 from numpy import int32, int64, float64
 from pandas import melt, DatetimeIndex, Series
 
-from Series_View import getSeriesFigure
+from .Series_View import getSeriesFigure
 
 
 def _getDataFrameRowHtml(dataframe, ix, max_cols):

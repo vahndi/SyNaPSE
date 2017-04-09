@@ -18,7 +18,7 @@ class DataFrameGroupBy_FigureModel(object):
     
     
     def __init__(self, dataframegroupby):
-        print dataframegroupby.ngroups
+        print(dataframegroupby.ngroups)
         self.figure = (dataframegroupby_fig(dataframegroupby)
                        if dataframegroupby.ngroups <= 20
                        else None)

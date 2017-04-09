@@ -212,10 +212,10 @@ class CalculationItem(object):
         they have not yet been calculated then calculate them first.
         '''
         if self._model.calc_outputs:
-            print 'returning existing calc outputs for %s' % self.item_name
+            print('returning existing calc outputs for %s' % self.item_name)
             return self._model.calc_outputs
         else:
-            print 'calc outputs for %s do not exist' % self.item_name
+            print('calc outputs for %s do not exist' % self.item_name)
             return self.calculate_outputs()
 
 
@@ -223,7 +223,7 @@ class CalculationItem(object):
         '''
         Calculates the outputs of the model and returns them
         '''
-        print 'calculating outputs for %s' % self.item_name
+        print('calculating outputs for %s' % self.item_name)
         self._model.calc_outputs = self._model.getOutputs()
         return self._model.calc_outputs
         

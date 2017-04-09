@@ -39,7 +39,7 @@ class SelectableOrderedList_Model(object):
 
     def __init__(self, item_names, selected_item_names = [], 
                  fn_selected_changed = None):
-        '''
+        """
         Arguments
         ---------
         item_names (iterable of str):
@@ -51,7 +51,7 @@ class SelectableOrderedList_Model(object):
             the contents of other widgets depend on the selected items. The 
             function will be called with a list of names of items which are
             selected.
-        '''
+        """
         self.item_names = item_names
         self.selected_items = [SelectableOrderedListItem(name, self) 
                                for name in list(selected_item_names)]
@@ -75,9 +75,9 @@ class SelectableOrderedList_Model(object):
 
 
     def select_item(self):
-        '''
+        """
         move the checked unselected item to the selected items
-        '''
+        """
         item = self.uiModel.unselected_item
         
         if item is not None:
@@ -95,9 +95,9 @@ class SelectableOrderedList_Model(object):
 
     
     def unselect_item(self):
-        '''
+        """
         move the checked selected item to the unselected items
-        '''
+        """
         item = self.uiModel.selected_item
         
         if item is not None:
@@ -115,9 +115,9 @@ class SelectableOrderedList_Model(object):
 
 
     def move_item_up(self):
-        '''
+        """
         move the checked unselected item up one
-        '''
+        """
         item = self.uiModel.selected_item
         idx_selected = self.selected_items.index(item)
         
@@ -133,9 +133,9 @@ class SelectableOrderedList_Model(object):
 
 
     def move_item_down(self):
-        '''
+        """
         move the checked unselected item down one
-        '''
+        """
         item = self.uiModel.selected_item
         idx_selected = self.selected_items.index(item)
         
@@ -157,8 +157,8 @@ class SelectableOrderedList_Model(object):
 
             
 enamldef SelectableOrderedList_View(GroupBox):
-    '''
-    '''
+    """
+    """
 
     attr model
 

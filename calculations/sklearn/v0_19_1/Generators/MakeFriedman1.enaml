@@ -6,7 +6,7 @@ from enaml.widgets.api import CheckBox, Form, GroupBox, Label, Notebook, Page
 from custom_views.fields import FloatField, IntField
 
 # Models
-from _base.RegressionGenerator import RegressionGenerator
+from ._base.RegressionGenerator import RegressionGenerator
 from sklearn.datasets import make_friedman1
 
 

@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 13 10:33:05 2015
-
-@author: vahndi
-"""
-
 import enaml
 from enaml.qt.qt_application import QtApplication
 
@@ -28,4 +21,3 @@ if __name__ == '__main__':
     view = Main_View()
     view.show()
     app.start()
-    

@@ -1,6 +1,6 @@
-from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
-from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
-from _base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
+from ._base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_UI
+from ._base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_Model
+from ._base.DataFrameGroupBy_Aggregate import DataFrameGroupBy_Aggregate_View
 
 
 

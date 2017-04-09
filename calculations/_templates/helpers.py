@@ -33,10 +33,10 @@ def ToWords(CamelCaseString):
     
 
 def strlist_to_liststr(strlist):
-    '''
+    """
     Converts a string of comma separated strings (with or without separating 
     spaces and single or double quotes) to a list of strings
-    '''
+    """
     liststr = [str(value.strip().strip("'").strip('"'))
                for value in strlist.split(',')]
     return liststr
@@ -175,5 +175,5 @@ class widget(object):
                 tt_lines.append('\t)')
                 return '\n'.join(tt_lines)
         except:
-            print self.w_tooltip
+            print(self.w_tooltip)
             sys.exit()

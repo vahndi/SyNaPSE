@@ -3,7 +3,6 @@ from enaml.core.api import Conditional, Include, Looper
 from custom_views.DictMenu import DictMenu_Model, DictMenu_View
 
 
-
 enamldef Menu_View(MenuBar):
 
     attr model

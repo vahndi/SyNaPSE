@@ -112,7 +112,7 @@ if __name__ == '__main__':
     import seaborn as sns
     iris = sns.load_dataset('iris')
     d = public_attrs_to_dict(iris.blocks)
-    print d
+    print(d)
 
 
     

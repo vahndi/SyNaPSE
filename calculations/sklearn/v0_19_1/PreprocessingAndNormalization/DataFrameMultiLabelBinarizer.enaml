@@ -8,9 +8,9 @@ from custom_views.OrderedList import OrderedList_Model, OrderedList_View
 
 # Models
 from calculations._core.ABCs import ABCDataFrameToDataFrame
-from _base.MultiLabelBinarizer import MultiLabelBinarizer_UI
-from _base.MultiLabelBinarizer import MultiLabelBinarizer_Model
-from _base.MultiLabelBinarizer import MultiLabelBinarizer_View
+from ._base.MultiLabelBinarizer import MultiLabelBinarizer_UI
+from ._base.MultiLabelBinarizer import MultiLabelBinarizer_Model
+from ._base.MultiLabelBinarizer import MultiLabelBinarizer_View
 from sklearn.preprocessing import MultiLabelBinarizer
 from pandas import DataFrame, concat
 

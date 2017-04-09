@@ -170,7 +170,7 @@ def add_class_details(class_page_dict):
     
     class_path = '.'.join([class_page_dict['module'], 
                            class_page_dict['class_name']])
-    print 'processing %s' % class_path
+    print('processing %s' % class_path)
     r = requests.get(class_page_dict['link'])
     soup = BeautifulSoup(r.content)
     class_def = soup.find('dt', {'id': class_path})

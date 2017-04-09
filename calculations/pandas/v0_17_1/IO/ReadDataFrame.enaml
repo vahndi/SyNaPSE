@@ -61,18 +61,18 @@ class ReadDataFrame_UI(Atom):
         seaborn_dataset_tooltip = 'Select the seaborn  dataset to read'
 
         def get_sheet_name_list(self, source_path):            
-            '''
+            """
             Returns the names of the worksheets in the given Excel workbook
-            '''
+            """
             if (os.path.exists(source_path) and 
                 os.path.isfile(source_path)):
-                print 'reading excel file'
+                print('reading excel file')
                 try:
                     xlFile = pd.ExcelFile(source_path)
-                    print 'done'
+                    print('done')
                     return xlFile.sheet_names
                 except:
-                    print 'failed'                
+                    print('failed')
             return []
             
 

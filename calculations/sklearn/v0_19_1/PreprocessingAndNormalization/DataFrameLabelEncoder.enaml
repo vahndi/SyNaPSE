@@ -5,56 +5,54 @@ from atom.api import Atom, Value
 from enaml.widgets.api import Form, GroupBox, Label
 
 # Models
-from _base.MaxAbsScaler import MaxAbsScaler_UI, MaxAbsScaler_View
+from ._base.LabelEncoder import LabelEncoder_UI, LabelEncoder_View
 from calculations._core.ABCs import ABCDataFrameToDataFrame
 from custom_views.CheckBoxList import CheckBoxList_Model, CheckBoxList_View
-from sklearn.preprocessing import MaxAbsScaler
+from sklearn.preprocessing import LabelEncoder
 from pandas import Series
 
 
 
-class DataFrameMaxAbsScaler_UI(MaxAbsScaler_UI):
+class DataFrameLabelEncoder_UI(LabelEncoder_UI):
 
     # columns
     columns = Value(Atom)
-    columns_tooltip = 'Select the columns to scale.'
+    columns_tooltip = 'Select the columns to encode labels for.'
 
 
 
-class DataFrameMaxAbsScaler_Model(ABCDataFrameToDataFrame):
+class DataFrameLabelEncoder_Model(ABCDataFrameToDataFrame):
 
 
-    calc_name = 'Max Abs Scaler'
+    calc_name = 'Label Encoder'
 
 
     def setInputs(self, dataframe):
 
-        self._dataframe = dataframe
-        numeric_cols = dataframe.select_dtypes(['number']).columns
-        self.columns = CheckBoxList_Model(numeric_cols)
-        self.uiModel = DataFrameMaxAbsScaler_UI(columns = self.columns.uiModel)
+        self._dataframe = dataframe        
+        object_cols = dataframe.select_dtypes(['object']).columns
+        self.columns = CheckBoxList_Model(object_cols)
+        self.uiModel = DataFrameLabelEncoder_UI(columns = self.columns.uiModel)
 
 
     def getOutputs(self):
 
         df = self._dataframe
         columns = self.columns.checked_item_names()
-        encoder = MaxAbsScaler()
+        encoder = LabelEncoder()
         for column in columns:
             series = df[column]
-            df[column + '_scaled'] = Series(
-                            encoder.fit_transform(
-                                series.reshape(-1, 1)
-                                ).squeeze(), 
+            df[column + '_encoded'] = Series(
+                            encoder.fit_transform(series), 
                             index = series.index,
-                            name = series.name + '_scaled'
+                            name = series.name + '_encoded'
                             )
         
         return {'dataframe': df}
 
 
 
-enamldef DataFrameMaxAbsScaler_View(MaxAbsScaler_View): me:
+enamldef DataFrameLabelEncoder_View(LabelEncoder_View): me:
     
     
     attr model
